@@ -1,0 +1,20 @@
+[
+    {
+        "sample_id": "91_sc_ONLY_API_OUT_DOMAIN",
+        "dataset_name": "olympics",
+        "results": [
+            {
+                "query": "Which Summer Olympics did the competitor who has won the most medals win four gold and two silver medals?",
+                "answer": "2012 Summer"
+            },
+            {
+                "query": "What is the ratio of male to female athletes in these?",
+                "answer": [
+                    [
+                        1.2587021916630856
+                    ]
+                ]
+            }
+        ]
+    }
+]
