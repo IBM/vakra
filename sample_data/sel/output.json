@@ -2,8 +2,6 @@
     {
         "uuid": "8a751d8b-bf2b-4cdd-bdfe-54efdb1c4be8",
         "domain": "beer_factory",
-        "output": [
-        ],
         "ground_truth": [
             {
                 "turn_id": 0,
