@@ -1,9 +1,10 @@
 [
     {
-        "sample_id": "91_sc_ONLY_API_OUT_DOMAIN",
+        "uuid": "8a751d8b-bf2b-4cdd-bdfe-54efdb1c4be8",
         "domain": "olympics",
         "ground_truth": [
             {
+                "turn_id": 0,
                 "query": "Which Summer Olympics did the competitor who has won the most medals win four gold and two silver medals?",
                 "answer": ["2012 Summer"],
                 "gold_sequence": [
@@ -48,6 +49,7 @@
 
             },
             {
+                "turn_id": 1,
                 "query": "What is the ratio of male to female athletes in these?",
                 "answer": [
                     [
