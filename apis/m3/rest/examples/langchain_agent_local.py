@@ -196,7 +196,7 @@ async def main():
 
             if len(all_tools) > max_tools:
                 print(f"Filtering to top {max_tools} most relevant tools...")
-                priority_keywords = ['hockey', 'player', 'team', 'health', 'server', 'youngest', 'living']
+                priority_keywords = ['hockey', 'player', 'retails', 'customer', 'nation', 'superhero', 'power', 'hall_of_fame', 'alive', 'born']
 
                 # Sort tools: priority keywords first, then others
                 priority_tools = [t for t in all_tools if any(kw in t.name.lower() for kw in priority_keywords)]
@@ -216,11 +216,23 @@ async def main():
             # Create ReAct agent using LangGraph
             agent_executor = create_react_agent(llm, tools)
 
-            # Example queries
+            # Example queries - using endpoints that exist and work well
+            # These queries match actual API endpoints with no/simple parameters
             queries = [
-                "Get the youngest living hockey player",
-                "What is the health status of the server?",
-                "Get players born in 1990 not from Canada",
+                # Hockey - no params needed (get_most_recently_born_alive_player)
+                "Who is the most recently born hockey player that is still alive?",
+
+                # Hockey - no params needed (get_players_not_in_hall_of_fame)
+                "List hockey players who are not in the Hall of Fame",
+
+                # Retails - no params needed (get_customer_name_by_max_totalprice)
+                "Which customer has the highest total order price?",
+
+                # Retails - no params needed (get_nation_with_most_customers)
+                "Which nation has the most customers?",
+
+                # Superhero - simple param (get_power_names_by_superhero)
+                "What powers does Batman have?",
             ]
 
             for query in queries:
