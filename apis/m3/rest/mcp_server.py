@@ -19,13 +19,33 @@ logger = logging.getLogger(__name__)
 
 
 class FastAPIMCPServer:
-    """MCP Server that wraps a FastAPI server dynamically"""
+    """MCP Server that wraps a FastAPI server dynamically
 
-    def __init__(self, fastapi_base_url: str = "http://localhost:8000"):
+    Supports filtering endpoints by:
+    - path_prefixes: List of path prefixes to include (e.g., ["/v1/address", "/v1/city"])
+    - allowed_tags: List of OpenAPI tags to include (e.g., ["geography", "sports"])
+    - excluded_paths: List of path prefixes to exclude
+
+    If no filters are specified, all endpoints are exposed.
+    """
+
+    def __init__(
+        self,
+        fastapi_base_url: str = "http://localhost:8000",
+        server_name: str = "fastapi-mcp-wrapper",
+        path_prefixes: Optional[List[str]] = None,
+        allowed_tags: Optional[List[str]] = None,
+        excluded_paths: Optional[List[str]] = None
+    ):
         self.fastapi_base_url = fastapi_base_url
-        self.server = Server("fastapi-mcp-wrapper")
+        self.server = Server(server_name)
         self.tools_cache: List[Tool] = []
         self.openapi_spec: Optional[Dict] = None
+
+        # Domain filtering options
+        self.path_prefixes = path_prefixes
+        self.allowed_tags = allowed_tags
+        self.excluded_paths = excluded_paths or []
 
         # Register handlers
         self.server.list_tools()(self.list_tools)
@@ -42,14 +62,40 @@ class FastAPIMCPServer:
             logger.error(f"Failed to fetch OpenAPI spec: {e}")
             raise
 
+    def _should_include_endpoint(self, path: str, operation: Dict) -> bool:
+        """Check if an endpoint should be included based on filters"""
+        # Check excluded paths first
+        for excluded in self.excluded_paths:
+            if path.startswith(excluded):
+                return False
+
+        # Check path prefixes (if specified)
+        if self.path_prefixes:
+            if not any(path.startswith(prefix) for prefix in self.path_prefixes):
+                return False
+
+        # Check tags (if specified)
+        if self.allowed_tags:
+            endpoint_tags = operation.get("tags", [])
+            if not any(tag in self.allowed_tags for tag in endpoint_tags):
+                return False
+
+        return True
+
     def convert_openapi_to_mcp_tools(self, openapi_spec: Dict) -> List[Tool]:
-        """Convert OpenAPI spec to MCP tools"""
+        """Convert OpenAPI spec to MCP tools (respecting filters)"""
         tools = []
         paths = openapi_spec.get("paths", {})
+        filtered_count = 0
 
         for path, path_item in paths.items():
             for method, operation in path_item.items():
                 if method.lower() not in ["get", "post", "put", "delete", "patch"]:
+                    continue
+
+                # Apply domain filtering
+                if not self._should_include_endpoint(path, operation):
+                    filtered_count += 1
                     continue
 
                 # Create tool name from operationId or path
@@ -119,9 +165,16 @@ class FastAPIMCPServer:
     async def initialize(self):
         """Initialize the server by discovering FastAPI endpoints"""
         logger.info(f"Discovering FastAPI endpoints from {self.fastapi_base_url}")
+        if self.path_prefixes:
+            logger.info(f"Filtering by path prefixes: {self.path_prefixes}")
+        if self.allowed_tags:
+            logger.info(f"Filtering by tags: {self.allowed_tags}")
+        if self.excluded_paths:
+            logger.info(f"Excluding paths: {self.excluded_paths}")
+
         self.openapi_spec = await self.discover_fastapi_endpoints()
         self.tools_cache = self.convert_openapi_to_mcp_tools(self.openapi_spec)
-        logger.info(f"Discovered {len(self.tools_cache)} tools")
+        logger.info(f"Discovered {len(self.tools_cache)} tools (after filtering)")
 
     async def list_tools(self) -> List[Tool]:
         """List all available tools"""
@@ -218,17 +271,46 @@ class FastAPIMCPServer:
             )
 
 
-async def main():
-    """Main entry point"""
-    import sys
-
-    # Get FastAPI URL from environment or use default
+def parse_list_env(env_var: str) -> Optional[List[str]]:
+    """Parse comma-separated environment variable into list"""
     import os
+    value = os.getenv(env_var, "")
+    if not value:
+        return None
+    return [item.strip() for item in value.split(",") if item.strip()]
+
+
+async def main():
+    """Main entry point
+
+    Environment variables:
+    - FASTAPI_BASE_URL: Base URL of the FastAPI server (default: http://localhost:8000)
+    - MCP_SERVER_NAME: Name for this MCP server instance (default: fastapi-mcp-wrapper)
+    - MCP_PATH_PREFIXES: Comma-separated list of path prefixes to include
+                         (e.g., "/v1/address,/v1/city")
+    - MCP_ALLOWED_TAGS: Comma-separated list of OpenAPI tags to include
+                        (e.g., "geography,demographics")
+    - MCP_EXCLUDED_PATHS: Comma-separated list of path prefixes to exclude
+                          (e.g., "/v1/internal,/v1/admin")
+    """
+    import os
+
+    # Get configuration from environment
     fastapi_url = os.getenv("FASTAPI_BASE_URL", "http://localhost:8000")
+    server_name = os.getenv("MCP_SERVER_NAME", "fastapi-mcp-wrapper")
+    path_prefixes = parse_list_env("MCP_PATH_PREFIXES")
+    allowed_tags = parse_list_env("MCP_ALLOWED_TAGS")
+    excluded_paths = parse_list_env("MCP_EXCLUDED_PATHS")
 
-    logger.info(f"Starting MCP server wrapping FastAPI at {fastapi_url}")
+    logger.info(f"Starting MCP server '{server_name}' wrapping FastAPI at {fastapi_url}")
 
-    server = FastAPIMCPServer(fastapi_base_url=fastapi_url)
+    server = FastAPIMCPServer(
+        fastapi_base_url=fastapi_url,
+        server_name=server_name,
+        path_prefixes=path_prefixes,
+        allowed_tags=allowed_tags,
+        excluded_paths=excluded_paths
+    )
     await server.run()
 
 

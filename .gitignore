@@ -19,3 +19,5 @@ venv/
 *.dylib
 *.so
 *.sqlite
+
+train_chunked/
