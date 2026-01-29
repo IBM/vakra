@@ -275,14 +275,51 @@ rest/
 │   ├── airline.py              # /v1/airline/* endpoints
 │   ├── hockey.py               # /v1/hockey/* endpoints
 │   └── ...                     # 77 more domain modules
-├── db/                         # SQLite databases
+├── db/                         # SQLite databases (see "Database Setup" below)
 │   ├── address/
+│   │   └── address.sqlite
 │   ├── airline/
-│   └── ...
+│   │   └── airline.sqlite
+│   ├── hockey/
+│   │   └── hockey.sqlite
+│   └── ...                     # 80 domain directories, one .sqlite each
 ├── examples/                   # LangChain agent examples
 │   ├── langchain_agent_local.py
 │   └── langchain_agent_docker_remote.py
 └── requirements.txt
+```
+
+## Database Setup
+
+The SQLite databases must be placed under `m3/rest/db/`. The data comes from the [BIRD-Bench](https://bird-bench.github.io/) benchmark (train and dev splits).
+
+### Download
+
+1. Download the **train** and **dev** database splits from BIRD-Bench https://bird-bench.github.io/ 
+2. Place each database in its own subdirectory under `db/`:
+
+```
+rest/db/
+├── address/
+│   └── address.sqlite
+├── airline/
+│   └── airline.sqlite
+├── hockey/
+│   └── hockey.sqlite
+├── movie/
+│   └── movie.sqlite
+├── superhero/
+│   └── superhero.sqlite
+└── ...                    (80 directories total)
+```
+
+Each directory name must match the domain name used in the API routes (e.g., `hockey` for `/v1/hockey/*`). Each directory contains a single `.sqlite` file.
+
+The `db/` directory is mounted read-only into Docker via `docker-compose.yml`:
+
+```yaml
+volumes:
+  - ./db:/app/db:ro
 ```
 
 ## Environment Variables
