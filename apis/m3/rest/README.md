@@ -4,43 +4,94 @@ A FastAPI server exposing 80 database APIs with 9,800+ endpoints, wrapped by MCP
 
 ## Architecture
 
-### Docker (Single Container)
+```
+                          ┌─────────────────────────────────────────────────────────┐
+                          │                  Docker Container                       │
+                          │                                                         │
+                          │   ┌─────────────────────────────────────────────────┐   │
+                          │   │            FastAPI  (port 8000)                 │   │
+                          │   │                                                 │   │
+                          │   │   /v1/hockey/*          122 endpoints           │   │
+                          │   │   /v1/movie/*           148 endpoints           │   │
+                          │   │   /v1/superhero/*        95 endpoints           │   │
+                          │   │   /v1/financial/*       130 endpoints           │   │
+                          │   │   ...                                           │   │
+                          │   │   80 domains        9,800+ total endpoints      │   │
+                          │   │                                                 │   │
+                          │   │   SQLite databases (./db/)                      │   │
+                          │   │   OpenAPI spec at /openapi.json                 │   │
+                          │   │   Health check at /health                       │   │
+                          │   └──────────────────────┬──────────────────────────┘   │
+                          │                          │                              │
+                          │                 http://localhost:8000                    │
+                          │                          │                              │
+                          │   ┌──────────────────────┴──────────────────────────┐   │
+                          │   │            MCP Server (stdio)                   │   │
+                          │   │                                                 │   │
+                          │   │   1. Fetches /openapi.json from FastAPI         │   │
+                          │   │   2. Filters paths by MCP_DOMAINS env var      │   │
+                          │   │   3. Converts matching endpoints → MCP tools   │   │
+                          │   │   4. Serves tools over stdio (stdin/stdout)    │   │
+                          │   └──────────────────────┬──────────────────────────┘   │
+                          │                          │                              │
+                          └──────────────────────────│──────────────────────────────┘
+                                                     │ stdio
+                                                     │
+                          ┌──────────────────────────┴──────────────────────────┐
+                          │              LangChain ReAct Agent                  │
+                          │                                                     │
+                          │   Spawns MCP server via:                            │
+                          │     docker exec -i -e MCP_DOMAINS=hockey \         │
+                          │       fastapi-mcp-server python mcp_server.py      │
+                          │                                                     │
+                          │   OR locally:                                       │
+                          │     MCP_DOMAINS=hockey python mcp_server.py        │
+                          │                                                     │
+                          │   LLM (Claude / Ollama / OpenAI) picks tools       │
+                          │   from the filtered set and calls them via MCP     │
+                          └─────────────────────────────────────────────────────┘
+```
+
+### How domain filtering works
 
 ```
-┌──────────────────────────────────────────┐
-│         docker container                 │
-│                                          │
-│  ┌──────────────────────────────────┐    │
-│  │   FastAPI (port 8000)            │    │
-│  │   80 API modules, 9,800+ endpoints│   │
-│  │   SQLite DBs (./db/)            │    │
-│  └──────────────────────────────────┘    │
-│      ▲                                   │
-│      │ http://localhost:8000             │
-│      │                                   │
-│  ┌──────────────────────────────────┐    │
-│  │   MCP Server (stdio)             │    │
-│  │   Reads OpenAPI spec             │    │
-│  │   Filters by MCP_DOMAINS env var │    │
-│  └──────────────────────────────────┘    │
-│      ▲                                   │
-└──────│───────────────────────────────────┘
-       │ stdio
+  Agent sets MCP_DOMAINS="hockey"
+       │
        ▼
-   LLM Agent (sets MCP_DOMAINS to pick domain)
+  MCP Server starts
+       │
+       ├── Fetches /openapi.json (all 9,800+ endpoints)
+       │
+       ├── Filters: keep only paths starting with /v1/hockey/
+       │
+       ├── Converts 122 matching endpoints → 122 MCP tools
+       │
+       └── Agent sees only hockey tools
 ```
 
-The single container runs both FastAPI and the MCP server. The agent specifies which domain(s) to use via the `MCP_DOMAINS` environment variable.
-
-### Local (80 MCP Servers)
+### Local development
 
 ```
-uvicorn app:app --port 8000    ← single FastAPI process
-        ▲  ▲  ▲  ...  ▲
-        │  │  │        │
-  80 × python mcp_server.py    ← one per domain (MCP_DOMAINS="hockey", etc.)
-  managed by start_all_mcp_servers.sh
+  ┌────────────────────────────────────────────────────────────┐
+  │                FastAPI  (port 8000)                        │
+  │         uvicorn app:app --host 0.0.0.0 --port 8000        │
+  └────────────────────────────┬───────────────────────────────┘
+                               │
+                      http://localhost:8000
+                               │
+                  ┌────────────┴────────────┐
+                  │   MCP Server (stdio)    │
+                  │                         │
+                  │   MCP_DOMAINS=hockey    │
+                  │   → only hockey tools   │
+                  └────────────┬────────────┘
+                               │ stdio
+                               ▼
+                          LLM Agent
 ```
+
+The agent spawns `MCP_DOMAINS="hockey" python mcp_server.py` which
+connects to FastAPI on port 8000 and exposes only the matching tools.
 
 ## All 80 Domains
 
