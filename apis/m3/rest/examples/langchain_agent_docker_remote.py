@@ -246,7 +246,6 @@ async def main():
 
                 queries = [
                     "Who is the most recently born hockey player that is still alive?",
-                    "List hockey players who are not in the Hall of Fame",
                     "Which customer has the highest total order price?",
                     "Which nation has the most customers?",
                     "What powers does Batman have?",
