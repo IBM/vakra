@@ -2,26 +2,36 @@
 """
 Simple Benchmark Runner
 
-Takes a task_id as input and iterates over data points in the corresponding directory.
-For each file, extracts the domain from the filename, starts the MCP server with that domain,
-connects to it, and runs the agent on benchmark queries.
+Iterates over all domain files in the TASK directory.
+For each file (e.g., address.json, hockey.json):
+  - Extracts domain from filename
+  - Starts MCP server with that domain
+  - Runs agent on benchmark queries from that file
 
 Usage:
 
-    export TASK_2_DIR=<path to downloaded task_2 directory from box https://ibm.ent.box.com/folder/364205927270>
-    pip install mcp langchain-anthropic langgraph
+    export TASK_2_DIR=<path to downloaded task_2 directory>
+    pip install mcp langchain-anthropic langgraph langchain-ollama
 
-    # List tools only (no agent)
+    # List tools only (no agent) - iterates all domains
     python benchmark_runner.py --task_id 2
 
-    # Run benchmark with agent on all test cases
+    # Run benchmark with agent on all domains
     python benchmark_runner.py --task_id 2 --run-agent
 
-    # Limit to specific domain and max samples
-    python benchmark_runner.py --task_id 2 --run-agent --domain hockey --max-samples 5
+    # Limit samples per domain (e.g., 5 samples from each domain file)
+    python benchmark_runner.py --task_id 2 --run-agent --max-samples-per-domain 5
 
-    # Use different container runtime
-    python benchmark_runner.py --task_id 2 --container-runtime podman
+    # Use different provider/model
+    python benchmark_runner.py --task_id 2 --run-agent --provider anthropic
+    python benchmark_runner.py --task_id 2 --run-agent --provider ollama --model llama3.1:8b
+
+Output:
+    Results saved to: benchmark_output_YYYY-MM-DD_HH-MM-SS/
+        - address_benchmark_output.json
+        - hockey_benchmark_output.json
+        - ...
+        - summary.json
 """
 import json
 import os
@@ -40,6 +50,10 @@ from mcp.client.stdio import stdio_client
 
 from agent_interface import AgentInterface, AgentResponse, create_agent
 
+# Task configurations - maps task_id to input directory path
+TASK_PATHS = {
+    2: os.environ.get("TASK_2_DIR", "/Users/anu/Documents/GitHub/routing/EnterpriseBenchmark/train/input/input"),
+}
 
 @dataclass
 class BenchmarkItem:
@@ -113,13 +127,31 @@ def save_results(results: List[BenchmarkResult], output_path: Path):
 
     with open(output_path, "w") as f:
         json.dump(output_data, f, indent=2)
-    print(f"\nResults saved to: {output_path}")
+    print(f"  Results saved to: {output_path}")
 
 
-# Task configurations - maps task_id to input directory path
-TASK_PATHS = {
-    2: os.environ.get("TASK_2_DIR", "/Users/anu/Documents/GitHub/routing/EnterpriseBenchmark/train/input/input"),
-}
+def save_results_by_domain(results: List[BenchmarkResult], output_dir: Path):
+    """Save benchmark results to domain-specific JSON files."""
+    # Group results by domain
+    by_domain: Dict[str, List[BenchmarkResult]] = {}
+    for r in results:
+        if r.domain not in by_domain:
+            by_domain[r.domain] = []
+        by_domain[r.domain].append(r)
+
+    # Save each domain to its own file
+    for domain, domain_results in by_domain.items():
+        output_file = output_dir / f"{domain}_benchmark_output.json"
+        save_results(domain_results, output_file)
+
+    print(f"\nAll results saved to: {output_dir}")
+
+
+# Timeout for agent execution (seconds)
+AGENT_TIMEOUT_SECONDS = 60
+
+
+
 
 # Default settings
 DEFAULT_CONTAINER_NAME = "fastapi-mcp-server"
@@ -271,9 +303,16 @@ async def run_agent_with_query(
                 tools = await wrapper.get_tools()
                 print(f"  Loaded {len(tools)} tools")
 
-                # Run the agent and capture response before context cleanup
-                response = await agent.run(query, tools)
-                print(f"  Agent completed. Response received: {response is not None}")
+                # Run the agent with timeout
+                try:
+                    response = await asyncio.wait_for(
+                        agent.run(query, tools),
+                        timeout=AGENT_TIMEOUT_SECONDS
+                    )
+                    print(f"  Agent completed. Response received: {response is not None}")
+                except asyncio.TimeoutError:
+                    print(f"  Agent timed out after {AGENT_TIMEOUT_SECONDS}s")
+                    raise TimeoutError(f"Agent timed out after {AGENT_TIMEOUT_SECONDS} seconds")
         # Context exited cleanly
         print("  Server stopped.")
     except ExceptionGroup as eg:
@@ -386,6 +425,61 @@ async def run_benchmark_item(
     return result
 
 
+async def run_benchmark_for_domain(
+    domain: str,
+    items: List[BenchmarkItem],
+    container_runtime: str,
+    container_name: str,
+    agent: AgentInterface,
+    max_samples: Optional[int] = None,
+) -> List[BenchmarkResult]:
+    """Run benchmark for a single domain."""
+    import time
+
+    # Limit samples if requested
+    if max_samples and max_samples < len(items):
+        items = items[:max_samples]
+
+    print(f"\n{'#'*60}")
+    print(f"# DOMAIN: {domain} ({len(items)} items)")
+    print(f"{'#'*60}")
+
+    results: List[BenchmarkResult] = []
+
+    for i, item in enumerate(items):
+        print(f"\n  [{i+1}/{len(items)}] Query: {item.query[:80]}{'...' if len(item.query) > 80 else ''}")
+
+        result = BenchmarkResult(
+            uuid=item.uuid,
+            domain=domain,  # Use domain from filename, not item
+            query=item.query,
+        )
+
+        start_time = time.perf_counter()
+
+        try:
+            response = await run_agent_with_query(
+                domain=domain,  # Domain from filename
+                query=item.query,
+                container_runtime=container_runtime,
+                container_name=container_name,
+                agent=agent,
+            )
+            result.answer = response.content
+            result.tool_calls = response.tool_calls
+            result.status = "success"
+            print(f"    Status: success | Tools: {len(result.tool_calls)} | Time: {time.perf_counter() - start_time:.2f}s")
+        except Exception as e:
+            result.status = "error"
+            result.error = str(e)
+            print(f"    Status: error | {str(e)[:50]}")
+
+        result.duration_s = time.perf_counter() - start_time
+        results.append(result)
+
+    return results
+
+
 async def run_task(
     task_id: int,
     container_runtime: str,
@@ -393,11 +487,10 @@ async def run_task(
     run_agent: bool = False,
     provider: str = "ollama",
     model: Optional[str] = None,
-    domain_filter: Optional[str] = None,
-    max_samples: Optional[int] = None,
+    max_samples_per_domain: Optional[int] = None,
     output_file: Optional[str] = None,
 ) -> List[BenchmarkResult]:
-    """Run benchmark for a given task_id."""
+    """Run benchmark for a given task_id, iterating over all domain files."""
 
     if task_id not in TASK_PATHS:
         print(f"Error: Unknown task_id {task_id}")
@@ -410,7 +503,7 @@ async def run_task(
         print(f"Error: Input path does not exist: {input_path}")
         sys.exit(1)
 
-    # Get all JSON files
+    # Get all JSON files - each file represents a domain
     json_files = sorted(input_path.glob("*.json"))
 
     if not json_files:
@@ -421,85 +514,49 @@ async def run_task(
     print(f"Input path: {input_path}")
     print(f"Container runtime: {container_runtime}")
     print(f"Container name: {container_name}")
+    print(f"Found {len(json_files)} domain files")
 
     if not run_agent:
         # Just list tools for each domain (original behavior)
-        if domain_filter:
-            # Only list tools for the specified domain
-            result = await process_domain(domain_filter, container_runtime, container_name)
-            return [result]
-        else:
-            results = []
-            for json_file in json_files:
-                domain = json_file.stem
-                result = await process_domain(domain, container_runtime, container_name)
-                results.append(result)
-            return results
-
-    # Load benchmark items - if domain specified, try to load just that file first
-    all_items: List[BenchmarkItem] = []
-
-    if domain_filter:
-        # Try to load from domain-specific file first
-        domain_file = input_path / f"{domain_filter}.json"
-        if domain_file.exists():
-            items = load_benchmark_file(domain_file)
-            # Filter to only items matching the domain
-            items = [item for item in items if item.domain == domain_filter]
-            all_items.extend(items)
-            print(f"  Loaded {len(items)} items for domain '{domain_filter}' from {domain_file.name}")
-        else:
-            # Domain file doesn't exist, search all files for matching items
-            print(f"  No file '{domain_filter}.json' found, searching all files...")
-            for json_file in json_files:
-                items = load_benchmark_file(json_file)
-                matching = [item for item in items if item.domain == domain_filter]
-                if matching:
-                    all_items.extend(matching)
-                    print(f"  Found {len(matching)} items for domain '{domain_filter}' in {json_file.name}")
-    else:
-        # Load all items from all files
+        results = []
         for json_file in json_files:
-            items = load_benchmark_file(json_file)
-            all_items.extend(items)
-            print(f"  Loaded {len(items)} items from {json_file.name}")
+            domain = json_file.stem  # Domain from filename
+            result = await process_domain(domain, container_runtime, container_name)
+            results.append(result)
+        return results
 
-    if not all_items:
-        print(f"Error: No benchmark items found" + (f" for domain '{domain_filter}'" if domain_filter else ""))
-        sys.exit(1)
-
-    print(f"Total benchmark items: {len(all_items)}")
-
-    # Limit samples if requested
-    if max_samples and max_samples < len(all_items):
-        all_items = all_items[:max_samples]
-        print(f"Limited to {max_samples} samples")
-
-    # Create agent
+    # Create agent once for all domains
     agent = create_agent(provider=provider, model=model)
     print(f"Agent: {provider} / {model or 'default'}")
+    if max_samples_per_domain:
+        print(f"Max samples per domain: {max_samples_per_domain}")
 
-    # Run benchmark
-    results: List[BenchmarkResult] = []
-    for i, item in enumerate(all_items):
-        print(f"\n{'='*60}")
-        print(f"[{i+1}/{len(all_items)}] Domain: {item.domain}")
-        print(f"Query: {item.query[:100]}{'...' if len(item.query) > 100 else ''}")
-        print(f"{'='*60}")
+    # Process each domain file
+    all_results: List[BenchmarkResult] = []
 
-        result = await run_benchmark_item(
-            item, container_runtime, container_name, agent
+    for json_file in json_files:
+        domain = json_file.stem  # Extract domain from filename (e.g., "address" from "address.json")
+
+        # Load benchmark items from this file
+        items = load_benchmark_file(json_file)
+        print(f"\nLoaded {len(items)} items from {json_file.name}")
+
+        # Run benchmark for this domain
+        domain_results = await run_benchmark_for_domain(
+            domain=domain,
+            items=items,
+            container_runtime=container_runtime,
+            container_name=container_name,
+            agent=agent,
+            max_samples=max_samples_per_domain,
         )
-        results.append(result)
+        all_results.extend(domain_results)
 
-        if result.status == "success":
-            print(f"  Status: {result.status}")
-            print(f"  Tool calls: {len(result.tool_calls)}")
-            print(f"  Answer: {result.answer[:200]}..." if len(result.answer) > 200 else f"  Answer: {result.answer}")
-            print(f"  Duration: {result.duration_s:.2f}s")
-        else:
-            print(f"  Status: {result.status}")
-            print(f"  Error: {result.error}")
+    results = all_results
+
+    # Summary
+    successful = [r for r in results if r.status == "success"]
+    failed = [r for r in results if r.status == "error"]
 
     # Summary
     print(f"\n{'='*60}")
@@ -525,14 +582,35 @@ async def run_task(
         if len(failed) > 10:
             print(f"    ... and {len(failed) - 10} more")
 
-    # Save results
+    # Save results to timestamped directory with domain-specific files
     if output_file:
+        # Use specified output file (single file mode)
         save_results(results, Path(output_file))
     else:
-        # Default output file
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        default_output = Path(f"benchmark_results_{task_id}_{timestamp}.json")
-        save_results(results, default_output)
+        # Create human-readable timestamped directory
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        output_dir = Path(f"benchmark_output_{timestamp}")
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        # Save domain-specific output files (e.g., address_benchmark_output.json)
+        save_results_by_domain(results, output_dir)
+
+        # Also save a combined summary file
+        summary_file = output_dir / "summary.json"
+        summary = {
+            "task_id": task_id,
+            "timestamp": timestamp,
+            "provider": provider,
+            "model": model or "default",
+            "total_items": len(results),
+            "successful": len(successful),
+            "failed": len(failed),
+            "total_time_s": sum(r.duration_s for r in results),
+            "domains": list(set(r.domain for r in results)),
+        }
+        with open(summary_file, "w") as f:
+            json.dump(summary, f, indent=2)
+        print(f"  Summary saved to: {summary_file}")
 
     return results
 
@@ -553,27 +631,21 @@ def main():
         help=f"Container name (default: {DEFAULT_CONTAINER_NAME})"
     )
     parser.add_argument(
-        "--domain",
-        type=str,
-        default=None,
-        help="Filter to a specific domain (default: all domains)"
-    )
-    parser.add_argument(
         "--run-agent",
         action="store_true",
         help="Run the agent on benchmark queries (default: just list tools)"
     )
     parser.add_argument(
-        "--max-samples",
+        "--max-samples-per-domain",
         type=int,
         default=None,
-        help="Maximum number of benchmark items to run (default: all)"
+        help="Maximum number of benchmark items per domain (default: all)"
     )
     parser.add_argument(
         "--output",
         type=str,
         default=None,
-        help="Output file for results (default: benchmark_results_<task_id>_<timestamp>.json)"
+        help="Output file for results (default: timestamped directory with per-domain files)"
     )
     parser.add_argument(
         "--provider",
@@ -602,8 +674,7 @@ def main():
         run_agent=args.run_agent,
         provider=args.provider,
         model=args.model,
-        domain_filter=args.domain,
-        max_samples=args.max_samples,
+        max_samples_per_domain=args.max_samples_per_domain,
         output_file=args.output,
     ))
 
