@@ -105,7 +105,6 @@ class LangGraphReActAgent(AgentInterface):
 
     def _get_llm(self):
         """Lazily initialize the LLM."""
-        print(self.provider)
         if self._llm is not None:
             return self._llm
         
@@ -146,11 +145,8 @@ class LangGraphReActAgent(AgentInterface):
     ) -> AgentResponse:
         """Run the ReAct agent with given input and tools."""
         from langgraph.prebuilt import create_react_agent
-        print("inside agent", self.provider)
         llm = self._get_llm()
-        print(llm)
         agent = create_react_agent(llm, tools)
-        print(agent)
         # Convert input to messages format
         if isinstance(input, str):
             messages = [("user", input)]
@@ -159,8 +155,6 @@ class LangGraphReActAgent(AgentInterface):
 
         # Run the agent
         result = await agent.ainvoke({"messages": messages})
-        print("hello!")
-        print(result)
         # Extract results
         response_messages = []
         tool_calls = []
@@ -225,8 +219,6 @@ def create_agent(
     }
 
     model = model or default_models.get(provider, "claude-3-5-sonnet-20241022")
-    print("provider", provider)
-    print("model", model)
     return LangGraphReActAgent(
         model=model,
         provider=provider,
