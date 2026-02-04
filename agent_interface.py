@@ -138,6 +138,41 @@ class LangGraphReActAgent(AgentInterface):
         """Convert Message objects to LangChain format."""
         return [(m.role, m.content) for m in messages]
 
+    def _parse_json_tool_call(self, content: str) -> dict | None:
+        """Try to parse a JSON tool call from text output (for models that don't use tool calling API)."""
+        import json
+        import re
+
+        if not content:
+            return None
+
+        # Try to extract JSON from markdown code blocks or raw JSON
+        patterns = [
+            r'```json\s*(.*?)\s*```',  # ```json ... ```
+            r'```\s*(.*?)\s*```',       # ``` ... ```
+            r'(\{[^{}]*"name"[^{}]*"arguments"[^{}]*\})',  # raw JSON with name/arguments
+        ]
+
+        for pattern in patterns:
+            match = re.search(pattern, content, re.DOTALL)
+            if match:
+                try:
+                    data = json.loads(match.group(1))
+                    if "name" in data and "arguments" in data:
+                        return data
+                except json.JSONDecodeError:
+                    continue
+
+        # Try parsing the whole content as JSON
+        try:
+            data = json.loads(content.strip())
+            if "name" in data and "arguments" in data:
+                return data
+        except json.JSONDecodeError:
+            pass
+
+        return None
+
     async def run(
         self,
         input: Union[str, List[Message]],
@@ -147,6 +182,10 @@ class LangGraphReActAgent(AgentInterface):
         from langgraph.prebuilt import create_react_agent
         llm = self._get_llm()
         agent = create_react_agent(llm, tools)
+
+        # Build tool map for manual execution
+        tool_map = {t.name: t for t in tools}
+
         # Convert input to messages format
         if isinstance(input, str):
             messages = [("user", input)]
@@ -155,6 +194,7 @@ class LangGraphReActAgent(AgentInterface):
 
         # Run the agent
         result = await agent.ainvoke({"messages": messages})
+
         # Extract results
         response_messages = []
         tool_calls = []
@@ -174,7 +214,7 @@ class LangGraphReActAgent(AgentInterface):
                         final_content = msg.content
                     response_messages.append(Message(role="assistant", content=msg.content or ""))
 
-                    # Capture tool call arguments from AIMessage
+                    # Capture tool call arguments from AIMessage (proper tool calling)
                     if hasattr(msg, "tool_calls") and msg.tool_calls:
                         for tc in msg.tool_calls:
                             tc_id = tc.get("id", "") or tc.get("tool_call_id", "")
@@ -192,6 +232,37 @@ class LangGraphReActAgent(AgentInterface):
                         "arguments": tool_info.get("args", {}),
                         "result": msg.content,
                     })
+
+        # FALLBACK: If no tool calls captured but final_content looks like a JSON tool call,
+        # manually parse and execute it (for models that output tool calls as text)
+        if not tool_calls and final_content:
+            parsed_call = self._parse_json_tool_call(final_content)
+            if parsed_call:
+                tool_name = parsed_call.get("name", "")
+                tool_args = parsed_call.get("arguments", {})
+                print(f"    [FALLBACK] Detected text tool call: {tool_name}({tool_args})")
+
+                if tool_name in tool_map:
+                    try:
+                        tool_result = await tool_map[tool_name].ainvoke(tool_args)
+                        tool_result_str = str(tool_result)
+                        print(f"    [FALLBACK] Tool result: {tool_result_str[:200]}...")
+                        tool_calls.append({
+                            "tool_name": tool_name,
+                            "arguments": tool_args,
+                            "result": tool_result_str,
+                        })
+                        # Update final_content to be the tool result
+                        final_content = tool_result_str
+                    except Exception as e:
+                        print(f"    [FALLBACK] Tool error: {e}")
+                        tool_calls.append({
+                            "tool_name": tool_name,
+                            "arguments": tool_args,
+                            "result": f"Error: {e}",
+                        })
+                else:
+                    print(f"    [FALLBACK] Tool '{tool_name}' not found in available tools")
 
         return AgentResponse(
             content=final_content,

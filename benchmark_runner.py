@@ -31,7 +31,7 @@ Usage:
     python benchmark_runner.py --task_id 2 --run-agent --provider ollama --model llama3.1:8b
 
 Output:
-    Results saved to: benchmark_output_YYYY-MM-DD_HH-MM-SS/
+    Results saved to: benchmark_output_YYYY-MM-DD_HH-MM-SS_<model_name>/
         - address_benchmark_output.json
         - hockey_benchmark_output.json
         - ...
@@ -152,7 +152,7 @@ def save_results_by_domain(results: List[BenchmarkResult], output_dir: Path):
 
 
 # Timeout for agent execution (seconds)
-AGENT_TIMEOUT_SECONDS = 60
+AGENT_TIMEOUT_SECONDS = 120
 
 
 
@@ -496,7 +496,18 @@ async def run_benchmark_for_domain(
                         result.answer = response.content
                         result.tool_calls = response.tool_calls
                         result.status = "success"
-                        print(f"    Status: success | Tools: {len(result.tool_calls)} | Time: {time.perf_counter() - start_time:.2f}s")
+                        elapsed = time.perf_counter() - start_time
+                        print(f"    Status: success | Tools: {len(result.tool_calls)} | Time: {elapsed:.2f}s")
+                        # Log the answer
+                        answer_preview = result.answer[:200] if result.answer else "(empty)"
+                        print(f"    Answer: {answer_preview}{'...' if len(result.answer) > 200 else ''}")
+                        # Log tool calls if any
+                        if result.tool_calls:
+                            print(f"    Tool calls:")
+                            for tc in result.tool_calls:
+                                print(f"      - {tc.get('tool_name', 'unknown')}: {tc.get('arguments', {})}")
+                                tc_result = str(tc.get('result', ''))[:100]
+                                print(f"        Result: {tc_result}{'...' if len(str(tc.get('result', ''))) > 100 else ''}")
                     except asyncio.TimeoutError:
                         result.status = "error"
                         result.error = f"Agent timed out after {AGENT_TIMEOUT_SECONDS} seconds"
@@ -644,9 +655,11 @@ async def run_task(
         # Use specified output file (single file mode)
         save_results(results, Path(output_file))
     else:
-        # Create human-readable timestamped directory
+        # Create human-readable timestamped directory with model name
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        output_dir = Path(f"benchmark_output_{timestamp}")
+        # Sanitize model name for directory (replace special chars)
+        model_name = (model or "default").replace(":", "_").replace("/", "_")
+        output_dir = Path(f"benchmark_output_{timestamp}_{model_name}")
         output_dir.mkdir(parents=True, exist_ok=True)
 
         # Save domain-specific output files (e.g., address_benchmark_output.json)
