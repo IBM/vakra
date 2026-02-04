@@ -54,6 +54,7 @@ class AgentResponse:
     tool_calls: List[dict] = field(default_factory=list)
     messages: List[Message] = field(default_factory=list)
     metadata: dict = field(default_factory=dict)
+    trajectory: List[dict] = field(default_factory=list)  # Full agent trajectory
 
 
 class AgentInterface(ABC):
@@ -199,6 +200,7 @@ class LangGraphReActAgent(AgentInterface):
         response_messages = []
         tool_calls = []
         final_content = ""
+        trajectory = []  # Capture full trajectory
 
         # Track tool calls with their arguments
         tool_call_args = {}  # Map tool_call_id to args
@@ -207,8 +209,16 @@ class LangGraphReActAgent(AgentInterface):
             for msg in result["messages"]:
                 msg_class = msg.__class__.__name__
 
+                # Build trajectory entry for each message
+                trajectory_entry = {
+                    "type": msg_class,
+                    "content": getattr(msg, "content", ""),
+                }
+
                 if msg_class == "HumanMessage":
                     response_messages.append(Message(role="user", content=msg.content))
+                    trajectory.append(trajectory_entry)
+                    
                 elif msg_class == "AIMessage":
                     if msg.content:
                         final_content = msg.content
@@ -216,12 +226,19 @@ class LangGraphReActAgent(AgentInterface):
 
                     # Capture tool call arguments from AIMessage (proper tool calling)
                     if hasattr(msg, "tool_calls") and msg.tool_calls:
+                        trajectory_entry["tool_calls"] = []
                         for tc in msg.tool_calls:
                             tc_id = tc.get("id", "") or tc.get("tool_call_id", "")
                             tool_call_args[tc_id] = {
                                 "name": tc.get("name", "unknown"),
                                 "args": tc.get("args", {}),
                             }
+                            trajectory_entry["tool_calls"].append({
+                                "id": tc_id,
+                                "name": tc.get("name", "unknown"),
+                                "args": tc.get("args", {}),
+                            })
+                    trajectory.append(trajectory_entry)
 
                 elif msg_class == "ToolMessage":
                     tool_call_id = getattr(msg, "tool_call_id", "")
@@ -232,6 +249,10 @@ class LangGraphReActAgent(AgentInterface):
                         "arguments": tool_info.get("args", {}),
                         "result": msg.content,
                     })
+                    trajectory_entry["tool_name"] = tool_name
+                    trajectory_entry["tool_call_id"] = tool_call_id
+                    trajectory_entry["result"] = msg.content
+                    trajectory.append(trajectory_entry)
 
         # FALLBACK: If no tool calls captured but final_content looks like a JSON tool call,
         # manually parse and execute it (for models that output tool calls as text)
@@ -269,6 +290,7 @@ class LangGraphReActAgent(AgentInterface):
             tool_calls=tool_calls,
             messages=response_messages,
             metadata={"model": self.model, "provider": self.provider},
+            trajectory=trajectory,
         )
 
 

@@ -56,7 +56,7 @@ from agent_interface import AgentInterface, AgentResponse, create_agent
 
 # Task configurations - maps task_id to input directory path
 TASK_PATHS = {
-    2: os.environ.get("TASK_2_DIR", "/Users/anu/Documents/GitHub/routing/EnterpriseBenchmark/train/input/input"),
+    2: os.environ.get("TASK_2_DIR", "/Users/anu/Documents/GitHub/routing/EnterpriseBenchmark/train/input/"),
 }
 
 @dataclass
@@ -98,6 +98,7 @@ class BenchmarkResult:
     query: str
     answer: str = ""
     tool_calls: List[Dict] = field(default_factory=list)
+    trajectory: List[Dict] = field(default_factory=list)  # Agent trajectory
     status: str = "pending"
     error: str = ""
     duration_s: float = 0.0
@@ -124,6 +125,7 @@ def save_results(results: List[BenchmarkResult], output_path: Path):
             "query": r.query,
             "answer": r.answer,
             "tool_calls": r.tool_calls,
+            "trajectory": r.trajectory,  # Include trajectory
             "status": r.status,
             "error": r.error,
             "duration_s": r.duration_s,
@@ -365,6 +367,7 @@ async def process_domain(
                 "query": query,
                 "answer": response.content,
                 "tool_calls": response.tool_calls,
+                "trajectory": response.trajectory,
             }
         else:
             # Just list tools
@@ -420,6 +423,7 @@ async def run_benchmark_item(
         )
         result.answer = response.content
         result.tool_calls = response.tool_calls
+        result.trajectory = response.trajectory
         result.status = "success"
     except Exception as e:
         result.status = "error"
@@ -495,19 +499,34 @@ async def run_benchmark_for_domain(
                         )
                         result.answer = response.content
                         result.tool_calls = response.tool_calls
+                        result.trajectory = response.trajectory
                         result.status = "success"
                         elapsed = time.perf_counter() - start_time
-                        print(f"    Status: success | Tools: {len(result.tool_calls)} | Time: {elapsed:.2f}s")
+                        print(f"    Status: success | Tools: {len(result.tool_calls)} | Trajectory steps: {len(result.trajectory)} | Time: {elapsed:.2f}s")
                         # Log the answer
                         answer_preview = result.answer[:200] if result.answer else "(empty)"
                         print(f"    Answer: {answer_preview}{'...' if len(result.answer) > 200 else ''}")
-                        # Log tool calls if any
-                        if result.tool_calls:
-                            print(f"    Tool calls:")
-                            for tc in result.tool_calls:
-                                print(f"      - {tc.get('tool_name', 'unknown')}: {tc.get('arguments', {})}")
-                                tc_result = str(tc.get('result', ''))[:100]
-                                print(f"        Result: {tc_result}{'...' if len(str(tc.get('result', ''))) > 100 else ''}")
+                        # Log trajectory summary
+                        if result.trajectory:
+                            print(f"    Trajectory ({len(result.trajectory)} steps):")
+                            for i, step in enumerate(result.trajectory):
+                                step_type = step.get('type', 'unknown')
+                                if step_type == 'HumanMessage':
+                                    content_preview = step.get('content', '')[:80]
+                                    print(f"      [{i+1}] User: {content_preview}{'...' if len(step.get('content', '')) > 80 else ''}")
+                                elif step_type == 'AIMessage':
+                                    content_preview = step.get('content', '')[:80]
+                                    tool_calls = step.get('tool_calls', [])
+                                    if tool_calls:
+                                        print(f"      [{i+1}] AI: Calling {len(tool_calls)} tool(s)")
+                                        for tc in tool_calls:
+                                            print(f"          - {tc.get('name', 'unknown')}({tc.get('args', {})})")
+                                    else:
+                                        print(f"      [{i+1}] AI: {content_preview}{'...' if len(step.get('content', '')) > 80 else ''}")
+                                elif step_type == 'ToolMessage':
+                                    tool_name = step.get('tool_name', 'unknown')
+                                    result_preview = str(step.get('result', ''))[:80]
+                                    print(f"      [{i+1}] Tool ({tool_name}): {result_preview}{'...' if len(str(step.get('result', ''))) > 80 else ''}")
                     except asyncio.TimeoutError:
                         result.status = "error"
                         result.error = f"Agent timed out after {AGENT_TIMEOUT_SECONDS} seconds"
