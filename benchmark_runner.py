@@ -601,7 +601,7 @@ async def run_task(
 
     # Process each domain file
     all_results: List[BenchmarkResult] = []
-
+    print("jsn files", json_files)
     for json_file in json_files:
         domain = json_file.stem  # Extract domain from filename (e.g., "address" from "address.json")
 
