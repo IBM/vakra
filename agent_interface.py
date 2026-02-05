@@ -54,6 +54,7 @@ class AgentResponse:
     tool_calls: List[dict] = field(default_factory=list)
     messages: List[Message] = field(default_factory=list)
     metadata: dict = field(default_factory=dict)
+    trajectory: List[dict] = field(default_factory=list)  # Full agent trajectory
 
 
 class AgentInterface(ABC):
@@ -87,6 +88,8 @@ class LangGraphReActAgent(AgentInterface):
         temperature: float = 0,
         api_key: str | None = None,
         provider: str = "ollama",
+        project_id: str | None = None,
+        space_id: str | None = None,
     ):
         """
         Initialize the LangGraph ReAct agent.
@@ -95,12 +98,16 @@ class LangGraphReActAgent(AgentInterface):
             model: Model name to use
             temperature: Temperature for generation
             api_key: API key (defaults to env var based on provider)
-            provider: "anthropic", "openai", or "ollama"
+            provider: "anthropic", "openai", "ollama", or "watsonx"
+            project_id: watsonx.ai project ID (required for watsonx provider)
+            space_id: watsonx.ai space ID (optional, alternative to project_id)
         """
         self.model = model
         self.temperature = temperature
         self.provider = provider
         self.api_key = api_key
+        self.project_id = project_id
+        self.space_id = space_id
         self._llm = None
 
     def _get_llm(self):
@@ -129,6 +136,37 @@ class LangGraphReActAgent(AgentInterface):
                 temperature=self.temperature,
                 num_ctx=65536,
             )
+        elif self.provider == "watsonx":
+            from langchain_ibm import ChatWatsonx
+            
+            # Get credentials from environment or parameters
+            api_key = self.api_key or os.getenv("WATSONX_APIKEY")
+            project_id = self.project_id or os.getenv("WATSONX_PROJECT_ID")
+            space_id = self.space_id or os.getenv("WATSONX_SPACE_ID")
+            url = os.getenv("WATSONX_URL", "https://us-south.ml.cloud.ibm.com")
+            
+            if not api_key:
+                raise ValueError("watsonx.ai API key is required. Set WATSONX_APIKEY environment variable or pass api_key parameter.")
+            
+            if not project_id and not space_id:
+                raise ValueError("Either project_id or space_id is required for watsonx.ai. Set WATSONX_PROJECT_ID or WATSONX_SPACE_ID environment variable.")
+            
+            params = {
+                "model_id": self.model,
+                "url": url,
+                "apikey": api_key,
+                "params": {
+                    "temperature": self.temperature,
+                    "max_new_tokens": 4096,
+                }
+            }
+            
+            if project_id:
+                params["project_id"] = project_id
+            elif space_id:
+                params["space_id"] = space_id
+            
+            self._llm = ChatWatsonx(**params)
         else:
             raise ValueError(f"Unknown provider: {self.provider}")
 
@@ -199,6 +237,7 @@ class LangGraphReActAgent(AgentInterface):
         response_messages = []
         tool_calls = []
         final_content = ""
+        trajectory = []  # Capture full trajectory
 
         # Track tool calls with their arguments
         tool_call_args = {}  # Map tool_call_id to args
@@ -207,8 +246,16 @@ class LangGraphReActAgent(AgentInterface):
             for msg in result["messages"]:
                 msg_class = msg.__class__.__name__
 
+                # Build trajectory entry for each message
+                trajectory_entry = {
+                    "type": msg_class,
+                    "content": getattr(msg, "content", ""),
+                }
+
                 if msg_class == "HumanMessage":
                     response_messages.append(Message(role="user", content=msg.content))
+                    trajectory.append(trajectory_entry)
+                    
                 elif msg_class == "AIMessage":
                     if msg.content:
                         final_content = msg.content
@@ -216,12 +263,19 @@ class LangGraphReActAgent(AgentInterface):
 
                     # Capture tool call arguments from AIMessage (proper tool calling)
                     if hasattr(msg, "tool_calls") and msg.tool_calls:
+                        trajectory_entry["tool_calls"] = []
                         for tc in msg.tool_calls:
                             tc_id = tc.get("id", "") or tc.get("tool_call_id", "")
                             tool_call_args[tc_id] = {
                                 "name": tc.get("name", "unknown"),
                                 "args": tc.get("args", {}),
                             }
+                            trajectory_entry["tool_calls"].append({
+                                "id": tc_id,
+                                "name": tc.get("name", "unknown"),
+                                "args": tc.get("args", {}),
+                            })
+                    trajectory.append(trajectory_entry)
 
                 elif msg_class == "ToolMessage":
                     tool_call_id = getattr(msg, "tool_call_id", "")
@@ -232,6 +286,10 @@ class LangGraphReActAgent(AgentInterface):
                         "arguments": tool_info.get("args", {}),
                         "result": msg.content,
                     })
+                    trajectory_entry["tool_name"] = tool_name
+                    trajectory_entry["tool_call_id"] = tool_call_id
+                    trajectory_entry["result"] = msg.content
+                    trajectory.append(trajectory_entry)
 
         # FALLBACK: If no tool calls captured but final_content looks like a JSON tool call,
         # manually parse and execute it (for models that output tool calls as text)
@@ -269,6 +327,7 @@ class LangGraphReActAgent(AgentInterface):
             tool_calls=tool_calls,
             messages=response_messages,
             metadata={"model": self.model, "provider": self.provider},
+            trajectory=trajectory,
         )
 
 
@@ -281,9 +340,10 @@ def create_agent(
     Factory function to create an agent.
 
     Args:
-        provider: "anthropic", "openai", or "ollama"
+        provider: "anthropic", "openai", "ollama", or "watsonx"
         model: Model name (defaults based on provider)
         **kwargs: Additional arguments passed to agent constructor
+                  For watsonx: project_id or space_id, api_key
 
     Returns:
         AgentInterface implementation
@@ -292,6 +352,7 @@ def create_agent(
         "anthropic": "claude-3-5-sonnet-20241022",
         "openai": "gpt-4.1",
         "ollama": "llama3.1:8b",
+        "watsonx": "openai/gpt-oss-120b",
     }
 
     model = model or default_models.get(provider, "claude-3-5-sonnet-20241022")

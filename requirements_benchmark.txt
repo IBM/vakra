@@ -75,3 +75,4 @@ langchain-ollama>=0.2.0
 #   python benchmark_runner.py --task_id 2 --run-agent
 #   python benchmark_runner.py --task_id 2 --run-agent --provider anthropic
 #   python benchmark_runner.py --task_id 2 --run-agent --domain hockey
+langchain-ibm

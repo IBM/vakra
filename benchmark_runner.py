@@ -56,7 +56,7 @@ from agent_interface import AgentInterface, AgentResponse, create_agent
 
 # Task configurations - maps task_id to input directory path
 TASK_PATHS = {
-    2: os.environ.get("TASK_2_DIR", "/Users/anu/Documents/GitHub/routing/EnterpriseBenchmark/train/input/input"),
+    2: os.environ.get("TASK_2_DIR", "/Users/anu/Documents/GitHub/routing/EnterpriseBenchmark/train/input/"),
 }
 
 @dataclass
@@ -98,6 +98,7 @@ class BenchmarkResult:
     query: str
     answer: str = ""
     tool_calls: List[Dict] = field(default_factory=list)
+    trajectory: List[Dict] = field(default_factory=list)  # Agent trajectory
     status: str = "pending"
     error: str = ""
     duration_s: float = 0.0
@@ -124,6 +125,7 @@ def save_results(results: List[BenchmarkResult], output_path: Path):
             "query": r.query,
             "answer": r.answer,
             "tool_calls": r.tool_calls,
+            "trajectory": r.trajectory,  # Include trajectory
             "status": r.status,
             "error": r.error,
             "duration_s": r.duration_s,
@@ -155,11 +157,31 @@ def save_results_by_domain(results: List[BenchmarkResult], output_dir: Path):
 AGENT_TIMEOUT_SECONDS = 120
 
 
-
-
 # Default settings
 DEFAULT_CONTAINER_NAME = "fastapi-mcp-server"
 DEFAULT_CONTAINER_RUNTIME = "podman"
+
+
+def detect_container_runtime() -> str:
+    """
+    Detect available container runtime (podman or docker).
+    Returns 'podman' if available, otherwise 'docker'.
+    """
+    import shutil
+    
+    # Check if podman is available
+    if shutil.which("podman"):
+        return "podman"
+    
+    # Fall back to docker
+    if shutil.which("docker"):
+        print("  Note: podman not found, using docker instead")
+        return "docker"
+    
+    # Neither found
+    raise RuntimeError("Neither podman nor docker found in PATH. Please install one of them.")
+
+
 
 
 def stop_mcp_server(container_runtime: str, container_name: str):
@@ -273,6 +295,51 @@ async def connect_and_list_tools(domain: str, container_runtime: str, container_
     return tool_names
 
 
+async def connect_and_get_tools_detailed(domain: str, container_runtime: str, container_name: str) -> List[Dict[str, Any]]:
+    """Connect to MCP server and get detailed tool information including parameters."""
+    exec_args = [
+        "exec", "-i",
+        "-e", f"MCP_DOMAINS={domain}",
+        container_name,
+        "python", "mcp_server.py"
+    ]
+    print(f"  Starting: {container_runtime} {' '.join(exec_args)}")
+
+    server_params = StdioServerParameters(
+        command=container_runtime,
+        args=exec_args,
+        env=None,
+    )
+
+    tools_detailed = []
+
+    try:
+        async with stdio_client(server_params) as (read, write):
+            async with ClientSession(read, write) as session:
+                await session.initialize()
+                response = await session.list_tools()
+                
+                for tool in response.tools:
+                    tool_info = {
+                        "name": tool.name,
+                        "description": tool.description or "",
+                        "inputSchema": tool.inputSchema if hasattr(tool, 'inputSchema') else {}
+                    }
+                    tools_detailed.append(tool_info)
+        
+        print("  Server stopped.")
+    except ExceptionGroup as eg:
+        print(f"  Warning: Cleanup error (ignored): {eg}")
+    except Exception as e:
+        if "TaskGroup" in str(type(e).__name__) or "TaskGroup" in str(e):
+            print(f"  Warning: Cleanup error (ignored): {e}")
+        else:
+            stop_mcp_server(container_runtime, container_name)
+            raise
+
+    return tools_detailed
+
+
 async def run_agent_with_query(
     domain: str,
     query: str,
@@ -365,6 +432,7 @@ async def process_domain(
                 "query": query,
                 "answer": response.content,
                 "tool_calls": response.tool_calls,
+                "trajectory": response.trajectory,
             }
         else:
             # Just list tools
@@ -420,6 +488,7 @@ async def run_benchmark_item(
         )
         result.answer = response.content
         result.tool_calls = response.tool_calls
+        result.trajectory = response.trajectory
         result.status = "success"
     except Exception as e:
         result.status = "error"
@@ -495,19 +564,34 @@ async def run_benchmark_for_domain(
                         )
                         result.answer = response.content
                         result.tool_calls = response.tool_calls
+                        result.trajectory = response.trajectory
                         result.status = "success"
                         elapsed = time.perf_counter() - start_time
-                        print(f"    Status: success | Tools: {len(result.tool_calls)} | Time: {elapsed:.2f}s")
+                        print(f"    Status: success | Tools: {len(result.tool_calls)} | Trajectory steps: {len(result.trajectory)} | Time: {elapsed:.2f}s")
                         # Log the answer
                         answer_preview = result.answer[:200] if result.answer else "(empty)"
                         print(f"    Answer: {answer_preview}{'...' if len(result.answer) > 200 else ''}")
-                        # Log tool calls if any
-                        if result.tool_calls:
-                            print(f"    Tool calls:")
-                            for tc in result.tool_calls:
-                                print(f"      - {tc.get('tool_name', 'unknown')}: {tc.get('arguments', {})}")
-                                tc_result = str(tc.get('result', ''))[:100]
-                                print(f"        Result: {tc_result}{'...' if len(str(tc.get('result', ''))) > 100 else ''}")
+                        # Log trajectory summary
+                        if result.trajectory:
+                            print(f"    Trajectory ({len(result.trajectory)} steps):")
+                            for i, step in enumerate(result.trajectory):
+                                step_type = step.get('type', 'unknown')
+                                if step_type == 'HumanMessage':
+                                    content_preview = step.get('content', '')[:80]
+                                    print(f"      [{i+1}] User: {content_preview}{'...' if len(step.get('content', '')) > 80 else ''}")
+                                elif step_type == 'AIMessage':
+                                    content_preview = step.get('content', '')[:80]
+                                    tool_calls = step.get('tool_calls', [])
+                                    if tool_calls:
+                                        print(f"      [{i+1}] AI: Calling {len(tool_calls)} tool(s)")
+                                        for tc in tool_calls:
+                                            print(f"          - {tc.get('name', 'unknown')}({tc.get('args', {})})")
+                                    else:
+                                        print(f"      [{i+1}] AI: {content_preview}{'...' if len(step.get('content', '')) > 80 else ''}")
+                                elif step_type == 'ToolMessage':
+                                    tool_name = step.get('tool_name', 'unknown')
+                                    result_preview = str(step.get('result', ''))[:80]
+                                    print(f"      [{i+1}] Tool ({tool_name}): {result_preview}{'...' if len(str(step.get('result', ''))) > 80 else ''}")
                     except asyncio.TimeoutError:
                         result.status = "error"
                         result.error = f"Agent timed out after {AGENT_TIMEOUT_SECONDS} seconds"
@@ -594,7 +678,15 @@ async def run_task(
         return results
 
     # Create agent once for all domains
-    agent = create_agent(provider=provider, model=model)
+    agent_kwargs = {}
+    if provider == "watsonx":
+        # Pass watsonx-specific parameters from environment or command line
+        import os
+        agent_kwargs["project_id"] = os.getenv("WATSONX_PROJECT_ID")
+        agent_kwargs["space_id"] = os.getenv("WATSONX_SPACE_ID")
+        agent_kwargs["api_key"] = os.getenv("WATSONX_APIKEY")
+    
+    agent = create_agent(provider=provider, model=model, **agent_kwargs)
     print(f"Agent: {provider} / {model or 'default'}")
     if max_samples_per_domain:
         print(f"Max samples per domain: {max_samples_per_domain}")
@@ -637,52 +729,149 @@ async def run_task(
     print(f"  Successful: {len(successful)}")
     print(f"  Failed: {len(failed)}")
 
-    if successful:
-        total_time = sum(r.duration_s for r in successful)
-        avg_time = total_time / len(successful)
-        print(f"  Total time: {total_time:.2f}s")
-        print(f"  Avg time per item: {avg_time:.2f}s")
+async def list_tools_for_domains(
+    task_id: int,
+    container_runtime: str,
+    container_name: str,
+    domains: Optional[List[str]] = None,
+):
+    """List all available tools for specified domains using MCP protocol with detailed parameters."""
+    
+    print(f"Task ID: {task_id}")
+    print(f"Container runtime: {container_runtime}")
+    print(f"Container name: {container_name}\n")
 
-    if failed:
-        print(f"\n  Failed items:")
-        for r in failed[:10]:  # Show first 10 failures
-            print(f"    - [{r.domain}] {r.query[:50]}...: {r.error[:50]}")
-        if len(failed) > 10:
-            print(f"    ... and {len(failed) - 10} more")
-
-    # Save results to timestamped directory with domain-specific files
-    if output_file:
-        # Use specified output file (single file mode)
-        save_results(results, Path(output_file))
+    # If domains are specified, use them directly
+    # Otherwise, try to discover from JSON files in task directory
+    domains_to_process = []
+    
+    if domains:
+        # Use specified domains directly
+        domains_to_process = domains
+        print(f"Listing tools for {len(domains)} specified domain(s): {domains}")
     else:
-        # Create human-readable timestamped directory with model name
-        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        # Sanitize model name for directory (replace special chars)
-        model_name = (model or "default").replace(":", "_").replace("/", "_")
-        output_dir = Path(f"benchmark_output_{timestamp}_{model_name}")
-        output_dir.mkdir(parents=True, exist_ok=True)
+        # Try to discover domains from task directory
+        if task_id in TASK_PATHS:
+            input_path = Path(TASK_PATHS[task_id])
+            if input_path.exists():
+                json_files = sorted(input_path.glob("*.json"))
+                if json_files:
+                    domains_to_process = [f.stem for f in json_files]
+                    print(f"Discovered {len(domains_to_process)} domains from task directory")
+        
+        if not domains_to_process:
+            print("Error: No domains specified and could not discover from task directory")
+            print("Please specify domains using --domain flag")
+            sys.exit(1)
 
-        # Save domain-specific output files (e.g., address_benchmark_output.json)
-        save_results_by_domain(results, output_dir)
+    # Collect all tools for OpenAPI spec
+    all_tools_by_domain = {}
 
-        # Also save a combined summary file
-        summary_file = output_dir / "summary.json"
-        summary = {
-            "task_id": task_id,
-            "timestamp": timestamp,
-            "provider": provider,
-            "model": model or "default",
-            "total_items": len(results),
-            "successful": len(successful),
-            "failed": len(failed),
-            "total_time_s": sum(r.duration_s for r in results),
-            "domains": list(set(r.domain for r in results)),
+    # Process each domain
+    for domain in domains_to_process:
+        
+        print(f"\n{'='*60}")
+        print(f"Domain: {domain}")
+        print(f"{'='*60}")
+        
+        try:
+            tools_detailed = await connect_and_get_tools_detailed(domain, container_runtime, container_name)
+            print(f"  Total tools: {len(tools_detailed)}\n")
+            
+            all_tools_by_domain[domain] = tools_detailed
+            
+            for i, tool in enumerate(tools_detailed, 1):
+                print(f"  {i:3d}. {tool['name']}")
+                if tool['description']:
+                    print(f"       Description: {tool['description'][:100]}{'...' if len(tool['description']) > 100 else ''}")
+                
+                # Show parameters
+                input_schema = tool.get('inputSchema', {})
+                properties = input_schema.get('properties', {})
+                required = input_schema.get('required', [])
+                
+                if properties:
+                    print(f"       Parameters:")
+                    for param_name, param_info in properties.items():
+                        param_type = param_info.get('type', 'unknown')
+                        param_desc = param_info.get('description', '')
+                        required_marker = " (required)" if param_name in required else ""
+                        print(f"         - {param_name}: {param_type}{required_marker}")
+                        if param_desc:
+                            print(f"           {param_desc[:80]}{'...' if len(param_desc) > 80 else ''}")
+                print()
+                
+        except Exception as e:
+            print(f"  ERROR: {e}")
+
+    # Save as OpenAPI-like spec
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    
+    # Include domain names in filename if specified
+    if domains and len(domains) <= 3:
+        # For 1-3 domains, include them in the filename
+        domain_str = "_".join(domains)
+        output_file = Path(f"tools_spec_{domain_str}_{timestamp}.json")
+    elif domains and len(domains) > 3:
+        # For more than 3 domains, just indicate "multiple"
+        output_file = Path(f"tools_spec_multiple_domains_{timestamp}.json")
+    else:
+        # No specific domains (all domains)
+        output_file = Path(f"tools_spec_all_{timestamp}.json")
+    
+    openapi_spec = {
+        "openapi": "3.0.0",
+        "info": {
+            "title": "MCP Tools Specification",
+            "version": "1.0.0",
+            "description": f"Tools available for task {task_id}"
+        },
+        "paths": {},
+        "components": {
+            "schemas": {}
         }
-        with open(summary_file, "w") as f:
-            json.dump(summary, f, indent=2)
-        print(f"  Summary saved to: {summary_file}")
-
-    return results
+    }
+    
+    # Convert tools to OpenAPI paths
+    for domain, tools in all_tools_by_domain.items():
+        for tool in tools:
+            path = f"/v1/{domain}/{tool['name']}"
+            openapi_spec["paths"][path] = {
+                "get": {
+                    "summary": tool['description'],
+                    "operationId": tool['name'],
+                    "parameters": [],
+                    "responses": {
+                        "200": {
+                            "description": "Successful response"
+                        }
+                    }
+                }
+            }
+            
+            # Add parameters
+            input_schema = tool.get('inputSchema', {})
+            properties = input_schema.get('properties', {})
+            required = input_schema.get('required', [])
+            
+            for param_name, param_info in properties.items():
+                openapi_spec["paths"][path]["get"]["parameters"].append({
+                    "name": param_name,
+                    "in": "query",
+                    "required": param_name in required,
+                    "schema": {
+                        "type": param_info.get('type', 'string'),
+                        "description": param_info.get('description', '')
+                    }
+                })
+    
+    with open(output_file, 'w') as f:
+        json.dump(openapi_spec, f, indent=2)
+    
+    print(f"\n{'='*60}")
+    print("Tool listing complete")
+    print(f"{'='*60}")
+    print(f"OpenAPI specification saved to: {output_file}")
 
 
 def main():
@@ -691,8 +880,8 @@ def main():
     parser.add_argument(
         "--container-runtime",
         type=str,
-        default=DEFAULT_CONTAINER_RUNTIME,
-        help=f"Container runtime to use (default: {DEFAULT_CONTAINER_RUNTIME})"
+        default=None,
+        help=f"Container runtime to use (default: auto-detect, prefers podman over docker)"
     )
     parser.add_argument(
         "--container-name",
@@ -713,6 +902,11 @@ def main():
         help="Run the agent on benchmark queries (default: just list tools)"
     )
     parser.add_argument(
+        "--list-tools",
+        action="store_true",
+        help="List available tools for the specified domain(s) and exit"
+    )
+    parser.add_argument(
         "--max-samples-per-domain",
         type=int,
         default=None,
@@ -728,7 +922,7 @@ def main():
         "--provider",
         type=str,
         default="ollama",
-        choices=["anthropic", "openai", "ollama"],
+        choices=["anthropic", "openai", "ollama", "watsonx"],
         help="LLM provider to use (default: ollama)"
     )
     parser.add_argument(
@@ -737,16 +931,60 @@ def main():
         default=None,
         help="Model name (default: provider-specific default)"
     )
+    parser.add_argument(
+        "--watsonx-project-id",
+        type=str,
+        default=None,
+        help="watsonx.ai project ID (required for watsonx provider, or set WATSONX_PROJECT_ID env var)"
+    )
+    parser.add_argument(
+        "--watsonx-space-id",
+        type=str,
+        default=None,
+        help="watsonx.ai space ID (alternative to project-id, or set WATSONX_SPACE_ID env var)"
+    )
+    parser.add_argument(
+        "--watsonx-api-key",
+        type=str,
+        default=None,
+        help="watsonx.ai API key (or set WATSONX_APIKEY env var)"
+    )
 
     args = parser.parse_args()
+
+    # Auto-detect container runtime if not specified
+    container_runtime = args.container_runtime
+    if not container_runtime:
+        container_runtime = detect_container_runtime()
+        print(f"Auto-detected container runtime: {container_runtime}")
+
+    # Set watsonx environment variables if provided via command line
+    if args.provider == "watsonx":
+        import os
+        if args.watsonx_project_id:
+            os.environ["WATSONX_PROJECT_ID"] = args.watsonx_project_id
+        if args.watsonx_space_id:
+            os.environ["WATSONX_SPACE_ID"] = args.watsonx_space_id
+        if args.watsonx_api_key:
+            os.environ["WATSONX_APIKEY"] = args.watsonx_api_key
 
     print("="*60)
     print("Benchmark Runner")
     print("="*60)
 
+    # Handle --list-tools mode
+    if args.list_tools:
+        asyncio.run(list_tools_for_domains(
+            task_id=args.task_id,
+            container_runtime=container_runtime,
+            container_name=args.container_name,
+            domains=args.domain,
+        ))
+        return
+
     asyncio.run(run_task(
         task_id=args.task_id,
-        container_runtime=args.container_runtime,
+        container_runtime=container_runtime,
         container_name=args.container_name,
         run_agent=args.run_agent,
         provider=args.provider,
