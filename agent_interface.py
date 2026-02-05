@@ -88,6 +88,8 @@ class LangGraphReActAgent(AgentInterface):
         temperature: float = 0,
         api_key: str | None = None,
         provider: str = "ollama",
+        project_id: str | None = None,
+        space_id: str | None = None,
     ):
         """
         Initialize the LangGraph ReAct agent.
@@ -96,12 +98,16 @@ class LangGraphReActAgent(AgentInterface):
             model: Model name to use
             temperature: Temperature for generation
             api_key: API key (defaults to env var based on provider)
-            provider: "anthropic", "openai", or "ollama"
+            provider: "anthropic", "openai", "ollama", or "watsonx"
+            project_id: watsonx.ai project ID (required for watsonx provider)
+            space_id: watsonx.ai space ID (optional, alternative to project_id)
         """
         self.model = model
         self.temperature = temperature
         self.provider = provider
         self.api_key = api_key
+        self.project_id = project_id
+        self.space_id = space_id
         self._llm = None
 
     def _get_llm(self):
@@ -130,6 +136,37 @@ class LangGraphReActAgent(AgentInterface):
                 temperature=self.temperature,
                 num_ctx=65536,
             )
+        elif self.provider == "watsonx":
+            from langchain_ibm import ChatWatsonx
+            
+            # Get credentials from environment or parameters
+            api_key = self.api_key or os.getenv("WATSONX_APIKEY")
+            project_id = self.project_id or os.getenv("WATSONX_PROJECT_ID")
+            space_id = self.space_id or os.getenv("WATSONX_SPACE_ID")
+            url = os.getenv("WATSONX_URL", "https://us-south.ml.cloud.ibm.com")
+            
+            if not api_key:
+                raise ValueError("watsonx.ai API key is required. Set WATSONX_APIKEY environment variable or pass api_key parameter.")
+            
+            if not project_id and not space_id:
+                raise ValueError("Either project_id or space_id is required for watsonx.ai. Set WATSONX_PROJECT_ID or WATSONX_SPACE_ID environment variable.")
+            
+            params = {
+                "model_id": self.model,
+                "url": url,
+                "apikey": api_key,
+                "params": {
+                    "temperature": self.temperature,
+                    "max_new_tokens": 4096,
+                }
+            }
+            
+            if project_id:
+                params["project_id"] = project_id
+            elif space_id:
+                params["space_id"] = space_id
+            
+            self._llm = ChatWatsonx(**params)
         else:
             raise ValueError(f"Unknown provider: {self.provider}")
 
@@ -303,9 +340,10 @@ def create_agent(
     Factory function to create an agent.
 
     Args:
-        provider: "anthropic", "openai", or "ollama"
+        provider: "anthropic", "openai", "ollama", or "watsonx"
         model: Model name (defaults based on provider)
         **kwargs: Additional arguments passed to agent constructor
+                  For watsonx: project_id or space_id, api_key
 
     Returns:
         AgentInterface implementation
@@ -314,6 +352,7 @@ def create_agent(
         "anthropic": "claude-3-5-sonnet-20241022",
         "openai": "gpt-4.1",
         "ollama": "llama3.1:8b",
+        "watsonx": "openai/gpt-oss-120b",
     }
 
     model = model or default_models.get(provider, "claude-3-5-sonnet-20241022")

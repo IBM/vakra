@@ -613,7 +613,15 @@ async def run_task(
         return results
 
     # Create agent once for all domains
-    agent = create_agent(provider=provider, model=model)
+    agent_kwargs = {}
+    if provider == "watsonx":
+        # Pass watsonx-specific parameters from environment or command line
+        import os
+        agent_kwargs["project_id"] = os.getenv("WATSONX_PROJECT_ID")
+        agent_kwargs["space_id"] = os.getenv("WATSONX_SPACE_ID")
+        agent_kwargs["api_key"] = os.getenv("WATSONX_APIKEY")
+    
+    agent = create_agent(provider=provider, model=model, **agent_kwargs)
     print(f"Agent: {provider} / {model or 'default'}")
     if max_samples_per_domain:
         print(f"Max samples per domain: {max_samples_per_domain}")
@@ -747,7 +755,7 @@ def main():
         "--provider",
         type=str,
         default="ollama",
-        choices=["anthropic", "openai", "ollama"],
+        choices=["anthropic", "openai", "ollama", "watsonx"],
         help="LLM provider to use (default: ollama)"
     )
     parser.add_argument(
@@ -756,8 +764,36 @@ def main():
         default=None,
         help="Model name (default: provider-specific default)"
     )
+    parser.add_argument(
+        "--watsonx-project-id",
+        type=str,
+        default=None,
+        help="watsonx.ai project ID (required for watsonx provider, or set WATSONX_PROJECT_ID env var)"
+    )
+    parser.add_argument(
+        "--watsonx-space-id",
+        type=str,
+        default=None,
+        help="watsonx.ai space ID (alternative to project-id, or set WATSONX_SPACE_ID env var)"
+    )
+    parser.add_argument(
+        "--watsonx-api-key",
+        type=str,
+        default=None,
+        help="watsonx.ai API key (or set WATSONX_APIKEY env var)"
+    )
 
     args = parser.parse_args()
+
+    # Set watsonx environment variables if provided via command line
+    if args.provider == "watsonx":
+        import os
+        if args.watsonx_project_id:
+            os.environ["WATSONX_PROJECT_ID"] = args.watsonx_project_id
+        if args.watsonx_space_id:
+            os.environ["WATSONX_SPACE_ID"] = args.watsonx_space_id
+        if args.watsonx_api_key:
+            os.environ["WATSONX_APIKEY"] = args.watsonx_api_key
 
     print("="*60)
     print("Benchmark Runner")
