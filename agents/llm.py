@@ -12,51 +12,94 @@ from langchain_core.outputs.chat_generation import ChatGeneration
 import httpx
 from typing import Any, Sequence, Dict, Callable, Union
 
-from pydantic import Field
+from pydantic import Field, create_model
 
+# Import unified MCPToolWrapper factory (for ClientSession-based usage)
+from agents.mcp_tool_wrapper import MCPToolWrapper as MCPToolFactory
+
+# Keep old single-tool wrapper for backward compatibility with examples/demo.py
 class MCPToolWrapper(BaseTool):
-    """Wraps an MCPTool to make it compatible with LangChain ChatModels."""
+    """Wraps an individual MCP tool to make it compatible with LangChain ChatModels.
+
+    This is the legacy single-tool wrapper pattern for backward compatibility.
+    For new code, use MCPToolFactory which properly converts MCP ClientSession tools.
+    """
 
     name: str
     description: str
     _tool: Any = None
-    _fields: Dict[str, Any] = {}
+    args_schema: Any = Field(default=None)
 
-    def __init__(self, tool: Any, **kwargs):
-        mcp_schema = getattr(tool, "args_schema", {})
-        properties = mcp_schema.get("properties", {})
-        
-        # Initialize the tool
-        # set args_schema to None because args are handled manually
+    def __init__(self, tool, **kwargs):
+        # Extract schema from MCP tool if available (improved version)
+        schema = None
+        if hasattr(tool, "inputSchema"):
+            from typing import Optional
+            input_schema = tool.inputSchema
+
+            # Build Pydantic model from JSON Schema
+            if isinstance(input_schema, dict) and "properties" in input_schema:
+                fields = {}
+                properties = input_schema.get("properties", {})
+                required = input_schema.get("required", [])
+
+                for prop_name, prop_info in properties.items():
+                    # Map JSON Schema type to Python type
+                    if "anyOf" in prop_info:
+                        python_type = Any
+                    elif "enum" in prop_info:
+                        python_type = str
+                    elif "type" in prop_info:
+                        prop_type = prop_info.get("type")
+                        if isinstance(prop_type, list):
+                            python_type = Any
+                        else:
+                            type_map = {
+                                "string": str,
+                                "integer": int,
+                                "number": float,
+                                "boolean": bool,
+                                "array": list,
+                                "object": dict,
+                            }
+                            python_type = type_map.get(prop_type, Any)
+                    else:
+                        python_type = Any
+
+                    # Field description and enum values
+                    field_desc = prop_info.get("description", "")
+                    enum_values = prop_info.get("enum")
+                    if enum_values:
+                        field_desc = f"{field_desc} Allowed values: {', '.join(map(str, enum_values))}"
+
+                    # Required vs optional
+                    if prop_name in required:
+                        fields[prop_name] = (python_type, Field(..., description=field_desc))
+                    else:
+                        default = prop_info.get("default", None)
+                        fields[prop_name] = (Optional[python_type], Field(default=default, description=field_desc))
+
+                # Create dynamic model
+                if fields:
+                    schema = create_model(f"{tool.name}Input", **fields)
+
+        # Initialize with schema
         super().__init__(
-            name=tool.name,
-            description=tool.description,
-            args_schema=None, 
+            name=getattr(tool, "name", "unnamed_tool"),
+            description=getattr(tool, "description", "No description provided"),
+            args_schema=schema,
             **kwargs
         )
         self._tool = tool
-        self._fields = properties
-
-    @property
-    def args(self) -> dict:
-        """
-        Returns the parameters (data, key_name, etc.) directly.
-        Overrides defaulting to empty pydantics base.
-        Note: Removing this will lead to empty arguments for the tools.
-        """
-        return self._fields
 
     def _run(self, **kwargs):
-        # MCP tools expect a dict of arguments
         if hasattr(self._tool, "run"):
             return self._tool.run(kwargs)
-        # Fallback: try invoke
         if hasattr(self._tool, "invoke"):
             return self._tool.invoke(kwargs)
         raise NotImplementedError(f"Tool {self.name} has no run or invoke method")
 
     async def _arun(self, **kwargs):
-        # MCP tools expect a dict of arguments
         if hasattr(self._tool, "ainvoke"):
             return await self._tool.ainvoke(kwargs)
         elif hasattr(self._tool, "arun"):
@@ -66,8 +109,6 @@ class MCPToolWrapper(BaseTool):
         elif hasattr(self._tool, "invoke"):
             return self._tool.invoke(kwargs)
         raise NotImplementedError(f"Tool {self.name} has no async method")
-
-    # Remove to_openai_tool - let LangChain's convert_to_openai_tool handle it
 
 
 class RITSChatModel(BaseChatModel):

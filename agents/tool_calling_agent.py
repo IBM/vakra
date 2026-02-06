@@ -2,7 +2,7 @@ import json
 from typing import Any
 from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
 
-from agents.result_handle_manager import ResultHandleManager
+from agents.components.result_handle_manager import ResultHandleManager
 
 class ToolCallingAgent:
     """Agent that executes tool-calling loops with handle-based result management"""
