@@ -113,13 +113,13 @@ def load_config(
 
     # Environment variable overrides
     env_domain = os.environ.get("MCP_DOMAIN")
-    env_cache = os.environ.get("SLOT_FILLING_MCP_CACHE_DIR")
-    env_tables = os.environ.get("SLOT_FILLING_MCP_TABLES")
-    env_tool_universe_id = os.environ.get("SLOT_FILLING_MCP_TOOL_UNIVERSE_ID")
-    env_server_type = os.environ.get("SLOT_FILLING_MCP_SERVER_TYPE")
-    env_transport = os.environ.get("SLOT_FILLING_MCP_TRANSPORT")
-    env_host = os.environ.get("SLOT_FILLING_MCP_HOST")
-    env_port = os.environ.get("SLOT_FILLING_MCP_PORT")
+    env_cache = os.environ.get("MCP_CACHE_DIR")
+    env_tables = os.environ.get("MCP_TABLES")
+    env_tool_universe_id = os.environ.get("MCP_TOOL_UNIVERSE_ID")
+    env_server_type = os.environ.get("MCP_SERVER_TYPE")
+    env_transport = os.environ.get("MCP_TRANSPORT")
+    env_host = os.environ.get("MCP_HOST")
+    env_port = os.environ.get("MCP_PORT")
 
     # Debug logging
     import logging

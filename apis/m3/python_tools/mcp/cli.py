@@ -40,7 +40,7 @@ Examples:
   slot-filling-mcp --config ./slot-filling-mcp.json
 
   # Use environment variables
-  SLOT_FILLING_MCP_DATABASE=/path/to/db.sqlite slot-filling-mcp
+  MCP_DATABASE=/path/to/db.sqlite slot-filling-mcp
 
 Configuration priority (highest to lowest):
   1. Command line arguments
@@ -49,9 +49,9 @@ Configuration priority (highest to lowest):
   4. Default values
 
 Environment variables:
-  SLOT_FILLING_MCP_DATABASE  - Path to SQLite database
-  SLOT_FILLING_MCP_CACHE_DIR - Cache directory for IO operations
-  SLOT_FILLING_MCP_TABLES    - Comma-separated list of tables to load
+  MCP_DATABASE  - Path to SQLite database
+  MCP_CACHE_DIR - Cache directory for IO operations
+  MCP_TABLES    - Comma-separated list of tables to load
         """,
     )
 

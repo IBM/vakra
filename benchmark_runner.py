@@ -40,6 +40,8 @@ Output:
 import json
 import os
 import argparse
+from dotenv import load_dotenv
+load_dotenv()
 import asyncio
 import subprocess
 import sys

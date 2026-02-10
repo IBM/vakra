@@ -42,8 +42,8 @@ slot-filling-mcp --db /path/to/database.sqlite --verbose
 | Variable | Description |
 |----------|-------------|
 | `MCP_DOMAIN` | Database domain name (e.g., "superhero", "hockey") - constructs path as db/{domain}/{domain}.sqlite |
-| `SLOT_FILLING_MCP_CACHE_DIR` | Cache directory |
-| `SLOT_FILLING_MCP_TABLES` | Comma-separated table list |
+| `MCP_CACHE_DIR` | Cache directory |
+| `MCP_TABLES` | Comma-separated table list |
 
 ### Config File
 

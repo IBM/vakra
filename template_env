@@ -1,0 +1,101 @@
+# =============================================================================
+# enterprise-benchmark Environment Variables
+# =============================================================================
+# Copy this file to .env and fill in your actual values.
+# .env is already listed in .gitignore — never commit real credentials.
+# =============================================================================
+
+
+# =============================================================================
+# MCP Server - Python Tools (apis/m3/python_tools/mcp/)
+# =============================================================================
+
+# Database domain name. Builds path: db/{domain}/{domain}.sqlite
+# Examples: superhero, hockey, address, movie
+MCP_DOMAIN=superhero
+
+# Directory for caching intermediate data and I/O operations
+MCP_CACHE_DIR=./mcp_cache
+
+# Comma-separated list of tables to load (leave empty to load all tables)
+# MCP_TABLES=
+
+# Unique identifier for tracking different server instances
+# MCP_TOOL_UNIVERSE_ID=
+
+# Server mode: "slot_filling" (generic tools) or "selection" (domain-specific getters)
+MCP_SERVER_TYPE=slot_filling
+
+# Transport protocol: "stdio" (subprocess) or "websocket" (network)
+MCP_TRANSPORT=stdio
+
+# WebSocket server host (only used when MCP_TRANSPORT=websocket)
+MCP_HOST=127.0.0.1
+
+# WebSocket server port (only used when MCP_TRANSPORT=websocket)
+MCP_PORT=8000
+
+
+# =============================================================================
+# REST API MCP Wrapper (apis/m3/rest/)
+# =============================================================================
+
+# Base URL of the FastAPI REST API server
+FASTAPI_BASE_URL=http://localhost:8000
+
+# Name for the MCP server instance
+MCP_SERVER_NAME=fastapi-mcp-wrapper
+
+
+# =============================================================================
+# Container & Benchmark Runner (benchmark_runner.py)
+# =============================================================================
+
+# Path to the task 2 input directory containing benchmark JSON files
+TASK_2_DIR=./task_data/
+
+# Docker/Podman container name where the MCP server runs
+MCP_CONTAINER_NAME=fastapi-mcp-server
+
+# Container runtime to use: "docker" or "podman"
+CONTAINER_RUNTIME=docker
+
+
+# =============================================================================
+# LLM Providers
+# =============================================================================
+
+# --- IBM RITS (agents/llm.py) ---
+# API key for IBM RITS inference service (required for provider=openai via RITS)
+RITS_API_KEY=your-rits-api-key-here
+
+# --- Anthropic (agents/agent_interface.py, agents/langchain_agent_*.py) ---
+# API key for Anthropic Claude models
+ANTHROPIC_API_KEY=your-anthropic-api-key-here
+
+# --- OpenAI (agents/agent_interface.py, agents/langchain_agent_*.py) ---
+# API key for OpenAI models
+OPENAI_API_KEY=your-openai-api-key-here
+
+# --- Ollama (agents/langchain_agent_*.py) ---
+# Set to "true" to use a local Ollama instance instead of cloud providers
+# USE_OLLAMA=true
+
+# Ollama model name (used when USE_OLLAMA=true)
+OLLAMA_MODEL=llama3.1:8b
+
+# Set to "true" to skip Claude even when ANTHROPIC_API_KEY is set
+# SKIP_CLAUDE=true
+
+# --- IBM watsonx.ai (agents/agent_interface.py, benchmark_runner.py) ---
+# API key for IBM watsonx.ai
+WATSONX_APIKEY=your-watsonx-api-key-here
+
+# watsonx.ai project ID (use either PROJECT_ID or SPACE_ID, not both)
+WATSONX_PROJECT_ID=your-watsonx-project-id-here
+
+# watsonx.ai space ID (alternative to WATSONX_PROJECT_ID)
+# WATSONX_SPACE_ID=your-watsonx-space-id-here
+
+# watsonx.ai API endpoint URL
+WATSONX_URL=https://us-south.ml.cloud.ibm.com
