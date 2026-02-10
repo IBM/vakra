@@ -33,7 +33,7 @@ async def load_tools_for_domain(domain: str, container_name: str, container_runt
         command=container_runtime,
         args=[
             "exec", "-i",
-            "-e", f"MCP_DOMAINS={domain}",
+            "-e", f"MCP_DOMAIN={domain}",
             container_name,
             "python", "mcp_server.py",
         ],

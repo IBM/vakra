@@ -170,7 +170,7 @@ start_one() {
 
     FASTAPI_BASE_URL="$FASTAPI_BASE_URL" \
     MCP_SERVER_NAME="${domain}-mcp" \
-    MCP_DOMAINS="$domain" \
+    MCP_DOMAIN="$domain" \
     nohup python mcp_server.py > "$log_file" 2>&1 &
 
     local pid=$!

@@ -112,17 +112,31 @@ def load_config(
             config_data = json.load(f)
 
     # Environment variable overrides
-    env_db_path = os.environ.get("SLOT_FILLING_MCP_DATABASE")
-    env_cache = os.environ.get("SLOT_FILLING_MCP_CACHE_DIR")
-    env_tables = os.environ.get("SLOT_FILLING_MCP_TABLES")
-    env_tool_universe_id = os.environ.get("SLOT_FILLING_MCP_TOOL_UNIVERSE_ID")
-    env_server_type = os.environ.get("SLOT_FILLING_MCP_SERVER_TYPE")
-    env_transport = os.environ.get("SLOT_FILLING_MCP_TRANSPORT")
-    env_host = os.environ.get("SLOT_FILLING_MCP_HOST")
-    env_port = os.environ.get("SLOT_FILLING_MCP_PORT")
+    env_domain = os.environ.get("MCP_DOMAIN")
+    env_cache = os.environ.get("MCP_CACHE_DIR")
+    env_tables = os.environ.get("MCP_TABLES")
+    env_tool_universe_id = os.environ.get("MCP_TOOL_UNIVERSE_ID")
+    env_server_type = os.environ.get("MCP_SERVER_TYPE")
+    env_transport = os.environ.get("MCP_TRANSPORT")
+    env_host = os.environ.get("MCP_HOST")
+    env_port = os.environ.get("MCP_PORT")
 
-    if env_db_path:
-        config_data["database_path"] = env_db_path
+    # Debug logging
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.debug(f"Config loading: MCP_DOMAIN={env_domain}")
+    logger.debug(f"Config loading: config_data before domain processing={config_data.get('database_path', 'NOT SET')}")
+
+    # Construct database path from domain (env variable or default)
+    # Priority: env_domain (if set) > config file > default "superhero"
+    if env_domain is not None:
+        # MCP_DOMAIN explicitly set - override config file
+        config_data["database_path"] = f"db/{env_domain}/{env_domain}.sqlite"
+        logger.debug(f"Config loading: Set database_path from MCP_DOMAIN: {config_data['database_path']}")
+    elif "database_path" not in config_data:
+        # No config file path and no env - use default superhero
+        config_data["database_path"] = "db/superhero/superhero.sqlite"
+        logger.debug(f"Config loading: Set database_path to default: {config_data['database_path']}")
     if env_cache:
         config_data["cache_dir"] = env_cache
     if env_tables:
@@ -162,7 +176,7 @@ def load_config(
             "Database path is required. Provide via:\n"
             "  - CLI: slot-filling-mcp --db /path/to/database.sqlite\n"
             "  - Config file: --config config.json\n"
-            "  - Environment: SLOT_FILLING_MCP_DATABASE=/path/to/database.sqlite"
+            "  - Environment: MCP_DOMAIN=superhero (constructs db/{domain}/{domain}.sqlite)"
         )
 
     # Filter out None values and unknown keys

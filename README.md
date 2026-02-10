@@ -45,7 +45,13 @@ Please refer to [evaluation.py](evaluation.py) for more details on how the evalu
     pip install -r requirements.txt
     ```
 
-2. Test your model locally using `python evaluation.py`. This script will run answer generation and auto-evaluation.
+2. **Configure environment variables** by copying the provided template and filling in your credentials:
+    ```bash
+    cp example_env .env
+    ```
+    Edit `.env` and replace the placeholder values (e.g. `your-rits-api-key-here`) with your actual API keys. See `example_env` for the full list of available options.
+
+3. Test your model locally using `python evaluation.py`. This script will run answer generation and auto-evaluation.
 
 
 ## 🏁 Baselines

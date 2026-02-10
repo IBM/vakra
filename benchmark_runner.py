@@ -40,6 +40,8 @@ Output:
 import json
 import os
 import argparse
+from dotenv import load_dotenv
+load_dotenv()
 import asyncio
 import subprocess
 import sys
@@ -52,7 +54,7 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 from agents.agent_interface import AgentInterface, AgentResponse, create_agent
-
+from agents.mcp_tool_wrapper import MCPToolWrapper
 # Task configurations - maps task_id to input directory path
 TASK_PATHS = {
     2: os.environ.get("TASK_2_DIR", "/Users/anu/Documents/GitHub/routing/EnterpriseBenchmark/train/input/"),
@@ -243,10 +245,6 @@ def stop_mcp_server(container_runtime: str, container_name: str):
         pass
 
 
-# Import unified MCPToolWrapper
-from agents.mcp_tool_wrapper import MCPToolWrapper
-
-
 async def connect_and_get_session(
     domain: str,
     container_runtime: str,
@@ -255,7 +253,7 @@ async def connect_and_get_session(
     """Connect to MCP server and return the session context."""
     exec_args = [
         "exec", "-i",
-        "-e", f"MCP_DOMAINS={domain}",
+        "-e", f"MCP_DOMAIN={domain}",
         container_name,
         "python", "mcp_server.py"
     ]
@@ -274,7 +272,7 @@ async def connect_and_list_tools(domain: str, container_runtime: str, container_
     """Connect to MCP server with the given domain and list available tools."""
     exec_args = [
         "exec", "-i",
-        "-e", f"MCP_DOMAINS={domain}",
+        "-e", f"MCP_DOMAIN={domain}",
         container_name,
         "python", "mcp_server.py"
     ]
@@ -314,7 +312,7 @@ async def connect_and_get_tools_detailed(domain: str, container_runtime: str, co
     """Connect to MCP server and get detailed tool information including parameters."""
     exec_args = [
         "exec", "-i",
-        "-e", f"MCP_DOMAINS={domain}",
+        "-e", f"MCP_DOMAIN={domain}",
         container_name,
         "python", "mcp_server.py"
     ]
@@ -365,7 +363,7 @@ async def run_agent_with_query(
     """Run an agent with tools from the MCP server."""
     exec_args = [
         "exec", "-i",
-        "-e", f"MCP_DOMAINS={domain}",
+        "-e", f"MCP_DOMAIN={domain}",
         container_name,
         "python", "mcp_server.py"
     ]
@@ -538,7 +536,7 @@ async def run_benchmark_for_domain(
     # Start MCP server ONCE for this domain
     exec_args = [
         "exec", "-i",
-        "-e", f"MCP_DOMAINS={domain}",
+        "-e", f"MCP_DOMAIN={domain}",
         container_name,
         "python", "mcp_server.py"
     ]

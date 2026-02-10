@@ -40,8 +40,8 @@ A two-container system where an LLM agent dynamically loads **tools** (API endpo
  │  │  MCP Server (stdio)          │  │   │  ┌──────────────┴──────────────────────────┐  │
  │  │                              │  │   │  │  MCP Server (stdio)                     │  │
  │  │  Filters OpenAPI by          │  │   │  │                                         │  │
- │  │  MCP_DOMAINS env var         │  │   │  │  Filters retriever tools by             │  │
- │  │  → API call tools            │  │   │  │  MCP_DOMAINS env var                    │  │
+ │  │  MCP_DOMAIN env var         │  │   │  │  Filters retriever tools by             │  │
+ │  │  → API call tools            │  │   │  │  MCP_DOMAIN env var                    │  │
  │  └──────────────────────────────┘  │   │  │  → search_<domain>_docs tool            │  │
  │                                    │   │  └──────────────────────────────────────────┘  │
  └────────────────────────────────────┘   └───────────────────────────────────────────────┘
@@ -96,7 +96,7 @@ services:
       - ./db:/app/db:ro
     environment:
       - FASTAPI_BASE_URL=http://localhost:8000
-      - MCP_DOMAINS=hockey          # optional: filter to one domain
+      - MCP_DOMAIN=hockey          # optional: filter to one domain
 
   retriever:
     build:
@@ -109,7 +109,7 @@ services:
       - ./vectordb:/app/vectordb:ro
     environment:
       - RETRIEVER_BASE_URL=http://localhost:9000
-      - MCP_DOMAINS=hockey          # same domain filter
+      - MCP_DOMAIN=hockey          # same domain filter
 ```
 
 ## Project Structure
@@ -171,10 +171,10 @@ The agent spawns two MCP server processes:
 
 ```bash
 # Tools MCP (inside tools container)
-docker exec -i -e MCP_DOMAINS=hockey fastapi-mcp-tools python mcp_server.py
+docker exec -i -e MCP_DOMAIN=hockey fastapi-mcp-tools python mcp_server.py
 
 # Retriever MCP (inside retriever container)
-docker exec -i -e MCP_DOMAINS=hockey mcp-retriever python mcp_retriever_server.py
+docker exec -i -e MCP_DOMAIN=hockey mcp-retriever python mcp_retriever_server.py
 ```
 
 Both tool sets are merged into a single LangChain agent.
@@ -195,7 +195,7 @@ No container restart needed — the domain filter is passed at MCP server spawn 
 |----------|---------|-----------|-------------|
 | `FASTAPI_BASE_URL` | `http://localhost:8000` | tools | URL for Tools MCP to reach FastAPI |
 | `RETRIEVER_BASE_URL` | `http://localhost:9000` | retriever | URL for Retriever MCP to reach retriever service |
-| `MCP_DOMAINS` | (none = all) | both | Comma-separated domains to filter |
+| `MCP_DOMAIN` | (none = all) | both | Comma-separated domains to filter |
 | `MCP_SERVER_NAME` | `fastapi-mcp-wrapper` | tools | MCP server instance name |
 | `ANTHROPIC_API_KEY` | — | agent | API key for Claude |
 | `OPENAI_API_KEY` | — | agent | API key for OpenAI |

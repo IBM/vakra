@@ -29,7 +29,7 @@ A FastAPI server exposing 80 database APIs with 9,800+ endpoints, wrapped by MCP
                           │   │            MCP Server (stdio)                   │   │
                           │   │                                                 │   │
                           │   │   1. Fetches /openapi.json from FastAPI         │   │
-                          │   │   2. Filters paths by MCP_DOMAINS env var      │   │
+                          │   │   2. Filters paths by MCP_DOMAIN env var      │   │
                           │   │   3. Converts matching endpoints → MCP tools   │   │
                           │   │   4. Serves tools over stdio (stdin/stdout)    │   │
                           │   └──────────────────────┬──────────────────────────┘   │
@@ -41,11 +41,11 @@ A FastAPI server exposing 80 database APIs with 9,800+ endpoints, wrapped by MCP
                           │              LangChain ReAct Agent                  │
                           │                                                     │
                           │   Spawns MCP server via:                            │
-                          │     docker exec -i -e MCP_DOMAINS=hockey \         │
+                          │     docker exec -i -e MCP_DOMAIN=hockey \         │
                           │       fastapi-mcp-server python mcp_server.py      │
                           │                                                     │
                           │   OR locally:                                       │
-                          │     MCP_DOMAINS=hockey python mcp_server.py        │
+                          │     MCP_DOMAIN=hockey python mcp_server.py        │
                           │                                                     │
                           │   LLM (Claude / Ollama / OpenAI) picks tools       │
                           │   from the filtered set and calls them via MCP     │
@@ -55,7 +55,7 @@ A FastAPI server exposing 80 database APIs with 9,800+ endpoints, wrapped by MCP
 ### How domain filtering works
 
 ```
-  Agent sets MCP_DOMAINS="hockey"
+  Agent sets MCP_DOMAIN="hockey"
        │
        ▼
   MCP Server starts
@@ -82,7 +82,7 @@ A FastAPI server exposing 80 database APIs with 9,800+ endpoints, wrapped by MCP
                   ┌────────────┴────────────┐
                   │   MCP Server (stdio)    │
                   │                         │
-                  │   MCP_DOMAINS=hockey    │
+                  │   MCP_DOMAIN=hockey    │
                   │   → only hockey tools   │
                   └────────────┬────────────┘
                                │ stdio
@@ -90,7 +90,7 @@ A FastAPI server exposing 80 database APIs with 9,800+ endpoints, wrapped by MCP
                           LLM Agent
 ```
 
-The agent spawns `MCP_DOMAINS="hockey" python mcp_server.py` which
+The agent spawns `MCP_DOMAIN="hockey" python mcp_server.py` which
 connects to FastAPI on port 8000 and exposes only the matching tools.
 
 ## All 80 Domains
@@ -196,12 +196,12 @@ open http://localhost:8000/docs
 
 ### Step 3 — Connect an agent to the MCP server
 
-The MCP server inside the container communicates over stdio. To scope it to a specific domain, set `MCP_DOMAINS` in `docker-compose.yml`:
+The MCP server inside the container communicates over stdio. To scope it to a specific domain, set `MCP_DOMAIN` in `docker-compose.yml`:
 
 ```yaml
 environment:
   - FASTAPI_BASE_URL=http://localhost:8000
-  - MCP_DOMAINS=airline        # only expose /v1/airline/* tools
+  - MCP_DOMAIN=airline        # only expose /v1/airline/* tools
 ```
 
 Then restart:
@@ -210,7 +210,7 @@ Then restart:
 docker-compose up -d
 ```
 
-To expose all 9,800+ tools (all 80 domains), remove the `MCP_DOMAINS` line.
+To expose all 9,800+ tools (all 80 domains), remove the `MCP_DOMAIN` line.
 
 ### Step 4 — View logs / stop
 
@@ -251,13 +251,13 @@ open http://localhost:8000/docs
 
 ```bash
 # In a new terminal (with .venv activated)
-MCP_DOMAINS="hockey" python mcp_server.py
+MCP_DOMAIN="hockey" python mcp_server.py
 ```
 
 **Option B: Single MCP server (multiple domains)**
 
 ```bash
-MCP_DOMAINS="hockey,movie,financial" python mcp_server.py
+MCP_DOMAIN="hockey,movie,financial" python mcp_server.py
 ```
 
 **Option C: Single MCP server (all domains)**
@@ -363,7 +363,7 @@ volumes:
 |----------|---------|-------------|
 | `FASTAPI_BASE_URL` | `http://localhost:8000` | URL for MCP server to reach FastAPI |
 | `MCP_SERVER_NAME` | `fastapi-mcp-wrapper` | Name for this MCP server instance |
-| `MCP_DOMAINS` | (none = all) | Comma-separated domains to include (e.g., `hockey,movie`) |
+| `MCP_DOMAIN` | (none = all) | Comma-separated domains to include (e.g., `hockey,movie`) |
 | `ANTHROPIC_API_KEY` | - | API key for Claude models |
 | `OPENAI_API_KEY` | - | API key for OpenAI models |
 | `USE_OLLAMA` | - | Set to use local Ollama models |
@@ -466,17 +466,17 @@ pip install -r requirements.txt
 
 ```bash
 export OPENAI_API_KEY=your-key-here
-MCP_DOMAINS="airline" python examples/langchain_agent_docker_remote.py
+MCP_DOMAIN="airline" python examples/langchain_agent_docker_remote.py
 ```
 
 
 ### Step 5 — Steps to start MCP servers alone
 
 ```
-docker exec -i  -e MCP_DOMAINS=hockey fastapi-mcp-server python mcp_server.py
+docker exec -i  -e MCP_DOMAIN=hockey fastapi-mcp-server python mcp_server.py
 ```
 
-Note, it is key to pass the MCP_DOMAINS variable when starting the mcp server. MCP_DOMAINS points to the db - address vs bike_share vs airline etc
+Note, it is key to pass the MCP_DOMAIN variable when starting the mcp server. MCP_DOMAIN points to the db - address vs bike_share vs airline etc
 
 ---
 
