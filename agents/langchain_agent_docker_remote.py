@@ -9,10 +9,10 @@ Usage:
     docker-compose up -d
 
     # Run agent scoped to a single domain
-    MCP_DOMAINS="hockey" python examples/langchain_agent_docker_remote.py
+    MCP_DOMAIN="hockey" python examples/langchain_agent_docker_remote.py
 
     # Run agent scoped to multiple domains
-    MCP_DOMAINS="hockey,superhero" python examples/langchain_agent_docker_remote.py
+    MCP_DOMAIN="hockey,superhero" python examples/langchain_agent_docker_remote.py
 
     # Run agent with all domains
     python examples/langchain_agent_docker_remote.py
@@ -149,17 +149,17 @@ async def main():
     llm, use_openai, max_tools = create_llm()
 
     # Domain filtering: passed as env var to docker exec.
-    domains = os.getenv("MCP_DOMAINS", "")
+    domains = os.getenv("MCP_DOMAIN", "")
     container_name = os.getenv("MCP_CONTAINER_NAME", "fastapi-mcp-server")
     container_runtime = os.getenv("CONTAINER_RUNTIME", "docker")
 
-    # Build docker exec command with optional MCP_DOMAINS
+    # Build docker exec command with optional MCP_DOMAIN
     exec_args = ["exec", "-i"]
     if domains:
-        exec_args += ["-e", f"MCP_DOMAINS={domains}"]
+        exec_args += ["-e", f"MCP_DOMAIN={domains}"]
         print(f"\nDomains: {domains}")
     else:
-        print("\nDomains: ALL (no MCP_DOMAINS set)")
+        print("\nDomains: ALL (no MCP_DOMAIN set)")
     exec_args += [container_name, "python", "mcp_server.py"]
 
     print(f"Connecting to MCP server in {container_runtime} container: {container_name}")

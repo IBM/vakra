@@ -55,6 +55,9 @@ class LiveMCPServer(ABC):
         self.server = Server(name=config.server_name)
         self.shutdown_event = shutdown_event
 
+        # Log the database being used
+        logger.info(f"Initializing MCP Server with database: {config.database_path}")
+
         # Resolve path to mcp_init_mapping.json in project root
         project_root = pathlib.Path(__file__).parent.parent.parent.parent.parent
         self.universe_configuration_file = str(project_root / "apis" / "configs" / "mcp_init_mapping.json")

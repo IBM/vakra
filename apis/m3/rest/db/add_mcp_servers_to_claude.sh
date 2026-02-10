@@ -9,7 +9,7 @@ MAX_TOOL_NAME_LENGTH=64
 
 for domain in $(jq -r '.[]' "$DOMAINS_FILE"); do
   echo "===== Adding MCP server for: $domain ====="
-  "$CLAUDE_BIN" mcp add "fastapi-mcp-${domain}" -- docker exec -i -e "MCP_DOMAINS=${domain}" fastapi-mcp-server python mcp_server.py
+  "$CLAUDE_BIN" mcp add "fastapi-mcp-${domain}" -- docker exec -i -e "MCP_DOMAIN=${domain}" fastapi-mcp-server python mcp_server.py
 
   # Check tool names by sending a tools/list request to the server
   echo "  Checking tools for $domain..."
@@ -18,7 +18,7 @@ for domain in $(jq -r '.[]' "$DOMAINS_FILE"); do
   TOOLS_REQUEST='{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'
 
   RESPONSE=$(printf '%s\n%s\n%s\n' "$INIT_REQUEST" "$INITIALIZED_NOTIF" "$TOOLS_REQUEST" \
-    | docker exec -i -e "MCP_DOMAINS=${domain}" fastapi-mcp-server python mcp_server.py 2>/dev/null)
+    | docker exec -i -e "MCP_DOMAIN=${domain}" fastapi-mcp-server python mcp_server.py 2>/dev/null)
 
   # Parse the tools/list response (the line containing "id":2)
   TOOLS_LINE=$(echo "$RESPONSE" | grep '"id":2' | head -1)

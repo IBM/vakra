@@ -2,7 +2,7 @@
 MCP Server Wrapper for FastAPI Server
 Dynamically discovers FastAPI endpoints and exposes them as MCP tools.
 
-Supports filtering by domain name (e.g., MCP_DOMAINS="hockey" only exposes /v1/hockey/* endpoints).
+Supports filtering by domain name (e.g., MCP_DOMAIN="hockey" only exposes /v1/hockey/* endpoints).
 If no domains are specified, all endpoints are exposed.
 """
 import asyncio
@@ -261,7 +261,7 @@ async def main():
     Environment variables:
     - FASTAPI_BASE_URL: Base URL of the FastAPI server (default: http://localhost:8000)
     - MCP_SERVER_NAME: Name for this MCP server instance (default: fastapi-mcp-wrapper)
-    - MCP_DOMAINS: Comma-separated list of domains to include (e.g., "hockey,movie").
+    - MCP_DOMAIN: Comma-separated list of domains to include (e.g., "hockey,movie").
                    Each domain maps to /v1/{domain}/* endpoints.
                    If not set, all endpoints are exposed.
     """
@@ -269,7 +269,7 @@ async def main():
 
     fastapi_url = os.getenv("FASTAPI_BASE_URL", "http://localhost:8000")
     server_name = os.getenv("MCP_SERVER_NAME", "fastapi-mcp-wrapper")
-    domains = parse_list_env("MCP_DOMAINS")
+    domains = parse_list_env("MCP_DOMAIN")
 
     logger.info(f"Starting MCP server '{server_name}' wrapping FastAPI at {fastapi_url}")
 

@@ -87,12 +87,13 @@ db/
 - **Status**: Included in repository
 - **Pattern**: `db/dev_databases/{database_name}/{database_name}.sqlite`
 
-### Using a Custom Database
+### Using a Different Domain
 
-Set the environment variable to point to your database:
+Set the MCP_DOMAIN environment variable to choose a different database domain:
 
 ```bash
-export SUPERHERO_DB="/path/to/your/database.sqlite"
+export MCP_DOMAIN="hockey"  # Uses db/hockey/hockey.sqlite
+export MCP_DOMAIN="movie"   # Uses db/movie/movie.sqlite
 ```
 
 ## Configuration
@@ -101,7 +102,7 @@ export SUPERHERO_DB="/path/to/your/database.sqlite"
 
 | Variable | Description | Required | Default |
 |----------|-------------|----------|---------|
-| `SUPERHERO_DB` | Path to SQLite database | No | `db/dev_databases/superhero/superhero.sqlite` |
+| `MCP_DOMAIN` | Database domain name (constructs path as db/{domain}/{domain}.sqlite) | No | `superhero` |
 | `RITS_API_KEY` | API key for RITS/OpenAI-compatible API | Yes (for --llm openai) | None |
 
 ### API Key Setup
@@ -194,10 +195,10 @@ python examples/demo.py \
   --server-url ws://localhost:8000/mcp
 ```
 
-### Custom Database
+### Custom Database Domain
 
 ```bash
-export SUPERHERO_DB="/path/to/custom/database.sqlite"
+export MCP_DOMAIN="hockey"
 export RITS_API_KEY="your-key-here"
 python examples/demo.py
 ```
@@ -206,7 +207,7 @@ python examples/demo.py
 
 ```bash
 export RITS_API_KEY="your-key-here"
-export SUPERHERO_DB="db/dev_databases/superhero/superhero.sqlite"
+export MCP_DOMAIN="superhero"
 python examples/demo.py \
   --llm openai \
   --model llama-3-3-70b-instruct \
@@ -281,9 +282,10 @@ cd /path/to/enterprise-benchmark
 python examples/demo.py
 ```
 
-**Solution 2 - Use absolute path:**
+**Solution 2 - Ensure you're in the project root:**
 ```bash
-export SUPERHERO_DB="/absolute/path/to/superhero.sqlite"
+cd /path/to/enterprise-benchmark
+export MCP_DOMAIN="superhero"
 python examples/demo.py
 ```
 

@@ -19,7 +19,7 @@ from agents.llm import create_llm
 from agents.mcp_tool_wrapper import MCPToolWrapper
 
 # Configuration
-DATABASE_PATH = os.environ.get("SUPERHERO_DB", "db/superhero/superhero.sqlite")
+# Database path is now constructed by MCP server from MCP_DOMAIN environment variable
 
 @contextlib.asynccontextmanager
 async def connect_to_server(mode: str, server_url: str = None):
@@ -34,10 +34,13 @@ async def connect_to_server(mode: str, server_url: str = None):
     """
     if mode == "stdio":
         # Existing subprocess approach
+        # MCP server will read MCP_DOMAIN environment variable to construct database path
+        # Pass environment variables to subprocess
         python_exe = sys.executable
         server_params = StdioServerParameters(
             command=python_exe,
-            args=["-m", "apis.m3.python_tools.mcp", "--db", DATABASE_PATH],
+            args=["-m", "apis.m3.python_tools.mcp"],
+            env=os.environ.copy(),  # Pass all environment variables to subprocess
         )
         async with stdio_client(server_params) as (read, write):
             yield read, write
@@ -225,10 +228,6 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-
-    # Check that the database path is correct
-    if not os.path.isfile(DATABASE_PATH):
-        raise FileNotFoundError(f"No database found at {DATABASE_PATH}")
 
     try:
         asyncio.run(main(

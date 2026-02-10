@@ -31,7 +31,7 @@ async def load_tools_for_domain(domain: str, fastapi_url: str):
     """Spawn a local MCP server for the given domain and return tool count + timing."""
     env = {
         "FASTAPI_BASE_URL": fastapi_url,
-        "MCP_DOMAINS": domain,
+        "MCP_DOMAIN": domain,
     }
 
     server_params = StdioServerParameters(
