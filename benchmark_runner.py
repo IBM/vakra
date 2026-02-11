@@ -655,8 +655,6 @@ async def run_task(
     output_file: Optional[str] = None,
     domains: Optional[List[str]] = None,
     top_k_tools: int = 0,
-    litellm_base_url: Optional[str] = None,
-    litellm_api_key: Optional[str] = None,
 ) -> List[BenchmarkResult]:
     """Run benchmark for a given task_id, iterating over all domain files."""
 
@@ -708,20 +706,7 @@ async def run_task(
         return results
 
     # Create LLM and agent once for all domains
-    llm_kwargs = {}
-    if provider == "watsonx":
-        llm_kwargs["project_id"] = os.getenv("WATSONX_PROJECT_ID")
-        llm_kwargs["space_id"] = os.getenv("WATSONX_SPACE_ID")
-        llm_kwargs["api_key"] = os.getenv("WATSONX_APIKEY")
-    elif provider == "litellm":
-        resolved_base_url = litellm_base_url or os.getenv("LITELLM_BASE_URL")
-        if resolved_base_url:
-            llm_kwargs["api_base"] = resolved_base_url
-        resolved_api_key = litellm_api_key or os.getenv("LITELLM_API_KEY")
-        if resolved_api_key:
-            llm_kwargs["api_key"] = resolved_api_key
-
-    llm = create_llm(provider=provider, model=model, **llm_kwargs)
+    llm = create_llm(provider=provider, model=model)
     agent = LangGraphReActAgent(llm=llm, model=model or "", provider=provider)
     print(f"Agent: {provider} / {model or 'default'}")
 
@@ -1024,7 +1009,7 @@ def main():
         container_runtime = detect_container_runtime()
         print(f"Auto-detected container runtime: {container_runtime}")
 
-    # Set watsonx environment variables if provided via command line
+    # Set provider environment variables if provided via command line
     if args.provider == "watsonx":
         import os
         if args.watsonx_project_id:
@@ -1033,6 +1018,12 @@ def main():
             os.environ["WATSONX_SPACE_ID"] = args.watsonx_space_id
         if args.watsonx_api_key:
             os.environ["WATSONX_APIKEY"] = args.watsonx_api_key
+    elif args.provider == "litellm":
+        import os
+        if args.litellm_base_url:
+            os.environ["LITELLM_BASE_URL"] = args.litellm_base_url
+        if args.litellm_api_key:
+            os.environ["LITELLM_API_KEY"] = args.litellm_api_key
 
     print("="*60)
     print("Benchmark Runner")
@@ -1059,8 +1050,6 @@ def main():
         output_file=args.output,
         domains=args.domain,
         top_k_tools=args.top_k_tools,
-        litellm_base_url=args.litellm_base_url,
-        litellm_api_key=args.litellm_api_key,
     ))
 
 

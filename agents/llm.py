@@ -207,6 +207,17 @@ def create_llm(
     Returns:
         LangChain BaseChatModel instance
     """
+    if provider == "watsonx":
+        kwargs.setdefault("project_id", os.environ.get("WATSONX_PROJECT_ID"))
+        kwargs.setdefault("space_id", os.environ.get("WATSONX_SPACE_ID"))
+        if not api_key:
+            api_key = os.environ.get("WATSONX_APIKEY")
+    elif provider == "litellm":
+        resolved_base_url = os.environ.get("LITELLM_BASE_URL")
+        if resolved_base_url:
+            kwargs.setdefault("api_base", resolved_base_url)
+        if not api_key:
+            api_key = os.environ.get("LITELLM_API_KEY")
     if provider == "rits":
         rits_api_key = api_key or os.environ.get("RITS_API_KEY")
         if not rits_api_key:
@@ -238,7 +249,11 @@ def create_llm(
             )
 
         model_name = model or "llama3.1:8b"
-        base_url = kwargs.get("ollama_base_url") or "http://localhost:11434"
+        base_url = (
+            kwargs.get("ollama_base_url")
+            or os.environ.get("OLLAMA_BASE_URL")
+            or "http://localhost:11434"
+        )
 
         print(f"Connecting to Ollama at {base_url}")
         print(
