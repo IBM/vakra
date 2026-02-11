@@ -53,7 +53,8 @@ from typing import Any, Dict, List, Optional
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
-from agents.agent_interface import AgentInterface, AgentResponse, create_agent
+from agents.agent_interface import AgentInterface, AgentResponse, LangGraphReActAgent, create_agent
+from agents.llm import create_llm
 from agents.mcp_tool_wrapper import MCPToolWrapper
 # Task configurations - maps task_id to input directory path
 TASK_PATHS = {
@@ -704,16 +705,15 @@ async def run_task(
             results.append(result)
         return results
 
-    # Create agent once for all domains
-    agent_kwargs = {}
+    # Create LLM and agent once for all domains
+    llm_kwargs = {}
     if provider == "watsonx":
-        # Pass watsonx-specific parameters from environment or command line
-        import os
-        agent_kwargs["project_id"] = os.getenv("WATSONX_PROJECT_ID")
-        agent_kwargs["space_id"] = os.getenv("WATSONX_SPACE_ID")
-        agent_kwargs["api_key"] = os.getenv("WATSONX_APIKEY")
-    
-    agent = create_agent(provider=provider, model=model, **agent_kwargs)
+        llm_kwargs["project_id"] = os.getenv("WATSONX_PROJECT_ID")
+        llm_kwargs["space_id"] = os.getenv("WATSONX_SPACE_ID")
+        llm_kwargs["api_key"] = os.getenv("WATSONX_APIKEY")
+
+    llm = create_llm(provider=provider, model=model, **llm_kwargs)
+    agent = LangGraphReActAgent(llm=llm, model=model or "", provider=provider)
     print(f"Agent: {provider} / {model or 'default'}")
 
     # Create tool shortlister if requested
@@ -961,7 +961,7 @@ def main():
         "--provider",
         type=str,
         default="ollama",
-        choices=["anthropic", "openai", "ollama", "watsonx"],
+        choices=["anthropic", "openai", "ollama", "watsonx", "rits"],
         help="LLM provider to use (default: ollama)"
     )
     parser.add_argument(
