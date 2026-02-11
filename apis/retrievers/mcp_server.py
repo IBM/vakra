@@ -78,6 +78,23 @@ class FastAPIMCPServer:
         """Check if an endpoint is a POST query endpoint (e.g., /{domain}/query)."""
         return method.lower() == "post" and path.endswith("/query")
 
+    def _resolve_refs(self, schema: Any, spec: Dict) -> Any:
+        """Recursively resolve $ref pointers in a JSON Schema using the OpenAPI spec."""
+        if isinstance(schema, dict):
+            if "$ref" in schema:
+                ref_path = schema["$ref"]  # e.g. "#/components/schemas/QueryRequest"
+                if ref_path.startswith("#/"):
+                    parts = ref_path[2:].split("/")
+                    resolved = spec
+                    for part in parts:
+                        resolved = resolved.get(part, {})
+                    return self._resolve_refs(resolved, spec)
+                return schema  # external ref, leave as-is
+            return {k: self._resolve_refs(v, spec) for k, v in schema.items()}
+        if isinstance(schema, list):
+            return [self._resolve_refs(item, spec) for item in schema]
+        return schema
+
     def convert_openapi_to_mcp_tools(self, openapi_spec: Dict) -> List[Tool]:
         """Convert OpenAPI spec to MCP tools.
 
@@ -106,14 +123,15 @@ class FastAPIMCPServer:
                     operation.get("description", f"{method.upper()} {path}")
                 )
 
-                # Get request body schema
+                # Get request body schema (resolve $ref pointers)
                 body_schema = None
                 body_required = False
                 if method.lower() in ["post", "put", "patch"]:
                     request_body = operation.get("requestBody", {})
                     if request_body:
                         content = request_body.get("content", {})
-                        body_schema = content.get("application/json", {}).get("schema", {})
+                        raw_schema = content.get("application/json", {}).get("schema", {})
+                        body_schema = self._resolve_refs(raw_schema, openapi_spec)
                         body_required = request_body.get("required", False)
 
                 # Determine which domains to create tools for

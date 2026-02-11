@@ -17,7 +17,7 @@ services:
       - MCP_DOMAIN=${MCP_DOMAIN:-}
       - PRELOAD_COLLECTIONS=true
     volumes:
-      - ./chroma_data:/app/chroma_data:ro
+      - ./chroma_data:/app/chroma_data
       - ./queries:/app/queries:ro
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
