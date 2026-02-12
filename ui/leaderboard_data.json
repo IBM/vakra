@@ -1,0 +1,24 @@
+[
+  {
+    "agent": "Agent Y",
+    "model": "GPT-4o",
+    "scores": {
+      "Single Turn|API Styles|Business Intelligence": 90.0,
+      "Single Turn|API Styles|Dashboard APIs": 87.0,
+      "Single Turn|Reasoning|Multi-hop": 82.0,
+      "Single Turn|Reasoning|Policy Adherence": 91.0,
+      "Multi-turn|Joint Structured/ Unstructured Reasoning|Multi-hop": 85.0
+    }
+  },
+  {
+    "agent": "Agent X",
+    "model": "Claude Sonnet 4.5",
+    "scores": {
+      "Single Turn|API Styles|Business Intelligence": 85.0,
+      "Single Turn|API Styles|Dashboard APIs": 92.0,
+      "Single Turn|Reasoning|Multi-hop": 78.0,
+      "Single Turn|Reasoning|Policy Adherence": 88.0,
+      "Multi-turn|Joint Structured/ Unstructured Reasoning|Multi-hop": 82.0
+    }
+  }
+]

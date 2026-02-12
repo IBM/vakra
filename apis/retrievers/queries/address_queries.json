@@ -1,182 +1,186 @@
 [
   {
-    "question": "What is J. T. Barrett?",
-    "expected_topic": "J. T. Barrett"
+    "question": "Give me a summary of Elections in the United States.",
+    "expected_topic": "Elections in the United States"
   },
   {
-    "question": "Who or what is List of Mako: Island of Secrets episodes?",
-    "expected_topic": "List of Mako: Island of Secrets episodes"
+    "question": "What role does Spirit of Ecstasy play?",
+    "expected_topic": "Spirit of Ecstasy"
   },
   {
-    "question": "What do you know about 25 or 6 to 4?",
-    "expected_topic": "25 or 6 to 4"
+    "question": "Why is The impact of geography on colonial America important?",
+    "expected_topic": "The impact of geography on colonial America"
   },
   {
-    "question": "Tell me about La traviata.",
-    "expected_topic": "La traviata"
+    "question": "Tell me about Brown bear.",
+    "expected_topic": "Brown bear"
   },
   {
-    "question": "Can you explain XAMPP in detail?",
-    "expected_topic": "XAMPP"
+    "question": "Tell me about Death on the Nile.",
+    "expected_topic": "Death on the Nile"
   },
   {
-    "question": "Why is International System of Units important?",
-    "expected_topic": "International System of Units"
+    "question": "What is the significance of Civil Rights Act of 1991?",
+    "expected_topic": "Civil Rights Act of 1991"
   },
   {
-    "question": "Can you explain The Rite of Spring in detail?",
-    "expected_topic": "The Rite of Spring"
+    "question": "Describe Convicts in Australia.",
+    "expected_topic": "Convicts in Australia"
   },
   {
-    "question": "Give me a summary of Call of Duty: Black Ops III.",
-    "expected_topic": "Call of Duty: Black Ops III"
+    "question": "Why is Stop-loss insurance important?",
+    "expected_topic": "Stop-loss insurance"
   },
   {
-    "question": "What is Political party?",
-    "expected_topic": "Political party"
+    "question": "What are the key facts about State of the Union?",
+    "expected_topic": "State of the Union"
   },
   {
-    "question": "Who or what is Germ theory of disease?",
-    "expected_topic": "Germ theory of disease"
+    "question": "Give me a summary of A Regular Epic Final Battle.",
+    "expected_topic": "A Regular Epic Final Battle"
   },
   {
-    "question": "What are the key facts about Jacques-Louis David?",
-    "expected_topic": "Jacques-Louis David"
+    "question": "What are the key facts about Atomic bombings of Hiroshima and Nagasaki?",
+    "expected_topic": "Atomic bombings of Hiroshima and Nagasaki"
   },
   {
-    "question": "What role does Insulin play?",
-    "expected_topic": "Insulin"
-  },
-  {
-    "question": "What is the significance of Red giant?",
-    "expected_topic": "Red giant"
-  },
-  {
-    "question": "Who or what is War of the Austrian Succession?",
-    "expected_topic": "War of the Austrian Succession"
-  },
-  {
-    "question": "Describe Battle of Hampton Roads.",
-    "expected_topic": "Battle of Hampton Roads"
-  },
-  {
-    "question": "Tell me about Environmental issues in India.",
-    "expected_topic": "Environmental issues in India"
-  },
-  {
-    "question": "Why is Germination important?",
-    "expected_topic": "Germination"
-  },
-  {
-    "question": "What is the history of iOS 11?",
-    "expected_topic": "iOS 11"
-  },
-  {
-    "question": "What is Rhode Island?",
-    "expected_topic": "Rhode Island"
-  },
-  {
-    "question": "Give me a summary of Sleeping Beauty.",
-    "expected_topic": "Sleeping Beauty"
-  },
-  {
-    "question": "Why is Queen's Counsel important?",
-    "expected_topic": "Queen's Counsel"
-  },
-  {
-    "question": "Describe Dada.",
-    "expected_topic": "Dada"
-  },
-  {
-    "question": "Give me a summary of Clarabell the Clown.",
-    "expected_topic": "Clarabell the Clown"
-  },
-  {
-    "question": "Who or what is Boeing B-29 Superfortress?",
-    "expected_topic": "Boeing B-29 Superfortress"
-  },
-  {
-    "question": "What is Federalist No. 10?",
-    "expected_topic": "Federalist No. 10"
-  },
-  {
-    "question": "What happened with FIFA World Cup?",
+    "question": "What is the significance of FIFA World Cup?",
     "expected_topic": "FIFA World Cup"
   },
   {
-    "question": "What is the history of Nun River?",
-    "expected_topic": "Nun River"
+    "question": "Give me a summary of Alex (A Clockwork Orange).",
+    "expected_topic": "Alex (A Clockwork Orange)"
   },
   {
-    "question": "Tell me about Springfield High School (SHS) is a public comprehensive high school in Springfield, Ohio, United States. It is the only high school in the Springfield City School District, which includes the majority of the city limits..",
-    "expected_topic": "Springfield High School (SHS) is a public comprehensive high school in Springfield, Ohio, United States. It is the only high school in the Springfield City School District, which includes the majority of the city limits."
+    "question": "What is the significance of NOx?",
+    "expected_topic": "NOx"
   },
   {
-    "question": "Explain The Way of the World.",
-    "expected_topic": "The Way of the World"
+    "question": "Can you explain Las Meninas in detail?",
+    "expected_topic": "Las Meninas"
   },
   {
-    "question": "What is the significance of Birth control in the United States?",
-    "expected_topic": "Birth control in the United States"
+    "question": "What do you know about Chemiosmosis?",
+    "expected_topic": "Chemiosmosis"
   },
   {
-    "question": "Give me a summary of R-410A.",
-    "expected_topic": "R-410A"
+    "question": "Explain The Matrix Reloaded.",
+    "expected_topic": "The Matrix Reloaded"
   },
   {
-    "question": "Explain To Autumn.",
-    "expected_topic": "To Autumn"
+    "question": "What are the key facts about San Jose, California?",
+    "expected_topic": "San Jose, California"
   },
   {
-    "question": "Explain Night at the Museum: Secret of the Tomb.",
-    "expected_topic": "Night at the Museum: Secret of the Tomb"
+    "question": "Give me a summary of Slope.",
+    "expected_topic": "Slope"
   },
   {
-    "question": "What is Cult of Chucky?",
-    "expected_topic": "Cult of Chucky"
+    "question": "Describe God the Father.",
+    "expected_topic": "God the Father"
   },
   {
-    "question": "What role does Peru at the FIFA World Cup play?",
-    "expected_topic": "Peru at the FIFA World Cup"
+    "question": "What is Indigenous Australians?",
+    "expected_topic": "Indigenous Australians"
   },
   {
-    "question": "Find information related to: Thomas Woodrow Wilson ( December 28 , 1856 -- February 3 , 1924 ) was an American statesman and academic who served as t...",
+    "question": "How does R\u00edo de la Plata work?",
+    "expected_topic": "R\u00edo de la Plata"
+  },
+  {
+    "question": "What are the key facts about Connective tissue?",
+    "expected_topic": "Connective tissue"
+  },
+  {
+    "question": "What are the key facts about Game of Thrones (season 7)?",
+    "expected_topic": "Game of Thrones (season 7)"
+  },
+  {
+    "question": "How does Welcome Back, Kotter work?",
+    "expected_topic": "Welcome Back, Kotter"
+  },
+  {
+    "question": "Why is Shark tooth important?",
+    "expected_topic": "Shark tooth"
+  },
+  {
+    "question": "What happened with The Famous Five (Canada)?",
+    "expected_topic": "The Famous Five (Canada)"
+  },
+  {
+    "question": "Who or what is Kurt Angle?",
+    "expected_topic": "Kurt Angle"
+  },
+  {
+    "question": "Who or what is Frederica Wilson?",
+    "expected_topic": "Frederica Wilson"
+  },
+  {
+    "question": "What is the significance of Beauty and the Beast?",
+    "expected_topic": "Beauty and the Beast"
+  },
+  {
+    "question": "Give me a summary of Rick and Morty.",
+    "expected_topic": "Rick and Morty"
+  },
+  {
+    "question": "Explain Bone marrow.",
+    "expected_topic": "Bone marrow"
+  },
+  {
+    "question": "What happened with Transduction (physiology)?",
+    "expected_topic": "Transduction (physiology)"
+  },
+  {
+    "question": "Explain Barbados.",
+    "expected_topic": "Barbados"
+  },
+  {
+    "question": "What happened with Powers of the President of the United States?",
+    "expected_topic": "Powers of the President of the United States"
+  },
+  {
+    "question": "Wilson defended his administration 's segregation policy in a July 1913 letter responding to Oswald Garrison Villard , p...",
     "expected_topic": ""
   },
   {
-    "question": "Wilson pioneered twice - weekly press conferences in the White House .",
+    "question": "The Executive Office also supports the U.",
     "expected_topic": ""
   },
   {
-    "question": "Much of the legislation dealt with by Congress is drafted at the initiative of the executive branch .",
+    "question": "Find information related to: The role and functions of the CIA are roughly equivalent to those of the United Kingdom 's Secret Intelligence Service (...",
     "expected_topic": ""
   },
   {
-    "question": "Find information related to: Two offices of CIA Directorate of Analysis have analytical responsibilities in this area .",
+    "question": "What does this refer to: Lincoln 's first presidential inauguration occurred on March 4 , 1861 on the East Portico of the United States Capitol .",
     "expected_topic": ""
   },
   {
-    "question": "Lincoln 's first presidential inauguration occurred on March 4 , 1861 on the East Portico of the United States Capitol .",
+    "question": "What does this refer to: At the national level American politics was divided between the factions of Jefferson and Madison , which favored the Fr...",
     "expected_topic": ""
   },
   {
-    "question": "What does this refer to: At the end of 1913 , summing up the president 's efficacy , the Saturday Evening Post magazine stated , `` This administ...",
+    "question": "What does this refer to: James Madison , then a member of the House of Representatives , argued that the treaty could not , under Constitutional ...",
     "expected_topic": ""
   },
   {
-    "question": "Find information related to: Joint Sessions of the United States Congress occur on special occasions that require a concurrent resolution from both H...",
+    "question": "What does this refer to: Two offices of CIA Directorate of Analysis have analytical responsibilities in this area .",
     "expected_topic": ""
   },
   {
-    "question": "Find information related to: The address fulfills rules in Article II , Section 3 of the U.",
+    "question": "The State of the Union Address is an annual message presented by the President of the United States to a joint session o...",
     "expected_topic": ""
   },
   {
-    "question": "What does this refer to: At some time during the first two months of each session , the President customarily delivers the State of the Union Add...",
+    "question": "What does this refer to: The address fulfills rules in Article II , Section 3 of the U.",
     "expected_topic": ""
   },
   {
-    "question": "Find information related to: The CIA acts as the primary US HUMINT and general analytic agency , under the Director of National Intelligence , who di...",
+    "question": "What does this refer to: George Washington delivered the first regular annual message before a joint session of Congress on January 8 , 1790 , in...",
+    "expected_topic": ""
+  },
+  {
+    "question": "Find information related to: Wilson pioneered twice - weekly press conferences in the White House .",
     "expected_topic": ""
   },
   {
@@ -184,19 +188,15 @@
     "expected_topic": ""
   },
   {
-    "question": "Find information related to: George Washington delivered the first regular annual message before a joint session of Congress on January 8 , 1790 , in...",
+    "question": "Find information related to: In 1936 , President Roosevelt set a precedent when he delivered the address at night .",
     "expected_topic": ""
   },
   {
-    "question": "This became the Family Jewels .",
+    "question": "What does this refer to: Much of the legislation dealt with by Congress is drafted at the initiative of the executive branch .",
     "expected_topic": ""
   },
   {
-    "question": "When the CIA was created , its purpose was to create a clearinghouse for foreign policy intelligence and analysis .",
-    "expected_topic": ""
-  },
-  {
-    "question": "What does this refer to: James Madison , then a member of the House of Representatives , argued that the treaty could not , under Constitutional ...",
+    "question": "On July 17 , 2009 , the House Intelligence Committee said it was launching a formal investigation into the secret progra...",
     "expected_topic": ""
   }
 ]
