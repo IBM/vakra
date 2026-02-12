@@ -17,6 +17,11 @@ Usage:
     # Docker mode - requires: docker compose up
     python test_queries.py --mode docker address --max-queries 5
 
+    # List tools (params + descriptions)
+    python test_queries.py --list-tools address
+    python test_queries.py --list-tools --mode docker address
+    python test_queries.py --list-tools          # all domains
+
     # Extra tests (work with any mode)
     python test_queries.py --recall-at-k address
     python test_queries.py --negative address
@@ -330,6 +335,182 @@ async def test_negative_queries(query_fn, domain: str):
         print(f"  (This is your 'no relevant results' baseline threshold)")
 
 
+# --------------- List tools ---------------
+
+def _format_params(schema: dict, indent: int = 0) -> str:
+    """Format a JSON Schema's properties into readable param lines."""
+    lines = []
+    props = schema.get("properties", {})
+    required = set(schema.get("required", []))
+    for name, info in props.items():
+        typ = info.get("type", "any")
+        desc = info.get("description", "")
+        default = info.get("default")
+        req = " (required)" if name in required else ""
+        default_str = f" [default: {default}]" if default is not None else ""
+        line = f"{'  ' * indent}    {name}: {typ}{req}{default_str}"
+        if desc:
+            line += f"  — {desc}"
+        lines.append(line)
+        # Nested object
+        if typ == "object" and "properties" in info:
+            lines.append(_format_params(info, indent + 1))
+    return "\n".join(lines)
+
+
+async def list_tools_fastapi(domains: list[str], base_url: str):
+    """List tools by reading the OpenAPI spec from FastAPI."""
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        resp = await client.get(f"{base_url}/openapi.json")
+        resp.raise_for_status()
+        spec = resp.json()
+
+    paths = spec.get("paths", {})
+    schemas = spec.get("components", {}).get("schemas", {})
+
+    def resolve(obj):
+        if isinstance(obj, dict):
+            if "$ref" in obj:
+                ref = obj["$ref"]
+                if ref.startswith("#/components/schemas/"):
+                    return resolve(schemas.get(ref.split("/")[-1], {}))
+                return obj
+            return {k: resolve(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [resolve(i) for i in obj]
+        return obj
+
+    # Check if spec uses parameterized paths (/{domain}/...) or per-domain paths (/address/...)
+    parameterized = {p: v for p, v in paths.items() if "/{domain}/" in p}
+
+    # Detect path prefix: M3 uses /v1/{domain}/..., retrievers use /{domain}/...
+    prefixes = set()
+    for p in paths:
+        parts = p.strip("/").split("/")
+        if len(parts) >= 2:
+            # Check common prefixes like /v1/
+            if parts[0] in ("v1", "v2", "api"):
+                prefixes.add(f"/{parts[0]}")
+    path_prefix = prefixes.pop() if len(prefixes) == 1 else ""
+
+    for domain in sorted(domains):
+        # Match: /address/..., /v1/address/..., or /{domain}/...
+        candidates = [f"/{domain}/", f"{path_prefix}/{domain}/"]
+        matching = {p: v for p, v in paths.items()
+                    if any(p.startswith(c) for c in candidates)}
+        if not matching and parameterized:
+            # Substitute {domain} -> actual domain name for display
+            matching = {p.replace("{domain}", domain): v for p, v in parameterized.items()}
+
+        if not matching:
+            print(f"\n{domain}: no endpoints found")
+            continue
+
+        print(f"\n{domain} ({len(matching)} endpoints)")
+        print("-" * 60)
+        for path in sorted(matching):
+            for method, info in matching[path].items():
+                if method in ("parameters",):
+                    continue
+                summary = info.get("summary", "")
+                desc = info.get("description", "")
+                # Substitute {domain} in descriptions too
+                display = (desc or summary).replace("{domain}", domain)
+                print(f"  {method.upper():>6} {path}")
+                if display:
+                    print(f"         {display}")
+                # Show query/path parameters
+                params = info.get("parameters", [])
+                if params:
+                    print(f"         params:")
+                    for p in params:
+                        p_name = p.get("name", "")
+                        p_in = p.get("in", "")
+                        p_type = p.get("schema", {}).get("type", "any")
+                        p_req = " (required)" if p.get("required") else ""
+                        p_desc = p.get("description", "")
+                        line = f"            {p_name}: {p_type}{p_req}  [{p_in}]"
+                        if p_desc:
+                            line += f"  — {p_desc}"
+                        print(line)
+                # Show request body params
+                body = info.get("requestBody", {})
+                content = body.get("content", {}).get("application/json", {})
+                body_schema = resolve(content.get("schema", {}))
+                if isinstance(body_schema, dict) and body_schema.get("properties"):
+                    if not params:
+                        print(f"         params:")
+                    print(_format_params(body_schema, indent=2))
+                print()
+
+
+async def list_tools_mcp(domains: list[str], base_url: str):
+    """List tools via in-process MCP server."""
+    from mcp_server import FastAPIMCPServer
+
+    for domain in sorted(domains):
+        mcp = FastAPIMCPServer(
+            fastapi_base_url=base_url,
+            server_name=f"retriever-mcp-{domain}",
+            domains=[domain],
+        )
+        try:
+            await mcp.initialize()
+        except Exception as e:
+            print(f"\n{domain}: ERROR connecting to {base_url} — {e}")
+            continue
+
+        tools = await mcp.list_tools()
+        print(f"\n{domain} ({len(tools)} tools)")
+        print("-" * 60)
+        for tool in tools:
+            print(f"  {tool.name}")
+            if tool.description:
+                print(f"    {tool.description}")
+            if tool.inputSchema and tool.inputSchema.get("properties"):
+                print(f"    params:")
+                print(_format_params(tool.inputSchema, indent=1))
+            print()
+
+
+async def list_tools_docker(domains: list[str], args):
+    """List tools via MCP server inside Docker container."""
+    from mcp import ClientSession, StdioServerParameters
+    from mcp.client.stdio import stdio_client
+
+    container_runtime = args.container_runtime or detect_container_runtime()
+
+    for domain in sorted(domains):
+        exec_args = [
+            "exec", "-i",
+            "-e", f"MCP_DOMAIN={domain}",
+            args.container_name,
+            "python", "mcp_server.py",
+        ]
+        server_params = StdioServerParameters(
+            command=container_runtime, args=exec_args, env=None,
+        )
+        try:
+            async with stdio_client(server_params) as (read, write):
+                async with ClientSession(read, write) as session:
+                    await session.initialize()
+                    response = await session.list_tools()
+                    tools = response.tools
+
+                    print(f"\n{domain} ({len(tools)} tools)")
+                    print("-" * 60)
+                    for tool in tools:
+                        print(f"  {tool.name}")
+                        if tool.description:
+                            print(f"    {tool.description}")
+                        if tool.inputSchema and tool.inputSchema.get("properties"):
+                            print(f"    params:")
+                            print(_format_params(tool.inputSchema, indent=1))
+                        print()
+        except Exception as e:
+            print(f"\n{domain}: ERROR — {e}")
+
+
 # --------------- Per-domain test orchestration ---------------
 
 def print_domain_summary(domain: str, stats: dict):
@@ -471,6 +652,18 @@ async def _test_domain_docker(domain: str, queries: list[dict], args) -> dict:
 # --------------- Main ---------------
 
 async def run(args):
+    # Handle --list-tools
+    if args.list_tools:
+        domains = args.domains if args.domains else discover_domains()
+        print(f"Listing tools for {len(domains)} domain(s) [mode: {args.mode}]\n")
+        if args.mode == "fastapi":
+            await list_tools_fastapi(domains, args.base_url)
+        elif args.mode == "mcp":
+            await list_tools_mcp(domains, args.base_url)
+        elif args.mode == "docker":
+            await list_tools_docker(domains, args)
+        return
+
     # Handle cross-domain test separately
     if args.cross_domain:
         source, target = args.cross_domain
@@ -544,6 +737,9 @@ def main():
     )
     parser.add_argument("--max-queries", type=int, default=None, help="Max queries per domain")
     parser.add_argument("--n-results", type=int, default=3, help="Number of results per query")
+
+    # Inspection
+    parser.add_argument("--list-tools", action="store_true", help="List MCP tools with descriptions and parameters")
 
     # Extra tests
     parser.add_argument("--recall-at-k", action="store_true", help="Run Recall@K analysis")
