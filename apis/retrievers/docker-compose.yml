@@ -1,9 +1,8 @@
 services:
   retriever-mcp:
-    # Option 1: Build locally
-    build: .
-    # Option 2: Use pre-built image from Docker Hub (comment out 'build' above)
-    # image: docker.io/amurthi44g1wd/retriever-mcp:latest
+    image: docker.io/amurthi44g1wd/retriever-mcp:latest
+    # To build locally instead, comment out 'image' above and uncomment:
+    # build: .
 
     container_name: retriever-mcp-server
     ports:
@@ -12,12 +11,9 @@ services:
       - FASTAPI_BASE_URL=http://localhost:8001
       - MCP_DOMAIN=${MCP_DOMAIN:-}
       - PRELOAD_COLLECTIONS=true
-      # Set HF_REPO to auto-download data on first start
-      - HF_REPO=${HF_REPO:-anupamamurthi/retriever-chroma-data}
     volumes:
-      # Persist downloaded data across container restarts
-      - chroma_data:/app/chroma_data
-      - queries_data:/app/queries
+      - ./chroma_data:/app/chroma_data
+      - ./queries:/app/queries:ro
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
       interval: 10s
@@ -26,7 +22,3 @@ services:
     restart: unless-stopped
     stdin_open: true
     tty: true
-
-volumes:
-  chroma_data:
-  queries_data:

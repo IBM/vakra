@@ -1,19 +1,16 @@
 #!/bin/bash
 set -e
 
-# ---- Download data from HuggingFace if not already present ----
-if [ -n "$HF_REPO" ] && [ ! -d "/app/chroma_data" ] || [ -z "$(ls -A /app/chroma_data 2>/dev/null)" ]; then
-    echo "Downloading ChromaDB data from HuggingFace: $HF_REPO"
-    python hf_sync.py download --repo "$HF_REPO" --output-dir /app
-    echo "Download complete."
-elif [ -d "/app/chroma_data" ] && [ -n "$(ls -A /app/chroma_data 2>/dev/null)" ]; then
-    echo "ChromaDB data already present, skipping download."
-else
-    echo "WARNING: No HF_REPO set and no chroma_data/ found."
-    echo "Set HF_REPO env var or mount chroma_data/ volume."
+# Check that chroma_data exists
+if [ ! -d "/app/chroma_data" ] || [ -z "$(ls -A /app/chroma_data 2>/dev/null)" ]; then
+    echo "ERROR: No chroma_data/ found."
+    echo "Download it first:"
+    echo "  python hf_sync.py download --repo anupamamurthi/retriever-chroma-data"
+    echo "Then mount it into the container."
+    exit 1
 fi
 
-# ---- Start FastAPI server ----
+# Start FastAPI server
 echo "Starting FastAPI server on port 8001..."
 uvicorn server:app --host 0.0.0.0 --port 8001 &
 
@@ -23,7 +20,7 @@ until curl -sf http://localhost:8001/health > /dev/null 2>&1; do
 done
 echo "FastAPI is up."
 
-# ---- Start MCP server (or run custom command) ----
+# Start MCP server (or run custom command)
 if [ $# -gt 0 ]; then
     exec "$@"
 else

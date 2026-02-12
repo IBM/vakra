@@ -17,25 +17,23 @@ ChromaDB (chroma_data/)  +  Granite Embeddings
 
 ---
 
-## Quick Start (Docker — easiest)
-
-Pull the image from Docker Hub and let it download data from HuggingFace automatically:
+## Quick Start (Docker)
 
 ```bash
-# Pull and start — data downloads from HuggingFace on first run
+cd apis/retrievers
+
+# 1. Download ChromaDB data from HuggingFace
+pip install huggingface_hub
+python hf_sync.py download --repo anupamamurthi/retriever-chroma-data
+
+# 2. Start the container
 docker compose up -d
 
-# Check progress (first run downloads ~2GB of ChromaDB data)
+# 3. Verify it's healthy
 docker compose logs -f
-
-# Verify it's healthy
 docker compose ps
+curl http://localhost:8001/health
 ```
-
-That's it. The container:
-1. Downloads ChromaDB collections from `anupamamurthi/retriever-chroma-data` on HuggingFace
-2. Starts FastAPI on port 8001
-3. Starts MCP server over stdio
 
 ---
 
@@ -104,40 +102,59 @@ python index_all_domains.py /path/to/docs_by_domains_20k --max-domains 5
 
 ## Docker
 
-### Using Docker Hub image (recommended)
+### Prerequisites: download data first
+
+The container expects `chroma_data/` and `queries/` to exist locally. Download them from HuggingFace before starting:
 
 ```bash
-# Pull and run
-docker compose up -d
-
-# First run downloads data from HuggingFace automatically
-# Subsequent runs use cached data from Docker volumes
-
-# Stop
-docker compose down
-
-# Stop and wipe data (forces re-download on next start)
-docker compose down -v
+pip install huggingface_hub
+python hf_sync.py download --repo anupamamurthi/retriever-chroma-data
 ```
 
-### Building locally
+Or index from scratch (see [Indexing](#indexing) above).
+
+### Starting the container
 
 ```bash
-# Build from source
-docker compose build
-
-# Start
+# Using docker compose (recommended)
 docker compose up -d
 
-# Check health
-docker compose ps
-docker inspect retriever-mcp-server --format '{{.State.Health.Status}}'
+# Or using docker run directly
+docker run -d \
+  --name retriever-mcp-server \
+  -p 8001:8001 \
+  -e PRELOAD_COLLECTIONS=true \
+  -v ./chroma_data:/app/chroma_data \
+  -v ./queries:/app/queries:ro \
+  -i -t \
+  docker.io/amurthi44g1wd/retriever-mcp:latest
 
-# View logs
+# Watch startup logs
 docker compose logs -f
 
-# Stop
+# Check health status
+docker compose ps
+curl http://localhost:8001/health
+curl http://localhost:8001/domains
+```
+
+### Stopping the container
+
+```bash
+# If started with docker compose
 docker compose down
+
+# If started with docker run
+docker stop retriever-mcp-server && docker rm retriever-mcp-server
+```
+
+### Building locally (instead of pulling from Docker Hub)
+
+```bash
+# Edit docker-compose.yml: uncomment 'build: .' and comment out 'image: ...'
+
+docker compose build
+docker compose up -d
 ```
 
 ### Pushing to Docker Hub
@@ -146,27 +163,9 @@ docker compose down
 # Login to Docker Hub
 docker login
 
-# Build the image
+# Build and push
 docker build -t docker.io/amurthi44g1wd/retriever-mcp:latest .
-
-# Push to Docker Hub
 docker push docker.io/amurthi44g1wd/retriever-mcp:latest
-
-# To use the pushed image instead of building locally,
-# edit docker-compose.yml: comment out 'build: .' and
-# uncomment 'image: docker.io/amurthi44g1wd/retriever-mcp:latest'
-```
-
-### Using local data instead of HuggingFace download
-
-If you already have `chroma_data/` locally and don't want the container to download from HuggingFace:
-
-```bash
-# Override HF_REPO to empty to skip download, and bind-mount local data
-HF_REPO="" docker compose run -d \
-  -v ./chroma_data:/app/chroma_data \
-  -v ./queries:/app/queries:ro \
-  retriever-mcp
 ```
 
 ---
@@ -291,7 +290,7 @@ python hf_sync.py download --repo anupamamurthi/retriever-chroma-data --output-d
 | `index_all_domains.py` | Batch indexer: domain JSON files -> ChromaDB + query files |
 | `test_queries.py` | Unified test runner (fastapi / mcp / docker modes) |
 | `hf_sync.py` | Upload/download ChromaDB data to/from Hugging Face |
-| `entrypoint.sh` | Container entrypoint: downloads data, starts servers |
+| `entrypoint.sh` | Container entrypoint: starts FastAPI + MCP servers |
 | `docker-compose.yml` | Docker service definition |
 | `Dockerfile` | Container image |
 | `requirements.txt` | Python dependencies |
@@ -317,14 +316,17 @@ docker push docker.io/amurthi44g1wd/retriever-mcp:latest
 
 # === Usage (consumer) ===
 
-# 4. Start the service (downloads data from HF automatically)
+# 4. Download data from HuggingFace
+python hf_sync.py download --repo anupamamurthi/retriever-chroma-data
+
+# 5. Start the container
 docker compose up -d
 
-# 5. Test it works
+# 6. Test it works
 python test_queries.py address --max-queries 5
 python test_queries.py --mode docker address --max-queries 5
 
-# 6. Run the benchmark
+# 7. Run the benchmark
 cd ../..
 python benchmark_runner.py --task_id 2 --run-agent --domain address
 ```
