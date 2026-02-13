@@ -67,8 +67,23 @@ class LiveMCPServer(ABC):
         with open(self.universe_configuration_file) as f:
             self.all_tool_configs = yaml.safe_load(f)
 
-        # Current universe state (mutable)
-        self.tool_universe_id = config.tool_universe_id or list(self.all_tool_configs.keys())[0]
+        # Filter universe IDs to those belonging to the configured domain
+        if config.domain:
+            self.domain_universe_ids = [
+                uid for uid, entry in self.all_tool_configs.items()
+                if entry.get("domain") == config.domain
+            ]
+        else:
+            self.domain_universe_ids = list(self.all_tool_configs.keys())
+
+        if not self.domain_universe_ids:
+            raise ValueError(
+                f"No tool universes found for domain '{config.domain}' "
+                f"in {self.universe_configuration_file}"
+            )
+
+        # Current universe state (mutable) - default to first in domain list
+        self.tool_universe_id = self.domain_universe_ids[0]
         self._universe_lock = asyncio.Lock()  # Thread safety
         self.active_data: Optional[dict] = None  # Will be set by _load_tool_universe
 
