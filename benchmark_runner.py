@@ -78,10 +78,10 @@ TASK_CONFIGS: Dict[int, TaskConfig] = {
             "/Users/anu/Documents/GitHub/routing/EnterpriseBenchmark/train/input/",
         ),
         container_name="fastapi-mcp-server",
-        # NOTE: existing task_2 passes MCP_DOMAINS (plural) which the m3
+        # NOTE: existing task_2 passes MCP_DOMAIN (plural) which the m3
         # server doesn't actually read — it reads MCP_DOMAIN.  Keeping the
         # legacy value here to avoid changing current behaviour.
-        mcp_domain_env="MCP_DOMAINS",
+        mcp_domain_env="MCP_DOMAIN",
     ),
     5: TaskConfig(
         input_dir=os.environ.get(
