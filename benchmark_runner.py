@@ -50,9 +50,11 @@ Options:
   --top-k-tools K             Keep top-K tools per query via embedding similarity
   --container-runtime RT      Container runtime: docker or podman (default: auto-detect)
   --container-name NAME       Override container name from task config
+  --output DIR                Override output directory
 
 Output:
-  Results saved to: <task_input_dir>/../output/<domain>.json
+  Results saved to: output/task_{id}_{timestamp}/<domain>.json
+  e.g. output/task_5_feb_13_11_21am/address.json
 """
 import json
 import os
@@ -692,6 +694,23 @@ async def run_benchmark_for_domain(
     return results
 
 
+def _make_output_dir(task_id: int, output_dir: Optional[str] = None) -> Path:
+    """Create a timestamped output directory for a task under CWD.
+
+    Format: output/task_{id}_{Mon}_{dd}_{hh}_{mm}{am|pm}/
+    e.g.    output/task_5_Feb_13_11_21am/
+    """
+    if output_dir:
+        p = Path(output_dir)
+    else:
+        from datetime import datetime
+        now = datetime.now()
+        ts = now.strftime("%b_%d_%I_%M%p").lower()  # e.g. feb_13_11_21am
+        p = Path("output") / f"task_{task_id}_{ts}"
+    p.mkdir(parents=True, exist_ok=True)
+    return p
+
+
 async def run_task(
     task_id: int,
     container_runtime: str,
@@ -700,7 +719,7 @@ async def run_task(
     provider: str = "ollama",
     model: Optional[str] = None,
     max_samples_per_domain: Optional[int] = None,
-    output_file: Optional[str] = None,
+    output_dir: Optional[str] = None,
     domains: Optional[List[str]] = None,
     top_k_tools: int = 0,
     mcp_domain_env: str = "MCP_DOMAIN",
@@ -771,7 +790,8 @@ async def run_task(
 
     # Process each domain file, writing output incrementally per domain
     all_results: List[BenchmarkResult] = []
-    gt_output_dir = input_path.parent / "output"
+    gt_output_dir = _make_output_dir(task_id, output_dir)
+    print(f"Output directory: {gt_output_dir}")
     for json_file in json_files:
         domain = json_file.stem  # Extract domain from filename (e.g., "address" from "address.json")
 
@@ -1005,7 +1025,7 @@ def main():
         "--output",
         type=str,
         default=None,
-        help="Output file for results (default: timestamped directory with per-domain files)"
+        help="Output directory (default: output/task_{id}_{timestamp}/ in CWD)"
     )
     parser.add_argument(
         "--provider",
@@ -1108,7 +1128,7 @@ def main():
             provider=args.provider,
             model=args.model,
             max_samples_per_domain=args.max_samples_per_domain,
-            output_file=args.output,
+            output_dir=args.output,
             domains=args.domain,
             top_k_tools=args.top_k_tools,
             mcp_domain_env=cfg.mcp_domain_env,

@@ -110,10 +110,21 @@ python benchmark_runner.py --task_id 2 --run-agent --domain hockey --top-k-tools
 | `--top-k-tools K` | Keep top-K tools per query via embedding similarity |
 | `--container-runtime` | `docker` or `podman` (default: auto-detect) |
 | `--container-name` | Override container name from task config |
+| `--output DIR` | Override output directory |
 
 ### Output
 
-Results are saved to `<task_input_dir>/../output/<domain>.json`.
+Results are saved to `output/task_{id}_{timestamp}/<domain>.json` in the current working directory.
+
+```
+output/
+  task_2_feb_13_11_21am/
+    address.json
+    hockey.json
+  task_5_feb_13_11_21am/
+    address.json
+    airline.json
+```
 
 
 ## 🏁 Baselines
