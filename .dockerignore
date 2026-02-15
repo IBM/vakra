@@ -1,0 +1,24 @@
+.git/
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+
+# Data — mounted at runtime, not baked in
+apis/m3/rest/db/
+apis/retrievers/chroma_data/
+apis/retrievers/queries/
+
+# Build artifacts / outputs
+output/
+notebooks/
+*.sqlite
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+
+# Other
+sample_data/
+ui/

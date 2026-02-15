@@ -1,0 +1,76 @@
+# Unified Dockerfile combining all three MCP servers:
+#   1. M3 REST     — FastAPI (port 8000) + MCP wrapper
+#   2. Retrievers   — FastAPI (port 8001) + MCP wrapper
+#   3. Sel/Slot     — Direct MCP server (python -m apis.m3.python_tools.mcp)
+#
+# Build (from project root):
+#   docker build -t m3_environ -f docker/Dockerfile.unified .
+#
+# Run:
+#   docker run -d --name m3_environ \
+#       -v "$(pwd)/apis/m3/rest/db:/app/db:ro" \
+#       -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
+#       -v "$(pwd)/apis/retrievers/chroma_data:/app/retrievers/chroma_data" \
+#       -v "$(pwd)/apis/retrievers/queries:/app/retrievers/queries:ro" \
+#       -p 8000:8000 -p 8001:8001 \
+#       m3_environ
+#
+# Exec MCP servers:
+#   docker exec -i -e MCP_DOMAIN=address   m3_environ python /app/m3-rest/mcp_server.py
+#   docker exec -i -e MCP_DOMAIN=address   m3_environ python /app/retrievers/mcp_server.py
+#   docker exec -i -e MCP_DOMAIN=superhero m3_environ python -m apis.m3.python_tools.mcp
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# System dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies from all three servers
+COPY apis/m3/rest/requirements.txt        /tmp/req-m3-rest.txt
+COPY apis/retrievers/requirements.txt     /tmp/req-retrievers.txt
+COPY apis/m3/python_tools/requirements.txt /tmp/req-python-tools.txt
+
+RUN pip install --no-cache-dir \
+    -r /tmp/req-m3-rest.txt \
+    -r /tmp/req-retrievers.txt \
+    -r /tmp/req-python-tools.txt \
+    && rm /tmp/req-*.txt
+
+# Pre-download the sentence-transformers embedding model (avoids runtime download)
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('ibm-granite/granite-embedding-english-r2')"
+
+# --- M3 REST server ---
+COPY apis/m3/rest/app.py         m3-rest/app.py
+COPY apis/m3/rest/mcp_server.py  m3-rest/mcp_server.py
+COPY apis/m3/rest/server/        m3-rest/server/
+
+# Symlink so REST server's hardcoded 'db/...' paths resolve from m3-rest/ CWD
+RUN ln -s /app/db m3-rest/db
+
+# --- Retrievers server ---
+COPY apis/retrievers/server.py              retrievers/server.py
+COPY apis/retrievers/mcp_server.py          retrievers/mcp_server.py
+COPY apis/retrievers/chromadb_retriever.py  retrievers/chromadb_retriever.py
+
+# --- Sel/Slot Python tools MCP server ---
+COPY apis/__init__.py           apis/__init__.py
+COPY apis/m3/__init__.py        apis/m3/__init__.py
+COPY apis/m3/python_tools/      apis/m3/python_tools/
+
+# --- Entrypoint ---
+COPY docker/entrypoint-unified.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
+# Volume mount points (data mounted at runtime, not baked in)
+VOLUME /app/db
+VOLUME /app/apis/configs
+VOLUME /app/retrievers/chroma_data
+VOLUME /app/retrievers/queries
+
+EXPOSE 8000 8001
+
+ENTRYPOINT ["/app/entrypoint.sh"]

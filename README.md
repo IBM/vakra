@@ -127,6 +127,103 @@ output/
 ```
 
 
+## Unified Docker Image (`m3_environ`)
+
+A single Docker image that bundles all three MCP servers, so you only need one container instead of two or three.
+
+| Server | Port / Protocol | Exec Command |
+|--------|----------------|--------------|
+| M3 REST (Task 2) | FastAPI :8000 | `python /app/m3-rest/mcp_server.py` |
+| Retrievers (Task 5) | FastAPI :8001 | `python /app/retrievers/mcp_server.py` |
+| Sel/Slot Tools | MCP stdio | `python -m apis.m3.python_tools.mcp` |
+
+### Option A: Pull from Docker Hub
+
+```bash
+docker pull docker.io/amurthi44g1wd/m3_environ:latest
+docker tag docker.io/amurthi44g1wd/m3_environ:latest m3_environ
+```
+
+### Option B: Build locally
+
+```bash
+docker build -t m3_environ -f docker/Dockerfile.unified .
+```
+
+### Run
+
+```bash
+docker run -d --name m3_environ \
+    -v "$(pwd)/apis/m3/rest/db:/app/db:ro" \
+    -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
+    -v "$(pwd)/apis/retrievers/chroma_data:/app/retrievers/chroma_data" \
+    -v "$(pwd)/apis/retrievers/queries:/app/retrievers/queries:ro" \
+    -p 8000:8000 -p 8001:8001 \
+    m3_environ
+```
+
+### Quick Test
+
+Verify that both FastAPI servers are running inside the container:
+
+```bash
+# M3 REST (port 8000)
+curl http://localhost:8000/openapi.json | head -c 200
+
+# Retrievers (port 8001)
+curl http://localhost:8001/health
+```
+
+Test each MCP server via `docker exec`:
+
+```bash
+# Task 2 — M3 SQL tools
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0.1.0"}}}' \
+  | docker exec -i -e MCP_DOMAIN=address m3_environ python /app/m3-rest/mcp_server.py
+
+# Task 5 — Retriever tools
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0.1.0"}}}' \
+  | docker exec -i -e MCP_DOMAIN=address m3_environ python /app/retrievers/mcp_server.py
+
+# Sel/Slot tools
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0.1.0"}}}' \
+  | docker exec -i -e MCP_DOMAIN=superhero m3_environ python -m apis.m3.python_tools.mcp
+```
+
+### Push to Docker Hub
+
+```bash
+docker tag m3_environ docker.io/amurthi44g1wd/m3_environ:latest
+docker push docker.io/amurthi44g1wd/m3_environ:latest
+```
+
+### Benchmark Runner (Unified)
+
+`benchmark_runner_single_docker_image.py` works like `benchmark_runner.py` but targets the single `m3_environ` container.
+
+```bash
+# Task 2 — M3 SQL tools
+python benchmark_runner_single_docker_image.py --task_id 2 --run-agent --domain address
+
+# Task 5 — Retriever tools
+python benchmark_runner_single_docker_image.py --task_id 5 --run-agent --domain address
+
+# Both tasks in parallel
+python benchmark_runner_single_docker_image.py --task_id 2 5 --run-agent --domain address --parallel
+
+# List tools only
+python benchmark_runner_single_docker_image.py --task_id 5 --list-tools --domain address
+```
+
+### Demo (Unified)
+
+`examples/demo_single_docker_image.py` runs the sel/slot MCP server against the unified container.
+
+```bash
+python examples/demo_single_docker_image.py --mode docker --domain superhero \
+    --provider openai --model gpt-4o --max-samples-per-domain 1
+```
+
 ## 🏁 Baselines
 We include three baselines for demonstration purposes, and you can read more about them in [docs/baselines.md](docs/baselines.md).
 
