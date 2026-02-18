@@ -32,13 +32,15 @@ python benchmark_runner.py --task_id 2 --run-agent --domain hockey --domain addr
 # Combine with other options
 python benchmark_runner.py --task_id 2 --run-agent --domain hockey --max-samples-per-domain 5
 """
-import os
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import List, Union
 
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.tools import StructuredTool
+from langgraph.prebuilt import create_react_agent
+
+from agents.components.tool_shortlister import ToolShortlister
 
 
 @dataclass
@@ -65,14 +67,12 @@ class AgentInterface(ABC):
     async def run(
         self,
         input: Union[str, List[Message]],
-        tools: List[StructuredTool],
     ) -> AgentResponse:
         """
-        Run the agent with the given input and tools.
+        Run the agent with the given input.
 
         Args:
             input: Either a single question string or a list of Messages
-            tools: List of LangChain StructuredTool objects
 
         Returns:
             AgentResponse with the final answer and metadata
@@ -86,20 +86,28 @@ class LangGraphReActAgent(AgentInterface):
     def __init__(
         self,
         llm: BaseChatModel,
-        model: str = "",
-        provider: str = "",
+        tools: List[StructuredTool] | None = None,
+        top_k_tools: int = 0,
+        **kwargs,
     ):
         """
         Initialize the LangGraph ReAct agent.
 
         Args:
             llm: Already-constructed LangChain chat model instance
-            model: Model name (for metadata only)
-            provider: Provider name (for metadata only)
+            tools: List of LangChain StructuredTool objects to use
+            top_k_tools: If > 0, shortlist to this many tools per query via
+                         semantic similarity. 0 disables shortlisting.
         """
+        self._create_react_agent = create_react_agent
         self._llm = llm
-        self.model = model
-        self.provider = provider
+        self._tools = tools or []
+        self._shortlister = None
+        # Only shortlist if top_k_tools limit is lower than available tools
+        if top_k_tools > 0 and top_k_tools > len(self._tools):
+            self._shortlister = ToolShortlister(top_k=top_k_tools)
+            self._shortlister.encode_tools(self._tools)
+        self._agent = create_react_agent(self._llm, self._tools)
 
     def _messages_to_langchain(self, messages: List[Message]) -> List[tuple]:
         """Convert Message objects to LangChain format."""
@@ -143,14 +151,25 @@ class LangGraphReActAgent(AgentInterface):
     async def run(
         self,
         input: Union[str, List[Message]],
-        tools: List[StructuredTool],
     ) -> AgentResponse:
-        """Run the ReAct agent with given input and tools."""
-        from langgraph.prebuilt import create_react_agent
-        agent = create_react_agent(self._llm, tools)
+        """Run the ReAct agent with given input."""
+        # Determine active tools (shortlisted or full set)
+        if self._shortlister:
+            if isinstance(input, str):
+                query = input
+            else:
+                query = next(
+                    (m.content for m in reversed(input) if m.role == "user"),
+                    "",
+                )
+            active_tools = self._shortlister.shortlist(query, self._tools)
+            agent = self._create_react_agent(self._llm, active_tools)
+        else:
+            active_tools = self._tools
+            agent = self._agent
 
         # Build tool map for manual execution
-        tool_map = {t.name: t for t in tools}
+        tool_map = {t.name: t for t in active_tools}
 
         # Convert input to messages format
         if isinstance(input, str):
@@ -254,7 +273,7 @@ class LangGraphReActAgent(AgentInterface):
             content=final_content,
             tool_calls=tool_calls,
             messages=response_messages,
-            metadata={"model": self.model, "provider": self.provider},
+            metadata={},
             trajectory=trajectory,
         )
 
@@ -262,6 +281,7 @@ class LangGraphReActAgent(AgentInterface):
 def create_agent(
     provider: str = "anthropic",
     model: str | None = None,
+    tools: List[StructuredTool] | None = None,
     **kwargs,
 ) -> AgentInterface:
     """
@@ -288,4 +308,4 @@ def create_agent(
 
     resolved_model = model or default_models.get(provider, "")
     llm = create_llm(provider=provider, model=resolved_model, **kwargs)
-    return LangGraphReActAgent(llm=llm, model=resolved_model, provider=provider)
+    return LangGraphReActAgent(llm=llm, tools=tools)

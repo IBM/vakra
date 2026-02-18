@@ -13,45 +13,43 @@ Setup:
   pip install langchain-openai langchain mcp langchain-anthropic langgraph langchain-ollama
 
 MCP connection settings are read from a YAML config file
-(default: apis/configs/mcp_connection_config.yaml). Override the path
-with --mcp-config.
+(default: apis/configs/mcp_connection_config.yaml). Override with --mcp-config.
 
 Usage:
-  # Single task
-  python benchmark_runner.py --task_id 2 --run-agent --domain hockey
-  python benchmark_runner.py --task_id 5 --run-agent --domain address
+  # Single task, single domain
+  python benchmark_runner.py --task_id 2 --domain hockey
+
+  # Single task, multiple domains
+  python benchmark_runner.py --task_id 2 --domain hockey --domain address
 
   # Multiple tasks (sequential, default)
-  python benchmark_runner.py --task_id 2 5 --run-agent --domain address
+  python benchmark_runner.py --task_id 2 5
 
-  # Multiple tasks (parallel via asyncio.gather)
-  python benchmark_runner.py --task_id 2 5 --run-agent --domain address --parallel
+  # Multiple tasks in parallel
+  python benchmark_runner.py --task_id 2 5 --parallel
 
-  # Limit samples, choose provider/model
-  python benchmark_runner.py --task_id 5 --run-agent --domain address --max-samples-per-domain 5
-  python benchmark_runner.py --task_id 5 --run-agent --provider anthropic --model claude-sonnet-4-5-20250929
+  # Limit samples per domain
+  python benchmark_runner.py --task_id 2 --max-samples-per-domain 5
 
-    # Run benchmark on specific domain(s) only
-    python benchmark_runner.py --task_id 2 --run-agent --domain hockey
-    python benchmark_runner.py --task_id 2 --run-agent --domain hockey \
-        --domain address
+  # Choose provider/model
+  python benchmark_runner.py --task_id 2 --provider anthropic --model claude-sonnet-4-5-20250929
+  python benchmark_runner.py --task_id 2 --provider ollama --model llama3.1:8b
 
-    # Limit samples per domain (e.g., 5 samples from each domain file)
-    python benchmark_runner.py --task_id 2 --run-agent \
-        --max-samples-per-domain 5
+  # Enable tool shortlisting (top-k tools per query)
+  python benchmark_runner.py --task_id 2 --top-k-tools 10
 
-    # Use different provider/model
-    python benchmark_runner.py --task_id 2 --run-agent --provider anthropic
-    python benchmark_runner.py --task_id 2 --run-agent \
-        --provider ollama --model llama3.1:8b
+  # Custom output directory
+  python benchmark_runner.py --task_id 2 --output my_results/
 
-    # Use a custom MCP connection config
-    python benchmark_runner.py --task_id 2 --run-agent \
-        --mcp-config my_mcp_config.yaml
+  # Use a custom MCP connection config
+  python benchmark_runner.py --task_id 2 --mcp-config my_mcp_config.yaml
+
+  # List available tools for a domain (does not run the benchmark)
+  python benchmark_runner.py --task_id 2 --domain hockey --list-tools
 
 Output:
   Results saved to: output/task_{id}_{timestamp}/<domain>.json
-  e.g. output/task_5_feb_13_11_21am/address.json
+  e.g. output/task_2_feb_18_11_21am/hockey.json
 """
 import asyncio
 import json
@@ -64,7 +62,6 @@ from dotenv import load_dotenv
 
 from agents.agent_interface import (
     AgentInterface,
-    AgentResponse,
     LangGraphReActAgent,
 )
 from agents.llm import create_llm
@@ -99,233 +96,16 @@ DEFAULT_MCP_CONFIG = str(
 AGENT_TIMEOUT_SECONDS = 120
 
 
-def extract_tool_calling_agent_response(agent, answer: str) -> AgentResponse:
-    """Extract AgentResponse-compatible data from ToolCallingAgent after run().
-
-    The ToolCallingAgent stores its message history internally but only returns
-    a string. This function extracts tool_calls and trajectory from
-    agent._messages to create a BenchmarkResult-compatible response.
-
-    Args:
-        agent: ToolCallingAgent instance after run() completed
-        answer: The string returned by agent.run()
-
-    Returns:
-        AgentResponse with tool_calls and trajectory extracted from
-        agent._messages
-    """
-    tool_calls = []
-    trajectory = []
-    tool_call_args = {}  # Map tool_call_id -> {name, args}
-
-    for msg in agent._messages:
-        msg_class = msg.__class__.__name__
-
-        trajectory_entry = {
-            "type": msg_class,
-            "content": getattr(msg, "content", ""),
-        }
-
-        if msg_class == "HumanMessage":
-            trajectory.append(trajectory_entry)
-
-        elif msg_class == "AIMessage":
-            if hasattr(msg, "tool_calls") and msg.tool_calls:
-                trajectory_entry["tool_calls"] = []
-                for tc in msg.tool_calls:
-                    tc_id = tc.get("id", "") or tc.get("tool_call_id", "")
-                    tool_call_args[tc_id] = {
-                        "name": tc.get("name", "unknown"),
-                        "args": tc.get("args", {}),
-                    }
-                    trajectory_entry["tool_calls"].append({
-                        "id": tc_id,
-                        "name": tc.get("name", "unknown"),
-                        "args": tc.get("args", {}),
-                    })
-            trajectory.append(trajectory_entry)
-
-        elif msg_class == "ToolMessage":
-            tool_call_id = getattr(msg, "tool_call_id", "")
-            tool_info = tool_call_args.get(tool_call_id, {})
-            tool_name = (
-                getattr(msg, "name", None) or tool_info.get("name", "unknown")
-            )
-            tool_calls.append({
-                "tool_name": tool_name,
-                "arguments": tool_info.get("args", {}),
-                "result": msg.content,
-            })
-            trajectory_entry["tool_name"] = tool_name
-            trajectory_entry["tool_call_id"] = tool_call_id
-            trajectory_entry["result"] = msg.content
-            trajectory.append(trajectory_entry)
-
-        elif msg_class == "SystemMessage":
-            trajectory.append(trajectory_entry)
-
-    return AgentResponse(
-        content=answer,
-        tool_calls=tool_calls,
-        messages=[],
-        metadata={},
-        trajectory=trajectory,
-    )
-
-
-
-async def run_agent_with_query(
-    domain: str,
-    query: str,
-    cfg: MCPConnectionConfig,
-    agent: AgentInterface,
-) -> AgentResponse:
-    """Run an agent with tools from the MCP server."""
-    if cfg.mode == "stdio" and not cfg.command and cfg.container_name:
-        runtime = cfg.container_runtime or "(auto-detect)"
-        print(
-            f"  Starting: {runtime} exec -i"
-            f" -e MCP_DOMAIN={domain} {cfg.container_name} python mcp_server.py"
-        )
-    elif cfg.mode == "websocket":
-        print(f"  Connecting via websocket: {cfg.server_url}")
-    else:
-        print(
-            f"  Starting: {cfg.command}"
-            f" {' '.join(cfg.args or [])}"
-        )
-
-    response = None
-
-    try:
-        async with create_client_and_connect(cfg, domain) as session:
-            # Get tools as LangChain tools
-            wrapper = MCPToolWrapper(session)
-            tools = await wrapper.get_tools()
-            print(f"  Loaded {len(tools)} tools")
-
-            # Run the agent with timeout
-            try:
-                response = await asyncio.wait_for(
-                    agent.run(query, tools),
-                    timeout=AGENT_TIMEOUT_SECONDS
-                )
-                print(
-                    f"  Agent completed."
-                    f" Response received: {response is not None}"
-                )
-            except asyncio.TimeoutError:
-                print(
-                    f"  Agent timed out after {AGENT_TIMEOUT_SECONDS}s"
-                )
-                raise TimeoutError(
-                    f"Agent timed out after {AGENT_TIMEOUT_SECONDS}"
-                    " seconds"
-                )
-        # Context exited cleanly
-        print("  Server stopped.")
-    except ExceptionGroup as eg:
-        # Handle Python 3.11+ ExceptionGroup from TaskGroup cleanup
-        # Response may still be valid if agent completed before cleanup error
-        print(f"  Warning: Cleanup error (ignored): {eg}")
-        print("  Server stopped.")
-    except Exception as e:
-        if "TaskGroup" in str(type(e).__name__) or "TaskGroup" in str(e):
-            print(f"  Warning: Cleanup error (ignored): {e}")
-            print("  Server stopped.")
-        else:
-            stop_mcp_server(cfg)
-            raise
-
-    if response is None:
-        raise RuntimeError("Agent did not return a response")
-    return response
-
-
-async def process_domain(
-    domain: str,
-    cfg: MCPConnectionConfig,
-    agent: Optional[AgentInterface] = None,
-    query: Optional[str] = None,
-) -> dict:
-    """Process a single domain: connect to MCP server and list tools."""
-
-    print("\n" + "=" * 60)
-    print(f"Domain: {domain}")
-    print("=" * 60)
-
-    try:
-        if agent and query:
-            # Run agent with query
-            response = await run_agent_with_query(domain, query, cfg, agent)
-            print(f"  Tool calls: {len(response.tool_calls)}")
-            if len(response.content) > 200:
-                print(f"  Answer: {response.content[:200]}...")
-            else:
-                print(f"  Answer: {response.content}")
-
-            return {
-                "domain": domain,
-                "status": "success",
-                "query": query,
-                "answer": response.content,
-                "tool_calls": response.tool_calls,
-                "trajectory": response.trajectory,
-            }
-        else:
-            # Just list tools
-            tool_names: List[str] = []
-            try:
-                async with create_client_and_connect(cfg, domain) as session:
-                    response = await session.list_tools()
-                    tool_names = [t.name for t in response.tools]
-                print("  Server stopped.")
-            except ExceptionGroup as eg:
-                print(f"  Warning: Cleanup error (ignored): {eg}")
-            except Exception as e:
-                if "TaskGroup" in str(type(e).__name__) or "TaskGroup" in str(e):
-                    print(f"  Warning: Cleanup error (ignored): {e}")
-                else:
-                    stop_mcp_server(cfg)
-                    raise
-            print(f"  Tools loaded: {len(tool_names)}")
-
-            for tool in tool_names[:5]:
-                print(f"    - {tool}")
-            if len(tool_names) > 5:
-                print(f"    ... and {len(tool_names) - 5} more")
-
-            return {
-                "domain": domain,
-                "status": "success",
-                "tool_count": len(tool_names),
-                "tools": tool_names,
-            }
-    except Exception as e:
-        print(f"  ERROR: {e}")
-        return {
-            "domain": domain,
-            "status": "error",
-            "error": str(e),
-            "tool_count": 0,
-            "tools": [],
-        }
-
-
 async def run_benchmark_for_domain(
     domain: str,
     items: List[BenchmarkItem],
     cfg: MCPConnectionConfig,
-    make_item_runner,
+    task_id: int,
+    llm,
     max_samples: Optional[int] = None,
-    shortlister=None,
+    top_k_tools: int = 0,
 ) -> List[BenchmarkResult]:
-    """Run benchmark for a single domain - starts MCP server once.
-
-    Args:
-        make_item_runner: Callable[[tools], async (item, tools) -> AgentResponse]
-            Factory called once per domain after tools are loaded.
-    """
+    """Run benchmark for a single domain - starts MCP server once."""
     import time
 
     # Limit samples if requested
@@ -345,12 +125,11 @@ async def run_benchmark_for_domain(
             tools = await wrapper.get_tools()
             print(f"  Loaded {len(tools)} tools for domain '{domain}'")
 
-            # Build the per-item runner for this domain's tools
-            item_runner = make_item_runner(tools)
+            agent = _get_agent(task_id, llm, tools, top_k_tools)
 
-            # Pre-compute tool embeddings for shortlisting
-            if shortlister:
-                shortlister.encode_tools(tools)
+            get_data_tool = next(
+                (t for t in tools if t.name == "get_data"), None
+            )
 
             # Run all queries for this domain
             for i, item in enumerate(items):
@@ -372,21 +151,40 @@ async def run_benchmark_for_domain(
                 start_time = time.perf_counter()
 
                 try:
-                    # Shortlist tools per query if enabled
-                    if shortlister:
-                        query_tools = shortlister.shortlist(
-                            item.query, tools
+                    if get_data_tool:
+                        print(f"    Switching to universe: {item.uuid}")
+                        data_result = await get_data_tool.ainvoke(
+                            {"tool_universe_id": item.uuid}
                         )
-                        print(
-                            f"    Shortlisted"
-                            f" {len(query_tools)}/{len(tools)} tools"
-                        )
-                    else:
-                        query_tools = tools
+                        parsed_data = json.loads(data_result)
 
-                    # Run item via the factory-provided runner
+                        # Handle MCP TextContent format
+                        if isinstance(parsed_data, list) and parsed_data:
+                            first_item = parsed_data[0]
+                            if (
+                                isinstance(first_item, dict)
+                                and "text" in first_item
+                            ):
+                                parsed_data = json.loads(first_item["text"])
+                            else:
+                                parsed_data = first_item
+
+                        if (
+                            isinstance(parsed_data, dict)
+                            and "error" in parsed_data
+                        ):
+                            raise RuntimeError(
+                                f"Universe switch failed: {parsed_data['error']}"
+                            )
+
+                        print("    Universe loaded successfully")
+                        assert isinstance(agent, ToolCallingAgent)
+                        handle = agent.handle_manager.store_initial_data(parsed_data)
+                        agent._initial_data_handle = handle
+                        print(f"    Initial data stored as: {handle}")
+
                     response = await asyncio.wait_for(
-                        item_runner(item, query_tools),
+                        agent.run(item.query),
                         timeout=AGENT_TIMEOUT_SECONDS
                     )
                     result.answer = response.content
@@ -445,77 +243,21 @@ async def run_benchmark_for_domain(
     return results
 
 
-def _make_task1_item_runner(llm):
-    """Return a domain-level factory for task_id=1 (ToolCallingAgent)."""
-    def factory(tools):
-        llm_with_tools = llm.bind_tools(tools)
-        get_data_tool = next(
-            (t for t in tools if t.name == "get_data"), None
+def _get_agent(task_id: int, llm, tools, top_k_tools: int = 0) -> AgentInterface:
+    """Return the appropriate agent for the given task_id."""
+    if task_id == 1:
+        return ToolCallingAgent(
+            llm=llm,
+            tools=tools,
+            initial_data_handle="placeholder",
+            max_iterations=10,
         )
-
-        async def item_runner(item, query_tools):
-            if not get_data_tool:
-                raise RuntimeError(
-                    "get_data tool not found in available tools"
-                )
-
-            print(f"    Switching to universe: {item.uuid}")
-            data_result = await get_data_tool.ainvoke(
-                {"tool_universe_id": item.uuid}
-            )
-            parsed_data = json.loads(data_result)
-
-            # Handle MCP TextContent format
-            if isinstance(parsed_data, list) and parsed_data:
-                first_item = parsed_data[0]
-                if (
-                    isinstance(first_item, dict)
-                    and "text" in first_item
-                ):
-                    parsed_data = json.loads(first_item["text"])
-                else:
-                    parsed_data = first_item
-
-            if (
-                isinstance(parsed_data, dict)
-                and "error" in parsed_data
-            ):
-                raise RuntimeError(
-                    f"Universe switch failed: {parsed_data['error']}"
-                )
-
-            print("    Universe loaded successfully")
-
-            agent = ToolCallingAgent(
-                llm_with_tools=llm_with_tools,
-                mcp_tools=query_tools,
-                initial_data_handle="placeholder",
-                max_iterations=10,
-            )
-            handle = agent.handle_manager.store_initial_data(parsed_data)
-            agent._initial_data_handle = handle
-            print(f"    Initial data stored as: {handle}")
-
-            answer = await agent.run(item.query)
-            return extract_tool_calling_agent_response(agent, answer)
-
-        return item_runner
-    return factory
-
-
-def _make_task2_item_runner(agent):
-    """Return a domain-level factory for task_id=2 (LangGraphReActAgent)."""
-    def factory(_tools):
-        async def item_runner(item, query_tools):
-            return await agent.run(item.query, query_tools)
-        return item_runner
-    return factory
+    return LangGraphReActAgent(llm=llm, tools=tools, top_k_tools=top_k_tools)
 
 
 async def run_task(
     task_id: int,
     cfg: MCPConnectionConfig,
-    run_agent: bool = False,
     provider: str = "ollama",
     model: Optional[str] = None,
     max_samples_per_domain: Optional[int] = None,
@@ -539,37 +281,10 @@ async def run_task(
         print(f"Container name: {cfg.container_name}")
     print(f"Processing {len(domain_list)} domain(s): {domain_list}")
 
-    if not run_agent:
-        # Just list tools/items without running the agent
-        results = []
-        for domain in domain_list:
-            result = await process_domain(domain, cfg)
-            results.append(result)
-        return results
-
-    # Create tool shortlister if requested
-    shortlister = None
-    if top_k_tools > 0:
-        from agents.components.tool_shortlister import ToolShortlister
-        shortlister = ToolShortlister(top_k=top_k_tools)
-        print(f"Tool shortlister enabled: top_k={top_k_tools}")
-
     if max_samples_per_domain:
         print(f"Max samples per domain: {max_samples_per_domain}")
 
-    # Build the per-domain item runner factory based on task_id
     llm = create_llm(provider=provider, model=model)
-    if task_id == 1:
-        print(f"Agent: ToolCallingAgent / {provider} / {model or 'default'}")
-        item_runner_factory = _make_task1_item_runner(llm)
-    else:
-        agent = LangGraphReActAgent(
-            llm=llm, model=model or "", provider=provider
-        )
-        print(
-            f"Agent: LangGraphReActAgent / {provider} / {model or 'default'}"
-        )
-        item_runner_factory = _make_task2_item_runner(agent)
 
     # Process each domain, writing output incrementally
     out_dir = make_output_dir(task_id, output_dir)
@@ -582,9 +297,10 @@ async def run_task(
             domain=domain,
             items=items,
             cfg=cfg,
-            make_item_runner=item_runner_factory,
+            task_id=task_id,
+            llm=llm,
             max_samples=max_samples_per_domain,
-            shortlister=shortlister,
+            top_k_tools=top_k_tools,
         )
         all_results.extend(domain_results)
         save_results_ground_truth(domain_results, out_dir / f"{domain}.json")
@@ -743,11 +459,6 @@ def main():
         ),
     )
     parser.add_argument(
-        "--run-agent",
-        action="store_true",
-        help="Run the agent on benchmark queries (default: just list tools)"
-    )
-    parser.add_argument(
         "--list-tools",
         action="store_true",
         help="List available tools for the specified domain(s) and exit"
@@ -817,7 +528,6 @@ def main():
         return run_task(
             task_id=tid,
             cfg=task_cfg,
-            run_agent=args.run_agent,
             provider=args.provider,
             model=args.model,
             max_samples_per_domain=args.max_samples_per_domain,

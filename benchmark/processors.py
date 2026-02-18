@@ -101,14 +101,14 @@ def load_benchmark_data(
         sys.exit(1)
     json_files = sorted(input_path.glob("input/*.json"))
     if not json_files:
-        print(f"Error: No JSON files found under {input_path}/*/input/")
+        print(f"Error: No JSON files found under {input_path}/input/")
         sys.exit(1)
 
     if domains:
         json_files = [f for f in json_files if f.stem in domains]
         if not json_files:
             available = sorted(
-                {f.stem for f in input_path.glob("*/input/*.json")}
+                {f.stem for f in input_path.glob("input/*.json")}
             )
             print(f"Error: No files found for domains: {domains}")
             suffix = "..." if len(available) > 10 else ""

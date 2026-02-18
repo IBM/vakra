@@ -1,18 +1,26 @@
 import json
-from typing import Any
-from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
+from typing import Any, List, Union
 
+from langchain_core.messages import (
+    AIMessage,
+    HumanMessage,
+    SystemMessage,
+    ToolMessage,
+)
+
+from agents.agent_interface import AgentInterface, AgentResponse, Message
 from agents.components.result_handle_manager import ResultHandleManager
 
-class ToolCallingAgent:
+class ToolCallingAgent(AgentInterface):
     """Agent that executes tool-calling loops with handle-based result management"""
 
     def __init__(
         self,
-        llm_with_tools: Any,
-        mcp_tools: list,
+        llm: Any,
+        tools: list,
         initial_data_handle: str,
-        max_iterations: int = 10
+        max_iterations: int = 10,
+        **kwargs,
     ):
         """Initialize agent with LLM and tools via dependency injection
 
@@ -23,11 +31,10 @@ class ToolCallingAgent:
             max_iterations: Maximum number of agent loop iterations (default: 10)
         """
         self.handle_manager = ResultHandleManager()
-        self._llm_with_tools = llm_with_tools
-        self._mcp_tools = mcp_tools
+        self._llm_with_tools = llm.bind_tools(tools)
+        self._mcp_tools = tools
         self._initial_data_handle = initial_data_handle
         self._max_iterations = max_iterations
-        self._messages = []
 
     def _build_system_message(self) -> str:
         """Build system message explaining handle system"""
@@ -72,68 +79,99 @@ INITIAL DATA:
 - Start by using this handle in your first tool call
         """
 
-    async def run(self, query: str) -> str:
-        """Execute agent loop for a query and return final answer
+    async def run(
+        self,
+        input: Union[str, List[Message]],
+    ) -> AgentResponse:
+        """Execute agent loop and return AgentResponse.
 
         Args:
-            query: The natural language query to process
+            input: Either a plain query string or a list of Messages
+                representing a partial conversation.  When a string is
+                given the system message is prepended automatically.
+                When a list is given the system message is prepended
+                unless the list already contains a system message.
 
         Returns:
-            Final answer as string, or indication of max iterations reached
+            AgentResponse with content, tool_calls, and trajectory
         """
-        # Initialize message history
-        self._messages = [
-            SystemMessage(content=self._build_system_message()),
-            HumanMessage(content=query)
-        ]
+        system_prompt = self._build_system_message()
+
+        if isinstance(input, str):
+            messages = [
+                SystemMessage(content=system_prompt),
+                HumanMessage(content=input),
+            ]
+            query_preview = input
+        else:
+            messages = []
+            has_system = any(m.role == "system" for m in input)
+            if not has_system:
+                messages.append(SystemMessage(content=system_prompt))
+            for m in input:
+                if m.role == "user":
+                    messages.append(HumanMessage(content=m.content))
+                elif m.role == "assistant":
+                    messages.append(AIMessage(content=m.content))
+                elif m.role == "system":
+                    messages.append(SystemMessage(content=m.content))
+            query_preview = next(
+                (m.content for m in reversed(input) if m.role == "user"),
+                "",
+            )
 
         print(f"\n{'='*80}")
-        print(f"Query: {query}")
+        print(f"Query: {query_preview}")
         print(f"{'='*80}\n")
 
         print("SYSTEM:")
-        print(self._build_system_message())
+        print(system_prompt)
 
         # Run agent loop
         for iteration in range(self._max_iterations):
             print(f"\n{'='*80}")
             print(f"ITERATION {iteration + 1}/{self._max_iterations}")
             print(f"{'='*80}")
-            print(f"Message history length: {len(self._messages)}")
+            print(f"Message history length: {len(messages)}")
 
             # Invoke LLM
             print("Invoking LLM...")
-            response = await self._llm_with_tools.ainvoke(self._messages)
+            response = await self._llm_with_tools.ainvoke(messages)
             print("LLM response received")
 
             if response.content:
                 content_preview = str(response.content)[:200]
-                print(f"Response content (first 200 chars): {content_preview}")
+                print(
+                    f"Response content (first 200 chars): {content_preview}"
+                )
 
             # Add AI response to messages
-            self._messages.append(response)
+            messages.append(response)
 
             # Check if done (no tool calls)
             if not response.tool_calls:
                 print("\nNo tool calls - Agent is done!")
                 print(f"Final Answer: {response.content}")
-                return response.content
+                return self._build_response(response.content, messages)
 
             # Execute tool calls
             print(f"\nNumber of tool calls: {len(response.tool_calls)}")
             for idx, tool_call in enumerate(response.tool_calls, 1):
                 print(f"\n--- Tool Call {idx}/{len(response.tool_calls)} ---")
-                await self._execute_tool_call(tool_call)
+                await self._execute_tool_call(tool_call, messages)
 
         # Max iterations reached
         print(f"\nReached max iterations ({self._max_iterations})")
-        return f"Max iterations reached ({self._max_iterations})"
+        return self._build_response(
+            f"Max iterations reached ({self._max_iterations})", messages
+        )
 
-    async def _execute_tool_call(self, tool_call: dict):
-        """Execute a single tool call and update message history
+    async def _execute_tool_call(self, tool_call: dict, messages: list):
+        """Execute a single tool call and append result to messages.
 
         Args:
             tool_call: Dict with 'name', 'args', and 'id' keys
+            messages: Running message list for this invocation
         """
         tool_name = tool_call['name']
         tool_args = tool_call['args']
@@ -158,7 +196,7 @@ INITIAL DATA:
         if not matching_tool:
             print(f"  ERROR: Tool '{tool_name}' not found in available tools!")
             error_msg = json.dumps({"error": f"Tool {tool_name} not found"})
-            self._messages.append(ToolMessage(
+            messages.append(ToolMessage(
                 content=error_msg,
                 tool_call_id=tool_id,
                 name=tool_name
@@ -211,7 +249,7 @@ INITIAL DATA:
                 # Don't store errors - return them directly in the message
                 print(f"  ERROR DETECTED in result: {parsed_result['error']}")
                 error_msg = json.dumps(parsed_result)
-                self._messages.append(ToolMessage(
+                messages.append(ToolMessage(
                     content=error_msg,
                     tool_call_id=tool_id,
                     name=tool_name
@@ -222,7 +260,7 @@ INITIAL DATA:
                 # Handle plain string error messages
                 print(f"  ERROR DETECTED in string result: {parsed_result}")
                 error_msg = json.dumps({"error": parsed_result})
-                self._messages.append(ToolMessage(
+                messages.append(ToolMessage(
                     content=error_msg,
                     tool_call_id=tool_id,
                     name=tool_name
@@ -242,7 +280,7 @@ INITIAL DATA:
             # print(f"  Reference content (first 300 chars): {reference[:300]}")
 
             # Add tool result with reference instead of full data
-            self._messages.append(ToolMessage(
+            messages.append(ToolMessage(
                 content=reference,
                 tool_call_id=tool_id,
                 name=tool_name
@@ -256,14 +294,72 @@ INITIAL DATA:
             print("  Traceback:")
             traceback.print_exc()
             error_msg = json.dumps({"error": str(e)})
-            self._messages.append(ToolMessage(
+            messages.append(ToolMessage(
                 content=error_msg,
                 tool_call_id=tool_id,
                 name=tool_name
             ))
             print("  Error message sent to LLM\n")
 
+    def _build_response(self, content: str, messages: list) -> AgentResponse:
+        """Build AgentResponse from message history."""
+        tool_calls = []
+        trajectory = []
+        tool_call_args = {}
+
+        for msg in messages:
+            msg_class = msg.__class__.__name__
+            trajectory_entry = {
+                "type": msg_class,
+                "content": getattr(msg, "content", ""),
+            }
+
+            if msg_class == "HumanMessage":
+                trajectory.append(trajectory_entry)
+
+            elif msg_class == "AIMessage":
+                if hasattr(msg, "tool_calls") and msg.tool_calls:
+                    trajectory_entry["tool_calls"] = []
+                    for tc in msg.tool_calls:
+                        tc_id = tc.get("id", "") or tc.get("tool_call_id", "")
+                        tool_call_args[tc_id] = {
+                            "name": tc.get("name", "unknown"),
+                            "args": tc.get("args", {}),
+                        }
+                        trajectory_entry["tool_calls"].append({
+                            "id": tc_id,
+                            "name": tc.get("name", "unknown"),
+                            "args": tc.get("args", {}),
+                        })
+                trajectory.append(trajectory_entry)
+
+            elif msg_class == "ToolMessage":
+                tool_call_id = getattr(msg, "tool_call_id", "")
+                tool_info = tool_call_args.get(tool_call_id, {})
+                tool_name = (
+                    getattr(msg, "name", None) or tool_info.get("name", "unknown")
+                )
+                tool_calls.append({
+                    "tool_name": tool_name,
+                    "arguments": tool_info.get("args", {}),
+                    "result": msg.content,
+                })
+                trajectory_entry["tool_name"] = tool_name
+                trajectory_entry["tool_call_id"] = tool_call_id
+                trajectory_entry["result"] = msg.content
+                trajectory.append(trajectory_entry)
+
+            elif msg_class == "SystemMessage":
+                trajectory.append(trajectory_entry)
+
+        return AgentResponse(
+            content=content,
+            tool_calls=tool_calls,
+            messages=[],
+            metadata={},
+            trajectory=trajectory,
+        )
+
     def restart(self):
-        """Clear agent state for new query execution"""
+        """Clear handle manager state between queries."""
         self.handle_manager.clear()
-        self._messages = []
