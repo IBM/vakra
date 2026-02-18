@@ -165,6 +165,8 @@ If you need to modify the servers or rebuild the image:
 
 ```bash
 docker build -t m3_environ -f docker/Dockerfile.unified .
+docker tag m3_environ docker.io/amurthi44g1wd/m3_environ:latest
+docker push docker.io/amurthi44g1wd/m3_environ:latest
 ```
 
 ## Cleanup

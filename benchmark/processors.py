@@ -16,6 +16,10 @@ TASK_PATHS = {
         "TASK_2_DIR",
         str(Path(__file__).parent.parent / "data" / "tasks" / "task_2"),
     ),
+    5: os.environ.get(
+        "TASK_5_DIR",
+        str(Path(__file__).parent.parent / "data" / "tasks" / "task_5"),
+    ),
 }
 
 
@@ -94,8 +98,7 @@ def load_benchmark_data(
     if not input_path.exists():
         print(f"Error: Input path does not exist: {input_path}")
         sys.exit(1)
-
-    json_files = sorted(input_path.glob("*/input/*.json"))
+    json_files = sorted(input_path.glob("input/*.json"))
     if not json_files:
         print(f"Error: No JSON files found under {input_path}/*/input/")
         sys.exit(1)

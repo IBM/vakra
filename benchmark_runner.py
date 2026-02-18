@@ -870,7 +870,7 @@ def main():
         "--task_id",
         type=int,
         nargs="+",
-        choices=[1, 2, 3, 4],
+        choices=[1, 2, 3, 4, 5],
         required=True,
         help="Task ID to run, must be one of [1, 2, 3, 4]"
     )

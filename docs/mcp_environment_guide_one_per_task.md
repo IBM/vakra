@@ -206,16 +206,21 @@ docker pull docker.io/amurthi44g1wd/m3_environ:latest
 docker tag docker.io/amurthi44g1wd/m3_environ:latest m3_environ
 
 # 2. Start both containers
+docker run -d --name task_1_m3_environ \
+    -v "$(pwd)/data/db:/app/db:ro" \
+    -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
+    m3_environ
+
 docker run -d --name task_2_m3_environ \
-    -v "$(pwd)/apis/m3/rest/db:/app/db:ro" \
+    -v "$(pwd)/data/db:/app/db:ro" \
     -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
     m3_environ
 
 docker run -d --name task_5_m3_environ \
-    -v "$(pwd)/apis/m3/rest/db:/app/db:ro" \
+    -v "$(pwd)/data/db:/app/db:ro" \
     -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
-    -v "$(pwd)/apis/retrievers/chroma_data:/app/retrievers/chroma_data" \
-    -v "$(pwd)/apis/retrievers/queries:/app/retrievers/queries:ro" \
+    -v "$(pwd)/data/chroma_data:/app/retrievers/chroma_data" \
+    -v "$(pwd)/data/queries:/app/retrievers/queries:ro" \
     m3_environ
 
 # 3. Wait for readiness (~30s for task_2, ~60-120s for task_5)
