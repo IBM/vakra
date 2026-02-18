@@ -130,6 +130,9 @@ def start_containers() -> None:
     """Start one container per task (names match mcp_connection_config.yaml)."""
     rt = _runtime()
 
+    # Always pull the latest image before starting containers
+    pull_image()
+
     # Stop and remove all benchmark containers before starting fresh
     print("\n=== Cleaning up existing benchmark containers ===")
     for name in CONTAINERS:
