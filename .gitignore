@@ -28,3 +28,9 @@ train/
 build/
 db/
 *chroma_data*
+data/
+
+tools_*.json
+output/
+
+parlant-data/
