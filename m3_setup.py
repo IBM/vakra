@@ -39,7 +39,7 @@ DATA_DIR = PROJECT_ROOT / "data"
 # Each HuggingFace dataset repo maps to a subdirectory under data/
 HF_DATASETS = {
     "anupamamurthi/db":         "db",
-    # "anupamamurthi/tasks":      "tasks",
+    "anupamamurthi/tasks":      "tasks",
     "anupamamurthi/retriever-chroma-data": "chroma_data",
     "anupamamurthi/queries":    "queries",
 }
