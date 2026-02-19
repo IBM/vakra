@@ -40,13 +40,13 @@ done
 # --- Wait for Retriever FastAPI (longer timeout — loads embeddings model) ---
 if [ "$RETRIEVER_AVAILABLE" = "true" ]; then
     echo "Waiting for Retriever FastAPI (port 8001)..."
-    for i in $(seq 1 120); do
+    for i in $(seq 1 300); do
         if curl -sf http://localhost:8001/health > /dev/null 2>&1; then
             echo "Retriever FastAPI is ready."
             break
         fi
-        if [ "$i" -eq 120 ]; then
-            echo "ERROR: Retriever FastAPI did not start within 120 seconds."
+        if [ "$i" -eq 300 ]; then
+            echo "ERROR: Retriever FastAPI did not start within 300 seconds."
             exit 1
         fi
         sleep 1
