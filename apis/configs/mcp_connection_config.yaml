@@ -52,6 +52,7 @@ tasks:
     container_runtime: docker
     container_env:
       MCP_DB_ROOT: /app/db
+      PRELOAD_COLLECTIONS: "false"
     container_command:
       - python
       - /app/retrievers/mcp_server.py
