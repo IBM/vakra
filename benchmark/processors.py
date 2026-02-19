@@ -196,6 +196,54 @@ def log_trajectory(result: "BenchmarkResult") -> None:
             print(f"      [{i+1}] Tool ({tool_name}): {result_str[:80]}{suffix}")
 
 
+def log_message_history(result: "BenchmarkResult") -> None:
+    """Print the full message history for a completed benchmark result.
+
+    Includes system prompts, user messages, tool calls with arguments,
+    tool results, and the final answer.
+    """
+    traj = result.trajectory
+    if not traj:
+        return
+
+    print("\n    " + "-" * 56)
+    print("    MESSAGE HISTORY")
+    print("    " + "-" * 56)
+
+    for entry in traj:
+        msg_type = entry.get("type", "Unknown")
+        content = entry.get("content", "")
+
+        if msg_type == "SystemMessage":
+            preview = content[:300] + ("..." if len(content) > 300 else "")
+            print(f"\n    [SYSTEM]\n      {preview!r}")
+
+        elif msg_type == "HumanMessage":
+            print(f"\n    [USER]\n      {content}")
+
+        elif msg_type == "AIMessage":
+            tool_calls = entry.get("tool_calls", [])
+            if content:
+                print(f"\n    [ASSISTANT]\n      {content}")
+            for tc in tool_calls:
+                args_str = json.dumps(
+                    tc.get("args", {}), ensure_ascii=False
+                )
+                if len(args_str) > 200:
+                    args_str = args_str[:200] + "..."
+                print(f"\n    [TOOL CALL] {tc.get('name', '?')}({args_str})")
+
+        elif msg_type == "ToolMessage":
+            tool_name = entry.get("tool_name", "?")
+            res = str(entry.get("result", ""))
+            res_preview = res[:300] + ("..." if len(res) > 300 else "")
+            print(f"\n    [TOOL RESULT] {tool_name}\n      {res_preview}")
+
+    answer = result.answer or "(empty)"
+    print(f"\n    [FINAL ANSWER]\n      {answer}")
+    print("    " + "-" * 56)
+
+
 def save_results_ground_truth(
     results: List[BenchmarkResult], output_dir: Path
 ):

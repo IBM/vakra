@@ -54,11 +54,22 @@ Output:
 import asyncio
 import json
 import argparse
+import logging
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from dotenv import load_dotenv
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s %(levelname)-8s %(name)s: %(message)s",
+)
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("httpcore").setLevel(logging.WARNING)                                         
+logging.getLogger("langchain").setLevel(logging.WARNING)                                      
+logging.getLogger("langgraph").setLevel(logging.WARNING)
+logging.getLogger("ibm_watsonx_ai").setLevel(logging.WARNING)
 
 from agents.agent_interface import (
     AgentInterface,
@@ -68,7 +79,6 @@ from agents.llm import create_llm
 from agents.mcp_tool_wrapper import MCPToolWrapper
 
 
-from agents.tool_calling_agent import ToolCallingAgent
 from benchmark.mcp_client import (
     load_mcp_config,
     create_client_and_connect,
@@ -79,7 +89,8 @@ from benchmark.processors import (
     save_results_ground_truth,
     load_benchmark_data,
     log_trajectory,
-    make_output_dir, 
+    log_message_history,
+    make_output_dir,
     BenchmarkItem,
     BenchmarkResult
 )
@@ -178,7 +189,8 @@ async def run_benchmark_for_domain(
                             )
 
                         print("    Universe loaded successfully")
-                        assert isinstance(agent, ToolCallingAgent)
+                        assert isinstance(agent, LangGraphReActAgent)
+                        assert agent.handle_manager is not None
                         handle = agent.handle_manager.store_initial_data(parsed_data)
                         agent._initial_data_handle = handle
                         print(f"    Initial data stored as: {handle}")
@@ -212,6 +224,7 @@ async def run_benchmark_for_domain(
                     )
                     # Log trajectory summary
                     log_trajectory(result)
+                    log_message_history(result)
                 except asyncio.TimeoutError:
                     result.status = "error"
                     result.error = (
@@ -246,9 +259,10 @@ async def run_benchmark_for_domain(
 def _get_agent(task_id: int, llm, tools, top_k_tools: int = 0) -> AgentInterface:
     """Return the appropriate agent for the given task_id."""
     if task_id == 1:
-        return ToolCallingAgent(
+        return LangGraphReActAgent(
             llm=llm,
             tools=tools,
+            use_handle_manager=True,
             initial_data_handle="placeholder",
             max_iterations=10,
         )
@@ -303,7 +317,7 @@ async def run_task(
             top_k_tools=top_k_tools,
         )
         all_results.extend(domain_results)
-        save_results_ground_truth(domain_results, out_dir / f"{domain}.json")
+        save_results_ground_truth(domain_results, out_dir)
 
     results = all_results
 

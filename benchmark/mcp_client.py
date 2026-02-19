@@ -158,10 +158,6 @@ async def create_client_and_connect(
                     "stdio mode requires either command or container_name"
                 )
             _assert_container_running(runtime, cfg.container_name)
-            logger.info(
-                "Starting MCP server: %s exec -i -e MCP_DOMAIN=%s %s python mcp_server.py",
-                runtime, domain, cfg.container_name,
-            )
             exec_env = {"MCP_DOMAIN": domain} if domain else {}
             if cfg.container_env:
                 exec_env.update(cfg.container_env)
@@ -169,6 +165,8 @@ async def create_client_and_connect(
             for k, v in exec_env.items():
                 env_args += ["-e", f"{k}={v}"]
             cmd = cfg.container_command or ["python", "mcp_server.py"]
+            full_args = ["exec", "-i"] + env_args + [cfg.container_name] + cmd
+            logger.info("Starting MCP server: %s %s", runtime, " ".join(full_args))
             server_params = StdioServerParameters(
                 command=runtime,
                 args=["exec", "-i"] + env_args + [cfg.container_name] + cmd,
