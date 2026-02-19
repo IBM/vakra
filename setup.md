@@ -74,7 +74,6 @@ Run a sample benchmark:
 ```bash
 python benchmark_runner.py \
   --task_id 2 \
-  --run-agent \
   --domain airline \
   --max-samples-per-domain 1 \
   --provider openai
