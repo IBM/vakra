@@ -21,6 +21,7 @@ Usage:
 
 import argparse
 import getpass
+import json
 import os
 import shutil
 import subprocess
@@ -89,32 +90,71 @@ def _ensure_hf_token() -> str:
     return token
 
 
+def _load_metadata(path: Path) -> dict:
+    """Load locally stored file metadata (filename -> blob sha)."""
+    if path.exists():
+        return json.loads(path.read_text())
+    return {}
+
+
 def download_data() -> None:
-    """Download benchmark data from HuggingFace dataset repos into data/."""
+    """Download only changed/added/deleted files from HuggingFace dataset repos."""
     try:
-        from huggingface_hub import snapshot_download
+        from huggingface_hub import HfApi, RepoFile, hf_hub_download
     except ImportError:
         print("Error: huggingface_hub is not installed.")
         print("  pip install -e '.[init]'")
         sys.exit(1)
 
     token = _ensure_hf_token()
+    api = HfApi(token=token)
 
-    print(f"\n=== Downloading data into {DATA_DIR} ===")
+    print(f"\n=== Syncing data into {DATA_DIR} ===")
     print(f"Repos: {len(HF_DATASETS)}")
 
     for repo, subdir in HF_DATASETS.items():
         target = DATA_DIR / subdir
-        print(f"\n--- {repo} -> data/{subdir}/ ---")
-        snapshot_download(
-            repo_id=repo,
-            repo_type="dataset",
-            local_dir=str(target),
-            token=token,
-        )
-        print(f"  [ok] {subdir}/")
+        target.mkdir(parents=True, exist_ok=True)
+        metadata_path = target / ".hf_metadata.json"
 
-    print("\nData download complete.")
+        print(f"\n--- {repo} -> data/{subdir}/ ---")
+
+        # Get remote file tree (filename -> blob sha)
+        remote_files = {
+            item.path: item.blob_id
+            for item in api.list_repo_tree(repo_id=repo, repo_type="dataset", recursive=True)
+            if isinstance(item, RepoFile)
+        }
+
+        local_metadata = _load_metadata(metadata_path)
+
+        to_download = [p for p, sha in remote_files.items() if local_metadata.get(p) != sha]
+        to_delete = [p for p in local_metadata if p not in remote_files]
+
+        if not to_download and not to_delete:
+            print(f"  [up to date] {subdir}/")
+            continue
+
+        for path in to_delete:
+            local_path = target / path
+            if local_path.exists():
+                local_path.unlink()
+            print(f"  [deleted] {path}")
+
+        print(f"  Downloading {len(to_download)} file(s)...")
+        for path in to_download:
+            hf_hub_download(
+                repo_id=repo,
+                filename=path,
+                repo_type="dataset",
+                local_dir=str(target),
+                token=token,
+            )
+            print(f"  [ok] {path}")
+
+        metadata_path.write_text(json.dumps(remote_files, indent=2))
+
+    print("\nData sync complete.")
 
 
 def pull_image(image: str = DOCKER_IMAGE) -> None:
@@ -252,13 +292,13 @@ def main() -> None:
         print("=" * 60)
         print()
         print("  # Single task, single domain")
-        print("  python benchmark_runner.py --task_id 2 --run-agent --domain address")
+        print("  python benchmark_runner.py --m3_task_id 2 --run-agent --domain address")
         print()
         print("  # All three tasks for one domain")
-        print("  python benchmark_runner.py --task_id 1 2 5 --run-agent --domain address")
+        print("  python benchmark_runner.py --m3_task_id 1 2 5 --run-agent --domain address")
         print()
         print("  # Parallel execution")
-        print("  python benchmark_runner.py --task_id 1 2 5 --run-agent --domain address --parallel")
+        print("  python benchmark_runner.py --m3_task_id 1 2 5 --run-agent --domain address --parallel")
         print()
         print("  # Stop containers when done")
         print("  python m3_setup.py --stop-containers")
