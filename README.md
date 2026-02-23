@@ -89,7 +89,14 @@ This will:
    - `anupamamurthi/chroma_data` — ChromaDB vector collections
    - `anupamamurthi/queries` — retriever query configurations
 2. Pull `docker.io/amurthi44g1wd/m3_environ:latest` and tag it as `m3_environ`
-3. Start 3 containers (`task_1_m3_environ`, `task_2_m3_environ`, `task_5_m3_environ`) — `task_5_m3_environ` is started with `--memory=4g` to support ChromaDB's memory requirements
+3. Start 4 containers — `task_5_m3_environ` is started with `--memory=4g` to support ChromaDB's memory requirements
+
+| Container | Purpose |
+|-----------|---------|
+| `task_1_m3_environ` | Sel/Slot MCP server |
+| `task_2_m3_environ` | M3 REST MCP server |
+| `task_3_m3_environ` | BPO MCP server + M3 REST API |
+| `task_5_m3_environ` | M3 REST API + ChromaDB Retriever |
 
 You can also run individual steps:
 
@@ -200,13 +207,14 @@ output/
 
 ## Unified Docker Image (`m3_environ`)
 
-A single Docker image that bundles all three MCP servers, so you only need one container instead of two or three.
+A single Docker image that bundles all MCP servers. Each task gets its own named container started from the same image.
 
 | Server | Port / Protocol | Exec Command |
 |--------|----------------|--------------|
-| M3 REST (Task 2) | FastAPI :8000 | `python /app/m3-rest/mcp_server.py` |
+| M3 REST (Tasks 2, 3) | FastAPI :8000 | `python /app/m3-rest/mcp_server.py` |
+| BPO (Task 3) | MCP stdio | `python /app/apis/bpo/mcp/server.py` |
 | Retrievers (Task 5) | FastAPI :8001 | `python /app/retrievers/mcp_server.py` |
-| Sel/Slot Tools | MCP stdio | `python -m apis.m3.python_tools.mcp` |
+| Sel/Slot Tools (Task 1) | MCP stdio | `python -m apis.m3.python_tools.mcp` |
 
 ### Option A: Pull from Docker Hub
 
@@ -235,38 +243,67 @@ docker run -d --name m3_environ \
 
 ### Quick Test
 
-Verify that both FastAPI servers are running inside the container:
+Verify that the M3 REST FastAPI server is running inside a container:
 
 ```bash
-# M3 REST (port 8000)
-curl http://localhost:8000/openapi.json | head -c 200
+# M3 REST (port 8000) — available in all containers
+docker exec task_2_m3_environ curl -sf http://localhost:8000/openapi.json | head -c 200
 
-# Retrievers (port 8001)
-curl http://localhost:8001/health
+# Retrievers (port 8001) — task_5 only
+docker exec task_5_m3_environ curl -sf http://localhost:8001/health
 ```
 
 Test each MCP server via `docker exec`:
 
 ```bash
+MCP_INIT='{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0.1.0"}}}'
+
 # Task 2 — M3 SQL tools
-echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0.1.0"}}}' \
-  | docker exec -i -e MCP_DOMAIN=address m3_environ python /app/m3-rest/mcp_server.py
+echo "$MCP_INIT" | docker exec -i -e MCP_DOMAIN=address task_2_m3_environ python /app/m3-rest/mcp_server.py
+
+# Task 3 — BPO tools (primary)
+echo "$MCP_INIT" | docker exec -i task_3_m3_environ python /app/apis/bpo/mcp/server.py
+
+# Task 3 — M3 REST tools (secondary, same container)
+echo "$MCP_INIT" | docker exec -i -e MCP_DOMAIN=address task_3_m3_environ python /app/m3-rest/mcp_server.py
 
 # Task 5 — Retriever tools
-echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0.1.0"}}}' \
-  | docker exec -i -e MCP_DOMAIN=address m3_environ python /app/retrievers/mcp_server.py
+echo "$MCP_INIT" | docker exec -i -e MCP_DOMAIN=address task_5_m3_environ python /app/retrievers/mcp_server.py
 
-# Sel/Slot tools
-echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0.1.0"}}}' \
-  | docker exec -i -e MCP_DOMAIN=superhero m3_environ python -m apis.m3.python_tools.mcp
+# Task 1 — Sel/Slot tools
+echo "$MCP_INIT" | docker exec -i -e MCP_DOMAIN=superhero task_1_m3_environ python -m apis.m3.python_tools.mcp
 ```
 
-### Push to Docker Hub
+### Rebuilding and Pushing the Docker Image
+
+Run these steps from the **project root** after any changes to `docker/Dockerfile.unified`, `apis/bpo/`, or other server code.
 
 ```bash
+# 1. Build
+docker build -t m3_environ -f docker/Dockerfile.unified .
+
+# 2. Smoke-test — checks files, M3 REST health, and MCP handshakes for BPO + M3 REST
+bash docker/smoke_test.sh
+# Exit 0 = all good; exit 1 = fix issues before pushing
+
+# 3. Tag and push
 docker tag m3_environ docker.io/amurthi44g1wd/m3_environ:latest
 docker push docker.io/amurthi44g1wd/m3_environ:latest
+
+# 4. Restart all benchmark containers to use the new image
+python m3_setup.py --start-containers
 ```
+
+> **Note:** You must be logged in (`docker login docker.io`) with push access to `amurthi44g1wd`.
+
+The smoke-test script (`docker/smoke_test.sh`) runs these checks against a temporary container:
+
+| Check | What it verifies |
+|-------|-----------------|
+| File existence | All required `.py`, `.parquet`, and entrypoint files are in the image |
+| M3 REST FastAPI | `/openapi.json` responds within 60 s and has at least one route |
+| BPO MCP handshake | `python /app/apis/bpo/mcp/server.py` returns a valid JSON-RPC response |
+| M3 REST MCP handshake | `python /app/m3-rest/mcp_server.py` returns a valid JSON-RPC response |
 
 ### Benchmark Runner (Unified)
 

@@ -42,13 +42,20 @@ python m3_setup.py
 
 ## 4. Verify Docker Containers
 
-Once setup completes, confirm three containers are running:
+Once setup completes, confirm four containers are running:
 
 ```bash
 docker ps
 ```
 
-You should see **3 containers** listed.
+You should see **4 containers** listed:
+
+| Container | Purpose |
+|-----------|---------|
+| `task_1_m3_environ` | Sel/Slot MCP server |
+| `task_2_m3_environ` | M3 REST MCP server |
+| `task_3_m3_environ` | BPO MCP server + M3 REST API |
+| `task_5_m3_environ` | M3 REST API + ChromaDB Retriever |
 
 ---
 
@@ -73,8 +80,73 @@ Run a sample benchmark:
 
 ```bash
 python benchmark_runner.py \
-  --task_id 2 \
+  --m3_task_id 2 \
+  --domain airline \
+  --max-samples-per-domain 1 \
+  --provider openai
+
+# Task 3 (BPO + M3 REST tools)
+python benchmark_runner.py \
+  --m3_task_id 3 \
   --domain airline \
   --max-samples-per-domain 1 \
   --provider openai
 ```
+
+---
+
+## Makefile Targets
+
+| Target | What it does |
+|--------|-------------|
+| `make download` | `python m3_setup.py --download-data` — syncs all 4 HuggingFace repos into `data/` |
+| `make build` | Build the Docker image |
+| `make test` | Smoke-test the image (file checks + MCP handshakes) |
+| `make validate` | Live MCP connection check against running containers |
+| `make tag` | Tag image for Docker Hub |
+| `make push` | Push image to Docker Hub |
+| `make release` | `build → test → tag → push` |
+| `make setup` | `download → build → test → start → validate` — full first-time setup |
+| `make start` | Start all benchmark containers |
+| `make stop` | Stop and remove all benchmark containers |
+| `make logs` | Last 20 log lines per container |
+
+---
+
+## Rebuilding and Pushing the Docker Image
+
+Run these commands from the **project root** whenever `docker/Dockerfile.unified`, `apis/bpo/`, or any other server code changes.
+
+### 1. One-command release (recommended)
+
+```bash
+make release
+```
+
+This runs `build → test → tag → push` in sequence and stops on the first failure.
+
+### 2. Step by step
+
+```bash
+make build      # docker build -t m3_environ -f docker/Dockerfile.unified .
+make test       # smoke-test: file checks + M3 REST health + BPO/M3 MCP handshakes
+make tag        # docker tag m3_environ docker.io/amurthi44g1wd/m3_environ:latest
+make push       # docker push docker.io/amurthi44g1wd/m3_environ:latest
+```
+
+After restarting containers you can also run a live connection check against all four containers:
+
+```bash
+make start      # restart containers with new image
+make validate   # python benchmark/validate_clients.py — tests every MCP server
+```
+
+> **Note:** You must be logged in (`docker login docker.io`) with push access to `amurthi44g1wd`.
+
+### 3. Restart containers to pick up the new image
+
+```bash
+make start
+```
+
+This stops/removes all existing benchmark containers, pulls the freshly pushed image, and restarts all four containers.

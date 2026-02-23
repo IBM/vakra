@@ -49,6 +49,7 @@ HF_DATASETS = {
 CONTAINERS = [
     "task_1_m3_environ",
     "task_2_m3_environ",
+    "task_3_m3_environ",   # BPO + M3 REST (no retriever)
     "task_5_m3_environ",
 ]
 
@@ -186,6 +187,14 @@ def start_containers() -> None:
         "task_5_m3_environ": ["--memory=4g"],
     }
 
+    # task_5 is the only container that needs the retriever volumes
+    container_extra_volumes: dict[str, list[str]] = {
+        "task_5_m3_environ": [
+            "-v", f"{chroma_dir}:/app/retrievers/chroma_data",
+            "-v", f"{queries_dir}:/app/retrievers/queries:ro",
+        ],
+    }
+
     for name in CONTAINERS:
         _run([
             rt, "run", "-d",
@@ -193,8 +202,7 @@ def start_containers() -> None:
             *container_extra_flags.get(name, []),
             "-v", f"{db_dir}:/app/db:ro",
             "-v", f"{configs_dir}:/app/apis/configs:ro",
-            "-v", f"{chroma_dir}:/app/retrievers/chroma_data",
-            "-v", f"{queries_dir}:/app/retrievers/queries:ro",
+            *container_extra_volumes.get(name, []),
             "m3_environ",
         ], check=True)
         print(f"  Started {name}")
