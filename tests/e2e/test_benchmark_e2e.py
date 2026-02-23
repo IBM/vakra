@@ -3,7 +3,7 @@
 Tests the full pipeline:
   1. Download data from HuggingFace (incremental sync)
   2. Start Docker containers
-  3. Run benchmark_runner.py for task 1 and task 2
+  3. Run benchmark_runner.py for task 1, task 2, and task 5
   4. Validate the output JSON files
 
 Requirements:
@@ -28,12 +28,13 @@ Usage:
     # Run only one task
     python -m pytest tests/e2e/test_benchmark_e2e.py::TestBenchmarkE2E::test_task1_address -v -s
     python -m pytest tests/e2e/test_benchmark_e2e.py::TestBenchmarkE2E::test_task2_address -v -s
+    python -m pytest tests/e2e/test_benchmark_e2e.py::TestBenchmarkE2E::test_task5_address -v -s
 
 Notes:
     - The module-scoped fixture downloads data and starts containers once,
       then tears them down after both tests finish.
     - Each test gets an isolated tmp_path for its output files.
-    - All tests are skipped automatically when the required env vars are absent.
+    - Tests fail immediately with a clear error if required env vars are absent.
 """
 
 import json
@@ -48,26 +49,6 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 
 
 # ---------------------------------------------------------------------------
-# Guard: skip the entire module when required env vars are absent
-# ---------------------------------------------------------------------------
-
-def _missing_env_vars() -> list[str]:
-    missing = []
-    if not (os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")):
-        missing.append("HF_TOKEN")
-    if not os.environ.get("OPENAI_API_KEY"):
-        missing.append("OPENAI_API_KEY")
-    return missing
-
-
-_MISSING = _missing_env_vars()
-pytestmark = pytest.mark.skipif(
-    bool(_MISSING),
-    reason=f"Required environment variables not set: {', '.join(_MISSING)}",
-)
-
-
-# ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
 
@@ -76,7 +57,16 @@ def containers_ready():
     """Download benchmark data and start Docker containers.
 
     Runs once for the whole module; tears down containers on exit.
+    Errors immediately if required environment variables are not set.
     """
+    missing = []
+    if not (os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")):
+        missing.append("HF_TOKEN")
+    if not os.environ.get("OPENAI_API_KEY"):
+        missing.append("OPENAI_API_KEY")
+    if missing:
+        pytest.fail(f"Required environment variables not set: {', '.join(missing)}")
+
     sys.path.insert(0, str(PROJECT_ROOT))
     from m3_setup import download_data, start_containers, stop_containers
 
@@ -208,5 +198,25 @@ class TestBenchmarkE2E:
         successful = [r for r in records if r["status"] == "success"]
         assert len(successful) >= 1, (
             "Expected at least 1 successful record for task 2.\n"
+            + json.dumps(records, indent=2)
+        )
+
+    def test_task5_address(self, containers_ready, tmp_path):
+        """Task 5: ChromaDB retriever MCP agent on 2 address-domain samples."""
+        output_dir = tmp_path / "task5"
+        output_dir.mkdir()
+
+        result = _run_benchmark(task_id=5, output_dir=output_dir)
+
+        assert result.returncode == 0, (
+            f"benchmark_runner.py exited with code {result.returncode} "
+            f"(see output above)"
+        )
+
+        records = _assert_output(output_dir)
+
+        successful = [r for r in records if r["status"] == "success"]
+        assert len(successful) >= 1, (
+            "Expected at least 1 successful record for task 5.\n"
             + json.dumps(records, indent=2)
         )
