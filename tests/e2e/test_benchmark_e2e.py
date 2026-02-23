@@ -30,10 +30,11 @@ Usage:
     python -m pytest tests/e2e/test_benchmark_e2e.py::TestBenchmarkE2E::test_task2_address -v -s
     python -m pytest tests/e2e/test_benchmark_e2e.py::TestBenchmarkE2E::test_task5_address -v -s
 
+    # Run the entire test in one go
+    python -m pytest tests/e2e/test_benchmark_e2e.py -v -s
 Notes:
-    - The module-scoped fixture downloads data and starts containers once,
-      then tears them down after both tests finish.
-    - Each test gets an isolated tmp_path for its output files.
+    - Containers are started once (module-scoped fixture) and shared across all three tests.
+    - Each task writes to its own isolated output directory.
     - Tests fail immediately with a clear error if required env vars are absent.
 """
 
@@ -52,7 +53,7 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 # Fixtures
 # ---------------------------------------------------------------------------
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="module", autouse=True)
 def containers_ready():
     """Download benchmark data and start Docker containers.
 
@@ -89,6 +90,7 @@ def _run_benchmark(task_id: int, output_dir: Path) -> subprocess.CompletedProces
         "--domain", "address",
         "--provider", "openai",
         "--max-samples-per-domain", "2",
+        "--top-k-tools", "100",
         "--output", str(output_dir),
     ]
     print(f"\n$ {' '.join(str(c) for c in cmd)}\n", flush=True)
@@ -161,7 +163,7 @@ def _assert_output(output_dir: Path, domain: str = "address") -> list:
 class TestBenchmarkE2E:
     """Full end-to-end tests: containers → runner → output validation."""
 
-    def test_task1_address(self, containers_ready, tmp_path):
+    def test_task1_address(self, tmp_path):
         """Task 1: slot-filling agent on 2 address-domain samples."""
         output_dir = tmp_path / "task1"
         output_dir.mkdir()
@@ -169,19 +171,16 @@ class TestBenchmarkE2E:
         result = _run_benchmark(task_id=1, output_dir=output_dir)
 
         assert result.returncode == 0, (
-            f"benchmark_runner.py exited with code {result.returncode} "
-            f"(see output above)"
+            f"benchmark_runner.py exited with code {result.returncode} (see output above)"
         )
-
         records = _assert_output(output_dir)
-
         successful = [r for r in records if r["status"] == "success"]
         assert len(successful) >= 1, (
             "Expected at least 1 successful record for task 1.\n"
             + json.dumps(records, indent=2)
         )
 
-    def test_task2_address(self, containers_ready, tmp_path):
+    def test_task2_address(self, tmp_path):
         """Task 2: SQL MCP agent on 2 address-domain samples."""
         output_dir = tmp_path / "task2"
         output_dir.mkdir()
@@ -189,19 +188,16 @@ class TestBenchmarkE2E:
         result = _run_benchmark(task_id=2, output_dir=output_dir)
 
         assert result.returncode == 0, (
-            f"benchmark_runner.py exited with code {result.returncode} "
-            f"(see output above)"
+            f"benchmark_runner.py exited with code {result.returncode} (see output above)"
         )
-
         records = _assert_output(output_dir)
-
         successful = [r for r in records if r["status"] == "success"]
         assert len(successful) >= 1, (
             "Expected at least 1 successful record for task 2.\n"
             + json.dumps(records, indent=2)
         )
 
-    def test_task5_address(self, containers_ready, tmp_path):
+    def test_task5_address(self, tmp_path):
         """Task 5: ChromaDB retriever MCP agent on 2 address-domain samples."""
         output_dir = tmp_path / "task5"
         output_dir.mkdir()
@@ -209,12 +205,9 @@ class TestBenchmarkE2E:
         result = _run_benchmark(task_id=5, output_dir=output_dir)
 
         assert result.returncode == 0, (
-            f"benchmark_runner.py exited with code {result.returncode} "
-            f"(see output above)"
+            f"benchmark_runner.py exited with code {result.returncode} (see output above)"
         )
-
         records = _assert_output(output_dir)
-
         successful = [r for r in records if r["status"] == "success"]
         assert len(successful) >= 1, (
             "Expected at least 1 successful record for task 5.\n"
