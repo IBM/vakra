@@ -32,7 +32,7 @@ class MCPServerConfig:
     # Optional: Domain name (used to filter available tool universes)
     domain: Optional[str] = None
 
-    # Optional: Server type ('slot_filling' or 'selection')
+    # Optional: Server type ('router', 'slot_filling', or 'selection')
     server_type: Optional[str] = None
 
     # Optional: Transport protocol ('stdio' or 'websocket')
@@ -84,7 +84,7 @@ def load_config(
         database_path: Path to SQLite database (overrides config/env)
         tables: List of tables to load (overrides config/env)
         cache_dir: Cache directory (overrides config/env)
-        server_type: Server type - 'slot_filling' or 'selection' (overrides config/env)
+        server_type: Server type - 'router', 'slot_filling', or 'selection' (overrides config/env)
         transport: Transport protocol - 'stdio' or 'websocket' (overrides config/env)
         host: Host to bind WebSocket server (overrides config/env)
         port: Port for WebSocket server (overrides config/env)

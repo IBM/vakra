@@ -86,9 +86,9 @@ Environment variables:
         "--mode",
         "--server-type",
         dest="server_type",
-        choices=["slot_filling", "selection"],
+        choices=["slot_filling", "selection", "router"],
         metavar="MODE",
-        help="Server mode: 'slot_filling' (generic tools) or 'selection' (specialized tools with getters)",
+        help="Server mode: 'router' (default, routes per query), 'slot_filling' (generic tools), or 'selection' (specialized tools with getters)",
     )
 
     parser.add_argument(

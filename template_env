@@ -23,8 +23,8 @@ MCP_CACHE_DIR=./mcp_cache
 # Unique identifier for tracking different server instances
 # MCP_TOOL_UNIVERSE_ID=
 
-# Server mode: "slot_filling" (generic tools) or "selection" (domain-specific getters)
-MCP_SERVER_TYPE=slot_filling
+# Server mode: "router" (default, routes per query), "slot_filling" (generic tools), or "selection" (domain-specific getters)
+MCP_SERVER_TYPE=router
 
 # Transport protocol: "stdio" (subprocess) or "websocket" (network)
 MCP_TRANSPORT=stdio
