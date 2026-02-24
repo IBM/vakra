@@ -29,7 +29,7 @@ langchain>=0.3.0
 # LangGraph - Agent Framework
 # ----------------------------------------------------------------------------
 # Required for ReAct agent implementation (create_react_agent)
-langgraph>=0.2.0
+langgraph>=1.0.9
 
 # ----------------------------------------------------------------------------
 # LLM Provider Integrations

@@ -41,6 +41,7 @@ rag = [
 agents = [
     "langchain>=0.1.0",
     "langchain-openai>=0.0.5",
+    "langgraph>=1.0.9",
     "httpx",
     "litellm",
     "langchain-litellm",

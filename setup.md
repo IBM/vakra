@@ -9,8 +9,8 @@
 Everything you need to go from a fresh clone to a working single-sample benchmark run:
 
 ```bash
-# 1. Python environment
-python -m venv .venv && source .venv/bin/activate
+# 1. Python environment (Use python or python3)
+python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[init]"
 pip install -r requirements_benchmark.txt
 
@@ -407,6 +407,18 @@ make setup      # download → build → test → start → validate
 
 Run these commands from the **project root** whenever `docker/Dockerfile.unified`, `apis/bpo/`, or any other server code changes.
 
+### 0. Log in to Docker Hub (one-time)
+
+```bash
+docker login docker.io --username
+# Username: amurthi44g1wd
+# Password: <your Docker Hub password or access token>
+```
+
+> **Using an access token?** The token must have **Read & Write** (or **Read, Write & Delete**) scope — a read-only token will cause `insufficient scopes` errors on push.
+>
+> Create one at **Docker Hub → Account Settings → Personal access tokens → Generate new token**, set Access permissions to **Read & Write**, then use the token as the password above.
+
 ### 1. One-command release (recommended)
 
 ```bash
@@ -416,6 +428,8 @@ make release
 This runs `build → test → tag → push` in sequence and stops on the first failure.
 
 ### 2. Step by step
+
+Ignore the below four steps, if you already did a `make release`
 
 ```bash
 make build      # docker build -t m3_environ -f docker/Dockerfile.unified .
@@ -430,8 +444,6 @@ After restarting containers you can also run a live connection check against all
 make start      # restart containers with new image
 make validate   # python benchmark/validate_clients.py — tests every MCP server
 ```
-
-> **Note:** You must be logged in (`docker login docker.io`) with push access to `amurthi44g1wd`.
 
 ### 3. Restart containers to pick up the new image
 
