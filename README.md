@@ -1,6 +1,6 @@
 # M3Benchmark
 
-> **Getting started?** See [SETUP.md](SETUP.md) for installation, container setup, and how to run benchmarks and e2e tests.
+> **Getting started?** See [setup.md](setup.md) for installation, container setup, and how to run benchmarks and e2e tests.
 
 ## 📊 Dataset
 
