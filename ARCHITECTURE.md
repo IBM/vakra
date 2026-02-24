@@ -246,9 +246,15 @@ Benchmark Client (host)
 ### Purpose
 
 The agent has access to both structured SQL tools (M3 REST) and unstructured
-semantic search (ChromaDB retriever) for the same domain in a single session.
-A single MCP server aggregates both backends so `list_tools()` returns all
-M3 REST tools **plus** the `query_{domain}` retriever tool in one flat list.
+semantic search (ChromaDB retriever) in a single session. Tool filtering is
+**asymmetric by design**:
+
+- **M3 REST tools** are scoped to the primary domain only (e.g. `/v1/address/*`).
+- **Retriever tools** are exposed for the primary domain **plus its negative
+  (distractor) domains** looked up from `domain_negatives.json`. For `address`
+  this means `query_address`, `query_olympics`, `query_card_games`,
+  `query_legislator`, and `query_craftbeer`. The agent must retrieve from the
+  correct collection despite having access to confusable alternatives.
 
 ### Container: `task_5_m3_environ`
 
@@ -257,6 +263,7 @@ M3 REST tools **plus** the `query_{domain}` retriever tool in one flat list.
 | FastAPI services | M3 REST on port 8000 + Retriever on port 8001 |
 | MCP entry point | `python /app/retrievers/task5_mcp_server.py` |
 | MCP source | [`apis/retrievers/task5_mcp_server.py`](apis/retrievers/task5_mcp_server.py) |
+| Negatives config | [`apis/retrievers/domain_negatives.json`](apis/retrievers/domain_negatives.json) |
 
 ### How it works
 
@@ -266,10 +273,14 @@ at startup, builds a merged `tools_cache`, and stores the originating
 reads `_metadata["backend_url"]`, and routes the HTTP request to the correct
 service.
 
-| Backend | Tools exposed | Tool name pattern |
-|---------|--------------|-------------------|
-| M3 REST `:8000` | ~40 per domain | operationId from OpenAPI (e.g. `get_address_streets`) |
-| Retriever `:8001` | 1 per domain | `query_{domain}` (e.g. `query_address`) |
+The negatives for the primary domain are resolved once in `main()` via
+`load_retriever_domains()`, which reads `domain_negatives.json` and expands the
+primary domain list before the server is constructed.
+
+| Backend | Filter | Tools exposed | Tool name pattern |
+|---------|--------|--------------|-------------------|
+| M3 REST `:8000` | primary domain only | ~40 | operationId from OpenAPI (e.g. `get_address_streets`) |
+| Retriever `:8001` | primary + negatives | ~5 | `query_{domain}` (e.g. `query_address`, `query_olympics`) |
 
 ### Stack diagram
 
@@ -281,30 +292,36 @@ Benchmark Client (host)
         │  python /app/retrievers/task5_mcp_server.py
         │
         ▼
-┌──────────────────────────────────────────────────────────────┐
-│  task_5_m3_environ                                           │
-│                                                              │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Task5CombinedMCPServer  (stdio)                     │   │
-│  │                                                      │   │
-│  │  list_tools()                                        │   │
-│  │    ├─ GET :8000/openapi.json → M3 REST tools (≈40)  │   │
-│  │    └─ GET :8001/openapi.json → query_address (1)    │   │
-│  │                                                      │   │
-│  │  call_tool(name, args)                               │   │
-│  │    ├─ M3 REST tool  → HTTP → :8000/v1/{domain}/...  │   │
-│  │    └─ query_address → HTTP → :8001/address/query    │   │
-│  └───────────┬────────────────────────┬─────────────────┘   │
-│              │  HTTP :8000            │  HTTP :8001          │
-│              ▼                        ▼                      │
-│   M3 REST FastAPI              Retriever FastAPI             │
-│   (port 8000)                  (port 8001)                   │
-│              │                        │                      │
-│              ▼                        ▼                      │
-│   SQLite                       ChromaDB collections          │
-│   /app/db/{domain}/            + Granite embeddings          │
-│   *.sqlite                     /app/retrievers/chroma_data/  │
-└──────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────┐
+│  task_5_m3_environ                                                 │
+│                                                                    │
+│  domain_negatives.json["address"]                                  │
+│    → [address, olympics, card_games, legislator, craftbeer]        │
+│                          │                                         │
+│  ┌───────────────────────▼────────────────────────────────────┐   │
+│  │  Task5CombinedMCPServer  (stdio)                           │   │
+│  │                                                            │   │
+│  │  list_tools()                                              │   │
+│  │    ├─ GET :8000/openapi.json                               │   │
+│  │    │    filter: /v1/address/* → M3 REST tools (≈40)       │   │
+│  │    └─ GET :8001/openapi.json                               │   │
+│  │         filter: address + negatives → query_address,       │   │
+│  │                  query_olympics, query_card_games, ...  (5) │   │
+│  │                                                            │   │
+│  │  call_tool(name, args)   [routes via _metadata.backend_url]│   │
+│  │    ├─ M3 REST tool  → HTTP → :8000/v1/address/...         │   │
+│  │    └─ query_*       → HTTP → :8001/{domain}/query         │   │
+│  └────────────┬──────────────────────────┬──────────────────┘    │
+│               │  HTTP :8000              │  HTTP :8001            │
+│               ▼                          ▼                        │
+│   M3 REST FastAPI                 Retriever FastAPI               │
+│   (port 8000)                     (port 8001)                     │
+│               │                          │                        │
+│               ▼                          ▼                        │
+│   SQLite                          ChromaDB collections            │
+│   /app/db/{domain}/               (one per domain)                │
+│   *.sqlite                        /app/retrievers/chroma_data/    │
+└────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Retriever FastAPI — route shape
@@ -335,3 +352,4 @@ image; takes up to 5 min to warm up on first container start).
 | [`apis/bpo/mcp/task3_router.py`](apis/bpo/mcp/task3_router.py) | `os.execv` router → BPO or M3 REST (Task 3) |
 | [`apis/retrievers/server.py`](apis/retrievers/server.py) | Retriever FastAPI — ChromaDB, port 8001 |
 | [`apis/retrievers/task5_mcp_server.py`](apis/retrievers/task5_mcp_server.py) | Combined MCP server — merges M3 REST + Retriever (Task 5) |
+| [`apis/retrievers/domain_negatives.json`](apis/retrievers/domain_negatives.json) | Maps each domain to its distractor domains for retriever tool expansion (Task 5) |
