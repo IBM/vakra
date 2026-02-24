@@ -131,26 +131,11 @@ async def run_benchmark_for_domain(
 
     try:
         async with AsyncExitStack() as stack:
-            # When secondary_container_command is set (e.g. Task 3), route
-            # each domain to the server that owns it:
-            #   "bpo" → primary (BPO MCP server)
-            #   others → secondary (M3 REST MCP server)
-            # For tasks without a secondary server, always use the primary.
-            # Note: the secondary_cfg construction below is preserved so the
-            # dual-server merge pattern can be reused for other tasks.
-            if cfg.secondary_container_command and domain != "bpo":
-                active_cfg = MCPConnectionConfig(
-                    mode=cfg.mode,
-                    container_name=cfg.container_name,
-                    container_runtime=cfg.container_runtime,
-                    container_env=cfg.container_env,
-                    container_command=cfg.secondary_container_command,
-                )
-            else:
-                active_cfg = cfg
-
+            # Primary MCP server (always present).
+            # For Task 3, cfg.container_command points to task3_router.py which
+            # exec's into the correct server (BPO or M3 REST) based on MCP_DOMAIN.
             session = await stack.enter_async_context(
-                create_client_and_connect(active_cfg, domain)
+                create_client_and_connect(cfg, domain)
             )
             wrapper = MCPToolWrapper(session)
             tools = await wrapper.get_tools()

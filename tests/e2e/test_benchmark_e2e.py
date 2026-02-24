@@ -203,8 +203,8 @@ class TestBenchmarkE2E:
     def test_task3_airline(self, tmp_path):
         """Task 3: M3 REST MCP agent on 2 airline-domain samples.
 
-        Uses task_3_m3_environ container. Since "airline" is an M3 REST domain,
-        the runner connects only to the M3 REST MCP server (secondary_container_command).
+        Uses task_3_m3_environ container via task3_router.py. Since "airline"
+        is an M3 REST domain, the router exec's into /app/m3-rest/mcp_server.py.
         """
         output_dir = tmp_path / "task3_airline"
         output_dir.mkdir()
@@ -224,8 +224,8 @@ class TestBenchmarkE2E:
     def test_task3_bpo(self, tmp_path):
         """Task 3: BPO MCP agent on 2 BPO-domain samples.
 
-        Uses task_3_m3_environ container. Since "bpo" is the BPO domain,
-        the runner connects only to the BPO MCP server (primary container_command).
+        Uses task_3_m3_environ container via task3_router.py. Since "bpo"
+        is the BPO domain, the router exec's into /app/apis/bpo/mcp/server.py.
         """
         output_dir = tmp_path / "task3_bpo"
         output_dir.mkdir()

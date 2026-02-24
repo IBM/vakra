@@ -19,6 +19,9 @@
 #   docker exec -i                          m3_environ python /app/apis/bpo/mcp/server.py
 #   docker exec -i -e MCP_DOMAIN=address   m3_environ python /app/retrievers/mcp_server.py
 #   docker exec -i -e MCP_DOMAIN=superhero m3_environ python -m apis.m3.python_tools.mcp
+# Task 3 router (routes by MCP_DOMAIN to BPO or M3 REST):
+#   docker exec -i -e MCP_DOMAIN=bpo       task_3_m3_environ python /app/apis/bpo/mcp/task3_router.py
+#   docker exec -i -e MCP_DOMAIN=airline   task_3_m3_environ python /app/apis/bpo/mcp/task3_router.py
 
 FROM python:3.11-slim
 
