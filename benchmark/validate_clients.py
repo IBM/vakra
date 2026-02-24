@@ -54,8 +54,8 @@ async def list_tools_for_domains(
     print(f"Task ID: {task_id}")
     # Collect all tools for OpenAPI spec
     all_tools_by_domain = {}
-    if task_id == 2:
-        # Task 2: per-domain connections.
+    if task_id == 2 or cfg.secondary_container_command:
+        # Task 2 and Task 3: per-domain connections.
         _, domains_to_process = load_benchmark_data(
             task_id=task_id, domains=domains, domain_names_only=True
         )
@@ -73,8 +73,19 @@ async def list_tools_for_domains(
         print("=" * 60)
         try:
             tools_detailed: List[Dict[str, Any]] = []
+            # Apply task-3 style routing: domain determines which server to use.
+            if cfg.secondary_container_command and domain != "bpo":
+                active_cfg = MCPConnectionConfig(
+                    mode=cfg.mode,
+                    container_name=cfg.container_name,
+                    container_runtime=cfg.container_runtime,
+                    container_env=cfg.container_env,
+                    container_command=cfg.secondary_container_command,
+                )
+            else:
+                active_cfg = cfg
             try:
-                async with create_client_and_connect(cfg, domain) as session:
+                async with create_client_and_connect(active_cfg, domain) as session:
                     response = await session.list_tools()
                     for tool in response.tools:
                         tools_detailed.append({

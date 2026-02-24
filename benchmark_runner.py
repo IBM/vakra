@@ -131,33 +131,30 @@ async def run_benchmark_for_domain(
 
     try:
         async with AsyncExitStack() as stack:
-            # Primary MCP server (always present)
-            session = await stack.enter_async_context(
-                create_client_and_connect(cfg, domain)
-            )
-            wrapper = MCPToolWrapper(session)
-            tools = await wrapper.get_tools()
-            print(f"  Loaded {len(tools)} tools for domain '{domain}'")
-
-            # Secondary MCP server (Task 3: BPO primary + M3 REST secondary)
-            if cfg.secondary_container_command:
-                secondary_cfg = MCPConnectionConfig(
+            # When secondary_container_command is set (e.g. Task 3), route
+            # each domain to the server that owns it:
+            #   "bpo" → primary (BPO MCP server)
+            #   others → secondary (M3 REST MCP server)
+            # For tasks without a secondary server, always use the primary.
+            # Note: the secondary_cfg construction below is preserved so the
+            # dual-server merge pattern can be reused for other tasks.
+            if cfg.secondary_container_command and domain != "bpo":
+                active_cfg = MCPConnectionConfig(
                     mode=cfg.mode,
                     container_name=cfg.container_name,
                     container_runtime=cfg.container_runtime,
                     container_env=cfg.container_env,
                     container_command=cfg.secondary_container_command,
                 )
-                secondary_session = await stack.enter_async_context(
-                    create_client_and_connect(secondary_cfg, domain)
-                )
-                secondary_wrapper = MCPToolWrapper(secondary_session)
-                secondary_tools = await secondary_wrapper.get_tools()
-                print(
-                    f"  Loaded {len(secondary_tools)} additional tools"
-                    f" from secondary server"
-                )
-                tools = tools + secondary_tools
+            else:
+                active_cfg = cfg
+
+            session = await stack.enter_async_context(
+                create_client_and_connect(active_cfg, domain)
+            )
+            wrapper = MCPToolWrapper(session)
+            tools = await wrapper.get_tools()
+            print(f"  Loaded {len(tools)} tools for domain '{domain}'")
 
             agent = _get_agent(task_id, llm, tools, top_k_tools)
 
