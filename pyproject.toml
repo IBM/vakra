@@ -45,7 +45,6 @@ agents = [
     "litellm",
     "langchain-litellm",
     "langchain-ollama",
-    "langchain-ibm",
     "sentence-transformers"
 ]
 
