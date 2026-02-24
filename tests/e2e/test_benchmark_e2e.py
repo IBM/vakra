@@ -262,13 +262,20 @@ class TestBenchmarkE2E:
         )
 
     def test_task5_combined_tools(self):
-        """Task 5: combined MCP server exposes address-only M3 REST + retriever tools.
+        """Task 5: combined MCP server exposes address M3 REST tools + retriever
+        tools for address and its negative domains.
 
-        Verifies three things:
-        1. query_address is present  — retriever backend is included.
-        2. Total tool count > 1      — M3 REST tools are also included.
-        3. No cross-domain tools     — domain filter is working (e.g. no
-           query_hockey, no tools from /v1/hockey/*).
+        For MCP_DOMAIN=address the expected tool set is:
+          - M3 REST:  all /v1/address/* tools only  (~40 tools)
+          - Retriever: query_address, query_olympics, query_card_games,
+                       query_legislator, query_craftbeer  (5 tools from
+                       domain_negatives.json["address"])
+
+        Verifies four things:
+        1. query_address is present   — primary retriever tool included.
+        2. query_olympics is present  — negative-domain retriever tool included.
+        3. Total tool count > 1       — M3 REST tools are also included.
+        4. query_hockey is absent     — unrelated domain not leaking through.
         """
         result = _list_tools(task_id=5, domain="address")
 
@@ -294,22 +301,29 @@ class TestBenchmarkE2E:
             f"Could not find 'Total tools:' in --list-tools output:\n{result.stdout}"
         )
 
-        # 1. Retriever tool must be present for the requested domain
+        # 1. Primary retriever tool must be present
         assert "query_address" in result.stdout, (
             "Expected 'query_address' tool from the retriever backend, "
             f"but it was not found in --list-tools output:\n{result.stdout}"
         )
 
-        # 2. M3 REST tools must also be present (combined > retriever-only)
-        assert total_tools > 1, (
-            f"Expected more than 1 tool (got {total_tools}). "
-            "The combined server should expose M3 REST tools AND the retriever tool."
+        # 2. Negative-domain retriever tools must also be present
+        assert "query_olympics" in result.stdout, (
+            "Expected 'query_olympics' (a negative domain for 'address' per "
+            "domain_negatives.json) to be exposed, but it was not found.\n"
+            f"Output:\n{result.stdout}"
         )
 
-        # 3. Domain filter must be applied — no tools from other domains
+        # 3. M3 REST tools must be present (combined count >> retriever-only)
+        assert total_tools > 1, (
+            f"Expected more than 1 tool (got {total_tools}). "
+            "The combined server should expose M3 REST tools AND retriever tools."
+        )
+
+        # 4. Unrelated domains must not appear
         assert "query_hockey" not in result.stdout, (
             "Found 'query_hockey' in task 5 address output — "
-            "domain filtering is broken; all-domain tools are being returned."
+            "domain filtering is broken; unrelated tools are leaking through."
         )
 
     def test_task5_address(self, tmp_path):

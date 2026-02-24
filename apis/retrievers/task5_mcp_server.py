@@ -5,20 +5,29 @@ Task 5 Combined MCP Server
 Aggregates tools from two FastAPI servers running in the same container and
 exposes them as a single MCP server:
 
-  - M3 REST FastAPI   (http://localhost:8000) → SQL/REST tools for the domain
-  - Retriever FastAPI (http://localhost:8001) → semantic-search query tool
+  - M3 REST FastAPI   (http://localhost:8000) → SQL/REST tools for the primary domain
+  - Retriever FastAPI (http://localhost:8001) → semantic-search tools for the primary
+                                                domain AND its negative domains
 
-When the benchmark runner does ``docker exec -e MCP_DOMAIN=address … python
-/app/retrievers/task5_mcp_server.py``, the connected MCP client's
-``list_tools()`` returns all M3 REST tools for *address* PLUS the
-``query_address`` retriever tool in one flat list.
+Domain filtering is asymmetric by design:
+
+  M3 REST tools    — filtered to the primary domain only (MCP_DOMAIN).
+                     e.g. MCP_DOMAIN=address → /v1/address/* tools only.
+
+  Retriever tools  — filtered to the primary domain PLUS its "negative" domains
+                     from domain_negatives.json. These are confusable domains the
+                     agent must distinguish at retrieval time.
+                     e.g. MCP_DOMAIN=address →
+                       query_address, query_olympics, query_card_games,
+                       query_legislator, query_craftbeer
 
 Each tool's ``_metadata`` records which backend URL handles it, so
 ``call_tool`` can route the HTTP request correctly.
 
 Environment variables:
-    MCP_DOMAIN         Comma-separated domain(s) to expose (e.g. "address").
-                       If unset, all endpoints from both servers are exposed.
+    MCP_DOMAIN         Primary domain (e.g. "address"). Drives both M3 REST
+                       filtering and the negatives lookup. If unset, all
+                       endpoints from both servers are exposed.
     M3_REST_BASE_URL   Base URL of the M3 REST FastAPI server
                        (default: http://localhost:8000)
     RETRIEVER_BASE_URL Base URL of the Retriever FastAPI server
@@ -35,6 +44,7 @@ import asyncio
 import json
 import logging
 import os
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlencode
 
@@ -45,20 +55,64 @@ from mcp.types import Tool, TextContent
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# domain_negatives.json lives alongside this script in the container
+_NEGATIVES_PATH = Path(__file__).parent / "domain_negatives.json"
+
+
+def load_retriever_domains(
+    primary_domains: Optional[List[str]],
+    negatives_path: Path = _NEGATIVES_PATH,
+) -> Optional[List[str]]:
+    """Return the retriever domains for the given primary domains.
+
+    For each primary domain, the retriever should expose query tools for
+    that domain plus its negatives (confusable domains) as listed in
+    domain_negatives.json.
+
+    Returns None if primary_domains is None (expose all retriever endpoints).
+    """
+    if primary_domains is None:
+        return None
+
+    try:
+        with open(negatives_path) as f:
+            negatives_map: Dict[str, List[str]] = json.load(f)
+    except FileNotFoundError:
+        logger.warning(
+            "domain_negatives.json not found at %s — "
+            "retriever will use primary domain only.",
+            negatives_path,
+        )
+        return primary_domains
+
+    retriever_domains: List[str] = []
+    for domain in primary_domains:
+        for d in negatives_map.get(domain, [domain]):
+            if d not in retriever_domains:
+                retriever_domains.append(d)
+
+    return retriever_domains
+
 
 class Task5CombinedMCPServer:
-    """MCP server that merges M3 REST tools + Retriever tools for a domain."""
+    """MCP server that merges M3 REST tools + Retriever tools.
+
+    M3 REST tools are filtered to ``m3_domains`` (the primary domain).
+    Retriever tools are filtered to ``retriever_domains`` (primary + negatives).
+    """
 
     def __init__(
         self,
         m3_rest_url: str = "http://localhost:8000",
         retriever_url: str = "http://localhost:8001",
         server_name: str = "task5-combined-mcp",
-        domains: Optional[List[str]] = None,
+        m3_domains: Optional[List[str]] = None,
+        retriever_domains: Optional[List[str]] = None,
     ):
         self.m3_rest_url = m3_rest_url
         self.retriever_url = retriever_url
-        self.domains = domains
+        self.m3_domains = m3_domains
+        self.retriever_domains = retriever_domains
         self.server = Server(server_name)
         self.tools_cache: List[Tool] = []
 
@@ -78,12 +132,13 @@ class Task5CombinedMCPServer:
 
     # ------------------------------------------------------------------
     # M3 REST tool discovery (mirrors apis/m3/rest/mcp_server.py)
+    # Filtered to the primary domain only.
     # ------------------------------------------------------------------
 
     def _should_include_m3_endpoint(self, path: str) -> bool:
-        if not self.domains:
+        if not self.m3_domains:
             return True
-        return any(path.startswith(f"/v1/{domain}") for domain in self.domains)
+        return any(path.startswith(f"/v1/{domain}") for domain in self.m3_domains)
 
     def _m3_rest_tools_from_spec(self, spec: Dict) -> List[Tool]:
         tools = []
@@ -149,7 +204,6 @@ class Task5CombinedMCPServer:
                     "method": method.upper(),
                     "path_params": [p["name"] for p in path_params],
                     "query_params": [p["name"] for p in query_params],
-                    # M3 REST passes the request body under the "body" key
                     "body_params": [],
                 }
                 tools.append(tool)
@@ -157,6 +211,7 @@ class Task5CombinedMCPServer:
 
     # ------------------------------------------------------------------
     # Retriever tool discovery (mirrors apis/retrievers/mcp_server.py)
+    # Filtered to primary domain + its negatives.
     # ------------------------------------------------------------------
 
     def _resolve_refs(self, schema: Any, spec: Dict) -> Any:
@@ -186,14 +241,14 @@ class Task5CombinedMCPServer:
             for method, operation in path_item.items():
                 if method.lower() not in ["get", "post", "put", "delete", "patch"]:
                     continue
-                # Only expose POST /{domain}/query endpoints
                 if not (method.lower() == "post" and path.endswith("/query")):
                     continue
 
                 path_domain = self._extract_path_domain(path)
                 if not path_domain:
                     continue
-                if self.domains and path_domain not in self.domains:
+                # Use retriever_domains (primary + negatives) for filtering
+                if self.retriever_domains and path_domain not in self.retriever_domains:
                     continue
 
                 body_schema = None
@@ -235,7 +290,6 @@ class Task5CombinedMCPServer:
                     "method": "POST",
                     "path_params": [],
                     "query_params": [],
-                    # Retriever flattens body props to top-level tool args
                     "body_params": body_param_names,
                 }
                 tools.append(tool)
@@ -246,12 +300,20 @@ class Task5CombinedMCPServer:
     # ------------------------------------------------------------------
 
     async def initialize(self):
-        logger.info("Fetching M3 REST OpenAPI spec from %s", self.m3_rest_url)
+        logger.info(
+            "Fetching M3 REST OpenAPI spec from %s (domains: %s)",
+            self.m3_rest_url,
+            self.m3_domains,
+        )
         m3_spec = await self._fetch_openapi(self.m3_rest_url)
         m3_tools = self._m3_rest_tools_from_spec(m3_spec)
         logger.info("M3 REST: %d tools", len(m3_tools))
 
-        logger.info("Fetching Retriever OpenAPI spec from %s", self.retriever_url)
+        logger.info(
+            "Fetching Retriever OpenAPI spec from %s (domains: %s)",
+            self.retriever_url,
+            self.retriever_domains,
+        )
         ret_spec = await self._fetch_openapi(self.retriever_url)
         ret_tools = self._retriever_tools_from_spec(ret_spec)
         logger.info("Retriever: %d tools", len(ret_tools))
@@ -283,7 +345,6 @@ class Task5CombinedMCPServer:
         query_params: List[str] = meta["query_params"]
         body_params: List[str] = meta.get("body_params", [])
 
-        # Build URL
         url = backend_url + path
         for pname in path_params:
             if pname in arguments:
@@ -293,7 +354,6 @@ class Task5CombinedMCPServer:
         if query_dict:
             url = f"{url}?{urlencode(query_dict)}"
 
-        # Body: retriever flattens params; M3 REST uses a "body" key
         if body_params:
             body = {k: arguments[k] for k in body_params if k in arguments} or None
         else:
@@ -355,21 +415,28 @@ async def main():
     m3_rest_url = os.getenv("M3_REST_BASE_URL", "http://localhost:8000")
     retriever_url = os.getenv("RETRIEVER_BASE_URL", "http://localhost:8001")
     server_name = os.getenv("MCP_SERVER_NAME", "task5-combined-mcp")
-    domains = parse_list_env("MCP_DOMAIN")
+
+    # Primary domain(s) from MCP_DOMAIN (e.g. "address")
+    primary_domains = parse_list_env("MCP_DOMAIN")
+
+    # Retriever domains = primary + negatives from domain_negatives.json
+    retriever_domains = load_retriever_domains(primary_domains)
 
     logger.info(
         "Starting Task 5 combined MCP server "
-        "(M3 REST @ %s + Retriever @ %s, domains=%s)",
+        "(M3 REST @ %s [domains=%s] + Retriever @ %s [domains=%s])",
         m3_rest_url,
+        primary_domains,
         retriever_url,
-        domains,
+        retriever_domains,
     )
 
     server = Task5CombinedMCPServer(
         m3_rest_url=m3_rest_url,
         retriever_url=retriever_url,
         server_name=server_name,
-        domains=domains,
+        m3_domains=primary_domains,
+        retriever_domains=retriever_domains,
     )
     await server.run()
 
