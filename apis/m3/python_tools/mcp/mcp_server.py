@@ -647,7 +647,7 @@ def create_server(config: MCPServerConfig, shutdown_event: Optional[asyncio.Even
         shutdown_event: Optional asyncio.Event for graceful shutdown
 
     Returns:
-        SlotFillingMCPServer or SelectionMCPServer based on config.server_type
+        SlotFillingMCPServer, SelectionMCPServer, or RouterMCPServer based on config.server_type
     """
     # Determine server type from config or server name
     server_type = getattr(config, 'server_type', None)
@@ -657,7 +657,7 @@ def create_server(config: MCPServerConfig, shutdown_event: Optional[asyncio.Even
         if 'selection' in config.server_name.lower():
             server_type = 'selection'
         else:
-            server_type = 'slot_filling'
+            server_type = 'router'
 
     if server_type == 'selection':
         return SelectionMCPServer(config, shutdown_event)

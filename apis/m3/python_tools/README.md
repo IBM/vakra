@@ -135,7 +135,7 @@ This means the server works out of the box in both Docker and local environments
 | `MCP_DOMAIN` | Database domain name (e.g. `superhero`, `hockey`) |
 | `MCP_CACHE_DIR` | Cache directory for IO operations |
 | `MCP_TABLES` | Comma-separated list of tables to load |
-| `MCP_SERVER_TYPE` | `slot_filling` or `selection` |
+| `MCP_SERVER_TYPE` | `router` (default), `slot_filling`, or `selection` |
 | `MCP_TRANSPORT` | `stdio` (default) or `websocket` |
 | `MCP_HOST` | WebSocket host (default: `127.0.0.1`) |
 | `MCP_PORT` | WebSocket port (default: `8000`) |
@@ -148,7 +148,7 @@ This means the server works out of the box in both Docker and local environments
 | `--tables TABLE1,TABLE2` | Comma-separated list of tables to load (default: all) |
 | `--config FILE` | Path to JSON config file |
 | `--cache-dir DIR` | Directory for caching (default: `./mcp_cache`) |
-| `--mode` | Server type: `slot_filling` or `selection` |
+| `--mode` | Server type: `router` (default), `slot_filling`, or `selection` |
 | `--transport` | `stdio` (default) or `websocket` |
 | `--host` | WebSocket bind host |
 | `--port` | WebSocket port |

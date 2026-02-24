@@ -138,7 +138,7 @@ SLOT_FILLING_MCP_DATABASE = { description = "Path to SQLite database file", requ
 SLOT_FILLING_MCP_CACHE_DIR = { description = "Cache directory for IO operations", default = "./mcp_cache" }
 SLOT_FILLING_MCP_TABLES = { description = "Comma-separated list of tables to load", required = false }
 SLOT_FILLING_MCP_TOOL_UNIVERSE_ID = { description = "Unique ID for this server instance", required = false }
-SLOT_FILLING_MCP_SERVER_TYPE = { description = "Server mode: slot_filling or selection", default = "slot_filling" }
+SLOT_FILLING_MCP_SERVER_TYPE = { description = "Server mode: router, slot_filling, or selection", default = "router" }
 SLOT_FILLING_MCP_TRANSPORT = { description = "Transport protocol: stdio or websocket", default = "stdio" }
 SLOT_FILLING_MCP_HOST = { description = "Host to bind WebSocket server", default = "127.0.0.1" }
 SLOT_FILLING_MCP_PORT = { description = "Port for WebSocket server", default = "8000" }
