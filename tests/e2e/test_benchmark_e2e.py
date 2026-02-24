@@ -104,6 +104,25 @@ def _run_benchmark(task_id: int, output_dir: Path, domain: str = "address") -> s
     )
 
 
+def _list_tools(task_id: int, domain: str = "address") -> subprocess.CompletedProcess:
+    """Invoke benchmark_runner.py --list-tools and capture its output."""
+    cmd = [
+        sys.executable,
+        str(PROJECT_ROOT / "benchmark_runner.py"),
+        "--m3_task_id", str(task_id),
+        "--domain", domain,
+        "--list-tools",
+    ]
+    print(f"\n$ {' '.join(str(c) for c in cmd)}\n", flush=True)
+    return subprocess.run(
+        cmd,
+        cwd=str(PROJECT_ROOT),
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+
+
 def _assert_output(output_dir: Path, domain: str = "address") -> list:
     """Assert the output file is valid and return the parsed records."""
     output_file = output_dir / f"{domain}.json"
@@ -242,8 +261,50 @@ class TestBenchmarkE2E:
             + json.dumps(records, indent=2)
         )
 
+    def test_task5_combined_tools(self):
+        """Task 5: combined MCP server exposes both M3 REST and retriever tools.
+
+        The task5_mcp_server.py merges tools from the M3 REST FastAPI server
+        (port 8000) and the Retriever FastAPI server (port 8001). For the
+        'address' domain this should yield the M3 REST tools PLUS the single
+        ``query_address`` retriever tool — well more than 1 tool in total.
+        """
+        result = _list_tools(task_id=5, domain="address")
+
+        print(result.stdout, flush=True)
+        if result.stderr:
+            print(result.stderr, flush=True)
+
+        assert result.returncode == 0, (
+            f"--list-tools exited with code {result.returncode}\n{result.stderr}"
+        )
+
+        # Parse "  Total tools: N" from the output
+        total_tools = None
+        for line in result.stdout.splitlines():
+            if "Total tools:" in line:
+                try:
+                    total_tools = int(line.split("Total tools:")[-1].strip())
+                except ValueError:
+                    pass
+                break
+
+        assert total_tools is not None, (
+            f"Could not find 'Total tools:' in --list-tools output:\n{result.stdout}"
+        )
+        # Retriever-only would give 1 tool; combined should give M3 REST tools + 1
+        assert total_tools > 1, (
+            f"Expected more than 1 tool (got {total_tools}). "
+            "The combined server should expose M3 REST tools AND the retriever tool."
+        )
+
     def test_task5_address(self, tmp_path):
-        """Task 5: ChromaDB retriever MCP agent on 2 address-domain samples."""
+        """Task 5: combined MCP server (M3 REST + retriever) on 2 address samples.
+
+        Uses task5_mcp_server.py which merges tools from both FastAPI servers
+        running in task_5_m3_environ so the agent can use SQL/REST tools and
+        semantic search in the same session.
+        """
         output_dir = tmp_path / "task5"
         output_dir.mkdir()
 
