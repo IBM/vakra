@@ -131,33 +131,15 @@ async def run_benchmark_for_domain(
 
     try:
         async with AsyncExitStack() as stack:
-            # Primary MCP server (always present)
+            # Primary MCP server (always present).
+            # For Task 3, cfg.container_command points to task3_router.py which
+            # exec's into the correct server (BPO or M3 REST) based on MCP_DOMAIN.
             session = await stack.enter_async_context(
                 create_client_and_connect(cfg, domain)
             )
             wrapper = MCPToolWrapper(session)
             tools = await wrapper.get_tools()
             print(f"  Loaded {len(tools)} tools for domain '{domain}'")
-
-            # Secondary MCP server (Task 3: BPO primary + M3 REST secondary)
-            if cfg.secondary_container_command:
-                secondary_cfg = MCPConnectionConfig(
-                    mode=cfg.mode,
-                    container_name=cfg.container_name,
-                    container_runtime=cfg.container_runtime,
-                    container_env=cfg.container_env,
-                    container_command=cfg.secondary_container_command,
-                )
-                secondary_session = await stack.enter_async_context(
-                    create_client_and_connect(secondary_cfg, domain)
-                )
-                secondary_wrapper = MCPToolWrapper(secondary_session)
-                secondary_tools = await secondary_wrapper.get_tools()
-                print(
-                    f"  Loaded {len(secondary_tools)} additional tools"
-                    f" from secondary server"
-                )
-                tools = tools + secondary_tools
 
             agent = _get_agent(task_id, llm, tools, top_k_tools)
 

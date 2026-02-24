@@ -29,6 +29,7 @@ Usage:
     python -m pytest tests/e2e/test_benchmark_e2e.py::TestBenchmarkE2E::test_task1_address -v -s
     python -m pytest tests/e2e/test_benchmark_e2e.py::TestBenchmarkE2E::test_task2_address -v -s
     python -m pytest tests/e2e/test_benchmark_e2e.py::TestBenchmarkE2E::test_task3_airline -v -s
+    python -m pytest tests/e2e/test_benchmark_e2e.py::TestBenchmarkE2E::test_task3_bpo -v -s
     python -m pytest tests/e2e/test_benchmark_e2e.py::TestBenchmarkE2E::test_task5_address -v -s
 
     # Run the entire test suite in one go
@@ -200,13 +201,12 @@ class TestBenchmarkE2E:
         )
 
     def test_task3_airline(self, tmp_path):
-        """Task 3: BPO + M3 REST dual-MCP agent on 2 airline-domain samples.
+        """Task 3: M3 REST MCP agent on 2 airline-domain samples.
 
-        Uses task_3_m3_environ container which runs both the BPO MCP server
-        (primary) and the M3 REST MCP server (secondary) simultaneously.
-        The agent receives the merged tool list from both servers.
+        Uses task_3_m3_environ container via task3_router.py. Since "airline"
+        is an M3 REST domain, the router exec's into /app/m3-rest/mcp_server.py.
         """
-        output_dir = tmp_path / "task3"
+        output_dir = tmp_path / "task3_airline"
         output_dir.mkdir()
 
         result = _run_benchmark(task_id=3, output_dir=output_dir, domain="airline")
@@ -217,7 +217,28 @@ class TestBenchmarkE2E:
         records = _assert_output(output_dir, domain="airline")
         successful = [r for r in records if r["status"] == "success"]
         assert len(successful) >= 1, (
-            "Expected at least 1 successful record for task 3.\n"
+            "Expected at least 1 successful record for task 3 (airline).\n"
+            + json.dumps(records, indent=2)
+        )
+
+    def test_task3_bpo(self, tmp_path):
+        """Task 3: BPO MCP agent on 2 BPO-domain samples.
+
+        Uses task_3_m3_environ container via task3_router.py. Since "bpo"
+        is the BPO domain, the router exec's into /app/apis/bpo/mcp/server.py.
+        """
+        output_dir = tmp_path / "task3_bpo"
+        output_dir.mkdir()
+
+        result = _run_benchmark(task_id=3, output_dir=output_dir, domain="bpo")
+
+        assert result.returncode == 0, (
+            f"benchmark_runner.py exited with code {result.returncode} (see output above)"
+        )
+        records = _assert_output(output_dir, domain="bpo")
+        successful = [r for r in records if r["status"] == "success"]
+        assert len(successful) >= 1, (
+            "Expected at least 1 successful record for task 3 (bpo).\n"
             + json.dumps(records, indent=2)
         )
 
