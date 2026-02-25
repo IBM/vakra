@@ -66,6 +66,7 @@ COPY apis/retrievers/domain_negatives.json          retrievers/domain_negatives.
 
 # --- Sel/Slot Python tools MCP server ---
 COPY apis/__init__.py           apis/__init__.py
+COPY apis/mcp_logging.py        apis/mcp_logging.py
 COPY apis/m3/__init__.py        apis/m3/__init__.py
 COPY apis/m3/python_tools/      apis/m3/python_tools/
 
@@ -78,12 +79,18 @@ COPY apis/bpo/                  apis/bpo/
 COPY docker/entrypoint-unified.sh entrypoint.sh
 RUN chmod +x entrypoint.sh
 
+# --- MCP dispatcher (single entrypoint for all tasks, routed by TASK_ID) ---
+COPY docker/mcp_dispatch.py mcp_dispatch.py
+
 # Volume mount points (data mounted at runtime, not baked in)
 VOLUME /app/db
 VOLUME /app/apis/configs
 VOLUME /app/retrievers/chroma_data
 VOLUME /app/retrievers/queries
 ENV MCP_DB_ROOT=/app/db
+# Ensure `from apis.*` resolves for scripts run as `python /app/.../*.py`
+# (Python only adds the script's own directory to sys.path, not /app)
+ENV PYTHONPATH=/app
 
 EXPOSE 8000 8001
 

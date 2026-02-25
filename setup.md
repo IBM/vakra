@@ -6,10 +6,18 @@
 
 ## Quick Start — First Time Test
 
-Everything you need to go from a fresh clone to a working single-sample benchmark run:
+Choose one of the two routes below. Both end at the same place: 4 containers running and a passing smoke test.
+
+---
+
+### Option 1 — Build from source + Docker Compose
+
+Use this when you've cloned the repo and want to build and run everything locally.
+
+> **Podman users:** `docker compose` is a Docker plugin and won't exist on Podman-only systems. Either alias it (`alias docker=podman`) or replace `docker compose` with `podman compose` throughout. `make` targets use `$(DOCKER)` and auto-detect the runtime, so they work without aliasing.
 
 ```bash
-# 1. Python environment (Use python or python3)
+# 1. Python environment
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[init]"
 pip install -r requirements_benchmark.txt
@@ -18,28 +26,71 @@ pip install -r requirements_benchmark.txt
 export HF_TOKEN=hf_...
 export OPENAI_API_KEY=sk-...
 
-# 3. Download data (~30 GB), pull Docker image, start containers
+# 3. Download benchmark data (~30 GB)
 make download
-make pull
-make start
 
-# 4. Verify all 4 containers are up
-docker ps
+# 4. Stop any existing containers, build the image, and start all 4 containers
+docker compose down    # or: podman compose down
+make build
+docker compose up -d   # or: podman compose up -d
 
-# 5. Run a single-sample smoke test (Task 1, authors domain)
+# 5. Wait ~60 s for internal services to initialize, then verify
+docker compose ps      # or: podman compose ps
+
+# 6. Run a single-sample smoke test (Task 1, authors domain)
 python benchmark_runner.py --m3_task_id 1 --domain authors --max-samples-per-domain 1 --provider openai
 
 # Results land in output/task_1_<timestamp>/authors.json
 ```
 
-> If you hit issues, see [Debugging containers](#debugging-containers) below.
+After making changes to server code or `docker/Dockerfile.unified`, re-run `make build` then `docker compose up -d` (or `podman compose up -d`) to pick them up.
+
+```bash
+export OPENAI_API_KEY=sk-...
+
+# Skips data download and container restart — tests against whatever is already running
+make e2e-quick
+```
+---
+
+### Option 2 — Pull pre-built image from Docker Hub
+
+Use this if you just want to run the benchmark without building anything.
+
+```bash
+# 1. Python environment
+python3 -m venv .venv && source .venv/bin/activate
+pip install -e ".[init]"
+pip install -r requirements_benchmark.txt
+
+# 2. Set required tokens
+export HF_TOKEN=hf_...
+export OPENAI_API_KEY=sk-...
+
+# 3. Download benchmark data (~30 GB), pull the image, and start all 4 containers
+#    (make start stops existing containers before starting fresh ones)
+make download
+make pull
+make start
+
+# 4. Run a single-sample smoke test (Task 1, authors domain)
+python benchmark_runner.py --m3_task_id 1 --domain authors --max-samples-per-domain 1 --provider openai
+
+# Results land in output/task_1_<timestamp>/authors.json
+```
+
+
+> If you hit issues, see [DEBUGGING.md](DEBUGGING.md).
 
 ---
 
 ## Prerequisites
 
 - Docker or Podman running (`docker ps` / `podman ps`)
-- If using Podman, alias it: `alias docker=podman`
+- **Podman users:** `docker compose` is a Docker-only plugin. Use one of:
+  - `alias docker=podman` — makes `docker compose` invoke `podman compose` (requires `podman-compose` installed)
+  - Or use `podman compose` directly wherever `docker compose` appears in these docs
+  - `make` targets auto-detect the runtime and don't need the alias
 
 ### Container memory requirements
 
@@ -96,21 +147,88 @@ pip install langchain-openai langchain mcp langchain-anthropic langgraph langcha
 
 ---
 
-## 3. Download Data, Pull Image, and Start Containers
+## 3. Download Data and Start Containers
+
+Data download is required for both routes below:
 
 ```bash
 # Download benchmark data from HuggingFace (~30 GB)
-# You will be prompted for a Hugging Face token
+# You will be prompted for a HuggingFace token
 make download
-
-# Pull the m3_environ Docker image
-make pull
-
-# Start all four benchmark containers
-make start
 ```
 
 > **Warning:** `make download` fetches ~30 GB of data. This will be reduced in a future release.
+
+Then choose your route:
+
+---
+
+### Route A — Pull from Docker Hub (recommended for most users)
+
+No build step required. Pulls the pre-built image and starts all containers:
+
+```bash
+make pull
+make start
+```
+
+`make start` always pulls the latest image before starting, so you're guaranteed to be on the current published version.
+
+---
+
+### Route B — Build locally and use Docker Compose (for contributors and local changes)
+
+Use this when you've made changes to server code or `docker/Dockerfile.unified` and want to test locally without pushing to Docker Hub first.
+
+```bash
+# Build the image from source
+make build
+
+# Start all four containers (uses the locally built image — no pull)
+docker compose up -d
+```
+
+Wait ~60 seconds for the internal FastAPI services to initialize, then verify:
+
+```bash
+docker compose ps
+docker compose logs -f   # Ctrl+C to exit
+```
+
+**Running e2e tests against locally built containers:**
+
+```bash
+export OPENAI_API_KEY=sk-...
+
+# Skips data download and container restart — tests against whatever is already running
+make e2e-quick
+```
+
+> `docker compose up -d` never pulls from Docker Hub. If you change server code, re-run `make build` before `docker compose up -d` to pick up the changes.
+
+**MCP config files:**
+
+The benchmark runner uses `benchmark/mcp_connection_config.yaml` by default. Two versions are available:
+
+| Config file | Requires | Use when |
+|-------------|----------|----------|
+| `benchmark/mcp_connection_config.yaml` | New image (after `make build`) | Default — uses `/app/mcp_dispatch.py` for a single unified entrypoint |
+| `benchmark/mcp_connection_config_legacy.yaml` | Any image version | You haven't rebuilt yet, or want direct server paths |
+
+To use the legacy config:
+
+```bash
+python benchmark_runner.py --mcp-config benchmark/mcp_connection_config_legacy.yaml \
+    --m3_task_id 2 --domain address --provider openai
+```
+
+**Day-to-day after initial setup (either route):**
+
+```bash
+docker compose up -d    # restart containers without pulling or rebuilding
+docker compose down     # stop and remove all containers
+docker compose logs -f  # tail logs
+```
 
 ---
 
@@ -131,69 +249,36 @@ You should see **4 containers** listed:
 | `task_3_m3_environ` | BPO MCP server + M3 REST API |
 | `task_5_m3_environ` | M3 REST API + ChromaDB Retriever |
 
+### Restarting a single container
+
+If one container fails or becomes unhealthy while the others are fine, restart it individually rather than tearing everything down.
+
+`make` targets work for both Docker and Podman. The raw `docker compose` commands below need `alias docker=podman` or `podman compose` on Podman systems.
+
+```bash
+# Via make — works for Docker and Podman without aliasing
+make start-task1
+make start-task2
+make start-task3
+make start-task5
+
+# Or directly via docker compose (same effect)
+docker compose up -d task_1_m3_environ
+docker compose up -d task_5_m3_environ
+
+# Stop and remove a single container only
+docker compose rm -sf task_1_m3_environ
+
+# Check logs for a specific container
+docker logs task_1_m3_environ --tail 50
+docker compose logs -f task_1_m3_environ
+```
+
+> `task_5_m3_environ` (ChromaDB) is the most likely to OOM on startup. If it exits immediately, confirm Docker Desktop memory is set to at least 8 GB (see [Prerequisites](#prerequisites)).
+
 ### Debugging containers
 
-**Tail logs for all containers at once:**
-
-```bash
-make logs
-```
-
-**Tail logs for a specific container:**
-
-```bash
-docker logs -f task_5_m3_environ
-```
-
-**Check memory and CPU usage in real time:**
-
-```bash
-docker stats task_1_m3_environ task_2_m3_environ task_3_m3_environ task_5_m3_environ
-```
-
-**Inspect a container's environment and config:**
-
-```bash
-docker inspect task_5_m3_environ
-```
-
-**Open a shell inside a running container:**
-
-```bash
-docker exec -it task_5_m3_environ bash
-```
-
-**Check if the FastAPI server is responding (Tasks 2, 3, 5):**
-
-```bash
-docker exec task_2_m3_environ curl -sf http://localhost:8000/openapi.json | head -c 200
-docker exec task_5_m3_environ curl -sf http://localhost:8001/health
-```
-
-**Send a test MCP handshake to verify the MCP server is alive:**
-
-```bash
-MCP_INIT='{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0.1.0"}}}'
-
-echo "$MCP_INIT" | docker exec -i -e MCP_DOMAIN=address task_2_m3_environ python /app/m3-rest/mcp_server.py
-echo "$MCP_INIT" | docker exec -i task_3_m3_environ python /app/apis/bpo/mcp/server.py
-echo "$MCP_INIT" | docker exec -i -e MCP_DOMAIN=address task_5_m3_environ python /app/retrievers/mcp_server.py
-echo "$MCP_INIT" | docker exec -i -e MCP_DOMAIN=superhero task_1_m3_environ python -m apis.m3.python_tools.mcp
-```
-
-**Stop and restart a single container:**
-
-```bash
-docker rm -f task_5_m3_environ
-
-docker run -d --name task_5_m3_environ \
-    --memory=4g \
-    -v "$(pwd)/data/db:/app/db:ro" \
-    -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
-    -v "$(pwd)/data/chroma_data:/app/retrievers/chroma_data" \
-    -v "$(pwd)/data/queries:/app/retrievers/queries:ro" \
-    m3_environ
-```
+See [DEBUGGING.md](DEBUGGING.md) for container inspection commands, benchmark run logs, MCP server log capture, and jq recipes.
 
 ---
 
@@ -258,15 +343,31 @@ Results are saved to `output/task_{id}_{timestamp}/{domain}.json`.
 
 ## Integration & Unit Tests
 
-### End-to-end tests (requires HuggingFace token + OpenAI key + Docker)
+### End-to-end tests
 
-These tests download data, start containers, run the benchmark pipeline, and validate output.
+Two ways to run e2e tests depending on whether containers are already running:
 
-**Step 1 — Set required env vars:**
+---
+
+**Option 1 — `make e2e-quick` (containers already running)**
+
+Use this after `make build && docker compose up -d` or `make start`. No data re-download, no container restart.
+
+```bash
+export OPENAI_API_KEY=sk-...
+make e2e-quick
+```
+
+---
+
+**Option 2 — `make e2e` (full setup from scratch)**
+
+Downloads data, starts containers, then runs tests. Requires both tokens.
 
 ```bash
 export HF_TOKEN=hf_...
 export OPENAI_API_KEY=sk-...
+make e2e
 ```
 
 Alternatively, use a `.env` file:
@@ -275,11 +376,6 @@ Alternatively, use a `.env` file:
 cp template_env .env
 # edit .env: set HF_TOKEN and OPENAI_API_KEY
 export $(grep -v '^#' .env | xargs)
-```
-
-**Step 2 — Run the full e2e suite:**
-
-```bash
 make e2e
 ```
 
@@ -396,9 +492,14 @@ make setup      # download → build → test → start → validate
 | `make release` | `build → test → tag → push` |
 | `make setup` | `download → build → test → start → validate` — full first-time setup |
 | `make start` | Start all benchmark containers |
+| `make start-task1` | Start `task_1_m3_environ` only |
+| `make start-task2` | Start `task_2_m3_environ` only |
+| `make start-task3` | Start `task_3_m3_environ` only |
+| `make start-task5` | Start `task_5_m3_environ` only |
 | `make stop` | Stop and remove all benchmark containers |
 | `make clean` | Stop containers and remove the local `m3_environ` Docker image |
 | `make e2e` | Run end-to-end benchmark tests (requires `HF_TOKEN` + `OPENAI_API_KEY`) |
+| `make e2e-quick` | Run e2e tests against already-running containers — skips download and container restart (requires `OPENAI_API_KEY` only) |
 | `make logs` | Last 20 log lines per container |
 
 ---

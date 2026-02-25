@@ -52,7 +52,8 @@ import httpx
 from mcp.server import Server
 from mcp.types import Tool, TextContent
 
-logging.basicConfig(level=logging.INFO)
+from apis.mcp_logging import _setup_mcp_logging
+
 logger = logging.getLogger(__name__)
 
 # domain_negatives.json lives alongside this script in the container
@@ -333,6 +334,7 @@ class Task5CombinedMCPServer:
     async def call_tool(
         self, name: str, arguments: Dict[str, Any]
     ) -> List[TextContent]:
+        logger.info("tool_call tool=%s", name)
         tool = next((t for t in self.tools_cache if t.name == name), None)
         if not tool:
             raise ValueError(f"Tool '{name}' not found")
@@ -412,6 +414,7 @@ def parse_list_env(env_var: str) -> Optional[List[str]]:
 
 
 async def main():
+    _setup_mcp_logging()
     m3_rest_url = os.getenv("M3_REST_BASE_URL", "http://localhost:8000")
     retriever_url = os.getenv("RETRIEVER_BASE_URL", "http://localhost:8001")
     server_name = os.getenv("MCP_SERVER_NAME", "task5-combined-mcp")
