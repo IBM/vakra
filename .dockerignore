@@ -39,3 +39,4 @@ benchmark/
 *.cfg
 *.toml
 *.ini
+*.ipynb_checkpoints/

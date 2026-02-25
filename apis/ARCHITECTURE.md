@@ -1,43 +1,33 @@
 # Architecture
 
 ```
-                        +--------------------------+
-                        |     Benchmark Runner     |
-                        |   (benchmark_runner.py)  |
-                        |                          |
-                        |  - Loads domain tasks    |
-                        |  - Spawns MCP servers    |
-                        |  - Runs LLM agent        |
-                        |  - Collects results      |
-                        +----+----------------+----+
-                             |                |
-                   MCP stdio |                | MCP stdio
-                             |                |
-              +--------------+--+          +--+--------------+
-              |  Docker Service |          |  Docker Service |
-              |  Port 8000      |          |  Port 8001      |
-              |                 |          |                 |
-         +----+----+-------+   |     +----+----+-------+   |
-         |         |       |   |     |         |       |   |
-         |   MCP   | FastAPI|   |     |   MCP   | FastAPI|   |
-         | Server  | Server |   |     | Server  | Server |   |
-         |         |       |   |     |         |       |   |
-         +----+----+---+---+   |     +----+----+---+---+   |
-              |        |       |          |        |       |
-              +--------+       |          +--------+       |
-              |                |          |                |
-   +----------+----------+    |   +------+------+         |
-   |  M3 Tools Service   |    |   |  Retrievers  |         |
-   |  (fastapi-mcp)      |    |   |  Service     |         |
-   +-----------+----------+    |   +------+-------+         |
-               |               |          |                |
-               |               |          |                |
-+--------------+-----------+   |   +------+--------+       |
-|    60+ SQLite Databases  |   |   | ChromaDB       |       |
-|    /db/{domain}/*.sqlite |   |   | (vector store) |       |
-+--------------------------+   |   +----------------+       |
-                               |                            |
-                               +----------------------------+
+HOST
++------------------------------------------------------------+
+|                    benchmark_runner.py                     |
+|                                                            |
+|  Loads domain questions  |  Runs LLM agent  |  Saves output|
++-------+----------+----------+----------+-------------------+
+        |          |          |          |
+        docker exec -i, MCP stdio (TASK_ID=N, MCP_DOMAIN=<domain>)
+        |          |          |          |
+- - - - - - - - - - - - host / container boundary - - - - - -
+        |          |          |          |
+        v          v          v          v
+CONTAINERS (image: m3_environ)
++------------------+ +------------------+ +------------------+ +---------------------+
+| task_1_m3_environ| | task_2_m3_environ| | task_3_m3_environ| | task_5_m3_environ   |
+|                  | |                  | |                  | |  (mem_limit: 4 GB)  |
+| mcp_dispatch.py  | | mcp_dispatch.py  | | mcp_dispatch.py  | | mcp_dispatch.py     |
+|  (TASK_ID=1)     | |  (TASK_ID=2)     | |  (TASK_ID=3)     | |  (TASK_ID=5)        |
+|  os.execv ->     | |  os.execv ->     | |  os.execv ->     | |  os.execv ->        |
+| python_tools.mcp | | m3-rest/         | | bpo/             | | task5_mcp_server    |
+| (Sel/Slot router)| | mcp_server.py    | | task3_router.py  | | (M3 REST+Retriever) |
+|       |          | |       |          | |       |          | |     |         |     |
+|   SQLite /db/    | | FastAPI :8000    | | FastAPI :8000    | | FastAPI   FastAPI   |
+|                  | |       |          | |       |          | |  :8000     :8001    |
+|                  | |   SQLite /db/    | |   SQLite /db/    | |   |           |    |
+|                  | |                  | |                  | | SQLite    ChromaDB  |
++------------------+ +------------------+ +------------------+ +---------------------+
 ```
 
 ## Unified Docker Image

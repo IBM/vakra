@@ -6,6 +6,57 @@ the MCP layer the benchmark client connects to, and a full end-to-end diagram.
 
 ---
 
+## System Overview
+
+```
+                    +------------------------------------------+
+                    |          LLM Provider API                |
+                    |  OpenAI | Anthropic | Ollama | LiteLLM  |
+                    +-------------------+----------------------+
+                                        | HTTPS (chat completions)
+= = = = = = = = = = = = = = = = = = = = + = = = = = = = HOST = = = = = = = = = = = = =
+                                        |
+              +─────────────────────────+──────────────────────────+
+              |              benchmark_runner.py                   |
+              |                                                    |
+              |  · Reads domain questions from data/               |
+              |  · Runs a ReAct agent loop (LangGraph)             |
+              |  · Calls LLM API above for reasoning               |
+              |  · Calls MCP tools below for data access           |
+              |  · Scores answers → output/{task}/{domain}.json    |
+              +─────────────────────────+──────────────────────────+
+                                        |
+                           docker exec -i, MCP stdio
+                           TASK_ID=N, MCP_DOMAIN=<domain>
+                                        |
+= = = = = = = = = = = = = = = = = = = = + = = = CONTAINERS = = = = = = = = = = = = = =
+                                        |
+     +──────────────────────────────────+──────────────────────────────────────+
+     |                           image: m3_environ                             |
+     |                                                                         |
+     |  +──────────────+ +──────────────+ +──────────────+ +─────────────────+ |
+     |  |   task_1     | |   task_2     | |   task_3     | |     task_5      | |
+     |  |  Sel / Slot  | |  M3 REST     | |  BPO + M3    | |  M3 REST +      | |
+     |  |  MCP server  | |  MCP server  | |  REST router | |  Retriever      | |
+     |  +──────┬───────+ +──────┬───────+ +──────┬───────+ +────┬───────┬────+ |
+     |         |                |                |              |       |       |
+     |         +────────────────+────────────────+--------------+       |       |
+     |                                                                  |       |
+     |          mcp_dispatch.py  (os.execv → per-task MCP server)      |       |
+     |                     |                                            |       |
+     |         FastAPI :8000 — M3 REST API (all tasks)    FastAPI :8001 |       |
+     |                     |                              Retriever API  |       |
+     |                     |                              (task_5 only)  |       |
+     |        +────────────+──────────────────+   +────────────────────+|       |
+     |        |  SQLite  /app/db/             |   |  ChromaDB           +       |
+     |        |  60+ domain databases         |   |  62 collections             |
+     |        |  (tasks 1, 2, 3, 5)           |   |  (task_5 only)              |
+     |        +───────────────────────────────+   +─────────────────────────────+
+     +─────────────────────────────────────────────────────────────────────────+
+```
+
+---
+
 ## Shared Infrastructure
 
 ### One image, four containers
@@ -22,13 +73,30 @@ The benchmark runner never opens a network socket to a container. Instead it
 runs:
 
 ```
-docker exec -i -e MCP_DOMAIN=<domain> <container> python <mcp_server.py>
+docker exec -i -e TASK_ID=<N> -e MCP_DOMAIN=<domain> <container> python /app/mcp_dispatch.py
 ```
 
 That spawns a short-lived MCP server process inside the container. The process
 speaks the [MCP stdio protocol](https://modelcontextprotocol.io) back over
 stdin/stdout. The benchmark client (`benchmark/mcp_client.py`) wraps this as
 an MCP `ClientSession` and calls `list_tools()` / `call_tool()` as normal.
+
+### MCP dispatcher (`mcp_dispatch.py`)
+
+All tasks share a single container entrypoint — `/app/mcp_dispatch.py`. It
+reads the `TASK_ID` environment variable and calls `os.execv()` to replace
+itself with the correct server process. There is no proxy layer; the stdio
+pipe connects directly to the target server after exec.
+
+| `TASK_ID` | Exec target |
+|-----------|-------------|
+| `1` | `python -m apis.m3.python_tools.mcp` |
+| `2` | `python /app/m3-rest/mcp_server.py` |
+| `3` | `python /app/apis/bpo/mcp/task3_router.py` |
+| `5` | `python /app/retrievers/task5_mcp_server.py` |
+
+The original server scripts remain intact and are still tested directly by
+`docker/smoke_test.sh`. The dispatcher is just a thin routing shim.
 
 ### Container startup (`entrypoint.sh`)
 
@@ -106,15 +174,19 @@ reads from the pre-loaded SQLite database.
 Benchmark Client (host)
         │
         │  docker exec -i
+        │    -e TASK_ID=1
         │    -e MCP_DOMAIN=<domain>
         │    -e MCP_SERVER_TYPE=router
         │    -e MCP_DB_ROOT=/app/db
         │  task_1_m3_environ
-        │  python -m apis.m3.python_tools.mcp
-        │
+        │  python /app/mcp_dispatch.py
+─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ host / container boundary ─ ─ ─ ─
         ▼
 ┌────────────────────────────────────────────────────────────┐
 │  task_1_m3_environ                                         │
+│                                                            │
+│  mcp_dispatch.py  (TASK_ID=1)                              │
+│    └─ os.execv → python -m apis.m3.python_tools.mcp        │
 │                                                            │
 │  cli.py → create_server() → RouterMCPServer  (stdio)       │
 │                                                            │
@@ -182,13 +254,16 @@ query against the domain's SQLite database.
 ```
 Benchmark Client (host)
         │
-        │  docker exec -i -e MCP_DOMAIN=address
+        │  docker exec -i -e TASK_ID=2 -e MCP_DOMAIN=address
         │  task_2_m3_environ
-        │  python /app/m3-rest/mcp_server.py
-        │
+        │  python /app/mcp_dispatch.py
+─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ host / container boundary ─ ─ ─ ─
         ▼
 ┌──────────────────────────────────────────────────┐
 │  task_2_m3_environ                               │
+│                                                  │
+│  mcp_dispatch.py  (TASK_ID=2)                    │
+│    └─ os.execv → python /app/m3-rest/mcp_server.py│
 │                                                  │
 │  ┌────────────────────────────────────────────┐  │
 │  │  FastAPIMCPServer  (stdio)                 │  │
@@ -261,15 +336,16 @@ os.execv(sys.executable, [sys.executable, target])
 ```
 Benchmark Client (host)
         │
-        │  docker exec -i -e MCP_DOMAIN=bpo      (or -e MCP_DOMAIN=airline)
+        │  docker exec -i -e TASK_ID=3 -e MCP_DOMAIN=bpo   (or MCP_DOMAIN=airline)
         │  task_3_m3_environ
-        │  python /app/apis/bpo/mcp/task3_router.py
-        │
+        │  python /app/mcp_dispatch.py
+─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ host / container boundary ─ ─ ─ ─
         ▼
 ┌──────────────────────────────────────────────────────────────┐
 │  task_3_m3_environ                                           │
 │                                                              │
-│  task3_router.py  ──  os.execv  ──┬── MCP_DOMAIN=bpo ────►  │
+│  mcp_dispatch.py  (TASK_ID=3)                                │
+│    └─ os.execv → task3_router.py  ──┬── MCP_DOMAIN=bpo ───► │
 │                                   │                          │
 │                        ┌──────────┴──────────────────────┐  │
 │                        │  BPO FastMCP server  (stdio)    │  │
@@ -341,13 +417,16 @@ primary domain list before the server is constructed.
 ```
 Benchmark Client (host)
         │
-        │  docker exec -i -e MCP_DOMAIN=address
+        │  docker exec -i -e TASK_ID=5 -e MCP_DOMAIN=address
         │  task_5_m3_environ
-        │  python /app/retrievers/task5_mcp_server.py
-        │
+        │  python /app/mcp_dispatch.py
+─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ host / container boundary ─ ─ ─ ─
         ▼
 ┌────────────────────────────────────────────────────────────────────┐
 │  task_5_m3_environ                                                 │
+│                                                                    │
+│  mcp_dispatch.py  (TASK_ID=5)                                      │
+│    └─ os.execv → python /app/retrievers/task5_mcp_server.py        │
 │                                                                    │
 │  domain_negatives.json["address"]                                  │
 │    → [address, olympics, card_games, legislator, craftbeer]        │
@@ -397,6 +476,7 @@ image; takes up to 5 min to warm up on first container start).
 |------|------|
 | [`docker/Dockerfile.unified`](docker/Dockerfile.unified) | Single image for all tasks |
 | [`docker/entrypoint-unified.sh`](docker/entrypoint-unified.sh) | Starts FastAPI services; waits for health |
+| [`docker/mcp_dispatch.py`](docker/mcp_dispatch.py) | Single MCP entrypoint — reads `TASK_ID`, `os.execv()`s into the right server |
 | [`benchmark/mcp_connection_config.yaml`](benchmark/mcp_connection_config.yaml) | Maps task IDs → containers + MCP commands |
 | [`benchmark/mcp_client.py`](benchmark/mcp_client.py) | Builds `docker exec` command; opens MCP `ClientSession` |
 | [`apis/m3/rest/app.py`](apis/m3/rest/app.py) | M3 REST FastAPI — 45+ domain routers, port 8000 |
