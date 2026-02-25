@@ -34,7 +34,8 @@ DOCKER ?= $(shell command -v docker 2>/dev/null | head -1 || command -v podman 2
 # Auto-detect Python interpreter: prefer python3, fall back to python
 PYTHON ?= $(shell command -v python3 2>/dev/null | head -1 || command -v python 2>/dev/null | head -1 || echo python3)
 
-.PHONY: download build test validate tag push release setup pull start stop logs clean e2e e2e-quick
+.PHONY: download build test validate tag push release setup pull start stop logs clean e2e e2e-quick \
+        start-task1 start-task2 start-task3 start-task5
 
 # ---------------------------------------------------------------------------
 # Download benchmark data from HuggingFace  (prompts for HF token if not set)
@@ -124,6 +125,22 @@ e2e:
 e2e-quick:
 	@if [ -z "$(OPENAI_API_KEY)" ]; then echo "ERROR: OPENAI_API_KEY is not set."; exit 1; fi
 	E2E_SKIP_SETUP=1 $(PYTHON) -m pytest tests/e2e/test_benchmark_e2e.py -v -s
+
+# ---------------------------------------------------------------------------
+# Start a single container (useful when one fails and you don't want to
+# restart all four — uses docker compose so the image must already exist)
+# ---------------------------------------------------------------------------
+start-task1:
+	$(DOCKER) compose up -d task_1_m3_environ
+
+start-task2:
+	$(DOCKER) compose up -d task_2_m3_environ
+
+start-task3:
+	$(DOCKER) compose up -d task_3_m3_environ
+
+start-task5:
+	$(DOCKER) compose up -d task_5_m3_environ
 
 # ---------------------------------------------------------------------------
 # Clean — stop & remove containers, then remove the local image

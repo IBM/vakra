@@ -2,35 +2,12 @@
 
 import argparse
 import asyncio
-import json
 import logging
-import os
 import sys
 from typing import List, Optional
 
+from apis.mcp_logging import _JsonFormatter
 from .config import find_default_config, load_config
-
-
-class _JsonFormatter(logging.Formatter):
-    """Single-line JSON log records including TASK_ID and MCP_DOMAIN context."""
-
-    def __init__(self) -> None:
-        super().__init__()
-        self._task_id = os.environ.get("TASK_ID", "")
-        self._domain = os.environ.get("MCP_DOMAIN", "")
-
-    def format(self, record: logging.LogRecord) -> str:
-        return json.dumps(
-            {
-                "ts": self.formatTime(record, "%Y-%m-%dT%H:%M:%S"),
-                "level": record.levelname,
-                "task_id": self._task_id,
-                "domain": self._domain,
-                "logger": record.name,
-                "msg": record.getMessage(),
-            },
-            ensure_ascii=False,
-        )
 
 
 def setup_logging(verbose: bool = False) -> None:
