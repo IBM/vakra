@@ -116,6 +116,7 @@ async def run_benchmark_for_domain(
     llm,
     max_samples: Optional[int] = None,
     top_k_tools: int = 0,
+    max_iterations: Optional[int] = None,
     tlog: TaskLogger = None,
 ) -> List[BenchmarkResult]:
     """Run benchmark for a single domain - starts MCP server once."""
@@ -145,7 +146,7 @@ async def run_benchmark_for_domain(
             tools = await wrapper.get_tools()
             tlog(f"  Loaded {len(tools)} tools for domain '{domain}'")
 
-            agent = _get_agent(task_id, llm, tools, top_k_tools)
+            agent = _get_agent(task_id, llm, tools, top_k_tools, max_iterations)
 
             get_data_tool = next(
                 (t for t in tools if t.name == "get_data"), None
@@ -265,17 +266,21 @@ async def run_benchmark_for_domain(
     return results
 
 
-def _get_agent(task_id: int, llm, tools, top_k_tools: int = 0) -> AgentInterface:
+def _get_agent(task_id: int, llm, tools, top_k_tools: int = 0, max_iterations: Optional[int] = None) -> AgentInterface:
     """Return the appropriate agent for the given task_id."""
     if task_id == 1:
-        return LangGraphReActAgent(
+        kwargs = dict(
             llm=llm,
             tools=tools,
             use_handle_manager=True,
             initial_data_handle="placeholder",
-            max_iterations=10,
+            max_iterations=max_iterations if max_iterations is not None else 10,
         )
-    return LangGraphReActAgent(llm=llm, tools=tools, top_k_tools=top_k_tools)
+        return LangGraphReActAgent(**kwargs)
+    kwargs = dict(llm=llm, tools=tools, top_k_tools=top_k_tools)
+    if max_iterations is not None:
+        kwargs["max_iterations"] = max_iterations
+    return LangGraphReActAgent(**kwargs)
 
 
 async def run_task(
@@ -287,6 +292,7 @@ async def run_task(
     output_dir: Optional[str] = None,
     domains: Optional[List[str]] = None,
     top_k_tools: int = 0,
+    max_iterations: Optional[int] = None,
 ) -> List[BenchmarkResult]:
     """Run benchmark for a given task_id, iterating over all domain files."""
 
@@ -328,6 +334,7 @@ async def run_task(
             llm=llm,
             max_samples=max_samples_per_domain,
             top_k_tools=top_k_tools,
+            max_iterations=max_iterations,
             tlog=tlog,
         )
         all_results.extend(domain_results)
@@ -418,6 +425,12 @@ def main():
         help="Enable tool shortlisting: keep top-k tools per query"
     )
     parser.add_argument(
+        "--max-iterations",
+        type=int,
+        default=None,
+        help="Maximum agent iterations per query (default: 10 for task 1, provider default otherwise)"
+    )
+    parser.add_argument(
         "--mcp-config",
         type=str,
         default=DEFAULT_MCP_CONFIG,
@@ -449,6 +462,7 @@ def main():
             output_dir=args.output,
             domains=args.domain,
             top_k_tools=args.top_k_tools,
+            max_iterations=args.max_iterations,
         )
 
     def _make_list_tools_coro(tid: int):
