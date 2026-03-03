@@ -351,6 +351,7 @@ async def run_capability(
     domains: Optional[List[str]] = None,
     top_k_tools: int = 0,
     max_iterations: Optional[int] = None,
+    restart: bool = False,
 ) -> List[BenchmarkResult]:
     """Run benchmark for a given capability_id, iterating over all domain files."""
 
@@ -375,6 +376,13 @@ async def run_capability(
 
     if max_samples_per_domain:
         tlog(f"Max samples per domain: {max_samples_per_domain}")
+
+    # Skip already-completed domains when restarting
+    if restart:
+        completed = {p.stem for p in out_dir.glob("*.json")}
+        if completed:
+            tlog(f"Restart mode: skipping {len(completed)} already-completed domain(s): {sorted(completed)}")
+            domain_list = [d for d in domain_list if d not in completed]
 
     llm = create_llm(provider=provider, model=model)
 
@@ -489,6 +497,15 @@ def main():
         help="Maximum agent iterations per query (default: 10 for task 1, provider default otherwise)"
     )
     parser.add_argument(
+        "--restart",
+        action="store_true",
+        help=(
+            "Resume a previous run: skip domains whose output file already"
+            " exists in the output directory (requires --output to point"
+            " to a previous run's directory)"
+        ),
+    )
+    parser.add_argument(
         "--mcp-config",
         type=str,
         default=DEFAULT_MCP_CONFIG,
@@ -556,6 +573,7 @@ def main():
             domains=args.domain,
             top_k_tools=args.top_k_tools,
             max_iterations=args.max_iterations,
+            restart=args.restart,
         )
 
     def _make_list_tools_coro(tid: int):
