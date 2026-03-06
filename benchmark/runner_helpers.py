@@ -29,6 +29,11 @@ TASK_PATHS = {
     ),
 }
 
+@dataclass
+class Message:
+    """A single message in a conversation."""
+    role: str  # "user", "assistant", "system"
+    content: str
 
 @dataclass
 class BenchmarkItem:
@@ -40,16 +45,29 @@ class BenchmarkItem:
     tools: List[Dict[str, Any]]
     additional_instructions: str = ""
     turn_id: int = 0
+    context: Optional[List[Message]] = None
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "BenchmarkItem":
         """Create BenchmarkItem from JSON dict."""
         dialogue = data.get("dialogue", {})
         turns = dialogue.get("turns", [])
+        context = []
         # Get first turn's query — support both dialogue.turns and ground_truth formats
         if turns:
-            query = turns[0]["query"]
-            turn_id = turns[0].get("turn_id", 0)
+            query = turns[-1]["query"]
+            turn_id = turns[-1].get("turn_id", 0)
+            if len(turns) > 1:
+                for turn in turns:
+                    context.append(Message(role="user", content=turn["query"]))
+
+                    answer = turn.get("answer")
+                    if answer:
+                        context.append(Message(role="assistant", content=str(answer)))
+            else:
+                query = turns[-1]["query"]
+                turn_id = turns[-1].get("turn_id", 0)
+
         else:
             ground_truth = data.get("ground_truth", [])
             query = ground_truth[0]["query"] if ground_truth else ""
@@ -63,6 +81,7 @@ class BenchmarkItem:
             tools=data.get("tools", []),
             additional_instructions=data.get("additional_instructions", ""),
             turn_id=turn_id,
+            context=context if len(context) !=0 else None
         )
 
 
@@ -73,6 +92,7 @@ class BenchmarkResult:
     domain: str
     query: str
     answer: str = ""
+    context: Optional[List[dict]] = None
     tool_calls: List[Dict] = field(default_factory=list)
     trajectory: List[Dict] = field(default_factory=list)  # Agent trajectory
     turn_id: int = 0
