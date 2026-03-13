@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/world/world.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/world/world.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the name of the country with the highest life expectancy
 @app.get("/v1/world/country_with_highest_life_expectancy", operation_id="get_country_with_highest_life_expectancy", summary="Retrieves the name of the country with the highest life expectancy, allowing the user to limit the number of results returned.")

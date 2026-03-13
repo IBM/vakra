@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/craftbeer/craftbeer.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/craftbeer/craftbeer.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get distinct states and IBUs of beers with the minimum IBU
 @app.get("/v1/craftbeer/distinct_states_min_ibu", operation_id="get_distinct_states_min_ibu", summary="Retrieves a list of unique states and the corresponding minimum International Bitterness Unit (IBU) value for beers. This operation identifies the state of each brewery and the IBU of the beer with the lowest bitterness level across all beers in the database.")

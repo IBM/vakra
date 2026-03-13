@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/software_company/software_company.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/software_company/software_company.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of customers based on marital status
 @app.get("/v1/software_company/customer_count_by_marital_status", operation_id="get_customer_count_by_marital_status", summary="Retrieves the total number of customers with a specified marital status from the database.")

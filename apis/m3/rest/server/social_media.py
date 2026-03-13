@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/social_media/social_media.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/social_media/social_media.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of tweets in a specific language
 @app.get("/v1/social_media/tweet_count_by_language", operation_id="get_tweet_count_by_language", summary="Retrieves the total number of tweets in a specified language from the social media database.")

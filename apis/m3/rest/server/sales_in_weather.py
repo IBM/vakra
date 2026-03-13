@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/sales_in_weather/sales_in_weather.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/sales_in_weather/sales_in_weather.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get units sold on a specific date for a specific store and item
 @app.get("/v1/sales_in_weather/units_by_date_store_item", operation_id="get_units_by_date_store_item", summary="Retrieves the number of units sold for a specific product in a particular store on a given date. The operation requires the date, store number, and item number as input parameters to filter the sales data.")

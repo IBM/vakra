@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/cookbook/cookbook.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/cookbook/cookbook.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the recipe title with the highest total fat
 @app.get("/v1/cookbook/recipe_highest_total_fat", operation_id="get_recipe_highest_total_fat", summary="Retrieves the title of the recipe with the highest total fat content. The operation allows you to limit the number of results returned. This endpoint is useful for identifying the recipe with the most fat content, which can be helpful for dietary planning or nutritional analysis.")

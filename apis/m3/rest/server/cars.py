@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/cars/cars.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/cars/cars.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the car name with the highest price for a given number of cylinders
 @app.get("/v1/cars/highest_price_car_by_cylinders", operation_id="get_highest_price_car_by_cylinders", summary="Retrieves the name of the car with the highest price for a specified number of cylinders. The input parameter determines the number of cylinders for which the car with the highest price is returned.")

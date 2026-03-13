@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/toxicology/toxicology.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/toxicology/toxicology.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the most common bond type
 @app.get("/v1/toxicology/most_common_bond_type", operation_id="get_most_common_bond_type", summary="Retrieves the most frequently occurring bond type in the database. This operation calculates the count of bond IDs for each bond type and returns the bond type with the highest count.")

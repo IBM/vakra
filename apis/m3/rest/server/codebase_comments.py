@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/codebase_comments/codebase_comments.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/codebase_comments/codebase_comments.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of methods based on language and comment format
 @app.get("/v1/codebase_comments/method_count_lang_comment_is_xml", operation_id="get_method_count", summary="Retrieves the total count of methods that match a specified programming language and comment format. The comment format is indicated by a boolean value, where 1 signifies XML and 0 indicates non-XML.")

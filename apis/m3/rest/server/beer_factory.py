@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/beer_factory/beer_factory.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/beer_factory/beer_factory.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the brand name of the first brewed root beer
 @app.get("/v1/beer_factory/first_brewed_brand", operation_id="get_first_brewed_brand", summary="Retrieves the brand name of the root beer that was first brewed. This operation identifies the earliest year of brewing from the available brands and returns the corresponding brand name.")

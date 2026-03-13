@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/shooting/shooting.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/shooting/shooting.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the percentage of officers of a specific race and gender
 @app.get("/v1/shooting/percentage_officers_race_gender", operation_id="get_percentage_officers_race_gender", summary="Retrieves the percentage of officers of a specific race and gender from the total number of officers. The operation requires the race and gender as input parameters to filter the data and calculate the corresponding percentage.")

@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/bike_share_1/bike_share_1.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/bike_share_1/bike_share_1.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the start and end station names for the trip with the maximum duration
 @app.get("/v1/bike_share_1/trip_with_max_duration", operation_id="get_trip_with_max_duration", summary="Retrieves the names of the start and end stations for the trip with the longest duration.")

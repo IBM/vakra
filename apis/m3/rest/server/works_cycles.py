@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/works_cycles/works_cycles.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/works_cycles/works_cycles.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the average standard cost of a product based on its product number
 @app.get("/v1/works_cycles/avg_standard_cost_by_product_number", operation_id="get_avg_standard_cost", summary="Retrieves the average standard cost of a product by utilizing its unique product number. This operation calculates the average cost by aggregating the standard cost history of the product, providing a comprehensive overview of its cost over time.")

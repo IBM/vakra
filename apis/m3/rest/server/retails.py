@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/retails/retails.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/retails/retails.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of line items based on order key and return flag
 @app.get("/v1/retails/lineitem_count_by_orderkey_returnflag", operation_id="get_lineitem_count", summary="Retrieves the total number of line items associated with a particular order, filtered by a specified return flag. The order is identified by its unique key, and the return flag indicates the status of the order's return process.")

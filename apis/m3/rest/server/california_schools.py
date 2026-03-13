@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/california_schools/california_schools.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/california_schools/california_schools.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the highest free meal ratio in a given county
 @app.get("/v1/california_schools/highest_free_meal_ratio_by_county", operation_id="get_highest_free_meal_ratio", summary="Retrieves the highest ratio of free meals (K-12) to total enrollment in a specified county. The operation returns the single highest ratio, calculated by dividing the number of students receiving free meals by the total enrollment in the county.")

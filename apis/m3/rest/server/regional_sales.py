@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/regional_sales/regional_sales.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/regional_sales/regional_sales.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the top region by the number of distinct sales teams
 @app.get("/v1/regional_sales/top_region_by_sales_teams", operation_id="get_top_region_by_sales_teams", summary="Retrieves the top region with the highest number of distinct sales teams, based on the specified limit. This operation provides a ranked list of regions, with the region having the most unique sales teams at the top. The limit parameter allows you to control the number of regions returned in the response.")

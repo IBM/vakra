@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/movie_3/movie_3.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/movie_3/movie_3.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the description of a film based on its title
 @app.get("/v1/movie_3/film_description_by_title", operation_id="get_film_description", summary="Retrieves the detailed description of a specific film by its title. The operation searches for the film with the provided title and returns its description.")

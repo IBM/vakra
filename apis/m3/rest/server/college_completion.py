@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/college_completion/college_completion.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/college_completion/college_completion.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the most common institution name for a given year and race
 @app.get("/v1/college_completion/most_common_institution_name", operation_id="get_most_common_institution_name", summary="Retrieves the name of the institution with the highest number of graduates for a specific year and race. The year and race are used to filter the graduation cohort data, and the institution with the most graduates is determined based on the count of occurrences in the filtered dataset.")

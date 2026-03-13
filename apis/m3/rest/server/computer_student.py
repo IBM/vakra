@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/computer_student/computer_student.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/computer_student/computer_student.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the average number of advisors per student
 @app.get("/v1/computer_student/average_advisors_per_student", operation_id="get_average_advisors_per_student", summary="Retrieves the average number of advisors assigned to each student in the computer science department. This operation calculates the ratio of total advisor assignments to the number of unique students, providing a statistical overview of advisor distribution.")

@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/shipping/shipping.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/shipping/shipping.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of shipments for a specific customer in a given year
 @app.get("/v1/shipping/count_shipments_customer_year", operation_id="get_count_shipments_customer_year", summary="Retrieves the total number of shipments associated with a particular customer during a specified year. The operation requires the customer's name and the year (in 'YYYY' format) as input parameters to filter the shipment records accordingly.")

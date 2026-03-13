@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/university/university.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/university/university.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of university years based on the number of students and year
 @app.get("/v1/university/count_university_years", operation_id="get_count_university_years", summary="Retrieves the count of university years that have more students than the specified number and correspond to the given year.")

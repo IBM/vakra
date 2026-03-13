@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/food_inspection_2/food_inspection_2.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/food_inspection_2/food_inspection_2.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get employee details based on title and supervisor's name
 @app.get("/v1/food_inspection_2/employee_details_by_title_supervisor", operation_id="get_employee_details", summary="Retrieves the first and last names of employees who hold a specific job title and report to a designated supervisor. The operation requires the employee's title and the supervisor's first and last names as input parameters.")

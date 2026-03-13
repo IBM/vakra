@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/movielens/movielens.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/movielens/movielens.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get distinct director IDs for movies with a rating greater than a specified value
 @app.get("/v1/movielens/distinct_director_ids_by_rating", operation_id="get_distinct_director_ids", summary="Retrieve a unique set of director IDs associated with movies that have a rating higher than the provided minimum rating.")

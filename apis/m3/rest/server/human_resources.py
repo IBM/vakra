@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/human_resources/human_resources.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/human_resources/human_resources.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the top employee by salary
 @app.get("/v1/human_resources/top_employee_by_salary", operation_id="get_top_employee_by_salary", summary="Retrieves the full name of the employee with the highest salary in the human resources department.")

@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/car_retails/car_retails.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/car_retails/car_retails.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of customers grouped by country
 @app.get("/v1/car_retails/customer_count_by_country", operation_id="get_customer_count_by_country", summary="Retrieves the total number of customers categorized by their respective countries. This operation provides a comprehensive overview of the customer distribution across different countries.")

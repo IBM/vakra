@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/restaurant/restaurant.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/restaurant/restaurant.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of restaurants with a review score less than a specified value
 @app.get("/v1/restaurant/count_restaurants_by_review", operation_id="get_count_restaurants_by_review", summary="Retrieves the number of restaurants that have a review score below the provided threshold. This operation is useful for understanding the distribution of review scores and identifying restaurants with lower ratings.")

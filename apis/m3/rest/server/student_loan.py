@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/student_loan/student_loan.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/student_loan/student_loan.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of names from longest_absense_from_school for a specific month
 @app.get("/v1/student_loan/count_names_by_month", operation_id="get_count_names_by_month", summary="Retrieves the total count of unique student names who have been absent from school for the longest duration during a specific month. The month is provided as an input parameter.")

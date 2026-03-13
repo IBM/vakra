@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/video_games/video_games.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/video_games/video_games.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the difference in sales between two game platforms in a specific region
 @app.get("/v1/video_games/sales_difference_by_platform_region", operation_id="get_sales_difference", summary="Retrieve the difference in sales, in units of 100,000, between two specified game platforms within a given region. This operation calculates the total sales for each platform and subtracts the lower value from the higher one, providing a clear comparison of their performance in the selected region.")

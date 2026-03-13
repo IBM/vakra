@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/european_football_2/european_football_2.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/european_football_2/european_football_2.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the player API ID with the highest overall rating
 @app.get("/v1/european_football_2/top_player_by_overall_rating", operation_id="get_top_player_by_overall_rating", summary="Retrieves the player with the highest overall rating, allowing the user to limit the number of results returned.")

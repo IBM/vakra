@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/hockey/hockey.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/hockey/hockey.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the first and last names of players born in a specific year and not in a specific country
 @app.get("/v1/hockey/players_by_birth_year_and_country", operation_id="get_players_by_birth_year_and_country", summary="Retrieve the first and last names of hockey players born in a specific year and not from a specific country. The operation filters the player records based on the provided birth year and excludes those born in the specified country.")

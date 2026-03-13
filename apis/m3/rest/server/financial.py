@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/financial/financial.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/financial/financial.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of account IDs based on district and account frequency
 @app.get("/v1/financial/count_account_ids_by_district_and_frequency", operation_id="get_count_account_ids_by_district_and_frequency", summary="Retrieves the total number of account IDs associated with a specific district and account frequency. The district and frequency parameters are used to filter the results.")

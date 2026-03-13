@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/airline/airline.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/airline/airline.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of flights on a specific date
 @app.get("/v1/airline/flight_count_by_date", operation_id="get_flight_count_by_date", summary="Retrieves the total number of flights scheduled for a specific date. The date must be provided in the 'YYYY/MM/DD' format.")

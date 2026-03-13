@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/european_football_1/european_football_1.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/european_football_1/european_football_1.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of matches based on season, away team, and full-time result
 @app.get("/v1/european_football_1/match_count_season_away_team_ftr", operation_id="get_match_count", summary="Retrieve the total number of matches played in a given season, by a specific away team, and with a particular full-time result. This operation provides a quantitative overview of matches based on the provided criteria.")

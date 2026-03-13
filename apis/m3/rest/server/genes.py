@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/genes/genes.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/genes/genes.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get chromosome information based on gene localization
 @app.get("/v1/genes/chromosome_by_localization", operation_id="get_chromosome_by_localization", summary="Retrieves the chromosome information for genes that are localized in the specified region. The localization parameter is used to filter the genes and return the corresponding chromosome data.")

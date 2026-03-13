@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/chicago_crime/chicago_crime.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/chicago_crime/chicago_crime.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of community areas based on side
 @app.get("/v1/chicago_crime/community_area_count_by_side", operation_id="get_community_area_count_by_side", summary="Retrieves the total number of community areas located on the specified side. The side parameter is used to filter the results.")

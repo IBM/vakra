@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/books/books.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/books/books.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of books based on publisher ID and minimum number of pages
 @app.get("/v1/books/count_books_by_publisher_and_pages", operation_id="get_count_books_by_publisher_and_pages", summary="Retrieves the total count of books from a specific publisher that have more than a specified number of pages. The operation requires the publisher's ID and the minimum number of pages as input parameters.")

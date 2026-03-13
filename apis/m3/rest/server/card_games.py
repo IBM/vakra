@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/card_games/card_games.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/card_games/card_games.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get card IDs where both cardKingdomFoilId and cardKingdomId are not null
 @app.get("/v1/card_games/cards_with_foil_and_regular_ids", operation_id="get_cards_with_foil_and_regular_ids", summary="Retrieves the IDs of cards that have both a foil and a regular version available. This operation returns a list of card IDs where both the foil and regular card identifiers are not null.")

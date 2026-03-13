@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/superhero/superhero.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/superhero/superhero.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the power names of a specific superhero
 @app.get("/v1/superhero/power_names_by_superhero", operation_id="get_power_names_by_superhero", summary="Retrieve the names of powers associated with a specific superhero. The operation requires the superhero's name as input and returns a list of corresponding power names.")

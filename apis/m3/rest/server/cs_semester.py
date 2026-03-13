@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/cs_semester/cs_semester.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/cs_semester/cs_semester.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the name of a course based on specific names and order by difficulty
 @app.get("/v1/cs_semester/course_name_by_difficulty", operation_id="get_course_name_by_difficulty", summary="Retrieves the name of a course that matches either of the provided course names, sorted by descending difficulty. The result is limited to one course.")

@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/book_publishing_company/book_publishing_company.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/book_publishing_company/book_publishing_company.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the date with the highest total quantity sold
 @app.get("/v1/book_publishing_company/highest_sales_date", operation_id="get_highest_sales_date", summary="Retrieves the date on which the highest total quantity of books was sold. This operation calculates the total quantity sold for each date and returns the date with the maximum total sales.")

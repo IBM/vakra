@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/public_review_platform/public_review_platform.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/public_review_platform/public_review_platform.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of businesses in a specific state with stars below a certain threshold
 @app.get("/v1/public_review_platform/business_count_state_stars", operation_id="get_business_count_state_stars", summary="Retrieves the total number of businesses located in a specified state that have a star rating below a given threshold. The state parameter filters the businesses by their location, while the max_stars parameter sets the upper limit for the star rating.")

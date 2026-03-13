@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/debit_card_specializing/debit_card_specializing.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/debit_card_specializing/debit_card_specializing.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of gas stations based on country and segment
 @app.get("/v1/debit_card_specializing/gas_station_count", operation_id="get_gas_station_count", summary="Retrieves the total number of gas stations in a specified country and segment. The operation filters gas stations based on the provided country and segment, then returns the count of matching records.")

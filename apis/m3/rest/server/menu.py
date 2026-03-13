@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/menu/menu.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/menu/menu.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of dishes based on first appeared year range
 @app.get("/v1/menu/dish_count_by_year_range", operation_id="get_dish_count_by_year_range", summary="Retrieves the total number of dishes that were introduced before a specified minimum year or after a specified maximum year. This operation allows you to analyze the distribution of dishes based on their year of introduction.")

@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/student_club/student_club.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/student_club/student_club.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the major name of a member based on their first and last name
 @app.get("/v1/student_club/major_name_by_member_name", operation_id="get_major_name_by_member_name", summary="Retrieves the major name associated with a specific member using their first and last name. This operation requires the first and last name of the member as input parameters to identify the corresponding major name from the database.")

@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/law_episode/law_episode.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/law_episode/law_episode.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get keywords for a specific episode title
 @app.get("/v1/law_episode/keywords_by_episode_title", operation_id="get_keywords_by_episode_title", summary="Retrieves a list of keywords linked to a specific episode, identified by its title. The operation searches for the episode using the provided title and returns the associated keywords.")

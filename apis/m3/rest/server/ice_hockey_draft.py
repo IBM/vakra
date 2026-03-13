@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/ice_hockey_draft/ice_hockey_draft.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/ice_hockey_draft/ice_hockey_draft.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the height in inches of a player by name
 @app.get("/v1/ice_hockey_draft/player_height_in_inches", operation_id="get_player_height_in_inches", summary="Retrieves the height in inches of a specific ice hockey player, identified by their name. The player's height is fetched from a database table that maps height identifiers to their corresponding values in inches.")

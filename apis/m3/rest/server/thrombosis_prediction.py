@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/thrombosis_prediction/thrombosis_prediction.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/thrombosis_prediction/thrombosis_prediction.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the admission ratio for male patients
 @app.get("/v1/thrombosis_prediction/admission_ratio_male", operation_id="get_admission_ratio_male", summary="Retrieves the percentage of male patients who were admitted, out of the total number of male patients. The sex of the patient is specified as an input parameter.")

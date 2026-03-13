@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/shakespeare/shakespeare.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/shakespeare/shakespeare.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of works before a specific date
 @app.get("/v1/shakespeare/count_works_before_date", operation_id="get_count_works_before_date", summary="Retrieves the total number of works created prior to a specified year. The year is provided in the YYYY format.")

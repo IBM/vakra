@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/authors/authors.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/authors/authors.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of authors based on affiliation
 @app.get("/v1/authors/author_count_given_affiliation", operation_id="get_author_count", summary="Retrieves the total number of authors associated with a specified affiliation.")

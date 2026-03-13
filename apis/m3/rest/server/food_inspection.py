@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/food_inspection/food_inspection.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/food_inspection/food_inspection.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of businesses based on owner state
 @app.get("/v1/food_inspection/business_count_by_owner_state", operation_id="get_business_count_by_owner_state", summary="Retrieves the total number of businesses associated with a given owner state. The owner state is a crucial attribute that identifies the location of the business owner.")

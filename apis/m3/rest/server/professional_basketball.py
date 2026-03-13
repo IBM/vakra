@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/professional_basketball/professional_basketball.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/professional_basketball/professional_basketball.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the percentage of home games won out of total games won
 @app.get("/v1/professional_basketball/home_win_percentage", operation_id="get_home_win_percentage", summary="Retrieves the percentage of home games won by each team out of their total wins. The calculation is based on the number of home games won divided by the total number of games won, multiplied by 100.")

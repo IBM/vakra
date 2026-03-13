@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/music_tracker/music_tracker.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/music_tracker/music_tracker.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get group names based on artist, year, release type, and total snatched
 @app.get("/v1/music_tracker/group_names_by_criteria", operation_id="get_group_names_by_criteria", summary="Retrieves the names of music groups that match the specified artist, year, release type, and total snatched count. This operation allows users to filter and find music groups based on these criteria, providing a targeted list of group names.")

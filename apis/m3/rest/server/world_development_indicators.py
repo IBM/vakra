@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/world_development_indicators/world_development_indicators.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/world_development_indicators/world_development_indicators.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of countries based on lending category and other groups
 @app.get("/v1/world_development_indicators/count_countries_lending_other_groups", operation_id="get_count_countries_lending_other_groups", summary="Retrieves the total number of countries that belong to a specific lending category and other groups. The lending category and other groups are used to filter the countries and determine the count.")

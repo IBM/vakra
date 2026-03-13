@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/movie_platform/movie_platform.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/movie_platform/movie_platform.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the most popular movie title from a specific release year
 @app.get("/v1/movie_platform/most_popular_movie_by_year", operation_id="get_most_popular_movie_by_year", summary="Retrieves the title of the most popular movie released in a specified year. The popularity is determined by a predefined metric, and the result is limited to a single movie title. The release year is provided as an input parameter.")

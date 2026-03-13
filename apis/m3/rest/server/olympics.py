@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/olympics/olympics.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/olympics/olympics.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the games names for a specific competitor
 @app.get("/v1/olympics/games_names_by_competitor", operation_id="get_games_names_by_competitor", summary="Retrieves the names of the Olympic Games in which a specified competitor has participated. The competitor is identified by their full name.")

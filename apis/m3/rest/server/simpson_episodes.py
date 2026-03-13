@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/simpson_episodes/simpson_episodes.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/simpson_episodes/simpson_episodes.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the name of the person with the earliest birthdate
 @app.get("/v1/simpson_episodes/earliest_birthdate_person", operation_id="get_earliest_birthdate_person", summary="Retrieves the name of the person with the earliest birthdate from the database. This operation returns the name of the person who was born first, based on the available birthdate data.")

@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/movies_4/movies_4.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/movies_4/movies_4.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the company names of production companies for a given movie title
 @app.get("/v1/movies_4/production_companies_by_movie_title", operation_id="get_production_companies_by_movie_title", summary="Retrieves the names of production companies associated with a specific movie. The operation requires the title of the movie as input and returns a list of company names that have contributed to the production of the movie.")

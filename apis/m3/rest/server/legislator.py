@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/legislator/legislator.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/legislator/legislator.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of current records with a specific ballotpedia_id or NULL
 @app.get("/v1/legislator/count_current_ballotpedia_id", operation_id="get_count_current_ballotpedia_id", summary="Retrieves the total count of current records that either match a given Ballotpedia ID or have no Ballotpedia ID assigned. This operation is useful for determining the prevalence of a specific Ballotpedia ID or the number of records without a Ballotpedia ID in the current dataset.")

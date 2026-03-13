@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/language_corpus/language_corpus.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/language_corpus/language_corpus.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the title and words of the page with the longest title
 @app.get("/v1/language_corpus/longest_title_page", operation_id="get_longest_title_page", summary="Retrieves the title and word count of the page with the longest title from the corpus. This operation provides a quick overview of the page with the most extensive title, allowing users to identify the most verbose entry in the corpus.")

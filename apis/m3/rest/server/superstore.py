@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/superstore/superstore.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/superstore/superstore.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get distinct product names for a given order ID
 @app.get("/v1/superstore/distinct_product_names_by_order_id", operation_id="get_distinct_product_names", summary="Retrieves a unique list of product names associated with a specific order ID. This operation fetches the distinct product names from the central superstore data, based on the provided order ID.")

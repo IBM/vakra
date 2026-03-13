@@ -35,7 +35,7 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 DOCKER_IMAGE = "docker.io/amurthi44g1wd/m3_environ:latest"
 PROJECT_ROOT = Path(__file__).parent.resolve()
-DATA_DIR = PROJECT_ROOT / "data"
+DATA_DIR = PROJECT_ROOT
 
 # Each HuggingFace dataset repo maps to a subdirectory under data/
 HF_DATASETS = {

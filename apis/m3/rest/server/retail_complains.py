@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/retail_complains/retail_complains.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/retail_complains/retail_complains.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the date received for the latest service time
 @app.get("/v1/retail_complains/latest_date_received", operation_id="get_latest_date_received", summary="Retrieves the date received for the most recent service time entry in the call center logs. This operation provides the latest date on which a service was received, offering insights into the most recent service activity.")

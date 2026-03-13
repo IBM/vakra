@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/trains/trains.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/trains/trains.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of trains based on direction
 @app.get("/v1/trains/count_trains_by_direction", operation_id="get_count_trains_by_direction", summary="Retrieves the total number of trains traveling in a specified direction. The direction parameter is used to filter the trains and calculate the count.")

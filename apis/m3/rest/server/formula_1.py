@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/formula_1/formula_1.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/formula_1/formula_1.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get driver references for a specific race ID ordered by q1 time in descending order
 @app.get("/v1/formula_1/driver_references_by_race_id", operation_id="get_driver_references", summary="Retrieves the top five driver references for a given race, sorted by their fastest qualifying lap time in descending order. The race is identified by its unique ID.")

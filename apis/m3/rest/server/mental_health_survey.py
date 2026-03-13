@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/mental_health_survey/mental_health_survey.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/mental_health_survey/mental_health_survey.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of answers for a specific question ID and answer text
 @app.get("/v1/mental_health_survey/answer_count_by_question_and_text", operation_id="get_answer_count", summary="Retrieves the total number of responses for a given question and answer text. The question is identified by its unique ID, and the answer text is matched using a case-insensitive partial search. This operation is useful for analyzing the distribution of responses to a specific question in a mental health survey.")

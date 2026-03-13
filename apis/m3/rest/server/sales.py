@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/sales/sales.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/sales/sales.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of sales based on customer ID
 @app.get("/v1/sales/count_sales_by_customer_id", operation_id="get_count_sales_by_customer_id", summary="Retrieves the total number of sales associated with a specific customer, identified by their unique customer ID.")

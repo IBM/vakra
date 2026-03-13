@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/music_platform_2/music_platform_2.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/music_platform_2/music_platform_2.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of podcasts in the most popular category
 @app.get("/v1/music_platform_2/count_podcasts_most_popular_category", operation_id="get_count_podcasts_most_popular_category", summary="Retrieves the total number of podcasts in the most popular category. The popularity of a category is determined by the count of podcasts it contains. The operation does not require any input parameters and returns a single integer value.")

@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/talkingdata/talkingdata.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/talkingdata/talkingdata.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the device ID of the oldest individual
 @app.get("/v1/talkingdata/oldest_individual_device_id", operation_id="get_oldest_individual_device_id", summary="Retrieves the device ID of the individual with the highest age in the gender_age table.")

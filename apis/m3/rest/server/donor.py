@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/donor/donor.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/donor/donor.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the sum of donation totals for a specific year
 @app.get("/v1/donor/sum_donation_total_by_year", operation_id="get_sum_donation_total_by_year", summary="Retrieves the total sum of donations made in a specific year. The year is provided in the 'YYYY' format.")

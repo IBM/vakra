@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/soccer_2016/soccer_2016.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/soccer_2016/soccer_2016.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of players born after a specific year
 @app.get("/v1/soccer_2016/player_count_by_year", operation_id="get_player_count_by_year", summary="Retrieves the total number of soccer players born after the specified year. The year parameter is used to filter the players by their birth year.")

@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/app_store/app_store.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/app_store/app_store.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get distinct translated reviews for apps updated within a specific date range and having a specific sentiment
 @app.get("/v1/app_store/distinct_translated_reviews", operation_id="get_distinct_translated_reviews", summary="Get distinct translated reviews for apps updated within a specific date range and having a specific sentiment")

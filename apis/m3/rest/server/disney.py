@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/disney/disney.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/disney/disney.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the difference in total revenue between two years
 @app.get("/v1/disney/revenue_difference", operation_id="get_revenue_difference", summary="Retrieves the difference in total revenue between two specified years. This operation compares the total revenue for the first year and the second year, both provided as input parameters, and returns the difference. The result offers a clear view of the revenue change between the two years.")

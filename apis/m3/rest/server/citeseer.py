@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/citeseer/citeseer.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/citeseer/citeseer.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the percentage of papers with a specific class label
 @app.get("/v1/citeseer/percentage_papers_by_class_label", operation_id="get_percentage_papers_by_class_label", summary="Retrieves the percentage of papers that belong to a specified class label. The calculation is based on the total count of papers with the given class label divided by the total count of all papers in the database.")

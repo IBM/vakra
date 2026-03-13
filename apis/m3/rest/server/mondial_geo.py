@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/mondial_geo/mondial_geo.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/mondial_geo/mondial_geo.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the country name with the lowest percentage of a specific ethnic group
 @app.get("/v1/mondial_geo/country_with_lowest_ethnic_percentage", operation_id="get_country_with_lowest_ethnic_percentage", summary="Retrieve the name of the country with the lowest percentage of a specified ethnic group. The operation filters the data based on the provided ethnic group name and returns the country name with the lowest percentage associated with the specified ethnic group.")

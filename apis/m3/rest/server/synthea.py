@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/synthea/synthea.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/synthea/synthea.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the value and units of observations for a specific patient on a specific date and description
 @app.get("/v1/synthea/observations_value_units", operation_id="get_observations_value_units", summary="Retrieves the value and units of a specific observation for a patient, identified by their first and last names, on a given date and description. The observation details returned correspond to the provided patient and observation criteria.")

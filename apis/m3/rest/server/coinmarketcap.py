@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/coinmarketcap/coinmarketcap.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/coinmarketcap/coinmarketcap.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the name of coins with the highest market cap in a specific year
 @app.get("/v1/coinmarketcap/coin_name_highest_market_cap", operation_id="get_coin_name_highest_market_cap", summary="Retrieves the name of the coin with the highest market capitalization in a specified year. The year is provided in the 'YYYY' format. This operation returns the coin name by querying the coins and historical tables, filtering for the specified year and the maximum market capitalization.")

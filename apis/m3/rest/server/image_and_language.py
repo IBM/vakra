@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/image_and_language/image_and_language.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/image_and_language/image_and_language.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the count of object samples for a given image ID
 @app.get("/v1/image_and_language/count_object_samples_by_image_id", operation_id="get_count_object_samples", summary="Retrieves the total number of object samples associated with a specific image, identified by its unique image ID.")

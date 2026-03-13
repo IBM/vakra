@@ -3,8 +3,13 @@ import sqlite3
 
 app = APIRouter()
 
-conn = sqlite3.connect('db/codebase_community/codebase_community.sqlite')
-cursor = conn.cursor()
+try:
+    conn = sqlite3.connect('db/codebase_community/codebase_community.sqlite')
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Warning: could not connect to database: {e}")
+    conn = None
+    cursor = None
 
 # Endpoint to get the display name of users with the highest reputation among a given set of display names
 @app.get("/v1/codebase_community/users/highest_reputation_display_names", operation_id="get_highest_reputation_display_names", summary="Retrieve the display names of users who have the highest reputation among the provided set of display names. This operation requires at least two display names as input parameters. The display names are used to filter the users and identify those with the maximum reputation. The operation returns the display names of the users who meet the criteria.")
