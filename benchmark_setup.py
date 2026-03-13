@@ -183,7 +183,7 @@ def start_containers() -> None:
         )
     db_dir = str(db_dir)
     configs_dir = str(PROJECT_ROOT / "apis" / "configs")
-    chroma_dir = str(PROJECT_ROOT / "indexed_documents")
+    chroma_dir = str(DATA_DIR / "indexed_documents")
     queries_dir = str(DATA_DIR / "queries")
 
     container_extra_flags = {

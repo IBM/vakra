@@ -16,7 +16,7 @@ tasks:
   #   docker run -d --name capability_4_multiturn \
   #       -v "$(pwd)/data/databases:/app/db:ro" \
   #       -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
-  #       -v "$(pwd)/indexed_documents:/app/retrievers/chroma_data" \
+  #       -v "$(pwd)/data/indexed_documents:/app/retrievers/chroma_data" \
   #       -v "$(pwd)/data/queries:/app/retrievers/queries:ro" \
   #       -e MCP_DB_ROOT=/app/db \
   #       benchmark_environ

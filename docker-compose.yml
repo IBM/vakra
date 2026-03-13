@@ -42,5 +42,5 @@ services:
     volumes:
       - ./data/databases:/app/db:ro
       - ./apis/configs:/app/apis/configs:ro
-      - ./indexed_documents:/app/retrievers/chroma_data
+      - ./data/indexed_documents:/app/retrievers/chroma_data
       - ./data/queries:/app/retrievers/queries:ro

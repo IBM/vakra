@@ -315,9 +315,17 @@ class Task5CombinedMCPServer:
             self.retriever_url,
             self.retriever_domains,
         )
-        ret_spec = await self._fetch_openapi(self.retriever_url)
-        ret_tools = self._retriever_tools_from_spec(ret_spec)
-        logger.info("Retriever: %d tools", len(ret_tools))
+        try:
+            ret_spec = await self._fetch_openapi(self.retriever_url)
+            ret_tools = self._retriever_tools_from_spec(ret_spec)
+            logger.info("Retriever: %d tools", len(ret_tools))
+        except Exception as exc:
+            logger.warning(
+                "Retriever server unavailable at %s (%s) — running without retriever tools.",
+                self.retriever_url,
+                exc,
+            )
+            ret_tools = []
 
         self.tools_cache = m3_tools + ret_tools
         logger.info("Total tools exposed: %d", len(self.tools_cache))

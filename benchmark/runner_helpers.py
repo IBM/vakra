@@ -317,8 +317,8 @@ def save_results_ground_truth(
 class CapabilityLogger:
     """Tee-style logger for a single task run.
 
-    Writes every message to both stdout (prefixed with ``[task_N]`` for easy
-    identification in parallel mode) and a per-task ``run.log`` file in the
+    Writes every message to both stdout (prefixed with ``[capability_N]`` for easy
+    identification in parallel mode) and a per-capability ``run.log`` file in the
     output directory (with a millisecond timestamp for post-hoc analysis).
 
     Usage::
@@ -332,7 +332,7 @@ class CapabilityLogger:
     """
 
     def __init__(self, capability_id: int, log_path: Path) -> None:
-        self._prefix = f"[task_{capability_id}] "
+        self._prefix = f"[capability_{capability_id}] "
         log_path.parent.mkdir(parents=True, exist_ok=True)
         self._file = log_path.open("w", buffering=1)  # line-buffered
 
