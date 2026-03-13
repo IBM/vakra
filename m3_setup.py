@@ -39,18 +39,15 @@ DATA_DIR = PROJECT_ROOT / "data"
 
 # Each HuggingFace dataset repo maps to a subdirectory under data/
 HF_DATASETS = {
-    "anupamamurthi/db":         "db",
-    "anupamamurthi/tasks":      "tasks",
-    "anupamamurthi/retriever-chroma-data": "chroma_data",
-    "anupamamurthi/queries":    "queries",
+    "ibm-research/M3Benchmark": "data"
 }
 
 # Container names must match benchmark/mcp_connection_config.yaml
 CONTAINERS = [
-    "task_1_m3_environ",
-    "task_2_m3_environ",
-    "task_3_m3_environ",   # BPO + M3 REST (no retriever)
-    "task_5_m3_environ",
+    "capability_1_bi_apis_m3_environ",
+    "capability_2_dashboard_apis_m3_environ",
+    "capability_3_multihop_reasoning_m3_environ",   # BPO + M3 REST (no retriever)
+    "capability_4_multiturn_m3_environ",
 ]
 
 
@@ -178,7 +175,7 @@ def start_containers() -> None:
     rt = _runtime()
     print("\n=== Starting containers ===")
 
-    db_dir = DATA_DIR / "db"
+    db_dir = DATA_DIR / "databases"
     if not db_dir.exists() or not any(db_dir.iterdir()):
         raise SystemExit(
             f"\nERROR: Database directory '{db_dir}' is missing or empty.\n"
@@ -186,16 +183,16 @@ def start_containers() -> None:
         )
     db_dir = str(db_dir)
     configs_dir = str(PROJECT_ROOT / "apis" / "configs")
-    chroma_dir = str(DATA_DIR / "chroma_data")
+    chroma_dir = str(PROJECT_ROOT / "indexed_documents")
     queries_dir = str(DATA_DIR / "queries")
 
     container_extra_flags = {
-        "task_5_m3_environ": ["--memory=4g"],
+        "capability_4_multiturn_m3_environ": ["--memory=4g"],
     }
 
-    # task_5 is the only container that needs the retriever volumes
+    # capability_4_multiturn is the only container that needs the retriever volumes
     container_extra_volumes: dict[str, list[str]] = {
-        "task_5_m3_environ": [
+        "capability_4_multiturn_m3_environ": [
             "-v", f"{chroma_dir}:/app/retrievers/chroma_data",
             "-v", f"{queries_dir}:/app/retrievers/queries:ro",
         ],
@@ -302,13 +299,13 @@ def main() -> None:
         print("=" * 60)
         print()
         print("  # Single task, single domain")
-        print("  python benchmark_runner.py --m3_task_id 2 --run-agent --domain address")
+        print("  python benchmark_runner.py --m3_capability_id 2 --run-agent --domain address")
         print()
         print("  # All three tasks for one domain")
-        print("  python benchmark_runner.py --m3_task_id 1 2 5 --run-agent --domain address")
+        print("  python benchmark_runner.py --m3_capability_id 1 2 4 --run-agent --domain address")
         print()
         print("  # Parallel execution")
-        print("  python benchmark_runner.py --m3_task_id 1 2 5 --run-agent --domain address --parallel")
+        print("  python benchmark_runner.py --m3_capability_id 1 2 4 --run-agent --domain address --parallel")
         print()
         print("  # Stop containers when done")
         print("  python m3_setup.py --stop-containers")

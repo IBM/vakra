@@ -9,10 +9,10 @@ tasks:
   # and requires the image to be rebuilt after the dispatcher was added:
   #   make build && docker compose up -d
 
-  # Task 1: ToolCallingAgent + RouterMCPServer (routes to SlotFilling or Selection per query)
+  # Capability 1 (bi_apis): ToolCallingAgent + RouterMCPServer
   1:
     mode: stdio
-    container_name: task_1_m3_environ
+    container_name: capability_1_bi_apis_m3_environ
     container_runtime: null
     container_env:
       MCP_DB_ROOT: /app/db
@@ -22,10 +22,10 @@ tasks:
       - "-m"
       - "apis.m3.python_tools.mcp"
 
-  # Task 2: LangGraphReActAgent + FastAPIMCPServer
+  # Capability 2 (dashboard_apis): LangGraphReActAgent + FastAPIMCPServer
   2:
     mode: stdio
-    container_name: task_2_m3_environ
+    container_name: capability_2_dashboard_apis_m3_environ
     container_runtime: null
     container_env:
       MCP_DB_ROOT: /app/db
@@ -33,12 +33,12 @@ tasks:
       - python
       - /app/m3-rest/mcp_server.py
 
-  # Task 3: LangGraphReActAgent + task3_router (routes by MCP_DOMAIN)
+  # Capability 3 (multihop_reasoning): LangGraphReActAgent + task3_router (routes by MCP_DOMAIN)
   # MCP_DOMAIN=bpo     → /app/apis/bpo/mcp/server.py  (BPO FastMCP server)
   # MCP_DOMAIN=<other> → /app/m3-rest/mcp_server.py   (M3 REST MCP server)
   3:
     mode: stdio
-    container_name: task_3_m3_environ
+    container_name: capability_3_multihop_reasoning_m3_environ
     container_runtime: null
     container_env:
       MCP_DB_ROOT: /app/db
@@ -46,10 +46,10 @@ tasks:
       - python
       - /app/apis/bpo/mcp/task3_router.py
 
-  # Task 5: LangGraphReActAgent + Task5CombinedMCPServer
-  5:
+  # Capability 4 (multiturn): LangGraphReActAgent + Task5CombinedMCPServer
+  4:
     mode: stdio
-    container_name: task_5_m3_environ
+    container_name: capability_4_multiturn_m3_environ
     container_runtime: null
     container_env:
       MCP_DB_ROOT: /app/db

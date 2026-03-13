@@ -8,17 +8,17 @@ HOST
 |  Loads domain questions  |  Runs LLM agent  |  Saves output|
 +-------+----------+----------+----------+-------------------+
         |          |          |          |
-        docker exec -i, MCP stdio (TASK_ID=N, MCP_DOMAIN=<domain>)
+        docker exec -i, MCP stdio (CAPABILITY_ID=N, MCP_DOMAIN=<domain>)
         |          |          |          |
 - - - - - - - - - - - - host / container boundary - - - - - -
         |          |          |          |
         v          v          v          v
 CONTAINERS (image: m3_environ)
 +------------------+ +------------------+ +------------------+ +---------------------+
-| task_1_m3_environ| | task_2_m3_environ| | task_3_m3_environ| | task_5_m3_environ   |
+| capability_1_bi_apis_m3_environ| | capability_2_dashboard_apis_m3_environ| | capability_3_multihop_reasoning_m3_environ| | capability_4_multiturn_m3_environ   |
 |                  | |                  | |                  | |  (mem_limit: 4 GB)  |
 | mcp_dispatch.py  | | mcp_dispatch.py  | | mcp_dispatch.py  | | mcp_dispatch.py     |
-|  (TASK_ID=1)     | |  (TASK_ID=2)     | |  (TASK_ID=3)     | |  (TASK_ID=5)        |
+|  (CAPABILITY_ID=1)     | |  (CAPABILITY_ID=2)     | |  (CAPABILITY_ID=3)     | |  (CAPABILITY_ID=5)        |
 |  os.execv ->     | |  os.execv ->     | |  os.execv ->     | |  os.execv ->        |
 | python_tools.mcp | | m3-rest/         | | bpo/             | | task5_mcp_server    |
 | (Sel/Slot router)| | mcp_server.py    | | task3_router.py  | | (M3 REST+Retriever) |
@@ -32,16 +32,16 @@ CONTAINERS (image: m3_environ)
 
 ## Unified Docker Image
 
-All four task containers (`task_1_m3_environ` through `task_5_m3_environ`) run the same `m3_environ` image. The image starts two internal FastAPI services at boot (port 8000 and optionally 8001). MCP servers are launched on-demand via `docker exec`, routed by the `TASK_ID` environment variable through `/app/mcp_dispatch.py`.
+All four task containers (`capability_1_bi_apis_m3_environ` through `capability_4_multiturn_m3_environ`) run the same `m3_environ` image. The image starts two internal FastAPI services at boot (port 8000 and optionally 8001). MCP servers are launched on-demand via `docker exec`, routed by the `CAPABILITY_ID` environment variable through `/app/mcp_dispatch.py`.
 
 | Task | Container | MCP Server |
 |------|-----------|-----------|
-| 1 | `task_1_m3_environ` | `python -m apis.m3.python_tools.mcp` (Slot-fill/Selection router) |
-| 2 | `task_2_m3_environ` | `python /app/m3-rest/mcp_server.py` (M3 REST wrapper) |
-| 3 | `task_3_m3_environ` | `python /app/apis/bpo/mcp/task3_router.py` (BPO ↔ M3 REST router) |
-| 5 | `task_5_m3_environ` | `python /app/retrievers/task5_mcp_server.py` (M3 REST + Retriever combined) |
+| 1 | `capability_1_bi_apis_m3_environ` | `python -m apis.m3.python_tools.mcp` (Slot-fill/Selection router) |
+| 2 | `capability_2_dashboard_apis_m3_environ` | `python /app/m3-rest/mcp_server.py` (M3 REST wrapper) |
+| 3 | `capability_3_multihop_reasoning_m3_environ` | `python /app/apis/bpo/mcp/task3_router.py` (BPO ↔ M3 REST router) |
+| 5 | `capability_4_multiturn_m3_environ` | `python /app/retrievers/task5_mcp_server.py` (M3 REST + Retriever combined) |
 
-All task containers are configured via `benchmark/mcp_connection_config.yaml` with `container_command: [python, /app/mcp_dispatch.py]` and the appropriate `TASK_ID`.
+All task containers are configured via `benchmark/mcp_connection_config.yaml` with `container_command: [python, /app/mcp_dispatch.py]` and the appropriate `CAPABILITY_ID`.
 
 ## Internal Services
 
@@ -88,7 +88,7 @@ Semantic search (RAG) over 62 domain document collections. Only started when `ch
 
 ```
 +-----------------------------------------------------------+
-|               Container: task_5_m3_environ only            |
+|               Container: capability_4_multiturn_m3_environ only            |
 |                                                           |
 |  +-------------------+       +-------------------------+  |
 |  |    MCP Server     | stdio  |     FastAPI Server      |  |
@@ -161,12 +161,12 @@ User Question
 
 ## MCP Dispatcher
 
-All tasks use a single dispatcher entrypoint (`/app/mcp_dispatch.py`) inside the container. It reads `TASK_ID` and `os.execv()`s into the appropriate server — zero proxy overhead.
+All tasks use a single dispatcher entrypoint (`/app/mcp_dispatch.py`) inside the container. It reads `CAPABILITY_ID` and `os.execv()`s into the appropriate server — zero proxy overhead.
 
 ```
-docker exec -i -e TASK_ID=2 -e MCP_DOMAIN=hockey task_2_m3_environ python /app/mcp_dispatch.py
+docker exec -i -e CAPABILITY_ID=2 -e MCP_DOMAIN=hockey capability_2_dashboard_apis_m3_environ python /app/mcp_dispatch.py
                                                                                     │
-                                                                     reads TASK_ID, exec's:
+                                                                     reads CAPABILITY_ID, exec's:
                                                                      python /app/m3-rest/mcp_server.py
 ```
 
@@ -183,7 +183,7 @@ Both FastAPI-backed services follow the same architecture:
    - Filtering by `MCP_DOMAIN` env var
    - Proxying tool calls as HTTP requests
 3. **Docker** runs both in a single unified container (FastAPI starts first at boot, MCP is spawned on-demand via `docker exec`)
-4. **Benchmark Runner** connects via `docker exec -i` using MCP stdio protocol, with `TASK_ID` routing through `mcp_dispatch.py`
+4. **Benchmark Runner** connects via `docker exec -i` using MCP stdio protocol, with `CAPABILITY_ID` routing through `mcp_dispatch.py`
 
 ## Testing
 

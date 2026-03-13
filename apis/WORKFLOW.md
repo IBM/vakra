@@ -178,22 +178,22 @@ cd /path/to/enterprise-benchmark-1
 export TASK_2_DIR=/path/to/task_2_data
 
 # Run with Ollama (local)
-python benchmark_runner.py --task_id 2 --run-agent \
+python benchmark_runner.py --capability_id 2 --run-agent \
   --provider ollama --model qwen2.5-coder:7b \
   --domain address --max-samples-per-domain 5
 
 # Run with Anthropic
-python benchmark_runner.py --task_id 2 --run-agent \
+python benchmark_runner.py --capability_id 2 --run-agent \
   --provider anthropic \
   --domain address
 
 # Run with OpenAI
-python benchmark_runner.py --task_id 2 --run-agent \
+python benchmark_runner.py --capability_id 2 --run-agent \
   --provider openai \
   --domain hockey --max-samples-per-domain 10
 
 # Run all domains
-python benchmark_runner.py --task_id 2 --run-agent
+python benchmark_runner.py --capability_id 2 --run-agent
 ```
 
 ---

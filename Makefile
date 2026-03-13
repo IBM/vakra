@@ -36,7 +36,7 @@ DOCKER ?= $(shell PATH=$$PATH:/usr/bin command -v docker 2>/dev/null || command 
 PYTHON ?= $(shell command -v python3 2>/dev/null | head -1 || command -v python 2>/dev/null | head -1 || echo python3)
 
 .PHONY: download build test validate tag push release setup pull start stop restart logs clean e2e e2e-quick \
-        start-task1 start-task2 start-task3 start-task5
+        start-capability1 start-capability2 start-capability3 start-capability4
 
 # ---------------------------------------------------------------------------
 # Download benchmark data from HuggingFace  (prompts for HF token if not set)
@@ -105,7 +105,7 @@ stop:
 	$(PYTHON) m3_setup.py --stop-containers
 
 logs:
-	@for c in task_1_m3_environ task_2_m3_environ task_3_m3_environ task_5_m3_environ; do \
+	@for c in capability_1_bi_apis_m3_environ capability_2_dashboard_apis_m3_environ capability_3_multihop_reasoning_m3_environ capability_4_multiturn_m3_environ; do \
 		echo ""; \
 		echo "=== $$c ==="; \
 		$(DOCKER) logs --tail 20 $$c 2>/dev/null || echo "  (not running)"; \
@@ -136,21 +136,21 @@ restart:
 	$(DOCKER) compose down --remove-orphans
 	$(DOCKER) compose up -d
 
-start-task1:
-	-$(DOCKER) rm -f task_1_m3_environ
-	$(DOCKER) compose up -d task_1_m3_environ
+start-capability1:
+	-$(DOCKER) rm -f capability_1_bi_apis_m3_environ
+	$(DOCKER) compose up -d capability_1_bi_apis_m3_environ
 
-start-task2:
-	-$(DOCKER) rm -f task_2_m3_environ
-	$(DOCKER) compose up -d task_2_m3_environ
+start-capability2:
+	-$(DOCKER) rm -f capability_2_dashboard_apis_m3_environ
+	$(DOCKER) compose up -d capability_2_dashboard_apis_m3_environ
 
-start-task3:
-	-$(DOCKER) rm -f task_3_m3_environ
-	$(DOCKER) compose up -d task_3_m3_environ
+start-capability3:
+	-$(DOCKER) rm -f capability_3_multihop_reasoning_m3_environ
+	$(DOCKER) compose up -d capability_3_multihop_reasoning_m3_environ
 
-start-task5:
-	-$(DOCKER) rm -f task_5_m3_environ
-	$(DOCKER) compose up -d task_5_m3_environ
+start-capability4:
+	-$(DOCKER) rm -f capability_4_multiturn_m3_environ
+	$(DOCKER) compose up -d capability_4_multiturn_m3_environ
 
 # ---------------------------------------------------------------------------
 # Clean — stop & remove containers, then remove the local image

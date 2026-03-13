@@ -13,7 +13,7 @@ Usage:
     python benchmark/validate_clients.py
 
     # List tools for specific domains (from benchmark_runner.py)
-    python benchmark_runner.py --task_id 2 --domain hockey --list-tools
+    python benchmark_runner.py --capability_id 2 --domain hockey --list-tools
 """
 import asyncio
 import json
@@ -45,22 +45,22 @@ DEFAULT_CONFIG_PATH = str(
 
 
 async def list_tools_for_domains(
-    task_id: int,
+    capability_id: int,
     cfg: MCPConnectionConfig,
     domains: Optional[List[str]] = None,
 ):
     """List all available tools for specified domains via MCP protocol."""
 
-    print(f"Task ID: {task_id}")
+    print(f"Capability ID: {capability_id}")
     # Collect all tools for OpenAPI spec
     all_tools_by_domain = {}
-    if task_id in (2, 3, 5):
-        # Tasks 2, 3, 5: per-domain connections — MCP_DOMAIN must be set so
+    if capability_id in (2, 3, 4):
+        # Capabilities 2, 3, 4: per-domain connections — MCP_DOMAIN must be set so
         # the server filters to the requested domain's tools only.
-        # Task 3: task3_router.py selects BPO or M3 REST based on MCP_DOMAIN.
-        # Task 5: task5_mcp_server.py filters both M3 REST and retriever tools.
+        # Capability 3: task3_router.py selects BPO or M3 REST based on MCP_DOMAIN.
+        # Capability 4: task5_mcp_server.py filters both M3 REST and retriever tools.
         _, domains_to_process = load_benchmark_data(
-            task_id=task_id, domains=domains, domain_names_only=True
+            capability_id=capability_id, domains=domains, domain_names_only=True
         )
         print(
             f"Listing tools for {len(domains_to_process)} domain(s):"
@@ -152,7 +152,7 @@ async def list_tools_for_domains(
         # No specific domains (all domains)
         output_file = Path(f"tools_spec_all_{timestamp}.json")
 
-    openapi_spec = generate_openapi_spec(all_tools_by_domain, task_id)
+    openapi_spec = generate_openapi_spec(all_tools_by_domain, capability_id)
     with open(output_file, "w") as f:
         json.dump(openapi_spec, f, indent=2)
 
@@ -163,7 +163,7 @@ async def list_tools_for_domains(
 
 
 async def validate_mcp_connection(
-    task_id: int,
+    capability_id: int,
     cfg: MCPConnectionConfig,
     domain: str = "superhero",
 ) -> Dict[str, Any]:
@@ -171,13 +171,13 @@ async def validate_mcp_connection(
     Validate MCP connection for a single task.
 
     Args:
-        task_id: Task ID to validate
+        capability_id: Capability ID to validate
         cfg: MCP connection configuration
         domain: Domain to use for testing connection (default: "superhero")
 
     Returns:
         Dict with keys:
-        - task_id: int
+        - capability_id: int
         - status: "connected" | "failed"
         - tool_count: int (0 if failed)
         - error: Optional[str]
@@ -185,7 +185,7 @@ async def validate_mcp_connection(
     """
     start_time = time.perf_counter()
     result = {
-        "task_id": task_id,
+        "capability_id": capability_id,
         "status": "failed",
         "tool_count": 0,
         "error": None,
@@ -244,47 +244,47 @@ async def validate_all_tasks(
         return
 
     # Task descriptions
-    task_names = {
+    capability_names = {
         1: "SlotFillingMCPServer",
         2: "FastAPIMCPServer",
         3: "BPO MCP Server",
-        5: "RetrieverMCPServer",
+        4: "RetrieverMCPServer",
     }
 
     # Validate each task
     all_results = []
-    for task_id in sorted(mcp_configs.keys()):
-        cfg = mcp_configs[task_id]
-        task_name = task_names.get(task_id, f"Task {task_id}")
+    for capability_id in sorted(mcp_configs.keys()):
+        cfg = mcp_configs[capability_id]
+        task_name = capability_names.get(capability_id, f"Capability {capability_id}")
 
         # Determine which domains to test
         if domain:
             # Use specified domain
             domains_to_test = [domain]
-            print(f"\nTask {task_id} ({task_name}) - Testing domain: {domain}")
+            print(f"\nTask {capability_id} ({task_name}) - Testing domain: {domain}")
         else:
             # Load all available domains for this task
             try:
                 _, available_domains = load_benchmark_data(
-                    task_id=task_id, domain_names_only=True
+                    capability_id=capability_id, domain_names_only=True
                 )
                 if available_domains:
                     domains_to_test = available_domains
-                    print(f"\nTask {task_id} ({task_name}) - Testing {len(domains_to_test)} domain(s)")
+                    print(f"\nTask {capability_id} ({task_name}) - Testing {len(domains_to_test)} domain(s)")
                 else:
                     # No domains found, use superhero as fallback
                     domains_to_test = ["superhero"]
-                    print(f"\nTask {task_id} ({task_name}) - No domains found, using 'superhero'")
+                    print(f"\nTask {capability_id} ({task_name}) - No domains found, using 'superhero'")
             except Exception as e:
                 # If loading domains fails, use superhero as fallback
                 domains_to_test = ["superhero"]
-                print(f"\nTask {task_id} ({task_name}) - Error loading domains: {e}")
+                print(f"\nTask {capability_id} ({task_name}) - Error loading domains: {e}")
                 print("  Using 'superhero' as fallback")
 
         # Test each domain
         task_results = []
         for test_domain in domains_to_test:
-            result = await validate_mcp_connection(task_id, cfg, domain=test_domain)
+            result = await validate_mcp_connection(capability_id, cfg, domain=test_domain)
             result["domain"] = test_domain
             task_results.append(result)
             all_results.append(result)

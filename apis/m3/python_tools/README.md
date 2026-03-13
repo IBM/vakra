@@ -121,7 +121,7 @@ The server constructs the database path as `db/{domain}/{domain}.sqlite` from th
 | Priority | Path | Typical use case |
 |----------|------|------------------|
 | 1 | `db/{domain}/{domain}.sqlite` | Docker container (`/app/db/` volume mount) |
-| 2 | `data/db/{domain}/{domain}.sqlite` | Alternative local layout |
+| 2 | `data/databases/{domain}/{domain}.sqlite` | Alternative local layout |
 | 3 | `apis/m3/rest/db/{domain}/{domain}.sqlite` | Local runs from project root |
 
 This means the server works out of the box in both Docker and local environments without any path configuration.

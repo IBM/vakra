@@ -26,7 +26,7 @@ FAIL=0
 # Resolve project root (directory containing this script's parent)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-DB_DIR="$PROJECT_ROOT/data/db"
+DB_DIR="$PROJECT_ROOT/data/databases"
 CONFIGS_DIR="$PROJECT_ROOT/apis/configs"
 
 # Colours (disabled if not a terminal)
@@ -78,7 +78,7 @@ section "2. M3 REST FastAPI health (port 8000)"
 # ---------------------------------------------------------------------------
 
 if [ ! -d "$DB_DIR" ]; then
-  echo "  WARNING: $DB_DIR not found — skipping FastAPI health check (run 'make download' first)"
+  echo "  WARNING: $DB_DIR not found — skipping FastAPI health check (run 'make download' first to populate data/databases/)"
   SKIP_FASTAPI=true
 else
   SKIP_FASTAPI=false
@@ -138,11 +138,11 @@ fi
 section "4. M3 REST MCP server (stdio handshake)"
 # Requires the FastAPI server to be running (it calls localhost:8000/openapi.json
 # at startup). Uses docker exec against the container from section 2.
-# Skipped when data/db is not available (same condition as section 2).
+# Skipped when data/databases is not available (same condition as section 2).
 # ---------------------------------------------------------------------------
 
 if [ "$SKIP_FASTAPI" = "true" ]; then
-  echo "  Skipping — FastAPI server not running (no data/db). Run 'make download' first."
+  echo "  Skipping — FastAPI server not running (no data/databases). Run 'make download' first."
 else
   M3_MCP_RESPONSE=$(echo "$MCP_INIT" \
     | docker exec -i -e MCP_DOMAIN=superhero "$CONTAINER" \

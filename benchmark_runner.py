@@ -7,7 +7,7 @@ Runs LLM agents against MCP tool servers and records trajectories + answers.
 
 Tasks:
   Task 2  -> fastapi-mcp-server   (M3 SQL tools)
-  Task 5  -> retriever-mcp-server (ChromaDB retriever)
+  Capability 4  -> retriever-mcp-server (ChromaDB retriever)
 
 Setup:
   pip install langchain-openai langchain mcp langchain-anthropic langgraph langchain-ollama sentence-transformers
@@ -17,35 +17,35 @@ MCP connection settings are read from a YAML config file
 
 Usage:
   # Single task, single domain
-  python benchmark_runner.py --m3_task_id 2 --domain hockey
+  python benchmark_runner.py --m3_capability_id 2 --domain hockey
 
   # Single task, multiple domains
-  python benchmark_runner.py --m3_task_id 2 --domain hockey --domain address
+  python benchmark_runner.py --m3_capability_id 2 --domain hockey --domain address
 
   # Multiple tasks (sequential, default)
-  python benchmark_runner.py --m3_task_id 2 5
+  python benchmark_runner.py --m3_capability_id 2 4
 
   # Multiple tasks in parallel
-  python benchmark_runner.py --m3_task_id 2 5 --parallel
+  python benchmark_runner.py --m3_capability_id 2 4 --parallel
 
   # Limit samples per domain
-  python benchmark_runner.py --m3_task_id 2 --max-samples-per-domain 5
+  python benchmark_runner.py --m3_capability_id 2 --max-samples-per-domain 5
 
   # Choose provider/model
-  python benchmark_runner.py --m3_task_id 2 --provider anthropic --model claude-sonnet-4-5-20250929
-  python benchmark_runner.py --m3_task_id 2 --provider ollama --model llama3.1:8b
+  python benchmark_runner.py --m3_capability_id 2 --provider anthropic --model claude-sonnet-4-5-20250929
+  python benchmark_runner.py --m3_capability_id 2 --provider ollama --model llama3.1:8b
 
   # Enable tool shortlisting (top-k tools per query)
-  python benchmark_runner.py --m3_task_id 2 --top-k-tools 10
+  python benchmark_runner.py --m3_capability_id 2 --top-k-tools 10
 
   # Custom output directory
-  python benchmark_runner.py --m3_task_id 2 --output my_results/
+  python benchmark_runner.py --m3_capability_id 2 --output my_results/
 
   # Use a custom MCP connection config
-  python benchmark_runner.py --m3_task_id 2 --mcp-config my_mcp_config.yaml
+  python benchmark_runner.py --m3_capability_id 2 --mcp-config my_mcp_config.yaml
 
   # List available tools for a domain (does not run the benchmark)
-  python benchmark_runner.py --m3_task_id 2 --domain hockey --list-tools
+  python benchmark_runner.py --m3_capability_id 2 --domain hockey --list-tools
 
 Output:
   Results saved to: output/task_{id}_{timestamp}/<domain>.json
@@ -93,7 +93,7 @@ from benchmark.runner_helpers import (
     make_output_dir,
     BenchmarkItem,
     BenchmarkResult,
-    TaskLogger,
+    CapabilityLogger,
 )
 from benchmark.validate_clients import list_tools_for_domains
 
@@ -112,12 +112,12 @@ async def run_benchmark_for_domain(
     domain: str,
     items: List[BenchmarkItem],
     cfg: MCPConnectionConfig,
-    task_id: int,
+    capability_id: int,
     llm,
     max_samples: Optional[int] = None,
     top_k_tools: int = 0,
     max_iterations: Optional[int] = None,
-    tlog: TaskLogger = None,
+    tlog: CapabilityLogger = None,
 ) -> List[BenchmarkResult]:
     """Run benchmark for a single domain - starts MCP server once."""
     import time
@@ -146,7 +146,7 @@ async def run_benchmark_for_domain(
             tools = await wrapper.get_tools()
             tlog(f"  Loaded {len(tools)} tools for domain '{domain}'")
 
-            agent = _get_agent(task_id, llm, tools, top_k_tools, max_iterations)
+            agent = _get_agent(capability_id, llm, tools, top_k_tools, max_iterations)
 
             get_data_tool = next(
                 (t for t in tools if t.name == "get_data"), None
@@ -206,7 +206,7 @@ async def run_benchmark_for_domain(
                         agent._initial_data_handle = handle
                         tlog(f"    Initial data stored as: {handle}")
 
-                    if task_id in [4,5]:
+                    if capability_id in [4]:
                         response = await asyncio.wait_for(
                             agent.run(item.context),
                             timeout=AGENT_TIMEOUT_SECONDS
@@ -274,9 +274,9 @@ async def run_benchmark_for_domain(
     return results
 
 
-def _get_agent(task_id: int, llm, tools, top_k_tools: int = 0, max_iterations: Optional[int] = None) -> AgentInterface:
-    """Return the appropriate agent for the given task_id."""
-    if task_id == 1:
+def _get_agent(capability_id: int, llm, tools, top_k_tools: int = 0, max_iterations: Optional[int] = None) -> AgentInterface:
+    """Return the appropriate agent for the given capability_id."""
+    if capability_id == 1:
         kwargs = dict(
             llm=llm,
             tools=tools,
@@ -291,8 +291,8 @@ def _get_agent(task_id: int, llm, tools, top_k_tools: int = 0, max_iterations: O
     return LangGraphReActAgent(**kwargs)
 
 
-async def run_task(
-    task_id: int,
+async def run_capability(
+    capability_id: int,
     cfg: MCPConnectionConfig,
     provider: str = "ollama",
     model: Optional[str] = None,
@@ -302,9 +302,9 @@ async def run_task(
     top_k_tools: int = 0,
     max_iterations: Optional[int] = None,
 ) -> List[BenchmarkResult]:
-    """Run benchmark for a given task_id, iterating over all domain files."""
+    """Run benchmark for a given capability_id, iterating over all domain files."""
 
-    all_items, _ = load_benchmark_data(task_id=task_id, domains=domains)
+    all_items, _ = load_benchmark_data(capability_id=capability_id, domains=domains)
 
     # Group items by domain
     items_by_domain: Dict[str, List[BenchmarkItem]] = {}
@@ -314,10 +314,10 @@ async def run_task(
     domain_list = sorted(items_by_domain)
 
     # Create output dir early so the log file lives alongside the results
-    out_dir = make_output_dir(task_id, output_dir)
-    tlog = TaskLogger(task_id, out_dir / "run.log")
+    out_dir = make_output_dir(capability_id, output_dir)
+    tlog = CapabilityLogger(capability_id, out_dir / "run.log")
 
-    tlog(f"Task ID: {task_id}")
+    tlog(f"Capability ID: {capability_id}")
     tlog(f"Mode: {cfg.mode}")
     if not cfg.command and cfg.mode == "stdio":
         tlog(f"Container name: {cfg.container_name}")
@@ -338,7 +338,7 @@ async def run_task(
             domain=domain,
             items=items,
             cfg=cfg,
-            task_id=task_id,
+            capability_id=capability_id,
             llm=llm,
             max_samples=max_samples_per_domain,
             top_k_tools=top_k_tools,
@@ -371,12 +371,12 @@ def main():
         description="Benchmark Runner for MCP Server"
     )
     parser.add_argument(
-        "--m3_task_id",
+        "--m3_capability_id",
         type=int,
         nargs="+",
-        choices=[1, 2, 3, 4, 5],
+        choices=[1, 2, 3, 4],
         required=True,
-        help="M3 Task ID to run, must be one of [1, 2, 3, 4, 5]"
+        help="M3 Capability ID to run, must be one of [1, 2, 3, 4]"
     )
     parser.add_argument(
         "--domain",
@@ -396,7 +396,7 @@ def main():
     parser.add_argument(
         "--parallel",
         action="store_true",
-        help="Run multiple m3_task_ids in parallel using asyncio.gather (default: sequential)"
+        help="Run multiple m3_capability_ids in parallel using asyncio.gather (default: sequential)"
     )
     parser.add_argument(
         "--max-samples-per-domain",
@@ -449,11 +449,11 @@ def main():
     )
 
     args = parser.parse_args()
-    task_ids = args.m3_task_id  # list of ints now
+    capability_ids = args.m3_capability_id  # list of ints now
 
-    mode = "parallel" if args.parallel and len(task_ids) > 1 else "sequential"
+    mode = "parallel" if args.parallel and len(capability_ids) > 1 else "sequential"
     print("="*60)
-    print(f"Benchmark Runner ({mode}, tasks: {task_ids})")
+    print(f"Benchmark Runner ({mode}, capabilities: {capability_ids})")
     print("="*60)
 
     # Load MCP connection config from YAML
@@ -461,8 +461,8 @@ def main():
 
     def _make_run_task_coro(tid: int):
         task_cfg = mcp_configs.get(tid, MCPConnectionConfig())
-        return run_task(
-            task_id=tid,
+        return run_capability(
+            capability_id=tid,
             cfg=task_cfg,
             provider=args.provider,
             model=args.model,
@@ -476,7 +476,7 @@ def main():
     def _make_list_tools_coro(tid: int):
         task_cfg = mcp_configs.get(tid, MCPConnectionConfig())
         return list_tools_for_domains(
-            task_id=tid,
+            capability_id=tid,
             cfg=task_cfg,
             domains=args.domain,
         )
@@ -484,7 +484,7 @@ def main():
     # Handle --list-tools mode
     if args.list_tools:
         async def _list_all():
-            coros = [_make_list_tools_coro(tid) for tid in task_ids]
+            coros = [_make_list_tools_coro(tid) for tid in capability_ids]
             if args.parallel and len(coros) > 1:
                 await asyncio.gather(*coros)
             else:
@@ -495,7 +495,7 @@ def main():
 
     # Run tasks
     async def _run_all():
-        coros = [_make_run_task_coro(tid) for tid in task_ids]
+        coros = [_make_run_task_coro(tid) for tid in capability_ids]
         if args.parallel and len(coros) > 1:
             await asyncio.gather(*coros)
         else:

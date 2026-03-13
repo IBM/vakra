@@ -6,10 +6,10 @@ name: m3-benchmark
 #   make pull           (pull from Docker Hub)
 #
 # Usage:
-#   docker compose up -d                           # start all task containers
-#   docker compose down                            # stop and remove containers
-#   docker compose logs -f                         # tail all logs
-#   docker compose up -d task_5_m3_environ         # start a single task
+#   docker compose up -d                                        # start all capability containers
+#   docker compose down                                         # stop and remove containers
+#   docker compose logs -f                                      # tail all logs
+#   docker compose up -d capability_4_multiturn_m3_environ      # start a single capability
 #
 # The benchmark runner and MCP clients connect via docker exec (stdio),
 # not via exposed ports. No port mapping is needed here.
@@ -19,28 +19,28 @@ x-base: &base
   environment:
     MCP_DB_ROOT: /app/db
   volumes:
-    - ./data/db:/app/db:ro
+    - ./data/databases:/app/db:ro
     - ./apis/configs:/app/apis/configs:ro
 
 services:
-  task_1_m3_environ:
+  capability_1_bi_apis_m3_environ:
     <<: *base
-    container_name: task_1_m3_environ
+    container_name: capability_1_bi_apis_m3_environ
 
-  task_2_m3_environ:
+  capability_2_dashboard_apis_m3_environ:
     <<: *base
-    container_name: task_2_m3_environ
+    container_name: capability_2_dashboard_apis_m3_environ
 
-  task_3_m3_environ:
+  capability_3_multihop_reasoning_m3_environ:
     <<: *base
-    container_name: task_3_m3_environ
+    container_name: capability_3_multihop_reasoning_m3_environ
 
-  task_5_m3_environ:
+  capability_4_multiturn_m3_environ:
     <<: *base
-    container_name: task_5_m3_environ
+    container_name: capability_4_multiturn_m3_environ
     mem_limit: 4g
     volumes:
-      - ./data/db:/app/db:ro
+      - ./data/databases:/app/db:ro
       - ./apis/configs:/app/apis/configs:ro
-      - ./data/chroma_data:/app/retrievers/chroma_data
+      - ./indexed_documents:/app/retrievers/chroma_data
       - ./data/queries:/app/retrievers/queries:ro

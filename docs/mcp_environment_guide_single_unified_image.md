@@ -139,22 +139,22 @@ The provided `benchmark_runner_single_docker_image.py` handles all of the above 
 ```bash
 # Task 2
 python benchmark_runner_single_docker_image.py \
-    --task_id 2 --run-agent --domain address \
+    --capability_id 2 --run-agent --domain address \
     --provider openai --model gpt-4o
 
 # Task 5
 python benchmark_runner_single_docker_image.py \
-    --task_id 5 --run-agent --domain address \
+    --capability_id 5 --run-agent --domain address \
     --provider openai --model gpt-4o
 
 # Both tasks in parallel
 python benchmark_runner_single_docker_image.py \
-    --task_id 2 5 --run-agent --domain address --parallel \
+    --capability_id 2 5 --run-agent --domain address --parallel \
     --provider openai --model gpt-4o
 
 # List available MCP tools (no LLM needed)
 python benchmark_runner_single_docker_image.py \
-    --task_id 2 --list-tools --domain address
+    --capability_id 2 --list-tools --domain address
 ```
 
 Results are saved to `output/task_{id}_{timestamp}/<domain>.json`.

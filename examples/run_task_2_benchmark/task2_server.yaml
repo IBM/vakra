@@ -1,8 +1,8 @@
 task_2:
-  container: task_2_m3_environ
+  container: capability_2_dashboard_apis_m3_environ
   env:
     MCP_DB_ROOT: /app/db
-    TASK_ID: "2"
+    CAPABILITY_ID: "2"
   command:
     - python
     - /app/mcp_dispatch.py
