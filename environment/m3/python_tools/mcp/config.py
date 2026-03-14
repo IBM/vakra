@@ -142,14 +142,14 @@ def load_config(
         logger.debug(f"Config loading: Set database_path to default: {config_data['database_path']}")
 
     # Resolve relative db path: search common locations for the database.
-    # Checks: MCP_DB_ROOT (if set), db/, data/databases/, apis/m3/rest/db/ (relative to CWD)
+    # Checks: MCP_DB_ROOT (if set), db/, data/databases/, environment/m3/rest/db/ (relative to CWD)
     db_path = config_data.get("database_path", "")
     if db_path and not os.path.isabs(db_path) and not os.path.exists(db_path):
         # db_path is e.g. "db/superhero/superhero.sqlite" — extract the domain-relative part
         # so we can prepend alternative roots
         parts = db_path.split("/", 1)  # ["db", "superhero/superhero.sqlite"]
         domain_rel = parts[1] if len(parts) > 1 else ""
-        search_roots = ([env_db_root] if env_db_root else []) + ["db", "data/databases", "apis/m3/rest/db"]
+        search_roots = ([env_db_root] if env_db_root else []) + ["db", "data/databases", "environment/m3/rest/db"]
         for root in search_roots:
             candidate = os.path.join(root, domain_rel) if domain_rel else root
             if os.path.exists(candidate):

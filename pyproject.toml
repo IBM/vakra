@@ -98,15 +98,15 @@ dev = [
 ]
 
 [project.scripts]
-slot-filling-mcp = "apis.m3.python_tools.mcp.cli:main"
-bpo-mcp = "apis.bpo.mcp.server:start_server"
+slot-filling-mcp = "environment.m3.python_tools.mcp.cli:main"
+bpo-mcp = "environment.bpo.mcp.server:start_server"
 benchmark-setup = "benchmark_setup:main"
 
 [tool.setuptools.packages.find]
 exclude = ["tests*"]
 
 [tool.setuptools.package-data]
-"apis.bpo.data" = ["*.parquet", "*.json", "*.csv"]
+"environment.bpo.data" = ["*.parquet", "*.json", "*.csv"]
 
 # Optional: Black configuration
 [tool.black]
@@ -122,7 +122,7 @@ python_functions = ["test_*"]
 
 # Optional: Coverage configuration
 [tool.coverage.run]
-source = ["apis"]
+source = ["environment"]
 omit = ["*/tests/*", "*/test_*.py"]
 
 # MCP Server configuration

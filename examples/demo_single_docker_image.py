@@ -57,7 +57,7 @@ async def connect_to_server(
         python_exe = sys.executable
         server_params = StdioServerParameters(
             command=python_exe,
-            args=["-m", "apis.m3.python_tools.mcp"],
+            args=["-m", "environment.m3.python_tools.mcp"],
             env=os.environ.copy(),
         )
         async with stdio_client(server_params) as (read, write):
@@ -73,7 +73,7 @@ async def connect_to_server(
                 "exec", "-i",
                 "-e", f"MCP_DOMAIN={mcp_domain}",
                 container_name,
-                "python", "-m", "apis.m3.python_tools.mcp",
+                "python", "-m", "environment.m3.python_tools.mcp",
             ],
         )
         print(f"  Using {runtime} exec into '{container_name}' (MCP_DOMAIN={mcp_domain})")
@@ -238,7 +238,7 @@ async def main(
     print(f"{'='*60}\n")
 
     # Load all instances
-    with open("apis/configs/mcp_init_mapping.json") as f:
+    with open("environment/configs/mcp_init_mapping.json") as f:
         instances = json.load(f)
 
     # Run with single server

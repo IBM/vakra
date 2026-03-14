@@ -20,8 +20,8 @@ CONTAINERS (image: m3_environ)
 | mcp_dispatch.py  | | mcp_dispatch.py  | | mcp_dispatch.py  | | mcp_dispatch.py     |
 |  (CAPABILITY_ID=1)     | |  (CAPABILITY_ID=2)     | |  (CAPABILITY_ID=3)     | |  (CAPABILITY_ID=5)        |
 |  os.execv ->     | |  os.execv ->     | |  os.execv ->     | |  os.execv ->        |
-| python_tools.mcp | | m3-rest/         | | bpo/             | | task5_mcp_server    |
-| (Sel/Slot router)| | mcp_server.py    | | task3_router.py  | | (M3 REST+Retriever) |
+| python_tools.mcp | | m3-rest/         | | bpo/             | | capability_4_mcp_server    |
+| (Sel/Slot router)| | mcp_server.py    | | bpo_router.py    | | (M3 REST+Retriever)        |
 |       |          | |       |          | |       |          | |     |         |     |
 |   SQLite /db/    | | FastAPI :8000    | | FastAPI :8000    | | FastAPI   FastAPI   |
 |                  | |       |          | |       |          | |  :8000     :8001    |
@@ -38,8 +38,8 @@ All four task containers (`capability_1_bi_apis_m3_environ` through `capability_
 |------|-----------|-----------|
 | 1 | `capability_1_bi_apis_m3_environ` | `python -m apis.m3.python_tools.mcp` (Slot-fill/Selection router) |
 | 2 | `capability_2_dashboard_apis_m3_environ` | `python /app/m3-rest/mcp_server.py` (M3 REST wrapper) |
-| 3 | `capability_3_multihop_reasoning_m3_environ` | `python /app/apis/bpo/mcp/task3_router.py` (BPO ↔ M3 REST router) |
-| 5 | `capability_4_multiturn_m3_environ` | `python /app/retrievers/task5_mcp_server.py` (M3 REST + Retriever combined) |
+| 3 | `capability_3_multihop_reasoning_m3_environ` | `python /app/environment/bpo/mcp/bpo_router.py` (BPO ↔ M3 REST router) |
+| 4 | `capability_4_multiturn_m3_environ` | `python /app/retrievers/capability_4_mcp_server.py` (M3 REST + Retriever combined) |
 
 All task containers are configured via `benchmark/mcp_connection_config.yaml` with `container_command: [python, /app/mcp_dispatch.py]` and the appropriate `CAPABILITY_ID`.
 

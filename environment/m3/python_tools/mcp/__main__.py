@@ -1,6 +1,6 @@
 """
 Allow running the MCP server as a module:
-    python -m apis.m3.python_tools.mcp --db /path/to/db.sqlite
+    python -m environment.m3.python_tools.mcp --db /path/to/db.sqlite
 """
 
 import sys

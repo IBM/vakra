@@ -288,10 +288,10 @@ def get_full_candidate_details(requisition_id: str) -> Dict[str, Any]:
 
     # Load pre-generated fixture
     fixture_paths = [
-        # apis/bpo/api/candidate_source_error.py -> ../data/
+        # environment/bpo/api/candidate_source_error.py -> ../data/
         Path(__file__).parent.parent / "data" / "large_response_fixture.json",
-        # Current working directory relative to apis/bpo
-        Path("apis/bpo/data/large_response_fixture.json"),
+        # Current working directory relative to environment/bpo
+        Path("environment/bpo/data/large_response_fixture.json"),
         # Fallback to current directory
         Path("./data/large_response_fixture.json"),
     ]

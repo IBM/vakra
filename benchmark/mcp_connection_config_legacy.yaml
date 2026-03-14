@@ -20,7 +20,7 @@ tasks:
     container_command:
       - python
       - "-m"
-      - "apis.m3.python_tools.mcp"
+      - "environment.m3.python_tools.mcp"
 
   # Capability 2 (dashboard_apis): LangGraphReActAgent + FastAPIMCPServer
   2:
@@ -33,8 +33,8 @@ tasks:
       - python
       - /app/m3-rest/mcp_server.py
 
-  # Capability 3 (multihop_reasoning): LangGraphReActAgent + task3_router (routes by MCP_DOMAIN)
-  # MCP_DOMAIN=bpo     → /app/apis/bpo/mcp/server.py  (BPO FastMCP server)
+  # Capability 3 (multihop_reasoning): LangGraphReActAgent + bpo_router (routes by MCP_DOMAIN)
+  # MCP_DOMAIN=bpo     → /app/environment/bpo/mcp/server.py  (BPO FastMCP server)
   # MCP_DOMAIN=<other> → /app/m3-rest/mcp_server.py   (M3 REST MCP server)
   3:
     mode: stdio
@@ -44,9 +44,9 @@ tasks:
       MCP_DB_ROOT: /app/db
     container_command:
       - python
-      - /app/apis/bpo/mcp/task3_router.py
+      - /app/environment/bpo/mcp/bpo_router.py
 
-  # Capability 4 (multiturn): LangGraphReActAgent + Task5CombinedMCPServer
+  # Capability 4 (multiturn): LangGraphReActAgent + Capability4CombinedMCPServer
   4:
     mode: stdio
     container_name: capability_4_multiturn
@@ -56,4 +56,4 @@ tasks:
       PRELOAD_COLLECTIONS: "false"
     container_command:
       - python
-      - /app/retrievers/task5_mcp_server.py
+      - /app/retrievers/capability_4_mcp_server.py

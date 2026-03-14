@@ -111,7 +111,7 @@ def download(args):
         print(f"  Query files:   {queries_path}")
 
     print(f"\nTo use with the server:")
-    print(f"  cd apis/retrievers")
+    print(f"  cd environment/retrievers")
     if str(output_dir) != ".":
         print(f"  ln -sf {chroma_path.resolve()} ./chroma_data")
         print(f"  ln -sf {queries_path.resolve()} ./queries")

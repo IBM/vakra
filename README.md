@@ -4,7 +4,7 @@
 
 ## 📊 Dataset
 
-Please find more details about the dataset (download, schema, etc.) in [docs/dataset.md](docs/dataset.md) and APIs in [apis](apis).
+Please find more details about the dataset (download, schema, etc.) in [docs/dataset.md](docs/dataset.md) and APIs in [environment](environment).
 
 
 ## Data Schema

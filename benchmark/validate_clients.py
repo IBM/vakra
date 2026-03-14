@@ -57,8 +57,8 @@ async def list_tools_for_domains(
     if capability_id in (2, 3, 4):
         # Capabilities 2, 3, 4: per-domain connections — MCP_DOMAIN must be set so
         # the server filters to the requested domain's tools only.
-        # Capability 3: task3_router.py selects BPO or M3 REST based on MCP_DOMAIN.
-        # Capability 4: task5_mcp_server.py filters both M3 REST and retriever tools.
+        # Capability 3: bpo_router.py selects BPO or M3 REST based on MCP_DOMAIN.
+        # Capability 4: capability_4_mcp_server.py filters both M3 REST and retriever tools.
         _, domains_to_process = load_benchmark_data(
             capability_id=capability_id, domains=domains, domain_names_only=True
         )

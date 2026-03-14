@@ -17,7 +17,7 @@ from mcp.server import Server
 from mcp.types import Tool, TextContent
 from pydantic import AnyUrl
 
-from apis.mcp_logging import _setup_mcp_logging
+from environment.mcp_logging import _setup_mcp_logging
 
 logger = logging.getLogger(__name__)
 

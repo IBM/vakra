@@ -137,7 +137,7 @@ async def run_benchmark_for_domain(
     try:
         async with AsyncExitStack() as stack:
             # Primary MCP server (always present).
-            # For Task 3, cfg.container_command points to task3_router.py which
+            # For Task 3, cfg.container_command points to bpo_router.py which
             # exec's into the correct server (BPO or M3 REST) based on MCP_DOMAIN.
             session = await stack.enter_async_context(
                 create_client_and_connect(cfg, domain)

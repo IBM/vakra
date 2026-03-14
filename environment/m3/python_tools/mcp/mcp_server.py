@@ -62,7 +62,7 @@ class LiveMCPServer(ABC):
 
         # Resolve path to mcp_tool_universe_id_mapping.yaml in project root
         project_root = pathlib.Path(__file__).parent.parent.parent.parent.parent
-        self.universe_configuration_file = str(project_root / "apis" / "configs" / "mcp_tool_universe_id_mapping.yaml")
+        self.universe_configuration_file = str(project_root / "environment" / "configs" / "mcp_tool_universe_id_mapping.yaml")
 
         # Load ALL tool configs at startup
         with open(self.universe_configuration_file) as f:

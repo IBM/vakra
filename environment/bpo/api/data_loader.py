@@ -25,12 +25,12 @@ class DataLoader:
         """Load candidate data from parquet file."""
         # Find data file - try multiple locations for different deployments
         possible_paths = [
-            # apis/bpo/api/data_loader.py -> ../data/
+            # environment/bpo/api/data_loader.py -> ../data/
             Path(__file__).parent.parent / "data" / "candidate_data.parquet",
             # Package installation: site-packages/bpo_benchmark/api/data/
             Path(__file__).parent / "data" / "candidate_data.parquet",
-            # Current working directory relative to apis/bpo
-            Path("apis/bpo/data/candidate_data.parquet"),
+            # Current working directory relative to environment/bpo
+            Path("environment/bpo/data/candidate_data.parquet"),
             # Main repo: api/data_loader.py -> data/
             Path(__file__).parent.parent.parent / "data" / "candidate_data.parquet",
             # Current working directory

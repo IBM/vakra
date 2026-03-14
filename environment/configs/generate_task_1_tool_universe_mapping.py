@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate apis/configs/mcp_tool_universe_id_mapping.yaml from task_1 output files.
+Generate environment/configs/mcp_tool_universe_id_mapping.yaml from task_1 output files.
 
 Usage:
     python scripts/generate_mcp_mapping.py [--dry-run]
@@ -14,7 +14,7 @@ import yaml
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 OUTPUT_DIRS_GLOB = "data/test/capability_1_bi_apis/output"
-MAPPING_FILE = "apis/configs/mcp_tool_universe_id_mapping.yaml"
+MAPPING_FILE = "environment/configs/mcp_tool_universe_id_mapping.yaml"
 
 # Unique to SelectionTools (not present in SlotFillingTools)
 SELECTION_ONLY_TOOLS = {

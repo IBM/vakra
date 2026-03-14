@@ -182,7 +182,7 @@ def start_containers() -> None:
             "Run 'make download' (or 'python benchmark_setup.py --download-data') first.\n"
         )
     db_dir = str(db_dir)
-    configs_dir = str(PROJECT_ROOT / "apis" / "configs")
+    configs_dir = str(PROJECT_ROOT / "environment" / "configs")
     chroma_dir = str(DATA_DIR / "indexed_documents")
     queries_dir = str(DATA_DIR / "queries")
 
@@ -204,7 +204,7 @@ def start_containers() -> None:
             "--name", name,
             *container_extra_flags.get(name, []),
             "-v", f"{db_dir}:/app/db:ro",
-            "-v", f"{configs_dir}:/app/apis/configs:ro",
+            "-v", f"{configs_dir}:/app/environment/configs:ro",
             *container_extra_volumes.get(name, []),
             "benchmark_environ",
         ], check=True)

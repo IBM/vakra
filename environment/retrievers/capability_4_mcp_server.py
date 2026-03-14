@@ -1,6 +1,6 @@
 """
-Task 5 Combined MCP Server
-==========================
+Capability 4 Combined MCP Server
+=================================
 
 Aggregates tools from two FastAPI servers running in the same container and
 exposes them as a single MCP server:
@@ -33,11 +33,11 @@ Environment variables:
     RETRIEVER_BASE_URL Base URL of the Retriever FastAPI server
                        (default: http://localhost:8001)
     MCP_SERVER_NAME    Name for this MCP server instance
-                       (default: task5-combined-mcp)
+                       (default: capability-4-combined-mcp)
 
 Usage (inside capability_4_multiturn container):
     docker exec -i -e MCP_DOMAIN=address capability_4_multiturn \\
-        python /app/retrievers/task5_mcp_server.py
+        python /app/retrievers/capability_4_mcp_server.py
 """
 
 import asyncio
@@ -52,7 +52,7 @@ import httpx
 from mcp.server import Server
 from mcp.types import Tool, TextContent
 
-from apis.mcp_logging import _setup_mcp_logging
+from environment.mcp_logging import _setup_mcp_logging
 
 logger = logging.getLogger(__name__)
 
@@ -95,7 +95,7 @@ def load_retriever_domains(
     return retriever_domains
 
 
-class Task5CombinedMCPServer:
+class Capability4CombinedMCPServer:
     """MCP server that merges M3 REST tools + Retriever tools.
 
     M3 REST tools are filtered to ``m3_domains`` (the primary domain).
@@ -106,7 +106,7 @@ class Task5CombinedMCPServer:
         self,
         m3_rest_url: str = "http://localhost:8000",
         retriever_url: str = "http://localhost:8001",
-        server_name: str = "task5-combined-mcp",
+        server_name: str = "capability-4-combined-mcp",
         m3_domains: Optional[List[str]] = None,
         retriever_domains: Optional[List[str]] = None,
     ):
@@ -132,7 +132,7 @@ class Task5CombinedMCPServer:
             return response.json()
 
     # ------------------------------------------------------------------
-    # M3 REST tool discovery (mirrors apis/m3/rest/mcp_server.py)
+    # M3 REST tool discovery (mirrors environment/m3/rest/mcp_server.py)
     # Filtered to the primary domain only.
     # ------------------------------------------------------------------
 
@@ -211,7 +211,7 @@ class Task5CombinedMCPServer:
         return tools
 
     # ------------------------------------------------------------------
-    # Retriever tool discovery (mirrors apis/retrievers/mcp_server.py)
+    # Retriever tool discovery (mirrors environment/retrievers/mcp_server.py)
     # Filtered to primary domain + its negatives.
     # ------------------------------------------------------------------
 
@@ -425,7 +425,7 @@ async def main():
     _setup_mcp_logging()
     m3_rest_url = os.getenv("M3_REST_BASE_URL", "http://localhost:8000")
     retriever_url = os.getenv("RETRIEVER_BASE_URL", "http://localhost:8001")
-    server_name = os.getenv("MCP_SERVER_NAME", "task5-combined-mcp")
+    server_name = os.getenv("MCP_SERVER_NAME", "capability-4-combined-mcp")
 
     # Primary domain(s) from MCP_DOMAIN (e.g. "address")
     primary_domains = parse_list_env("MCP_DOMAIN")
@@ -434,7 +434,7 @@ async def main():
     retriever_domains = load_retriever_domains(primary_domains)
 
     logger.info(
-        "Starting Task 5 combined MCP server "
+        "Starting Capability 4 combined MCP server "
         "(M3 REST @ %s [domains=%s] + Retriever @ %s [domains=%s])",
         m3_rest_url,
         primary_domains,
@@ -442,7 +442,7 @@ async def main():
         retriever_domains,
     )
 
-    server = Task5CombinedMCPServer(
+    server = Capability4CombinedMCPServer(
         m3_rest_url=m3_rest_url,
         retriever_url=retriever_url,
         server_name=server_name,

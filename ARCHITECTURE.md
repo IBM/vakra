@@ -92,8 +92,8 @@ pipe connects directly to the target server after exec.
 |-----------|-------------|
 | `1` | `python -m apis.m3.python_tools.mcp` |
 | `2` | `python /app/m3-rest/mcp_server.py` |
-| `3` | `python /app/apis/bpo/mcp/task3_router.py` |
-| `5` | `python /app/retrievers/task5_mcp_server.py` |
+| `3` | `python /app/environment/bpo/mcp/bpo_router.py` |
+| `4` | `python /app/retrievers/capability_4_mcp_server.py` |
 
 The original server scripts remain intact and are still tested directly by
 `docker/smoke_test.sh`. The dispatcher is just a thin routing shim.
@@ -309,14 +309,14 @@ both by exec-replacing itself with the correct server at startup.
 | What | Detail |
 |------|--------|
 | FastAPI services | M3 REST on port 8000 |
-| MCP entry point | `python /app/apis/bpo/mcp/task3_router.py` |
-| Router source | [`apis/bpo/mcp/task3_router.py`](apis/bpo/mcp/task3_router.py) |
+| MCP entry point | `python /app/environment/bpo/mcp/bpo_router.py` |
+| Router source | [`environment/bpo/mcp/bpo_router.py`](environment/bpo/mcp/bpo_router.py) |
 | BPO server source | [`apis/bpo/mcp/server.py`](apis/bpo/mcp/server.py) |
 | M3 server source | [`apis/m3/rest/mcp_server.py`](apis/m3/rest/mcp_server.py) |
 
 ### How it works
 
-`task3_router.py` is a six-line shim. It reads `MCP_DOMAIN` and calls
+`bpo_router.py` is a six-line shim. It reads `MCP_DOMAIN` and calls
 `os.execv` to **replace itself** with the target server process — there is no
 proxy layer. The MCP client's stdio pipe connects directly to the chosen server.
 
@@ -345,7 +345,7 @@ Benchmark Client (host)
 │  capability_3_multihop_reasoning_m3_environ                                           │
 │                                                              │
 │  mcp_dispatch.py  (CAPABILITY_ID=3)                                │
-│    └─ os.execv → task3_router.py  ──┬── MCP_DOMAIN=bpo ───► │
+│    └─ os.execv → bpo_router.py  ──┬── MCP_DOMAIN=bpo ───► │
 │                                   │                          │
 │                        ┌──────────┴──────────────────────┐  │
 │                        │  BPO FastMCP server  (stdio)    │  │
@@ -391,13 +391,13 @@ semantic search (ChromaDB retriever) in a single session. Tool filtering is
 | What | Detail |
 |------|--------|
 | FastAPI services | M3 REST on port 8000 + Retriever on port 8001 |
-| MCP entry point | `python /app/retrievers/task5_mcp_server.py` |
-| MCP source | [`apis/retrievers/task5_mcp_server.py`](apis/retrievers/task5_mcp_server.py) |
+| MCP entry point | `python /app/retrievers/capability_4_mcp_server.py` |
+| MCP source | [`environment/retrievers/capability_4_mcp_server.py`](environment/retrievers/capability_4_mcp_server.py) |
 | Negatives config | [`apis/retrievers/domain_negatives.json`](apis/retrievers/domain_negatives.json) |
 
 ### How it works
 
-`Task5CombinedMCPServer` fetches `/openapi.json` from **both** FastAPI servers
+`Capability4CombinedMCPServer` fetches `/openapi.json` from **both** FastAPI servers
 at startup, builds a merged `tools_cache`, and stores the originating
 `backend_url` in each tool's `_metadata`. On `call_tool` it looks up the tool,
 reads `_metadata["backend_url"]`, and routes the HTTP request to the correct
@@ -426,13 +426,13 @@ Benchmark Client (host)
 │  capability_4_multiturn_m3_environ                                                 │
 │                                                                    │
 │  mcp_dispatch.py  (CAPABILITY_ID=5)                                      │
-│    └─ os.execv → python /app/retrievers/task5_mcp_server.py        │
+│    └─ os.execv → python /app/retrievers/capability_4_mcp_server.py │
 │                                                                    │
 │  domain_negatives.json["address"]                                  │
 │    → [address, olympics, card_games, legislator, craftbeer]        │
 │                          │                                         │
 │  ┌───────────────────────▼────────────────────────────────────┐   │
-│  │  Task5CombinedMCPServer  (stdio)                           │   │
+│  │  Capability4CombinedMCPServer  (stdio)                     │   │
 │  │                                                            │   │
 │  │  list_tools()                                              │   │
 │  │    ├─ GET :8000/openapi.json                               │   │
@@ -486,7 +486,7 @@ image; takes up to 5 min to warm up on first container start).
 | [`apis/m3/python_tools/mcp/config.py`](apis/m3/python_tools/mcp/config.py) | `MCPServerConfig` dataclass; resolves `MCP_DOMAIN` → SQLite path (Task 1) |
 | [`apis/configs/mcp_tool_universe_id_mapping.yaml`](apis/configs/mcp_tool_universe_id_mapping.yaml) | Tool universe registry — universe IDs, init args, `server_type` per query (Task 1) |
 | [`apis/bpo/mcp/server.py`](apis/bpo/mcp/server.py) | BPO FastMCP server — `@mcp.tool()` decorators (Task 3) |
-| [`apis/bpo/mcp/task3_router.py`](apis/bpo/mcp/task3_router.py) | `os.execv` router → BPO or M3 REST (Task 3) |
+| [`environment/bpo/mcp/bpo_router.py`](environment/bpo/mcp/bpo_router.py) | `os.execv` router → BPO or M3 REST (Task 3) |
 | [`apis/retrievers/server.py`](apis/retrievers/server.py) | Retriever FastAPI — ChromaDB, port 8001 |
-| [`apis/retrievers/task5_mcp_server.py`](apis/retrievers/task5_mcp_server.py) | Combined MCP server — merges M3 REST + Retriever (Task 5) |
+| [`environment/retrievers/capability_4_mcp_server.py`](environment/retrievers/capability_4_mcp_server.py) | Combined MCP server — merges M3 REST + Retriever (Capability 4) |
 | [`apis/retrievers/domain_negatives.json`](apis/retrievers/domain_negatives.json) | Maps each domain to its distractor domains for retriever tool expansion (Task 5) |

@@ -20,7 +20,7 @@ x-base: &base
     MCP_DB_ROOT: /app/db
   volumes:
     - ./data/databases:/app/db:ro
-    - ./apis/configs:/app/apis/configs:ro
+    - ./environment/configs:/app/environment/configs:ro
 
 services:
   capability_1_bi_apis:
@@ -41,6 +41,6 @@ services:
     mem_limit: 4g
     volumes:
       - ./data/databases:/app/db:ro
-      - ./apis/configs:/app/apis/configs:ro
+      - ./environment/configs:/app/environment/configs:ro
       - ./data/indexed_documents:/app/retrievers/chroma_data
       - ./data/queries:/app/retrievers/queries:ro

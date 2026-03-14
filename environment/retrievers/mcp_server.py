@@ -7,7 +7,7 @@ the POST /{domain}/query endpoint for that domain).
 
 Usage:
     # Start the FastAPI retriever server first:
-    cd apis/retrievers && python run.py
+    cd environment/retrievers && python run.py
 
     # Then in another terminal, run the MCP server:
     MCP_DOMAIN=address python mcp_server.py

@@ -224,7 +224,7 @@ class TestBenchmarkE2E:
     def test_task3_airline(self, tmp_path):
         """Task 3: M3 REST MCP agent on 2 airline-domain samples.
 
-        Uses capability_3_multihop_reasoning container via task3_router.py. Since "airline"
+        Uses capability_3_multihop_reasoning container via bpo_router.py. Since "airline"
         is an M3 REST domain, the router exec's into /app/m3-rest/mcp_server.py.
         """
         output_dir = tmp_path / "task3_airline"
@@ -245,8 +245,8 @@ class TestBenchmarkE2E:
     def test_task3_bpo(self, tmp_path):
         """Task 3: BPO MCP agent on 2 BPO-domain samples.
 
-        Uses capability_3_multihop_reasoning container via task3_router.py. Since "bpo"
-        is the BPO domain, the router exec's into /app/apis/bpo/mcp/server.py.
+        Uses capability_3_multihop_reasoning container via bpo_router.py. Since "bpo"
+        is the BPO domain, the router exec's into /app/environment/bpo/mcp/server.py.
         """
         output_dir = tmp_path / "task3_bpo"
         output_dir.mkdir()
@@ -331,7 +331,7 @@ class TestBenchmarkE2E:
     def test_task5_address(self, tmp_path):
         """Task 5: combined MCP server (M3 REST + retriever) on 2 address samples.
 
-        Uses task5_mcp_server.py which merges tools from both FastAPI servers
+        Uses capability_4_mcp_server.py which merges tools from both FastAPI servers
         running in capability_4_multiturn so the agent can use SQL/REST tools and
         semantic search in the same session.
         """

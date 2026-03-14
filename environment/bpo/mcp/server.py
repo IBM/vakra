@@ -17,7 +17,7 @@ project_root = Path(__file__).parent.parent.parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from apis.bpo.api.schemas import (
+from environment.bpo.api.schemas import (
     RequisitionNotFoundResponse,
     SLAPerSourceResponse,
     TotalHiresBySourceResponse,
@@ -80,7 +80,7 @@ def track_tool_call(tool_name: str) -> None:
         logger.error(f"Failed to track tool call: {e}")
 
 # Import all API functions
-from apis.bpo.api.candidate_source import (
+from environment.bpo.api.candidate_source import (
     get_sla_per_source,
     get_total_hires_by_source,
     get_candidate_volume_by_source,
@@ -90,7 +90,7 @@ from apis.bpo.api.candidate_source import (
     get_source_recommendation_summary,
 )
 
-from apis.bpo.api.skills import (
+from environment.bpo.api.skills import (
     get_skill_analysis,
     get_skill_impact_fill_rate,
     get_skill_impact_sla,
@@ -100,7 +100,7 @@ from apis.bpo.api.skills import (
 )
 
 # Import error-prone API variants
-from apis.bpo.api import skills_error, candidate_source_error
+from environment.bpo.api import skills_error, candidate_source_error
 
 # Create MCP server
 # Note: Server name should match the key in evaluation/mcp_servers.yaml

@@ -27,7 +27,7 @@ FAIL=0
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 DB_DIR="$PROJECT_ROOT/data/databases"
-CONFIGS_DIR="$PROJECT_ROOT/apis/configs"
+CONFIGS_DIR="$PROJECT_ROOT/environment/configs"
 
 # Colours (disabled if not a terminal)
 if [ -t 1 ]; then
@@ -64,13 +64,13 @@ check_file /app/m3-rest/app.py
 check_file /app/m3-rest/mcp_server.py
 check_file /app/retrievers/server.py
 check_file /app/retrievers/mcp_server.py
-check_file /app/apis/__init__.py
-check_file /app/apis/bpo/__init__.py
-check_file /app/apis/bpo/mcp/server.py
-check_file /app/apis/bpo/api/schemas.py
-check_file /app/apis/bpo/api/candidate_source.py
-check_file /app/apis/bpo/api/skills.py
-check_file /app/apis/bpo/data/candidate_data.parquet
+check_file /app/environment/__init__.py
+check_file /app/environment/bpo/__init__.py
+check_file /app/environment/bpo/mcp/server.py
+check_file /app/environment/bpo/api/schemas.py
+check_file /app/environment/bpo/api/candidate_source.py
+check_file /app/environment/bpo/api/skills.py
+check_file /app/environment/bpo/data/candidate_data.parquet
 check_file /app/entrypoint.sh
 
 # ---------------------------------------------------------------------------
@@ -86,7 +86,7 @@ else
   docker run -d --name "$CONTAINER" \
     -e MCP_DB_ROOT=/app/db \
     -v "$DB_DIR:/app/db:ro" \
-    -v "$CONFIGS_DIR:/app/apis/configs:ro" \
+    -v "$CONFIGS_DIR:/app/environment/configs:ro" \
     "$IMAGE" >/dev/null
 fi
 
@@ -124,7 +124,7 @@ section "3. BPO MCP server (stdio handshake)"
 
 BPO_RESPONSE=$(echo "$MCP_INIT" \
   | docker run --rm -i --entrypoint python \
-    "$IMAGE" /app/apis/bpo/mcp/server.py 2>/dev/null \
+    "$IMAGE" /app/environment/bpo/mcp/server.py 2>/dev/null \
   | head -n 1 || true)
 
 if echo "$BPO_RESPONSE" | python3 -c "import sys,json; d=json.loads(sys.stdin.read()); assert 'result' in d or 'id' in d" 2>/dev/null; then

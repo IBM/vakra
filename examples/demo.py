@@ -56,7 +56,7 @@ async def connect_to_server(
         python_exe = sys.executable
         server_params = StdioServerParameters(
             command=python_exe,
-            args=["-m", "apis.m3.python_tools.mcp"],
+            args=["-m", "environment.m3.python_tools.mcp"],
             env=os.environ.copy(),
         )
         async with stdio_client(server_params) as (read, write):
@@ -72,7 +72,7 @@ async def connect_to_server(
                 "exec", "-i",
                 "-e", f"MCP_DOMAIN={mcp_domain}",
                 container_name,
-                "python", "-m", "apis.m3.python_tools.mcp",
+                "python", "-m", "environment.m3.python_tools.mcp",
             ],
         )
         print(f"  Using {runtime} exec into '{container_name}' (MCP_DOMAIN={mcp_domain})")
@@ -237,7 +237,7 @@ async def main(
     print(f"{'='*60}\n")
 
     # Load all instances
-    with open("apis/configs/mcp_tool_universe_id_mapping.json") as f:
+    with open("environment/configs/mcp_tool_universe_id_mapping.json") as f:
         instances = json.load(f)
 
     # Run with single server
@@ -268,7 +268,7 @@ Examples:
   # Local subprocess (default)
   python examples/demo.py --provider anthropic --model claude-sonnet-4-5-20250929
 
-  # Docker container (see apis/m3/python_tools/Dockerfile for build + run)
+  # Docker container (see environment/m3/python_tools/Dockerfile for build + run)
   python examples/demo.py --mode docker --container-name m3-sel-slot-server --domain superhero
 
   # WebSocket

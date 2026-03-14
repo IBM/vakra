@@ -5,17 +5,17 @@ tasks:
   # Start the containers first:
   #   docker run -d --name capability_1_bi_apis \
   #       -v "$(pwd)/data/databases:/app/db:ro" \
-  #       -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
+  #       -v "$(pwd)/environment/configs:/app/environment/configs:ro" \
   #       -e MCP_DB_ROOT=/app/db \
   #       benchmark_environ
   #   docker run -d --name capability_2_dashboard_apis \
   #       -v "$(pwd)/data/databases:/app/db:ro" \
-  #       -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
+  #       -v "$(pwd)/environment/configs:/app/environment/configs:ro" \
   #       -e MCP_DB_ROOT=/app/db \
   #       benchmark_environ
   #   docker run -d --name capability_4_multiturn \
   #       -v "$(pwd)/data/databases:/app/db:ro" \
-  #       -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
+  #       -v "$(pwd)/environment/configs:/app/environment/configs:ro" \
   #       -v "$(pwd)/data/indexed_documents:/app/retrievers/chroma_data" \
   #       -v "$(pwd)/data/queries:/app/retrievers/queries:ro" \
   #       -e MCP_DB_ROOT=/app/db \
@@ -46,8 +46,8 @@ tasks:
       - python
       - /app/mcp_dispatch.py
 
-  # Capability 3 (multihop_reasoning): LangGraphReActAgent + task3_router (routes by MCP_DOMAIN)
-  # MCP_DOMAIN=bpo     → /app/apis/bpo/mcp/server.py  (BPO FastMCP server)
+  # Capability 3 (multihop_reasoning): LangGraphReActAgent + bpo_router (routes by MCP_DOMAIN)
+  # MCP_DOMAIN=bpo     → /app/environment/bpo/mcp/server.py  (BPO FastMCP server)
   # MCP_DOMAIN=<other> → /app/m3-rest/mcp_server.py   (M3 REST MCP server)
   # The router exec's into the target server, so no proxy overhead.
 
@@ -56,7 +56,7 @@ tasks:
   #   mode: stdio
   #   command: python  # resolved to sys.executable at runtime
   #   args:
-  #     - "apis/bpo/mcp/task3_router.py"
+  #     - "environment/bpo/mcp/bpo_router.py"
 
   3:
     mode: stdio
@@ -69,7 +69,7 @@ tasks:
       - python
       - /app/mcp_dispatch.py
 
-  # Capability 4 (multiturn): LangGraphReActAgent + Task5CombinedMCPServer
+  # Capability 4 (multiturn): LangGraphReActAgent + Capability4CombinedMCPServer
   # Exposes M3 REST tools (port 8000) + Retriever query tool (port 8001)
   # in a single MCP server so list_tools() returns both sets.
   4:
@@ -93,7 +93,7 @@ tasks:
   #   command: python  # resolved to sys.executable at runtime
   #   args:
   #     - "-m"
-  #     - "apis.m3.python_tools.mcp"
+  #     - "environment.m3.python_tools.mcp"
   #
   # 2:
   #   mode: stdio
