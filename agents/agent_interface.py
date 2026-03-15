@@ -390,7 +390,7 @@ INITIAL DATA:
         else:
             if additional_instructions:
                 lc_messages.append(self._build_policy_guidance(additional_instructions=additional_instructions))
-            lc_messages.append(self._messages_to_langchain(input))
+            lc_messages.extend(self._messages_to_langchain(input))
 
         # Inject system message when handle manager is active
         if self.handle_manager is not None:
