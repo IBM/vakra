@@ -29,12 +29,12 @@ docker tag docker.io/amurthi44g1wd/m3_environ:latest m3_environ
 
 ## Container Configurations
 
-### `task_2_m3_environ` — M3 SQL Tools
+### `capability_2_dashboard_apis_m3_environ` — M3 SQL Tools
 
 Runs **only M3 REST FastAPI** (port 8000). The retriever is not started because `chroma_data` is not mounted.
 
 ```bash
-docker run -d --name task_2_m3_environ \
+docker run -d --name capability_2_dashboard_apis_m3_environ \
     -v "$(pwd)/apis/m3/rest/db:/app/db:ro" \
     -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
     m3_environ
@@ -43,12 +43,12 @@ docker run -d --name task_2_m3_environ \
 **Services started:** M3 REST FastAPI (:8000)
 **Memory footprint:** ~200 MB
 
-### `task_5_m3_environ` — Retriever Tools + M3 REST
+### `capability_4_multiturn_m3_environ` — Retriever Tools + M3 REST
 
 Runs **both M3 REST FastAPI** (port 8000) **and Retriever FastAPI** (port 8001). Task 5 needs M3 REST because some retriever workflows depend on it.
 
 ```bash
-docker run -d --name task_5_m3_environ \
+docker run -d --name capability_4_multiturn_m3_environ \
     -v "$(pwd)/apis/m3/rest/db:/app/db:ro" \
     -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
     -v "$(pwd)/apis/retrievers/chroma_data:/app/retrievers/chroma_data" \
@@ -69,16 +69,16 @@ No `-p` port mapping flags are needed unless you want to debug the FastAPI serve
 
 ```bash
 # Optional: expose ports for debugging (use different host ports to avoid collision)
-docker run -d --name task_2_m3_environ -p 8000:8000 ...
-docker run -d --name task_5_m3_environ -p 9000:8000 -p 9001:8001 ...
+docker run -d --name capability_2_dashboard_apis_m3_environ -p 8000:8000 ...
+docker run -d --name capability_4_multiturn_m3_environ -p 9000:8000 -p 9001:8001 ...
 ```
 
 ## Task Reference
 
 | Task ID | Container | MCP Exec Command | Running Services |
 |---------|-----------|-----------------|------------------|
-| 2 | `task_2_m3_environ` | `docker exec -i -e MCP_DOMAIN=<domain> task_2_m3_environ python /app/m3-rest/mcp_server.py` | M3 REST (:8000) → SQLite |
-| 5 | `task_5_m3_environ` | `docker exec -i -e MCP_DOMAIN=<domain> task_5_m3_environ python /app/retrievers/mcp_server.py` | M3 REST (:8000) → SQLite **+** Retriever (:8001) → ChromaDB |
+| 2 | `capability_2_dashboard_apis_m3_environ` | `docker exec -i -e MCP_DOMAIN=<domain> capability_2_dashboard_apis_m3_environ python /app/m3-rest/mcp_server.py` | M3 REST (:8000) → SQLite |
+| 5 | `capability_4_multiturn_m3_environ` | `docker exec -i -e MCP_DOMAIN=<domain> capability_4_multiturn_m3_environ python /app/retrievers/mcp_server.py` | M3 REST (:8000) → SQLite **+** Retriever (:8001) → ChromaDB |
 
 ## Environment Variable: `MCP_DOMAIN`
 
@@ -86,22 +86,22 @@ The only environment variable you need is `MCP_DOMAIN`, passed via `docker exec 
 
 ```bash
 # Task 2 — query the "hockey" domain
-docker exec -i -e MCP_DOMAIN=hockey task_2_m3_environ python /app/m3-rest/mcp_server.py
+docker exec -i -e MCP_DOMAIN=hockey capability_2_dashboard_apis_m3_environ python /app/m3-rest/mcp_server.py
 
 # Task 5 — query the "address" domain
-docker exec -i -e MCP_DOMAIN=address task_5_m3_environ python /app/retrievers/mcp_server.py
+docker exec -i -e MCP_DOMAIN=address capability_4_multiturn_m3_environ python /app/retrievers/mcp_server.py
 ```
 
 ## Volume Mounts
 
-### task_2_m3_environ
+### capability_2_dashboard_apis_m3_environ
 
 | Host Path | Container Path | Mode | Contents |
 |-----------|---------------|------|----------|
 | `apis/m3/rest/db/` | `/app/db/` | `ro` | SQLite databases |
 | `apis/configs/` | `/app/apis/configs/` | `ro` | MCP configuration files |
 
-### task_5_m3_environ
+### capability_4_multiturn_m3_environ
 
 | Host Path | Container Path | Mode | Contents |
 |-----------|---------------|------|----------|
@@ -117,12 +117,12 @@ docker exec -i -e MCP_DOMAIN=address task_5_m3_environ python /app/retrievers/mc
 ```
 Your Agent (benchmark_runner_one_per_task.py)
   │
-  ├── Task 2 queries ──► task_2_m3_environ
+  ├── Task 2 queries ──► capability_2_dashboard_apis_m3_environ
   │     │                  Services: M3 REST (:8000) only
   │     └── docker exec ... python /app/m3-rest/mcp_server.py
   │           └── localhost:8000 (M3 REST) → SQLite databases
   │
-  └── Task 5 queries ──► task_5_m3_environ
+  └── Task 5 queries ──► capability_4_multiturn_m3_environ
         │                  Services: M3 REST (:8000) + Retriever (:8001)
         └── docker exec ... python /app/retrievers/mcp_server.py
               ├── localhost:8001 (Retriever) → ChromaDB collections
@@ -135,24 +135,24 @@ Your Agent (benchmark_runner_one_per_task.py)
 from mcp import StdioServerParameters
 from mcp.client.stdio import stdio_client
 
-# Task 2 — points to task_2_m3_environ container
+# Task 2 — points to capability_2_dashboard_apis_m3_environ container
 task2_params = StdioServerParameters(
     command="docker",
     args=[
         "exec", "-i",
         "-e", f"MCP_DOMAIN={domain}",
-        "task_2_m3_environ",
+        "capability_2_dashboard_apis_m3_environ",
         "python", "/app/m3-rest/mcp_server.py",
     ],
 )
 
-# Task 5 — points to task_5_m3_environ container
+# Task 5 — points to capability_4_multiturn_m3_environ container
 task5_params = StdioServerParameters(
     command="docker",
     args=[
         "exec", "-i",
         "-e", f"MCP_DOMAIN={domain}",
-        "task_5_m3_environ",
+        "capability_4_multiturn_m3_environ",
         "python", "/app/retrievers/mcp_server.py",
     ],
 )
@@ -164,21 +164,21 @@ The runner automatically manages containers and routes each task to the right on
 
 ```bash
 # Task 2 only
-python benchmark_runner_one_per_task.py --task_id 2 --run-agent --domain address
+python benchmark_runner_one_per_task.py --capability_id 2 --run-agent --domain address
 
 # Task 5 only
-python benchmark_runner_one_per_task.py --task_id 5 --run-agent --domain address
+python benchmark_runner_one_per_task.py --capability_id 5 --run-agent --domain address
 
 # Both tasks in parallel (each in its own container)
-python benchmark_runner_one_per_task.py --task_id 2 5 --run-agent --domain address --parallel
+python benchmark_runner_one_per_task.py --capability_id 2 5 --run-agent --domain address --parallel
 
 # List tools
-python benchmark_runner_one_per_task.py --task_id 5 --list-tools --domain address
+python benchmark_runner_one_per_task.py --capability_id 5 --list-tools --domain address
 ```
 
 ### What the runner does
 
-1. **Start containers** — for each requested task_id, starts the corresponding container (if not already running) with the right volume mounts
+1. **Start containers** — for each requested capability_id, starts the corresponding container (if not already running) with the right volume mounts
 2. **Wait for readiness** — polls container logs until "All services running" appears
 3. **Run benchmark** — executes `docker exec` MCP sessions against the correct container
 4. **Stop containers** — optionally stops containers when done (or leaves them running for reuse)
@@ -195,8 +195,8 @@ python benchmark_runner_one_per_task.py --task_id 5 --list-tools --domain addres
 
 | Task ID | Container Name | Services | Volume Mounts |
 |---------|---------------|----------|---------------|
-| 2 | `task_2_m3_environ` | M3 REST only | `db`, `configs` |
-| 5 | `task_5_m3_environ` | M3 REST + Retriever | `db`, `configs`, `chroma_data`, `queries` |
+| 2 | `capability_2_dashboard_apis_m3_environ` | M3 REST only | `db`, `configs` |
+| 5 | `capability_4_multiturn_m3_environ` | M3 REST + Retriever | `db`, `configs`, `chroma_data`, `queries` |
 
 ## Quick Start (Full Walkthrough)
 
@@ -206,44 +206,44 @@ docker pull docker.io/amurthi44g1wd/m3_environ:latest
 docker tag docker.io/amurthi44g1wd/m3_environ:latest m3_environ
 
 # 2. Start both containers
-docker run -d --name task_1_m3_environ \
-    -v "$(pwd)/data/db:/app/db:ro" \
+docker run -d --name capability_1_bi_apis_m3_environ \
+    -v "$(pwd)/data/databases:/app/db:ro" \
     -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
     m3_environ
 
-docker run -d --name task_2_m3_environ \
-    -v "$(pwd)/data/db:/app/db:ro" \
+docker run -d --name capability_2_dashboard_apis_m3_environ \
+    -v "$(pwd)/data/databases:/app/db:ro" \
     -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
     m3_environ
 
-docker run -d --name task_5_m3_environ \
-    -v "$(pwd)/data/db:/app/db:ro" \
+docker run -d --name capability_4_multiturn_m3_environ \
+    -v "$(pwd)/data/databases:/app/db:ro" \
     -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
-    -v "$(pwd)/data/chroma_data:/app/retrievers/chroma_data" \
+    -v "$(pwd)/indexed_documents:/app/retrievers/chroma_data" \
     -v "$(pwd)/data/queries:/app/retrievers/queries:ro" \
     m3_environ
 
-# 3. Wait for readiness (~30s for task_2, ~60-120s for task_5)
-docker logs -f task_2_m3_environ   # wait for "All services running"
-docker logs -f task_5_m3_environ   # wait for "All services running"
+# 3. Wait for readiness (~30s for capability_2, ~60-120s for capability_4)
+docker logs -f capability_2_dashboard_apis_m3_environ   # wait for "All services running"
+docker logs -f capability_4_multiturn_m3_environ   # wait for "All services running"
 
 # 4. Verify
 echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0.1.0"}}}' \
-  | docker exec -i -e MCP_DOMAIN=address task_2_m3_environ python /app/m3-rest/mcp_server.py
+  | docker exec -i -e MCP_DOMAIN=address capability_2_dashboard_apis_m3_environ python /app/m3-rest/mcp_server.py
 
 echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0.1.0"}}}' \
-  | docker exec -i -e MCP_DOMAIN=address task_5_m3_environ python /app/retrievers/mcp_server.py
+  | docker exec -i -e MCP_DOMAIN=address capability_4_multiturn_m3_environ python /app/retrievers/mcp_server.py
 
 # 5. Run benchmark
-python benchmark_runner_one_per_task.py --task_id 2 5 --run-agent --domain address --parallel \
+python benchmark_runner_one_per_task.py --capability_id 2 5 --run-agent --domain address --parallel \
     --provider openai --model gpt-4o
 ```
 
 ## Cleanup
 
 ```bash
-docker stop task_2_m3_environ task_5_m3_environ
-docker rm task_2_m3_environ task_5_m3_environ
+docker stop capability_2_dashboard_apis_m3_environ capability_4_multiturn_m3_environ
+docker rm capability_2_dashboard_apis_m3_environ capability_4_multiturn_m3_environ
 ```
 
 ## Resource Limits (Optional)
@@ -252,13 +252,13 @@ Since each task runs in its own container, you can set per-task resource limits:
 
 ```bash
 # Task 2 — lightweight, limit to 512 MB
-docker run -d --name task_2_m3_environ --memory=512m \
+docker run -d --name capability_2_dashboard_apis_m3_environ --memory=512m \
     -v "$(pwd)/apis/m3/rest/db:/app/db:ro" \
     -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
     m3_environ
 
 # Task 5 — heavy (embeddings model), give it 4 GB
-docker run -d --name task_5_m3_environ --memory=4g \
+docker run -d --name capability_4_multiturn_m3_environ --memory=4g \
     -v "$(pwd)/apis/m3/rest/db:/app/db:ro" \
     -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
     -v "$(pwd)/apis/retrievers/chroma_data:/app/retrievers/chroma_data" \

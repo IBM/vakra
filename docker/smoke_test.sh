@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # =============================================================================
-# smoke_test.sh — Validate a locally built m3_environ Docker image
+# smoke_test.sh — Validate a locally built benchmark_environ Docker image
 #
 # Usage (from project root):
 #   bash docker/smoke_test.sh [image_name]
 #
 # Defaults:
-#   image_name = m3_environ
+#   image_name = benchmark_environ
 #
 # What it checks:
 #   1. Required files exist inside the image
@@ -18,16 +18,16 @@
 # =============================================================================
 set -euo pipefail
 
-IMAGE="${1:-m3_environ}"
-CONTAINER="m3_smoke_$$"
+IMAGE="${1:-benchmark_environ}"
+CONTAINER="benchmark_smoke_$$"
 PASS=0
 FAIL=0
 
 # Resolve project root (directory containing this script's parent)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-DB_DIR="$PROJECT_ROOT/data/db"
-CONFIGS_DIR="$PROJECT_ROOT/apis/configs"
+DB_DIR="$PROJECT_ROOT/data/databases"
+CONFIGS_DIR="$PROJECT_ROOT/environment/configs"
 
 # Colours (disabled if not a terminal)
 if [ -t 1 ]; then
@@ -64,13 +64,13 @@ check_file /app/m3-rest/app.py
 check_file /app/m3-rest/mcp_server.py
 check_file /app/retrievers/server.py
 check_file /app/retrievers/mcp_server.py
-check_file /app/apis/__init__.py
-check_file /app/apis/bpo/__init__.py
-check_file /app/apis/bpo/mcp/server.py
-check_file /app/apis/bpo/api/schemas.py
-check_file /app/apis/bpo/api/candidate_source.py
-check_file /app/apis/bpo/api/skills.py
-check_file /app/apis/bpo/data/candidate_data.parquet
+check_file /app/environment/__init__.py
+check_file /app/environment/bpo/__init__.py
+check_file /app/environment/bpo/mcp/server.py
+check_file /app/environment/bpo/api/schemas.py
+check_file /app/environment/bpo/api/candidate_source.py
+check_file /app/environment/bpo/api/skills.py
+check_file /app/environment/bpo/data/candidate_data.parquet
 check_file /app/entrypoint.sh
 
 # ---------------------------------------------------------------------------
@@ -78,7 +78,7 @@ section "2. M3 REST FastAPI health (port 8000)"
 # ---------------------------------------------------------------------------
 
 if [ ! -d "$DB_DIR" ]; then
-  echo "  WARNING: $DB_DIR not found — skipping FastAPI health check (run 'make download' first)"
+  echo "  WARNING: $DB_DIR not found — skipping FastAPI health check (run 'make download' first to populate data/databases/)"
   SKIP_FASTAPI=true
 else
   SKIP_FASTAPI=false
@@ -86,7 +86,7 @@ else
   docker run -d --name "$CONTAINER" \
     -e MCP_DB_ROOT=/app/db \
     -v "$DB_DIR:/app/db:ro" \
-    -v "$CONFIGS_DIR:/app/apis/configs:ro" \
+    -v "$CONFIGS_DIR:/app/environment/configs:ro" \
     "$IMAGE" >/dev/null
 fi
 
@@ -124,7 +124,7 @@ section "3. BPO MCP server (stdio handshake)"
 
 BPO_RESPONSE=$(echo "$MCP_INIT" \
   | docker run --rm -i --entrypoint python \
-    "$IMAGE" /app/apis/bpo/mcp/server.py 2>/dev/null \
+    "$IMAGE" /app/environment/bpo/mcp/server.py 2>/dev/null \
   | head -n 1 || true)
 
 if echo "$BPO_RESPONSE" | python3 -c "import sys,json; d=json.loads(sys.stdin.read()); assert 'result' in d or 'id' in d" 2>/dev/null; then
@@ -138,11 +138,11 @@ fi
 section "4. M3 REST MCP server (stdio handshake)"
 # Requires the FastAPI server to be running (it calls localhost:8000/openapi.json
 # at startup). Uses docker exec against the container from section 2.
-# Skipped when data/db is not available (same condition as section 2).
+# Skipped when data/databases is not available (same condition as section 2).
 # ---------------------------------------------------------------------------
 
 if [ "$SKIP_FASTAPI" = "true" ]; then
-  echo "  Skipping — FastAPI server not running (no data/db). Run 'make download' first."
+  echo "  Skipping — FastAPI server not running (no data/databases). Run 'make download' first."
 else
   M3_MCP_RESPONSE=$(echo "$MCP_INIT" \
     | docker exec -i -e MCP_DOMAIN=superhero "$CONTAINER" \

@@ -31,7 +31,7 @@ def _extract_tool_response_values(result_str: str):
 
 def generate_openapi_spec(
     all_tools_by_domain: Dict[str, List[Dict[str, Any]]],
-    task_id: int,
+    capability_id: int,
 ) -> Dict[str, Any]:
     """Build an OpenAPI-like spec dict from per-domain tool info."""
     spec: Dict[str, Any] = {
@@ -39,7 +39,7 @@ def generate_openapi_spec(
         "info": {
             "title": "MCP Tools Specification",
             "version": "1.0.0",
-            "description": f"Tools available for task {task_id}",
+            "description": f"Tools available for task {capability_id}",
         },
         "paths": {},
         "components": {"schemas": {}},

@@ -24,32 +24,32 @@ make logs
 **Tail logs for a specific container:**
 
 ```bash
-docker logs -f task_5_m3_environ
+docker logs -f capability_4_multiturn_m3_environ
 ```
 
 **Check memory and CPU usage in real time:**
 
 ```bash
-docker stats task_1_m3_environ task_2_m3_environ task_3_m3_environ task_5_m3_environ
+docker stats capability_1_bi_apis_m3_environ capability_2_dashboard_apis_m3_environ capability_3_multihop_reasoning_m3_environ capability_4_multiturn_m3_environ
 ```
 
 **Inspect a container's environment and config:**
 
 ```bash
-docker inspect task_5_m3_environ
+docker inspect capability_4_multiturn_m3_environ
 ```
 
 **Open a shell inside a running container:**
 
 ```bash
-docker exec -it task_5_m3_environ bash
+docker exec -it capability_4_multiturn_m3_environ bash
 ```
 
 **Check if the FastAPI server is responding (Tasks 2, 3, 5):**
 
 ```bash
-docker exec task_2_m3_environ curl -sf http://localhost:8000/openapi.json | head -c 200
-docker exec task_5_m3_environ curl -sf http://localhost:8001/health
+docker exec capability_2_dashboard_apis_m3_environ curl -sf http://localhost:8000/openapi.json | head -c 200
+docker exec capability_4_multiturn_m3_environ curl -sf http://localhost:8001/health
 ```
 
 **Send a test MCP handshake to verify the MCP server is alive:**
@@ -57,26 +57,26 @@ docker exec task_5_m3_environ curl -sf http://localhost:8001/health
 ```bash
 MCP_INIT='{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0.1.0"}}}'
 
-echo "$MCP_INIT" | docker exec -i -e MCP_DOMAIN=address task_2_m3_environ python /app/m3-rest/mcp_server.py
-echo "$MCP_INIT" | docker exec -i task_3_m3_environ python /app/apis/bpo/mcp/server.py
-echo "$MCP_INIT" | docker exec -i -e MCP_DOMAIN=address task_5_m3_environ python /app/retrievers/mcp_server.py
-echo "$MCP_INIT" | docker exec -i -e MCP_DOMAIN=superhero task_1_m3_environ python -m apis.m3.python_tools.mcp
+echo "$MCP_INIT" | docker exec -i -e MCP_DOMAIN=address capability_2_dashboard_apis_m3_environ python /app/m3-rest/mcp_server.py
+echo "$MCP_INIT" | docker exec -i capability_3_multihop_reasoning_m3_environ python /app/apis/bpo/mcp/server.py
+echo "$MCP_INIT" | docker exec -i -e MCP_DOMAIN=address capability_4_multiturn_m3_environ python /app/retrievers/mcp_server.py
+echo "$MCP_INIT" | docker exec -i -e MCP_DOMAIN=superhero capability_1_bi_apis_m3_environ python -m apis.m3.python_tools.mcp
 ```
 
 **Stop and restart a single container:**
 
 ```bash
 # Simple — uses docker compose
-docker compose up -d task_5_m3_environ
+docker compose up -d capability_4_multiturn_m3_environ
 
 # Manual — if you need to override flags
-docker rm -f task_5_m3_environ
+docker rm -f capability_4_multiturn_m3_environ
 
-docker run -d --name task_5_m3_environ \
+docker run -d --name capability_4_multiturn_m3_environ \
     --memory=4g \
-    -v "$(pwd)/data/db:/app/db:ro" \
+    -v "$(pwd)/data/databases:/app/db:ro" \
     -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
-    -v "$(pwd)/data/chroma_data:/app/retrievers/chroma_data" \
+    -v "$(pwd)/indexed_documents:/app/retrievers/chroma_data" \
     -v "$(pwd)/data/queries:/app/retrievers/queries:ro" \
     m3_environ
 ```
@@ -121,11 +121,11 @@ Redirect stderr to a file to capture and filter them:
 
 ```bash
 # Capture MCP server logs separately from benchmark runner stdout
-python benchmark_runner.py --m3_task_id 2 --domain hockey \
+python benchmark_runner.py --m3_capability_id 2 --domain hockey \
     --provider openai 2>mcp.log
 
 # Or capture everything together (stdout + stderr)
-python benchmark_runner.py --m3_task_id 2 --domain hockey \
+python benchmark_runner.py --m3_capability_id 2 --domain hockey \
     --provider openai 2>&1 | tee full.log
 ```
 
@@ -157,11 +157,11 @@ grep '^{' mcp.log | jq -r 'select(.msg | startswith("tool_call")) | .msg' \
 ```
 
 **In parallel mode** (`--parallel`), logs from all tasks are interleaved. Filter
-by `task_id` to isolate a single task:
+by `capability_id` to isolate a single task:
 
 ```bash
-grep '^{' mcp.log | jq 'select(.task_id == "2")'
-grep '^{' mcp.log | jq 'select(.task_id == "5" and .level == "ERROR")'
+grep '^{' mcp.log | jq 'select(.capability_id == "2")'
+grep '^{' mcp.log | jq 'select(.capability_id == "5" and .level == "ERROR")'
 ```
 
 **Container FastAPI logs** (long-lived service, separate from MCP server logs):
@@ -173,6 +173,6 @@ grep '^{' mcp.log | jq 'select(.task_id == "5" and .level == "ERROR")'
 
 ```bash
 # These show FastAPI request logs, SQLite errors, startup issues
-docker logs task_2_m3_environ 2>&1 | tail -50
-docker logs -f task_5_m3_environ   # follow in real time
+docker logs capability_2_dashboard_apis_m3_environ 2>&1 | tail -50
+docker logs -f capability_4_multiturn_m3_environ   # follow in real time
 ```

@@ -1,16 +1,16 @@
 # =============================================================================
-# M3 Benchmark — Docker image lifecycle
+# Enterprise Benchmark — Docker image lifecycle
 # =============================================================================
 # Targets:
 #   make download    Download benchmark data from HuggingFace
-#   make build       Build the m3_environ image from source
+#   make build       Build the benchmark_environ image from source
 #   make test        Smoke-test the locally built image (file checks + MCP handshakes)
 #   make validate    Validate live MCP connections against running containers
 #   make tag         Tag the local image for Docker Hub
 #   make push        Push the tagged image to Docker Hub
 #   make release     build → test → tag → push  (full publish workflow)
 #   make setup       download → build → test → start → validate  (first-time setup)
-#   make pull        Pull the m3_environ image from Docker Hub
+#   make pull        Pull the benchmark_environ image from Docker Hub
 #   make start       Start all benchmark containers (pulls latest image)
 #   make stop        Stop and remove all benchmark containers
 #   make restart     Stop and restart all containers without re-pulling the image
@@ -25,7 +25,7 @@
 # =============================================================================
 
 REGISTRY   := docker.io/amurthi44g1wd
-IMAGE_NAME := m3_environ
+IMAGE_NAME := benchmark_environ
 REMOTE     := $(REGISTRY)/$(IMAGE_NAME):latest
 DOCKERFILE := docker/Dockerfile.unified
 
@@ -36,13 +36,13 @@ DOCKER ?= $(shell PATH=$$PATH:/usr/bin command -v docker 2>/dev/null || command 
 PYTHON ?= $(shell command -v python3 2>/dev/null | head -1 || command -v python 2>/dev/null | head -1 || echo python3)
 
 .PHONY: download build test validate tag push release setup pull start stop restart logs clean e2e e2e-quick \
-        start-task1 start-task2 start-task3 start-task5
+        start-capability1 start-capability2 start-capability3 start-capability4
 
 # ---------------------------------------------------------------------------
 # Download benchmark data from HuggingFace  (prompts for HF token if not set)
 # ---------------------------------------------------------------------------
 download:
-	$(PYTHON) m3_setup.py --download-data
+	$(PYTHON) benchmark_setup.py --download-data
 
 # ---------------------------------------------------------------------------
 # Build
@@ -59,7 +59,7 @@ test:
 
 # ---------------------------------------------------------------------------
 # Validate live MCP connections against the running benchmark containers
-# Requires: make start (or m3_setup.py --start-containers) run first
+# Requires: make start (or benchmark_setup.py --start-containers) run first
 # ---------------------------------------------------------------------------
 validate:
 	$(PYTHON) benchmark/validate_clients.py
@@ -89,23 +89,23 @@ release: build test tag push
 # ---------------------------------------------------------------------------
 setup: download build test start validate
 	@echo ""
-	@echo "Setup complete. Run '$(PYTHON) benchmark_runner.py --m3_task_id 3 --domain bpo' to start benchmarking."
+	@echo "Setup complete. Run '$(PYTHON) benchmark_runner.py --capability_id 3 --domain bpo' to start benchmarking."
 
 # ---------------------------------------------------------------------------
-# Container lifecycle  (delegates to m3_setup.py)
+# Container lifecycle  (delegates to benchmark_setup.py)
 # ---------------------------------------------------------------------------
 pull:
-	$(PYTHON) m3_setup.py --pull-image
+	$(PYTHON) benchmark_setup.py --pull-image
 
 start:
-	$(PYTHON) m3_setup.py --start-containers
+	$(PYTHON) benchmark_setup.py --start-containers
 
 stop:
 	$(DOCKER) compose down --remove-orphans
-	$(PYTHON) m3_setup.py --stop-containers
+	$(PYTHON) benchmark_setup.py --stop-containers
 
 logs:
-	@for c in task_1_m3_environ task_2_m3_environ task_3_m3_environ task_5_m3_environ; do \
+	@for c in capability_1_bi_apis capability_2_dashboard_apis capability_3_multihop_reasoning capability_4_multiturn; do \
 		echo ""; \
 		echo "=== $$c ==="; \
 		$(DOCKER) logs --tail 20 $$c 2>/dev/null || echo "  (not running)"; \
@@ -136,26 +136,26 @@ restart:
 	$(DOCKER) compose down --remove-orphans
 	$(DOCKER) compose up -d
 
-start-task1:
-	-$(DOCKER) rm -f task_1_m3_environ
-	$(DOCKER) compose up -d task_1_m3_environ
+start-capability1:
+	-$(DOCKER) rm -f capability_1_bi_apis
+	$(DOCKER) compose up -d capability_1_bi_apis
 
-start-task2:
-	-$(DOCKER) rm -f task_2_m3_environ
-	$(DOCKER) compose up -d task_2_m3_environ
+start-capability2:
+	-$(DOCKER) rm -f capability_2_dashboard_apis
+	$(DOCKER) compose up -d capability_2_dashboard_apis
 
-start-task3:
-	-$(DOCKER) rm -f task_3_m3_environ
-	$(DOCKER) compose up -d task_3_m3_environ
+start-capability3:
+	-$(DOCKER) rm -f capability_3_multihop_reasoning
+	$(DOCKER) compose up -d capability_3_multihop_reasoning
 
-start-task5:
-	-$(DOCKER) rm -f task_5_m3_environ
-	$(DOCKER) compose up -d task_5_m3_environ
+start-capability4:
+	-$(DOCKER) rm -f capability_4_multiturn
+	$(DOCKER) compose up -d capability_4_multiturn
 
 # ---------------------------------------------------------------------------
 # Clean — stop & remove containers, then remove the local image
 # ---------------------------------------------------------------------------
 clean:
-	$(PYTHON) m3_setup.py --stop-containers
+	$(PYTHON) benchmark_setup.py --stop-containers
 	$(DOCKER) rmi -f $(IMAGE_NAME) 2>/dev/null || true
 	@echo "Removed containers and image '$(IMAGE_NAME)'."

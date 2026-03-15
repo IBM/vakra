@@ -41,7 +41,7 @@ docker compose up -d   # or: podman compose up -d
 docker compose ps      # or: podman compose ps
 
 # 6. Run a single-sample smoke test (Task 1, authors domain)
-python benchmark_runner.py --m3_task_id 1 --domain california_schools --max-samples-per-domain 1 --provider openai
+python benchmark_runner.py --m3_capability_id 1 --domain california_schools --max-samples-per-domain 1 --provider openai
 
 # Results land in output/task_1_<timestamp>/authors.json
 ```
@@ -77,7 +77,7 @@ make pull
 make start
 
 # 4. Run a single-sample smoke test (Task 1, authors domain)
-python benchmark_runner.py --m3_task_id 1 --domain authors --max-samples-per-domain 1 --provider openai
+python benchmark_runner.py --m3_capability_id 1 --domain authors --max-samples-per-domain 1 --provider openai
 
 # Results land in output/task_1_<timestamp>/authors.json
 ```
@@ -222,7 +222,7 @@ To use the legacy config:
 
 ```bash
 python benchmark_runner.py --mcp-config benchmark/mcp_connection_config_legacy.yaml \
-    --m3_task_id 2 --domain address --provider openai
+    --m3_capability_id 2 --domain address --provider openai
 ```
 
 **Day-to-day after initial setup (either route):**
@@ -247,10 +247,10 @@ You should see **4 containers** listed:
 
 | Container | Purpose |
 |-----------|---------|
-| `task_1_m3_environ` | Sel/Slot MCP server |
-| `task_2_m3_environ` | M3 REST MCP server |
-| `task_3_m3_environ` | BPO MCP server + M3 REST API |
-| `task_5_m3_environ` | M3 REST API + ChromaDB Retriever |
+| `capability_1_bi_apis_m3_environ` | Sel/Slot MCP server |
+| `capability_2_dashboard_apis_m3_environ` | M3 REST MCP server |
+| `capability_3_multihop_reasoning_m3_environ` | BPO MCP server + M3 REST API |
+| `capability_4_multiturn_m3_environ` | M3 REST API + ChromaDB Retriever |
 
 ### Restarting a single container
 
@@ -266,18 +266,18 @@ make start-task3
 make start-task5
 
 # Or directly via docker compose (same effect)
-docker compose up -d task_1_m3_environ
-docker compose up -d task_5_m3_environ
+docker compose up -d capability_1_bi_apis_m3_environ
+docker compose up -d capability_4_multiturn_m3_environ
 
 # Stop and remove a single container only
-docker compose rm -sf task_1_m3_environ
+docker compose rm -sf capability_1_bi_apis_m3_environ
 
 # Check logs for a specific container
-docker logs task_1_m3_environ --tail 50
-docker compose logs -f task_1_m3_environ
+docker logs capability_1_bi_apis_m3_environ --tail 50
+docker compose logs -f capability_1_bi_apis_m3_environ
 ```
 
-> `task_5_m3_environ` (ChromaDB) is the most likely to OOM on startup. If it exits immediately, confirm Docker Desktop memory is set to at least 8 GB (see [Prerequisites](#prerequisites)).
+> `capability_4_multiturn_m3_environ` (ChromaDB) is the most likely to OOM on startup. If it exits immediately, confirm Docker Desktop memory is set to at least 8 GB (see [Prerequisites](#prerequisites)).
 
 ### Debugging containers
 
@@ -305,39 +305,39 @@ make start
 
 ```bash
 # Task 1 — Sel/Slot tools
-python benchmark_runner.py --m3_task_id 1 --domain authors --max-samples-per-domain 1 --provider openai
+python benchmark_runner.py --m3_capability_id 1 --domain authors --max-samples-per-domain 1 --provider openai
 
 # Task 2 — M3 REST SQL tools
-python benchmark_runner.py --m3_task_id 2 --provider openai --domain address
-python benchmark_runner.py --m3_task_id 2 --provider openai --domain airline
-python benchmark_runner.py --m3_task_id 2     --provider openai          # all domains
+python benchmark_runner.py --m3_capability_id 2 --provider openai --domain address
+python benchmark_runner.py --m3_capability_id 2 --provider openai --domain airline
+python benchmark_runner.py --m3_capability_id 2     --provider openai          # all domains
 
 # Task 3 — BPO + M3 REST tools
-python benchmark_runner.py --m3_task_id 3 --domain airline --provider openai
+python benchmark_runner.py --m3_capability_id 3 --domain airline --provider openai
 
 # Task 5 — ChromaDB retriever
-python benchmark_runner.py --m3_task_id 5 --domain address --provider openai
+python benchmark_runner.py --m3_capability_id 5 --domain address --provider openai
 ```
 
 **Common options:**
 
 ```bash
 # Limit samples (good for quick tests)
-python benchmark_runner.py --m3_task_id 2 --domain hockey --max-samples-per-domain 5
+python benchmark_runner.py --m3_capability_id 2 --domain hockey --max-samples-per-domain 5
 
 # Choose provider and model
-python benchmark_runner.py --m3_task_id 2 --domain hockey --provider anthropic --model claude-sonnet-4-6
-python benchmark_runner.py --m3_task_id 2 --domain hockey --provider openai --model gpt-4o
-python benchmark_runner.py --m3_task_id 2 --domain hockey --provider ollama --model llama3.1:8b
+python benchmark_runner.py --m3_capability_id 2 --domain hockey --provider anthropic --model claude-sonnet-4-6
+python benchmark_runner.py --m3_capability_id 2 --domain hockey --provider openai --model gpt-4o
+python benchmark_runner.py --m3_capability_id 2 --domain hockey --provider ollama --model llama3.1:8b
 
 # Run multiple tasks in parallel
-python benchmark_runner.py --m3_task_id 2 5 --domain address --parallel
+python benchmark_runner.py --m3_capability_id 2 5 --domain address --parallel
 
 # Just list available tools (no agent run)
-python benchmark_runner.py --m3_task_id 2 --domain hockey --list-tools
+python benchmark_runner.py --m3_capability_id 2 --domain hockey --list-tools
 
 # Limit tools via embedding similarity (top-k)
-python benchmark_runner.py --m3_task_id 2 --domain hockey --top-k-tools 10
+python benchmark_runner.py --m3_capability_id 2 --domain hockey --top-k-tools 10
 ```
 
 Results are saved to `output/task_{id}_{timestamp}/{domain}.json`.
@@ -397,29 +397,29 @@ python -m pytest tests/e2e/test_benchmark_e2e.py::TestBenchmarkE2E::test_task5_a
 
 ```bash
 # Task 1 — Sel/Slot MCP server
-docker run -d --name task_1_m3_environ \
-    -v "$(pwd)/data/db:/app/db:ro" \
+docker run -d --name capability_1_bi_apis_m3_environ \
+    -v "$(pwd)/data/databases:/app/db:ro" \
     -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
     m3_environ
 
 # Task 2 — M3 REST MCP server
-docker run -d --name task_2_m3_environ \
-    -v "$(pwd)/data/db:/app/db:ro" \
+docker run -d --name capability_2_dashboard_apis_m3_environ \
+    -v "$(pwd)/data/databases:/app/db:ro" \
     -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
     m3_environ
 
 # Task 3 — BPO MCP server + M3 REST API
-docker run -d --name task_3_m3_environ \
-    -v "$(pwd)/data/db:/app/db:ro" \
+docker run -d --name capability_3_multihop_reasoning_m3_environ \
+    -v "$(pwd)/data/databases:/app/db:ro" \
     -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
     m3_environ
 
 # Task 5 — ChromaDB Retriever (needs extra memory + retriever volumes)
-docker run -d --name task_5_m3_environ \
+docker run -d --name capability_4_multiturn_m3_environ \
     --memory=4g \
-    -v "$(pwd)/data/db:/app/db:ro" \
+    -v "$(pwd)/data/databases:/app/db:ro" \
     -v "$(pwd)/apis/configs:/app/apis/configs:ro" \
-    -v "$(pwd)/data/chroma_data:/app/retrievers/chroma_data" \
+    -v "$(pwd)/indexed_documents:/app/retrievers/chroma_data" \
     -v "$(pwd)/data/queries:/app/retrievers/queries:ro" \
     m3_environ
 ```
@@ -427,7 +427,7 @@ docker run -d --name task_5_m3_environ \
 To stop and remove a single container:
 
 ```bash
-docker rm -f task_2_m3_environ
+docker rm -f capability_2_dashboard_apis_m3_environ
 ```
 
 ---
@@ -449,7 +449,7 @@ python benchmark/validate_clients.py --domain airline
 
 ## Testing the Docker Image
 
-The smoke test validates the image in two tiers — sections 1, 3, and 4 run without any data; section 2 (FastAPI health) requires `data/db` to be populated.
+The smoke test validates the image in two tiers — sections 1, 3, and 4 run without any data; section 2 (FastAPI health) requires `data/databases` to be populated.
 
 **Without data (just built the image):**
 
@@ -475,9 +475,9 @@ make setup      # download → build → test → start → validate
 | Check | Requires data? | What it verifies |
 |-------|---------------|-----------------|
 | 1. File existence | No | All required `.py`, `.parquet`, and entrypoint files are in the image |
-| 2. M3 REST FastAPI | Yes (`data/db`) | `/openapi.json` responds and has at least one route |
+| 2. M3 REST FastAPI | Yes (`data/databases`) | `/openapi.json` responds and has at least one route |
 | 3. BPO MCP handshake | No | `python /app/apis/bpo/mcp/server.py` returns a valid JSON-RPC response |
-| 4. M3 REST MCP handshake | Yes (`data/db`) | `python /app/m3-rest/mcp_server.py` returns a valid JSON-RPC response (requires FastAPI on port 8000) |
+| 4. M3 REST MCP handshake | Yes (`data/databases`) | `python /app/m3-rest/mcp_server.py` returns a valid JSON-RPC response (requires FastAPI on port 8000) |
 
 ---
 
@@ -495,10 +495,10 @@ make setup      # download → build → test → start → validate
 | `make release` | `build → test → tag → push` |
 | `make setup` | `download → build → test → start → validate` — full first-time setup |
 | `make start` | Start all benchmark containers |
-| `make start-task1` | Start `task_1_m3_environ` only |
-| `make start-task2` | Start `task_2_m3_environ` only |
-| `make start-task3` | Start `task_3_m3_environ` only |
-| `make start-task5` | Start `task_5_m3_environ` only |
+| `make start-task1` | Start `capability_1_bi_apis_m3_environ` only |
+| `make start-task2` | Start `capability_2_dashboard_apis_m3_environ` only |
+| `make start-task3` | Start `capability_3_multihop_reasoning_m3_environ` only |
+| `make start-task5` | Start `capability_4_multiturn_m3_environ` only |
 | `make stop` | Stop and remove all benchmark containers |
 | `make clean` | Stop containers and remove the local `m3_environ` Docker image |
 | `make e2e` | Run end-to-end benchmark tests (requires `HF_TOKEN` + `OPENAI_API_KEY`) |

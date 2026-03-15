@@ -38,7 +38,7 @@ class MCPConnectionConfig:
 def load_mcp_config(config_path: str) -> Dict[int, MCPConnectionConfig]:
     """Load MCP connection config from YAML file.
 
-    Returns a dict mapping task_id (int) to MCPConnectionConfig.
+    Returns a dict mapping capability_id (int) to MCPConnectionConfig.
     """
     with open(config_path, "r") as f:
         data = yaml.safe_load(f)

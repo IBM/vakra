@@ -41,7 +41,7 @@ python m3_setup.py
 This will:
 - Stop and remove any existing benchmark containers
 - Pull the latest `m3_environ` image from Docker Hub
-- Start `task_2_m3_environ` (and the other task containers)
+- Start `capability_2_dashboard_apis_m3_environ` (and the other task containers)
 - Wait until all containers are healthy
 
 To start containers only (skipping data download):
@@ -75,7 +75,7 @@ python run_task2.py --runtime podman
 
 ### What it does per domain
 
-1. Builds `docker exec -i -e MCP_DB_ROOT=/app/db -e MCP_DOMAIN=<domain> task_2_m3_environ python /app/m3-rest/mcp_server.py`
+1. Builds `docker exec -i -e MCP_DB_ROOT=/app/db -e MCP_DOMAIN=<domain> capability_2_dashboard_apis_m3_environ python /app/m3-rest/mcp_server.py`
 2. Opens an MCP session over stdio
 3. Lists all tools with their descriptions and parameters
 4. Calls the agent *(placeholder — wire in your agent here)*
@@ -107,7 +107,7 @@ and `session` is the live `ClientSession` you can pass directly to the agent.
 
 ```yaml
 task_2:
-  container: task_2_m3_environ   # Docker container name
+  container: capability_2_dashboard_apis_m3_environ   # Docker container name
   env:
     MCP_DB_ROOT: /app/db         # Path to databases inside the container
   command:
