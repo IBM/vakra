@@ -154,7 +154,7 @@ async def run_benchmark_for_domain(
             )
 
             # Run all queries for this domain
-            for i, item in enumerate(tqdm(items,desc=f"[{task_id}|{domain}]")):
+            for i, item in enumerate(tqdm(items,desc=f"[{capability_id}|{domain}]")):
                 query_suffix = (
                     "..." if len(item.query) > 80 else ""
                 )
