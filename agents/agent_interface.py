@@ -257,8 +257,7 @@ class LangGraphReActAgent(AgentInterface):
     
     def _build_policy_guidance(self, additional_instructions:str) -> str:
         """Build policy guidance based on additional instructions."""
-        if (not additional_instructions) or (additional_instructions in ["", " "]):
-            content=f"""You are a helpful assistant with access to tools.\n Tool Usage Constraint: {additional_instructions}."""
+        content=f"""You are a helpful assistant with access to tools.\n Tool Usage Constraint: {additional_instructions}."""
         return SystemMessage(content=content)
 
     def _build_system_message(self) -> str:
@@ -388,7 +387,7 @@ INITIAL DATA:
         if isinstance(input, str):
             lc_messages.append(HumanMessage(content=input))
         else:
-            if additional_instructions:
+            if (additional_instructions) and (additional_instructions not in [""," "]):
                 lc_messages.append(self._build_policy_guidance(additional_instructions=additional_instructions))
             lc_messages.extend(self._messages_to_langchain(input))
 
