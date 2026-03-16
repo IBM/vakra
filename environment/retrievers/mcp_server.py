@@ -183,6 +183,20 @@ class FastAPIMCPServer:
         """List all available tools."""
         if not self.tools_cache:
             await self.initialize()
+
+        # Server-side checksum verification (opt-in via MCP_VERIFY_CHECKSUMS=1).
+        capability_id_str = os.getenv("CAPABILITY_ID", "")
+        domain = os.getenv("MCP_DOMAIN", "")
+        if capability_id_str and domain:
+            try:
+                from environment.tool_checksums import verify_checksum
+                verify_checksum(int(capability_id_str), domain, self.tools_cache)
+            except ImportError:
+                pass  # module not installed in this container image — skip verification
+            except ValueError as exc:
+                logger.error("Server-side tool checksum verification failed: %s", exc)
+                raise
+
         return self.tools_cache
 
     async def call_tool(self, name: str, arguments: Dict[str, Any]) -> List[TextContent]:

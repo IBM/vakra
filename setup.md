@@ -556,3 +556,118 @@ make start
 ```
 
 This stops/removes all existing benchmark containers, pulls the freshly pushed image, and restarts all four containers.
+
+---
+
+## Optional: Expose FastAPI for Browser / Swagger UI
+
+By default, the benchmark runner connects to containers via `docker exec` (stdio) and no ports are exposed. If you want to browse the Swagger UI or fetch the OpenAPI spec from your host, use the ports override file:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.ports.yml up -d
+```
+
+| Capability | URL |
+|------------|-----|
+| Capability 1 | http://localhost:8010/docs |
+| Capability 2 | http://localhost:8020/docs |
+| Capability 3 | http://localhost:8030/docs |
+| Capability 4 (REST) | http://localhost:8040/docs |
+| Capability 4 (Retriever) | http://localhost:8041/docs |
+
+You can also download the OpenAPI spec without port mapping using:
+
+```bash
+python examples/download_spec.py --capability-id 2
+python examples/download_spec.py --capability-id 4 --port 8001   # retriever
+```
+
+---
+
+## Optional: MCP Tools Explorer
+
+A local web UI for browsing and invoking MCP tools interactively — without writing any code or running a benchmark.
+
+### What it does
+
+- **Capability + domain selector** — pick a capability (1–4) and a domain; the domain list is filtered to only the domains that exist for that capability
+- **Tool browser** — searchable list of all tools the MCP server exposes for that capability/domain
+- **Inspect** — click any tool to see its full description and parameter schema
+- **Invoke** — fill in parameters via auto-generated form fields (or paste raw JSON) and call the tool live against the running container; see the result inline
+
+### 1. Install dependencies
+
+```bash
+pip install fastapi uvicorn
+```
+
+These are lightweight and only needed for the explorer — they are not required for `benchmark_runner.py`.
+
+### 2. Make sure containers are running
+
+```bash
+docker compose up -d   # or: make start
+```
+
+### 3. Start the explorer
+
+Run from the **project root**:
+
+```bash
+uvicorn tools_explorer.app:app --reload --port 7860
+```
+
+Then open **http://localhost:7860** in your browser.
+
+### Usage
+
+1. Click a **Capability** card in the left sidebar — the domain dropdown updates automatically
+2. Select a **Domain** and click **Load Tools**
+3. Click any tool in the list to open its detail panel
+4. Fill in parameters and click **Invoke** to call the tool against the live container
+5. Use **{ } Raw JSON** to switch from form mode to a free-form JSON input
+
+### Notes
+
+- The explorer connects to containers the same way `benchmark_runner.py` does — via `docker exec` stdio, no port mapping required
+- `--reload` restarts the server automatically when you edit `tools_explorer/app.py`; drop it for a stable session
+- To run on a different port: `--port <port>`
+
+---
+
+## Optional: Phoenix / Arize Observability
+
+[Phoenix](https://phoenix.arize.com) provides a local LLM tracing UI. It is off by default.
+
+### 1. Start Phoenix alongside the benchmark containers
+
+```bash
+docker compose --profile phoenix up -d
+```
+
+Phoenix UI: http://localhost:6006
+OTLP endpoint: http://localhost:6006/v1/traces
+
+### 2. Install the Python packages
+
+```bash
+pip install arize-phoenix-otel openinference-instrumentation-langchain
+# or via pyproject.toml extras:
+pip install -e ".[phoenix]"
+```
+
+### 3. Run with tracing enabled
+
+```bash
+python benchmark_runner.py --capability_id 2 --domain hockey --phoenix
+```
+
+Additional flags:
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--phoenix` | off | Enable Phoenix tracing |
+| `--phoenix-endpoint` | `http://localhost:6006/v1/traces` | OTLP HTTP endpoint |
+| `--phoenix-project` | `enterprise-benchmark` | Project name in Phoenix UI |
+
+If the Phoenix packages are not installed or Phoenix is not reachable, the benchmark continues without tracing (graceful degradation).

@@ -63,6 +63,8 @@ class MCPToolWrapper:
         profile_callback: Optional[Callable[[Dict[str, Any]], None]] = None,
         current_query_index: Optional[int] = None,
         cache_tools: bool = True,
+        capability_id: Optional[int] = None,
+        domain: Optional[str] = None,
     ):
         """Initialize MCPToolWrapper.
 
@@ -79,6 +81,12 @@ class MCPToolWrapper:
                     - query_index: Optional[int]
             current_query_index: Query index for profiling context
             cache_tools: Cache tool list to avoid repeated fetches
+            capability_id: Benchmark capability ID for client-side checksum
+                verification. If provided alongside ``domain``, the tool list
+                returned by the server is verified against the stored checksum
+                in tool_checksums.json before any benchmarking proceeds.
+            domain: Domain name for client-side checksum verification
+                (e.g. ``"address"``, ``"airline"``).
         """
         self.session = session
         self.use_openai_restrictions = use_openai_restrictions
@@ -86,10 +94,18 @@ class MCPToolWrapper:
         self.profile_callback = profile_callback
         self.current_query_index = current_query_index
         self.cache_tools = cache_tools
+        self.capability_id = capability_id
+        self.domain = domain
         self._tools_cache: Optional[List[StructuredTool]] = None
 
     async def get_tools(self) -> List[StructuredTool]:
         """Fetch tools from MCP server and convert to LangChain tools.
+
+        If ``capability_id`` and ``domain`` were supplied at construction time,
+        the raw MCP tool list is verified against the stored checksum in
+        tool_checksums.json before conversion. A mismatch raises ``ValueError``
+        immediately so benchmarking is aborted rather than silently run against
+        the wrong domain's tools.
 
         Returns:
             List of StructuredTool instances with proper args_schema set
@@ -98,6 +114,13 @@ class MCPToolWrapper:
             return self._tools_cache
 
         response = await self.session.list_tools()
+
+        # Client-side checksum verification: confirm the server returned the
+        # expected tools for this (capability_id, domain) pair.
+        if self.capability_id is not None and self.domain:
+            from environment.tool_checksums import verify_checksum
+            verify_checksum(self.capability_id, self.domain, response.tools)
+
         tools = [self._create_langchain_tool(t) for t in response.tools]
 
         if self.cache_tools:
