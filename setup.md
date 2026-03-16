@@ -352,14 +352,37 @@ Two ways to run e2e tests depending on whether containers are already running:
 
 ---
 
-**Option 1 — `make e2e-quick` (containers already running)**
+**Option 1 — `make e2e-quick` / `make e2e-quick-<provider>` (containers already running)**
 
 Use this after `make build && docker compose up -d` or `make start`. No data re-download, no container restart.
 
+Each target validates the required credentials for its provider:
+
 ```bash
+# OpenAI (default)
 export OPENAI_API_KEY=sk-...
 make e2e-quick
+
+# RITS
+export RITS_API_KEY=...
+make e2e-quick-rits
+
+# WatsonX
+export WATSONX_APIKEY=...
+export WATSONX_PROJECT_ID=...   # or WATSONX_SPACE_ID
+make e2e-quick-watsonx
+
+# LiteLLM proxy
+export LITELLM_API_KEY=...
+export LITELLM_BASE_URL=https://your-litellm-proxy
+make e2e-quick-litellm
+
+# Anthropic
+export ANTHROPIC_API_KEY=...
+make e2e-quick-anthropic
 ```
+
+Model overrides: set `RITS_MODEL`, `WATSONX_MODEL`, `OPENAI_MODEL`, `LITELLM_MODEL`, or `ANTHROPIC_MODEL` before running.
 
 ---
 
@@ -502,7 +525,11 @@ make setup      # download → build → test → start → validate
 | `make stop` | Stop and remove all benchmark containers |
 | `make clean` | Stop containers and remove the local `m3_environ` Docker image |
 | `make e2e` | Run end-to-end benchmark tests (requires `HF_TOKEN` + `OPENAI_API_KEY`) |
-| `make e2e-quick` | Run e2e tests against already-running containers — skips download and container restart (requires `OPENAI_API_KEY` only) |
+| `make e2e-quick` | Run e2e tests against already-running containers — OpenAI provider (requires `OPENAI_API_KEY`) |
+| `make e2e-quick-rits` | Same, using RITS provider (requires `RITS_API_KEY`) |
+| `make e2e-quick-watsonx` | Same, using WatsonX provider (requires `WATSONX_APIKEY` + project/space ID) |
+| `make e2e-quick-litellm` | Same, using LiteLLM proxy (requires `LITELLM_API_KEY` + `LITELLM_BASE_URL`) |
+| `make e2e-quick-anthropic` | Same, using Anthropic provider (requires `ANTHROPIC_API_KEY`) |
 | `make logs` | Last 20 log lines per container |
 
 ---

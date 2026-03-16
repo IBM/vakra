@@ -6,10 +6,14 @@ Tests the full pipeline:
   3. Run benchmark_runner.py for capabilities 1, 2, 3, and 4
   4. Validate the output JSON files
 
-Provider selection (first available wins):
-  - RITS:     RITS_API_KEY
-  - WatsonX:  WATSONX_APIKEY + (WATSONX_PROJECT_ID or WATSONX_SPACE_ID)
-  - OpenAI:   OPENAI_API_KEY
+Provider selection:
+  Set E2E_PROVIDER to force a specific provider, or let auto-detection pick
+  the first available credentials (priority: RITS > WatsonX > OpenAI):
+  - RITS:      RITS_API_KEY
+  - WatsonX:   WATSONX_APIKEY + (WATSONX_PROJECT_ID or WATSONX_SPACE_ID)
+  - OpenAI:    OPENAI_API_KEY
+  - LiteLLM:   LITELLM_API_KEY + LITELLM_BASE_URL  (requires E2E_PROVIDER=litellm)
+  - Anthropic: ANTHROPIC_API_KEY                    (requires E2E_PROVIDER=anthropic)
 
 Requirements:
     HF_TOKEN              - HuggingFace token for data download
@@ -45,6 +49,21 @@ Usage:
     # Skip container setup (containers already running)
     E2E_SKIP_SETUP=1 RITS_API_KEY=... python -m pytest tests/e2e/test_benchmark_e2e.py -v -s
 
+    # LiteLLM (requires E2E_PROVIDER to avoid being shadowed by auto-detection)
+    E2E_SKIP_SETUP=1 E2E_PROVIDER=litellm LITELLM_API_KEY=... LITELLM_BASE_URL=... \\
+        python -m pytest tests/e2e/test_benchmark_e2e.py -v -s
+
+    # Anthropic
+    E2E_SKIP_SETUP=1 E2E_PROVIDER=anthropic ANTHROPIC_API_KEY=... \\
+        python -m pytest tests/e2e/test_benchmark_e2e.py -v -s
+
+    # Or use make targets (handle credential checks automatically):
+    #   make e2e-quick            — OpenAI
+    #   make e2e-quick-rits       — RITS
+    #   make e2e-quick-watsonx    — WatsonX
+    #   make e2e-quick-litellm    — LiteLLM
+    #   make e2e-quick-anthropic  — Anthropic
+
 Notes:
     - Containers are started once (module-scoped fixture) and shared across all tests.
     - Each capability writes to its own isolated output directory.
@@ -68,9 +87,11 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 # ---------------------------------------------------------------------------
 
 def _detect_provider() -> Tuple[str, Optional[str]]:
-    """Return (provider, model) for the first available set of credentials.
+    """Return (provider, model) based on E2E_PROVIDER or credential auto-detection.
 
-    Priority: RITS > WatsonX > OpenAI
+    If E2E_PROVIDER is set, that provider is used directly (the Makefile
+    e2e-quick-* targets set this).  Otherwise the first available credentials
+    win (priority: RITS > WatsonX > OpenAI).
 
     Returns:
         Tuple of (provider_name, model_or_None).
@@ -78,6 +99,17 @@ def _detect_provider() -> Tuple[str, Optional[str]]:
     Raises:
         pytest.fail if no credentials are found.
     """
+    forced = os.environ.get("E2E_PROVIDER", "").strip().lower()
+
+    if forced == "litellm":
+        model = os.environ.get("LITELLM_MODEL", None)
+        return "litellm", model
+
+    if forced == "anthropic":
+        model = os.environ.get("ANTHROPIC_MODEL", None)
+        return "anthropic", model
+
+    # Auto-detect: RITS > WatsonX > OpenAI
     # 1. RITS
     if os.environ.get("RITS_API_KEY"):
         model = os.environ.get("RITS_MODEL", "llama-3-3-70b-instruct")
@@ -100,7 +132,9 @@ def _detect_provider() -> Tuple[str, Optional[str]]:
         "No LLM provider credentials found. Set one of:\n"
         "  RITS_API_KEY\n"
         "  WATSONX_APIKEY + WATSONX_PROJECT_ID (or WATSONX_SPACE_ID)\n"
-        "  OPENAI_API_KEY"
+        "  OPENAI_API_KEY\n"
+        "  LITELLM_API_KEY + LITELLM_BASE_URL  (with E2E_PROVIDER=litellm)\n"
+        "  ANTHROPIC_API_KEY                    (with E2E_PROVIDER=anthropic)"
     )
 
 
