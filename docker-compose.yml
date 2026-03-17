@@ -18,6 +18,7 @@ x-base: &base
   image: benchmark_environ
   environment:
     MCP_DB_ROOT: /app/db
+    MCP_VERIFY_CHECKSUMS: "1"
   volumes:
     - ./data/databases:/app/db:ro
     - ./environment/configs:/app/environment/configs:ro
