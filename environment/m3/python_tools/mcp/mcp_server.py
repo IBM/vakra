@@ -6,7 +6,7 @@ import logging
 import os
 import yaml
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, TypedDict
 import pathlib
 
 from mcp.server import Server
@@ -32,6 +32,18 @@ from .config import MCPServerConfig
 logger = logging.getLogger(__name__)
 
 GET_DATA_FCN = "get_data"
+
+
+class KeyDetail(TypedDict):
+    name: str
+    dtype: str
+    first_3_values: list
+
+
+class DataPeek(TypedDict):
+    handle: str  # Use this string to reference the stored data in subsequent tool calls
+    num_records: int
+    key_details: list[KeyDetail]
 
 
 class GetDataInput(BaseModel):
@@ -201,7 +213,7 @@ class LiveMCPServer(ABC):
         self._handle_store[handle] = data
         return handle
 
-    def _make_data_peek(self, handle: str, data: dict) -> dict:
+    def _make_data_peek(self, handle: str, data: dict) -> DataPeek:
         """Build a compact peek dict for a data-table result."""
         dtypes = data.get(DTYPE_METADATA_KEY, {})
         data_keys = [k for k in data.keys() if k != DTYPE_METADATA_KEY]

@@ -134,6 +134,7 @@ from benchmark.runner_helpers import (
     CapabilityLogger,
 )
 from benchmark.validate_clients import list_tools_for_domains
+from environment.m3.python_tools.mcp.mcp_server import DataPeek
 
 load_dotenv()
 
@@ -222,7 +223,7 @@ async def run_benchmark_for_domain(
                         data_result = await get_data_tool.ainvoke(
                             {"tool_universe_id": item.uuid}
                         )
-                        parsed_data = json.loads(data_result)
+                        parsed_data: DataPeek = json.loads(data_result)
 
                         # Handle MCP TextContent format
                         if isinstance(parsed_data, list) and parsed_data:
