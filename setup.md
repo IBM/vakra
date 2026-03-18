@@ -534,55 +534,31 @@ make setup      # download → build → test → start → validate
 
 ---
 
-## Rebuilding and Pushing the Docker Image (to be used by M3 ENV maintainers only)
+## Rebuilding the Docker Image
 
 Run these commands from the **project root** whenever `docker/Dockerfile.unified`, `apis/bpo/`, or any other server code changes.
 
-### 0. Log in to Docker Hub (one-time)
+### 1. Build and test
 
 ```bash
-docker login docker.io --username
-# Username: amurthi44g1wd
-# Password: <your Docker Hub password or access token>
-```
-
-> **Using an access token?** The token must have **Read & Write** (or **Read, Write & Delete**) scope — a read-only token will cause `insufficient scopes` errors on push.
->
-> Create one at **Docker Hub → Account Settings → Personal access tokens → Generate new token**, set Access permissions to **Read & Write**, then use the token as the password above.
-
-### 1. One-command release (recommended)
-
-```bash
-make release
-```
-
-This runs `build → test → tag → push` in sequence and stops on the first failure.
-
-### 2. Step by step
-
-Ignore the below four steps, if you already did a `make release`
-
-```bash
-make build      # docker build -t m3_environ -f docker/Dockerfile.unified .
+make build      # docker build -t benchmark_environ -f docker/Dockerfile.unified .
 make test       # smoke-test: file checks + M3 REST health + BPO/M3 MCP handshakes
-make tag        # docker tag m3_environ docker.io/amurthi44g1wd/m3_environ:latest
-make push       # docker push docker.io/amurthi44g1wd/m3_environ:latest
 ```
 
-After restarting containers you can also run a live connection check against all four containers:
+After rebuilding, restart containers and run a live connection check:
 
 ```bash
-make start      # restart containers with new image
+make start      # docker compose up -d
 make validate   # python benchmark/validate_clients.py — tests every MCP server
 ```
 
-### 3. Restart containers to pick up the new image
+### 2. Restart containers to pick up the new image
 
 ```bash
 make start
 ```
 
-This stops/removes all existing benchmark containers, pulls the freshly pushed image, and restarts all four containers.
+This starts all benchmark containers via `docker compose up -d`.
 
 ---
 
