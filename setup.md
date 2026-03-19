@@ -562,6 +562,63 @@ This starts all benchmark containers via `docker compose up -d`.
 
 ---
 
+## Troubleshooting: Docker Hub Pull Rate Limit
+
+If `make build` or `make pull` fails with:
+
+```
+toomanyrequests: You have reached your unauthenticated pull rate limit.
+```
+
+You're hitting Docker Hub's anonymous pull limit (100 pulls / 6 hours per IP). Fix with one of the options below.
+
+### Option 1 — Log in to Docker Hub (recommended)
+
+Authenticated accounts have a higher limit (200+ pulls / 6 hours). A free account is sufficient.
+
+```bash
+docker login   # or: podman login docker.io
+```
+
+Then retry `make build` or `make pull`.
+
+### Option 2 — Use an alternative base image registry
+
+Edit [docker/Dockerfile.unified](docker/Dockerfile.unified) line 26 to pull `python:3.11-slim` from a mirror instead of Docker Hub:
+
+```dockerfile
+# Microsoft Container Registry (no rate limit)
+FROM mcr.microsoft.com/devcontainers/python:3.11
+
+# GitHub Container Registry mirror (community-maintained)
+FROM ghcr.io/tschm/python:3.11-slim
+```
+
+Then rebuild:
+
+```bash
+make build
+```
+
+### Option 3 — Use Podman with a configured registry mirror
+
+If you're on a system with a local or corporate registry mirror, point Podman at it:
+
+```bash
+# Example: mirror configured at myregistry.example.com
+DOCKER=podman make build
+```
+
+Or set a mirror in `/etc/containers/registries.conf`:
+
+```toml
+[[registry]]
+prefix = "docker.io"
+location = "myregistry.example.com"
+```
+
+---
+
 ## Optional: Expose FastAPI for Browser / Swagger UI
 
 By default, the benchmark runner connects to containers via `docker exec` (stdio) and no ports are exposed. If you want to browse the Swagger UI or fetch the OpenAPI spec from your host, use the ports override file:
