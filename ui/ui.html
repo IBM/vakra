@@ -539,12 +539,16 @@
       width: 60px;
     }
 
+    .leaderboard-table .col-agent {
+      width: 150px;
+    }
+
     .leaderboard-table .col-model {
-      width: 170px;
+      width: 150px;
     }
 
     .leaderboard-table .col-metric {
-      width: calc((100% - 84px - 170px) / 5);
+      width: calc((100% - 60px - 150px - 150px) / 6);
     }
 
     .model-cell {
@@ -690,6 +694,7 @@
           <table id="leaderboard-table" class="leaderboard-table">
             <colgroup>
               <col class="col-rank">
+              <col class="col-agent">
               <col class="col-model">
               <col class="col-metric">
               <col class="col-metric">
@@ -700,14 +705,15 @@
             <thead>
               <tr>
                 <th>Rank</th>
+                <th>Agent</th>
                 <th>Model</th>
                 <th class="sortable" data-sort="overall">
                   Overall <span class="sort-indicator"></span>
                 </th>
-                <th class="sortable" data-sort="api">
+                <th class="sortable" data-sort="api_chaining">
                   API chaining <span class="sort-indicator"></span>
                 </th>
-                <th class="sortable" data-sort="tool">
+                <th class="sortable" data-sort="tool_selection">
                   Tool selection <span class="sort-indicator"></span>
                 </th>
                 <th class="sortable" data-sort="multihop">
@@ -720,111 +726,8 @@
               </tr>
             </thead>
 
-            <tbody>
-              <tr data-overall="29.4" data-api="0.0" data-tool="50.46" data-multihop="27.14" data-multiturn="40.00">
-                <td class="rank">
-                  <div class="rank-num">01</div>
-                </td>
-                <td class="model-cell">
-                  <strong class="model-name">GPT-OSS-120B</strong><br>
-                  <a href="https://github.com/IBM/M3Benchmark" target="_blank" class="agent-link">
-                    <em>ReAct (Prompt)</em>
-                  </a><br>
-                  <span class="model-date">Mar 24, 2026</span>
-                </td>
-                <td>
-                  <div class="score">29.4</div>
-                  <div class="score-bar"><span style="width:74.8%"></span></div>
-                </td>
-                <td>0.0</td>
-                <td>50.46</td>
-                <td>27.14</td>
-                <td>40.00</td>
-              </tr>
-
-              <tr data-overall="29.75" data-api="0.0" data-tool="54.35" data-multihop="27.59" data-multiturn="37.06">
-                <td class="rank">
-                  <div class="rank-num">02</div>
-                </td>
-                <td class="model-cell">
-                  <strong class="model-name">LLAMA-405B</strong><br>
-                  <a href="https://github.com/IBM/M3Benchmark" target="_blank" class="agent-link">
-                    <em>ReAct (Prompt)</em>
-                  </a><br>
-                  <span class="model-date">Mar 19, 2026</span>
-                </td>
-                <td>
-                  <div class="score">29.75</div>
-                  <div class="score-bar"><span style="width:68.2%"></span></div>
-                </td>
-                <td>0.0</td>
-                <td>54.35</td>
-                <td>27.59</td>
-                <td>37.06</td>
-              </tr>
-
-              <tr data-overall="19.90" data-api="0.0" data-tool="49.5" data-multihop="30.08" data-multiturn="0.0">
-                <td class="rank">
-                  <div class="rank-num">03</div>
-                </td>
-                <td class="model-cell">
-                  <strong class="model-name">Claude-Sonnet-4.5</strong><br>
-                  <a href="https://github.com/IBM/M3Benchmark" target="_blank" class="agent-link">
-                    <em>ReAct (Prompt)</em>
-                  </a><br>
-                  <span class="model-date">Mar 19, 2026</span>
-                </td>
-                <td>
-                  <div class="score">19.90</div>
-                  <div class="score-bar"><span style="width:61.4%"></span></div>
-                </td>
-                <td>0.0</td>
-                <td>49.5</td>
-                <td>30.08</td>
-                <td>0.0</td>
-              </tr>
-
-              <tr data-overall="0.0" data-api="0.0" data-tool="0.0" data-multihop="0.0" data-multiturn="0.0">
-                <td class="rank">
-                  <div class="rank-num">03</div>
-                </td>
-                <td class="model-cell">
-                  <strong class="model-name">Gemini-3-Flash-Preview</strong><br>
-                  <a href="https://github.com/IBM/M3Benchmark" target="_blank" class="agent-link">
-                    <em>ReAct (Prompt)</em>
-                  </a><br>
-                  <span class="model-date">Mar 19, 2026</span>
-                </td>
-                <td>
-                  <div class="score">0.0</div>
-                  <div class="score-bar"><span style="width:61.4%"></span></div>
-                </td>
-                <td>0.0</td>
-                <td>0.0</td>
-                <td>0.0</td>
-                <td>0.0</td>
-              </tr>
-              
-              <tr data-overall="27.55" data-api="0.0" data-tool="50.0" data-multihop="25.80" data-multiturn="34.41">
-                <td class="rank">
-                  <div class="rank-num">03</div>
-                </td>
-                <td class="model-cell">
-                  <strong class="model-name">Granite-4.0-h-small</strong><br>
-                  <a href="https://github.com/IBM/M3Benchmark" target="_blank" class="agent-link">
-                    <em>ReAct (Prompt)</em>
-                  </a><br>
-                  <span class="model-date">Mar 19, 2026</span>
-                </td>
-                <td>
-                  <div class="score">27.55</div>
-                  <div class="score-bar"><span style="width:61.4%"></span></div>
-                </td>
-                <td>0.0</td>
-                <td>50.0</td>
-                <td>25.80</td>
-                <td>34.41</td>
-              </tr>              
+            <tbody id="leaderboard-tbody">
+              <tr><td colspan="8" style="text-align:center;padding:24px;color:var(--muted)">Loading…</td></tr>
             </tbody>
           </table>
         </div>
@@ -1041,6 +944,64 @@
   </div>
 
   <script>
+    // ── Leaderboard: fetch from API and render rows ──────────────────────────
+    (function () {
+      const tbody = document.getElementById('leaderboard-tbody');
+
+      function fmt(val) {
+        return val === null || val === undefined ? '—' : Number(val).toFixed(2);
+      }
+
+      function buildRow(entry, maxOverall) {
+        const s = entry.scores;
+        const barPct = maxOverall > 0 ? ((entry.overall / maxOverall) * 100).toFixed(1) : '0';
+        const rank = String(entry.rank).padStart(2, '0');
+        const tr = document.createElement('tr');
+        tr.dataset.overall  = entry.overall;
+        tr.dataset.api_chaining = s.api_chaining;
+        tr.dataset.tool_selection = s.tool_selection;
+        tr.dataset.multihop = s.multihop;
+        tr.dataset.multiturn = s.multiturn;
+        tr.innerHTML = `
+          <td class="rank"><div class="rank-num">${rank}</div></td>
+          <td class="agent-cell">
+            <a href="${entry.agent_url}" target="_blank" class="agent-link"><em>${entry.agent}</em></a><br>
+            <span class="model-date">${entry.date}</span>
+          </td>
+          <td class="model-cell">
+            <strong class="model-name">${entry.model}</strong>
+          </td>
+          <td>
+            <div class="score">${fmt(entry.overall)}</div>
+            <div class="score-bar"><span style="width:${barPct}%"></span></div>
+          </td>
+          <td>${fmt(s.api_chaining)}</td>
+          <td>${fmt(s.tool_selection)}</td>
+          <td>${fmt(s.multihop)}</td>
+          <td>${fmt(s.multiturn)}</td>`;
+        return tr;
+      }
+
+      fetch('/api/leaderboard')
+        .then(r => r.json())
+        .then(rows => {
+          tbody.innerHTML = '';
+          if (!rows.length) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted)">No entries yet.</td></tr>';
+            return;
+          }
+          const maxOverall = Math.max(...rows.map(r => r.overall));
+          rows.forEach(entry => tbody.appendChild(buildRow(entry, maxOverall)));
+          // Re-run the sort to apply default sort state
+          const table = document.getElementById('leaderboard-table');
+          if (table) sortTable('overall', 'desc');
+        })
+        .catch(() => {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:#dc2626">Failed to load leaderboard data.</td></tr>';
+        });
+    })();
+
+    // ── Active nav links on scroll ───────────────────────────────────────────
     const links = [...document.querySelectorAll('.toc a, .top-links a')];
     const sections = [...document.querySelectorAll('main [id]')];
 
@@ -1059,64 +1020,55 @@
     window.addEventListener('scroll', setActive, { passive: true });
     window.addEventListener('load', setActive);
 
-    (function () {
+    // ── Leaderboard: sort logic ──────────────────────────────────────────────
+    let _lbSortKey = 'overall';
+    let _lbSortDir = 'desc';
+
+    function sortTable(sortKey, direction) {
       const table = document.getElementById('leaderboard-table');
       if (!table) return;
-
       const tbody = table.querySelector('tbody');
       const headers = table.querySelectorAll('th.sortable');
-      let currentSortKey = 'overall';
-      let currentDirection = 'desc';
 
-      function updateRanks() {
-        const rows = Array.from(tbody.querySelectorAll('tr'));
-        rows.forEach((row, index) => {
-          const rankNum = row.querySelector('.rank-num');
-          if (rankNum) rankNum.textContent = String(index + 1).padStart(2, '0');
-        });
+      if (direction !== undefined) {
+        _lbSortKey = sortKey;
+        _lbSortDir = direction;
+      } else if (_lbSortKey === sortKey) {
+        _lbSortDir = _lbSortDir === 'desc' ? 'asc' : 'desc';
+      } else {
+        _lbSortKey = sortKey;
+        _lbSortDir = 'desc';
       }
 
-      function updateHeaderState(activeKey, direction) {
-        headers.forEach((header) => {
-          const key = header.dataset.sort;
-          const indicator = header.querySelector('.sort-indicator');
-          header.classList.remove('active');
-          if (key === activeKey) {
-            header.classList.add('active');
-            indicator.textContent = direction === 'desc' ? '↓' : '↑';
-          } else {
-            indicator.textContent = '↕';
-          }
-        });
-      }
+      const rows = Array.from(tbody.querySelectorAll('tr[data-overall]'));
+      rows.sort((a, b) => {
+        const aVal = parseFloat(a.dataset[_lbSortKey]);
+        const bVal = parseFloat(b.dataset[_lbSortKey]);
+        return _lbSortDir === 'asc' ? aVal - bVal : bVal - aVal;
+      });
+      rows.forEach(row => tbody.appendChild(row));
 
-      function sortTable(sortKey, direction) {
-        const rows = Array.from(tbody.querySelectorAll('tr'));
-        rows.sort((a, b) => {
-          const aVal = parseFloat(a.dataset[sortKey]);
-          const bVal = parseFloat(b.dataset[sortKey]);
-          return direction === 'asc' ? aVal - bVal : bVal - aVal;
-        });
-        rows.forEach((row) => tbody.appendChild(row));
-        updateRanks();
-        updateHeaderState(sortKey, direction);
-      }
-
-      headers.forEach((header) => {
-        header.addEventListener('click', () => {
-          const sortKey = header.dataset.sort;
-          if (currentSortKey === sortKey) {
-            currentDirection = currentDirection === 'desc' ? 'asc' : 'desc';
-          } else {
-            currentSortKey = sortKey;
-            currentDirection = 'desc';
-          }
-          sortTable(currentSortKey, currentDirection);
-        });
+      // Update rank numbers
+      rows.forEach((row, i) => {
+        const rankNum = row.querySelector('.rank-num');
+        if (rankNum) rankNum.textContent = String(i + 1).padStart(2, '0');
       });
 
-      sortTable(currentSortKey, currentDirection);
-    })();
+      // Update header indicators
+      headers.forEach(header => {
+        const key = header.dataset.sort;
+        const indicator = header.querySelector('.sort-indicator');
+        header.classList.toggle('active', key === _lbSortKey);
+        indicator.textContent = key === _lbSortKey ? (_lbSortDir === 'desc' ? '↓' : '↑') : '↕';
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const headers = document.querySelectorAll('#leaderboard-table th.sortable');
+      headers.forEach(header => {
+        header.addEventListener('click', () => sortTable(header.dataset.sort));
+      });
+    });
   </script>
 </body>
 </html>
