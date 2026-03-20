@@ -1,43 +1,49 @@
 """
 Leaderboard data layer.
 
-All agent data is read from / written to ``leaderboard_data.json``.
-Score keys use pipe-delimited paths that mirror the column hierarchy:
+Agents are stored in leaderboard_data.json. Each entry has:
+  {
+    "model":     "GPT-OSS-120B",
+    "agent":     "ReAct (Prompt)",
+    "agent_url": "https://...",
+    "date":      "Mar 24, 2026",
+    "scores": {
+      "api":      0.0,
+      "tool":     50.46,
+      "multihop": 27.14,
+      "multiturn": 40.00
+    }
+  }
 
-    "Single Turn|API Styles|Business Intelligence": 90.0
-
-This keeps the JSON simple and avoids tuple-key workarounds.
+Scores are on a 0-100 scale. Overall is computed as the mean of the four scores.
 """
 
 import json
-import pandas as pd
 from pathlib import Path
+from pydantic import BaseModel
 from typing import Optional
-
-# ---------------------------------------------------------------------------
-# Column hierarchy  (turn_type, task_type, metric)
-# ---------------------------------------------------------------------------
-COLUMN_HIERARCHY = [
-    ("Single Turn", "API Styles", "Business Intelligence"),
-    ("Single Turn", "API Styles", "Dashboard APIs"),
-    ("Single Turn", "Reasoning", "Multi-hop"),
-    ("Single Turn", "Reasoning", "Policy Adherence"),
-    ("Multi-turn", "Joint Structured/ Unstructured Reasoning", "Multi-hop"),
-]
 
 DATA_FILE = Path(__file__).parent / "leaderboard_data.json"
 
-
-def _score_key(turn: str, task: str, metric: str) -> str:
-    """Build the pipe-delimited key used in JSON score dicts."""
-    return f"{turn}|{task}|{metric}"
+SCORE_KEYS = ["api", "tool", "multihop", "multiturn"]
 
 
-# ---------------------------------------------------------------------------
-# Load / save
-# ---------------------------------------------------------------------------
+class Scores(BaseModel):
+    api: float = 0.0
+    tool: float = 0.0
+    multihop: float = 0.0
+    multiturn: float = 0.0
+
+
+class AgentEntry(BaseModel):
+    model: str
+    agent: str = "ReAct (Prompt)"
+    agent_url: str = "https://github.com/IBM/M3Benchmark"
+    date: str = ""
+    scores: Scores
+
+
 def load_agents() -> list:
-    """Load agents from the JSON file."""
     if DATA_FILE.exists():
         with open(DATA_FILE) as f:
             return json.load(f)
@@ -45,56 +51,28 @@ def load_agents() -> list:
 
 
 def save_agents(agents: list):
-    """Persist agents list to JSON."""
     with open(DATA_FILE, "w") as f:
         json.dump(agents, f, indent=2)
 
 
-# ---------------------------------------------------------------------------
-# DataFrame builder
-# ---------------------------------------------------------------------------
-def build_dataframe(agents: Optional[list] = None) -> pd.DataFrame:
-    """Build a MultiIndex DataFrame from agent dicts.
-
-    Columns: Rank | Agent | Model | <metrics...> | Overall
-    """
-    if agents is None:
-        agents = load_agents()
-
+def compute_rows(agents: list) -> list:
+    """Return leaderboard rows sorted by overall descending, with rank assigned."""
     rows = []
     for entry in agents:
-        row = {
-            "Agent": entry.get("agent", ""),
-            "Model": entry.get("model", ""),
-        }
-        scores = entry.get("scores", {})
+        s = entry.get("scores", {})
+        vals = [s.get(k, 0.0) for k in SCORE_KEYS]
+        overall = round(sum(vals) / len(vals), 2) if vals else 0.0
+        rows.append({
+            "model":     entry.get("model", ""),
+            "agent":     entry.get("agent", ""),
+            "agent_url": entry.get("agent_url", "https://github.com/IBM/M3Benchmark"),
+            "date":      entry.get("date", ""),
+            "scores": {k: s.get(k, 0.0) for k in SCORE_KEYS},
+            "overall":   overall,
+        })
 
-        for turn, task, metric in COLUMN_HIERARCHY:
-            key = _score_key(turn, task, metric)
-            row[(turn, task, metric)] = scores.get(key)
-
-        # Overall = mean of non-null metric scores
-        metric_vals = [
-            v for k, v in row.items()
-            if k not in ("Agent", "Model") and v is not None and isinstance(v, (int, float))
-        ]
-        row[("", "", "Overall")] = round(sum(metric_vals) / len(metric_vals), 3) if metric_vals else 0.0
-        rows.append(row)
-
-    # Sort by Overall descending
-    rows.sort(key=lambda r: r.get(("", "", "Overall"), 0), reverse=True)
-
-    # Assign ranks
+    rows.sort(key=lambda r: r["overall"], reverse=True)
     for i, row in enumerate(rows, 1):
-        row[("", "", "Rank")] = i
-        row[("", "", "Agent")] = row.pop("Agent")
-        row[("", "", "Model")] = row.pop("Model")
+        row["rank"] = i
 
-    # MultiIndex columns
-    mi_cols = [("", "", "Rank"), ("", "", "Agent"), ("", "", "Model")]
-    mi_cols += [(t, task, m) for t, task, m in COLUMN_HIERARCHY]
-    mi_cols += [("", "", "Overall")]
-
-    data = [[row.get(col) for col in mi_cols] for row in rows]
-    columns = pd.MultiIndex.from_tuples(mi_cols, names=["Turn Type", "Task Type", "Metric"])
-    return pd.DataFrame(data, columns=columns)
+    return rows
