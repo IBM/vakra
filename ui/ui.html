@@ -710,10 +710,10 @@
                 <th class="sortable" data-sort="overall">
                   Overall <span class="sort-indicator"></span>
                 </th>
-                <th class="sortable" data-sort="api">
+                <th class="sortable" data-sort="api_chaining">
                   API chaining <span class="sort-indicator"></span>
                 </th>
-                <th class="sortable" data-sort="tool">
+                <th class="sortable" data-sort="tool_selection">
                   Tool selection <span class="sort-indicator"></span>
                 </th>
                 <th class="sortable" data-sort="multihop">
@@ -958,8 +958,8 @@
         const rank = String(entry.rank).padStart(2, '0');
         const tr = document.createElement('tr');
         tr.dataset.overall  = entry.overall;
-        tr.dataset.api      = s.api;
-        tr.dataset.tool     = s.tool;
+        tr.dataset.api_chaining = s.api_chaining;
+        tr.dataset.tool_selection = s.tool_selection;
         tr.dataset.multihop = s.multihop;
         tr.dataset.multiturn = s.multiturn;
         tr.innerHTML = `
@@ -975,8 +975,8 @@
             <div class="score">${fmt(entry.overall)}</div>
             <div class="score-bar"><span style="width:${barPct}%"></span></div>
           </td>
-          <td>${fmt(s.api)}</td>
-          <td>${fmt(s.tool)}</td>
+          <td>${fmt(s.api_chaining)}</td>
+          <td>${fmt(s.tool_selection)}</td>
           <td>${fmt(s.multihop)}</td>
           <td>${fmt(s.multiturn)}</td>`;
         return tr;

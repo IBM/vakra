@@ -8,8 +8,8 @@ Agents are stored in leaderboard_data.json. Each entry has:
     "agent_url": "https://...",
     "date":      "Mar 24, 2026",
     "scores": {
-      "api":      0.0,
-      "tool":     50.46,
+      "api_chaining":      0.0,
+      "tool_selection":     50.46,
       "multihop": 27.14,
       "multiturn": 40.00
     }
@@ -25,12 +25,12 @@ from typing import Optional
 
 DATA_FILE = Path(__file__).parent / "leaderboard_data.json"
 
-SCORE_KEYS = ["api", "tool", "multihop", "multiturn"]
+SCORE_KEYS = ["api_chaining", "tool_selection", "multihop", "multiturn"]
 
 
 class Scores(BaseModel):
-    api: float = 0.0
-    tool: float = 0.0
+    api_chaining: float = 0.0
+    tool_selection: float = 0.0
     multihop: float = 0.0
     multiturn: float = 0.0
 
