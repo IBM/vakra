@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>(µ³) — Multi-Hop, Multi-Source, Multi-Tool Agent Benchmark</title>
+  <meta name="description" content="(µ³- Bench) is a public benchmark for evaluating Enterprise AI agents across multi-hop, multi-source, and multi-tool reasoning in executable environments." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f7f9fc;
+      --bg-2: #eef4fb;
+      --panel: rgba(255,255,255,0.92);
+      --panel-strong: #ffffff;
+      --text: #13233a;
+      --muted: #5c6f8c;
+      --muted-2: #7a8ca7;
+      --line: #d9e3f0;
+      --line-strong: #c8d6e8;
+      --blue: #1e5fbf;
+      --blue-2: #3178de;
+      --teal: #0ea5a4;
+      --orange: #f59e0b;
+      --shadow: 0 10px 30px rgba(15, 35, 65, 0.08);
+      --radius: 18px;
+      --maxw: 1360px;
+      --sidebar-w: 250px;
+      --topbar-h: 70px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 0%, rgba(49,120,222,0.12), transparent 22%),
+        radial-gradient(circle at 85% 10%, rgba(14,165,164,0.08), transparent 18%),
+        linear-gradient(180deg, #f8fbff 0%, #f3f7fc 100%);
+      line-height: 1.5;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    code, .mono { font-family: "JetBrains Mono", monospace; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: var(--topbar-h);
+      backdrop-filter: blur(12px);
+      background: rgba(255,255,255,0.82);
+      border-bottom: 1px solid rgba(200,214,232,0.9);
+    }
+
+    .topbar-inner {
+      width: min(var(--maxw), calc(100% - 32px));
+      height: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+      box-shadow: 0 8px 18px rgba(49,120,222,0.18);
+    }
+
+    .brand-copy small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .top-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .top-links a {
+      color: var(--muted);
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      transition: 0.18s ease;
+    }
+
+    .top-links a:hover,
+    .top-links a.active {
+      color: var(--text);
+      background: #eef4fb;
+    }
+
+    .top-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      color: white;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+      font-weight: 700;
+      box-shadow: 0 8px 18px rgba(49,120,222,0.18);
+    }
+
+    .page {
+      width: min(var(--maxw), calc(100% - 32px));
+      margin: 24px auto 64px;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: calc(var(--topbar-h) + 18px);
+      align-self: start;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 18px 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .sidebar-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 800;
+      color: var(--muted-2);
+      margin-bottom: 10px;
+    }
+
+    .toc {
+      display: grid;
+      gap: 4px;
+    }
+
+    .toc a {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+      border-left: 2px solid transparent;
+    }
+
+    .toc a:hover,
+    .toc a.active {
+      background: #eef4fb;
+      color: var(--text);
+      border-left-color: var(--blue);
+    }
+
+    .sidebar-note {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .content {
+      min-width: 0;
+    }
+
+    .rank {
+      font-weight: 800;
+      text-align: left;
+    }
+
+    .hero-title {
+      font-size: clamp(28px, 4vw, 42px);
+      margin: 10px 0 16px;
+
+      background: linear-gradient(90deg, #ffd166, #ffb703);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+      /* Description */
+      .hero-desc {
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto 20px;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      /* Center buttons */
+      .hero-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }    
+
+    .hero {
+      background: linear-gradient(135deg, #0b2f63 0%, #1351a6 55%, #1f74d8 100%);
+      text-align: center;
+      color: white;
+      border-radius: 28px;
+      padding: 34px;
+      box-shadow: 0 18px 40px rgba(11,47,99,0.18);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      right: -110px;
+      top: -140px;
+      background: radial-gradient(circle, rgba(255,255,255,0.14), transparent 62%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(38px, 5vw, 64px);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+    }
+
+    .hero h1 .accent { color: #ffb347; }
+    .hero p {
+      max-width: 850px;
+      font-size: 18px;
+      line-height: 1.6;
+      margin: 16px 0 22px;
+      color: rgba(255,255,255,0.88);
+    }
+
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .btn.primary { background: white; color: var(--blue); }
+    .btn.secondary { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.16); }
+    .btn:hover { transform: translateY(-1px); }
+
+    .section {
+      margin-top: 22px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 32px;
+      letter-spacing: -0.04em;
+    }
+
+    .section-desc {
+      margin: 8px 0 0;
+      color: var(--muted);
+      max-width: 900px;
+    }
+
+    .kicker {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 16px; }
+
+    .card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 6px 18px rgba(15,35,65,0.04);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
+
+    .card p, .card li {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .pill-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .pill {
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: #eef4fb;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .icon-badge {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      margin-bottom: 14px;
+      background: #eef4fb;
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
+    .stat {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+    }
+    .stat .value { font-size: 30px; font-weight: 800; letter-spacing: -0.04em; }
+    .stat .label { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+    .bench-layout {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 16px;
+    }
+
+    .trace-box {
+      background: #0e2344;
+      color: #dfeaff;
+      border-radius: 18px;
+      padding: 16px;
+      font-size: 12px;
+      font-family: "JetBrains Mono", monospace;
+      overflow: auto;
+    }
+
+    .trace-box div { margin-bottom: 8px; white-space: nowrap; }
+    .trace-box span { color: #7fd2ff; }
+
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .compare .card { min-height: 100%; }
+    .compare h3 { margin-bottom: 14px; }
+    .compare ul { margin: 0; padding-left: 18px; }
+    .compare li { margin-bottom: 10px; }
+
+    .leaderboard-badges { display: flex; gap: 10px; flex-wrap: wrap; }
+    .badge {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #eef4fb;
+      border: 1px solid var(--line);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: white;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 840px;
+    }
+
+    th, td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #ebf0f7;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    thead th {
+      color: var(--muted-2);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: #f8fbff;
+    }
+
+    tbody tr:hover { background: #fafcff; }
+    .rank { font-weight: 800; color: var(--blue); }
+    .score { font-weight: 800; }
+    .sortable {
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      transition: color 0.18s ease;
+    }
+    .sortable:hover { color: var(--text); }
+    .sort-indicator {
+      font-size: 0.85em;
+      opacity: 0.7;
+      margin-left: 6px;
+    }
+    .sortable.active .sort-indicator {
+      opacity: 1;
+      font-weight: 700;
+    }
+    .score-bar {
+      width: 140px;
+      height: 10px;
+      background: #ebf0f7;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .score-bar span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--teal));
+      border-radius: inherit;
+    }
+
+    .resource-card { display: block; }
+    .resource-card:hover { border-color: #bad1ed; transform: translateY(-1px); }
+
+    .footer {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    @media (max-width: 1120px) {
+      .page { grid-template-columns: 1fr; }
+      .sidebar {
+        position: relative;
+        top: auto;
+      }
+      .bench-layout, .compare, .grid-4 { grid-template-columns: 1fr 1fr; }
+      .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      .topbar { height: auto; }
+      .topbar-inner {
+        width: calc(100% - 24px);
+        padding: 12px 0;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .top-links { justify-content: space-between; }
+      .hero, .section { padding: 20px; }
+      .grid-2, .grid-3, .grid-4, .bench-layout, .compare, .stats { grid-template-columns: 1fr; }
+      .section-title { font-size: 28px; }
+    }
+    /* Center all columns EXCEPT Overall (column 3) */
+    .leaderboard-table th:not(:nth-child(3)),
+    .leaderboard-table td:not(:nth-child(3)) {
+      text-align: center;
+    }
+
+    .leaderboard-table {
+      table-layout: fixed;
+      width: 100%;
+    }
+
+    .leaderboard-table .col-rank {
+      width: 60px;
+    }
+
+    .leaderboard-table .col-agent {
+      width: 150px;
+    }
+
+    .leaderboard-table .col-model {
+      width: 150px;
+    }
+
+    .leaderboard-table .col-metric {
+      width: calc((100% - 60px - 150px - 150px) / 6);
+    }
+
+    .model-cell {
+      min-width: 170px;
+      vertical-align: top;
+    }
+
+    .model-name {
+      display: inline-block;
+      margin-bottom: 2px;
+    }
+
+    .model-date {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .rank {
+      vertical-align: top;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .rank-num {
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--blue);
+    }
+
+    .agent-link {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .agent-link:hover {
+      color: var(--blue);
+      text-decoration: underline;
+    }
+
+    .agent-link em {
+      font-style: italic;
+    }
+
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#top">
+        <div class="brand-mark">µ³</div>
+        <div class="brand-copy">
+          <div>Benchmark</div>
+          <small>Multi-Hop · Multi-Source · Multi-Tool</small>
+        </div>
+      </a>
+
+      <nav class="top-links" aria-label="Primary">
+        <a href="#overview">Overview</a>
+        <a href="https://huggingface.co/datasets/ibm-research/M3Benchmark">Dataset</a>        
+        <a href="#leaderboard">Leaderboard</a>
+        <a href="https://github.com/IBM/M3Benchmark/issues/new?template=leaderboard_submission.yml">Submission</a>
+        <a href="#resources">Blog</a>
+      </nav>
+
+      <a class="top-cta" href="#resources">Get started</a>
+    </div>
+  </header>
+
+  <div class="page" id="top">
+    <aside class="sidebar" aria-label="Contents">
+      <div class="sidebar-title">Contents</div>
+      <nav class="toc">
+        <a href="#overview">About</a>
+        <a href="#leaderboard">Leaderboard</a>
+        <a href="#capabilities">Core capabilities</a>        
+        <a href="#resources">Get started</a>
+        <a href="#why">Benchmark Description</a>
+        <a href="#api-styles">Evaluation</a>
+        <a href="https://github.com/IBM/M3Benchmark/issues/new?template=leaderboard_submission.yml">Submission</a>
+        <a href="https://github.com/IBM/M3Benchmark/issues/new?template=leaderboard_submission.md">Contact Us</a>        
+        <!-- <a href="#reasoning">Reasoning tasks</a> -->
+      </nav>
+      <div class="sidebar-note">
+        This work is licensed under a CC-BY-NC-SA-4.0
+      </div>
+    </aside>
+
+    <main class="content">
+      <section class="hero" id="overview">
+        <div class="eyebrow">Public benchmark for enterprise AI agents</div>
+        <h1>What is <span class="accent">µ³-Bench?</span></h1>
+        <p>
+          Public benchmark for evaluating <strong>multi-hop, multi-source,
+          multi-tool AI agents</strong> in realistic enterprise workflows with executable APIs,
+          document retrieval, and policy-constrained interaction.
+        </p>
+        <div class="hero-actions">
+          <a class="btn primary" href="https://huggingface.co/datasets/ibm-research/M3Benchmark">View dataset</a>
+          <a class="btn secondary" href="https://github.com/IBM/M3Benchmark" target="_blank">GitHub repo</a>
+          <a class="btn secondary" href="#resources">Blog (Coming Soon)</a>
+          <a class="btn secondary" href="#leaderboard">Explore results</a>          
+        </div>
+      </section>
+
+      <!-- <section class="hero" id="overview">
+
+        <h1 class="hero-title">µ³-Bench</h1>
+
+        <p class="hero-desc">
+          Evaluating <strong>multi-hop, multi-source,
+          multi-tool AI agents</strong> in realistic enterprise workflows with executable APIs,
+          document retrieval, and policy-constrained interaction.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn primary" href="https://huggingface.co/datasets/ibm-research/M3Benchmark">View dataset</a>
+          <a class="btn secondary" href="https://github.com/IBM/M3Benchmark" target="_blank">GitHub repo</a>
+          <a class="btn secondary" href="#leaderboard">Explore results</a>
+          <a class="btn secondary" href="#resources">Blog (Coming Soon)</a>
+        </div>
+
+      </section>       -->
+
+      <section class="section" id="leaderboard">
+        <div class="section-header">
+          <div>
+            <div class="kicker">Leaderboard</div>
+            <h2 class="section-title">Agent Performance</h2>
+            <p class="section-desc">
+              Trace-level evaluation of agent performance across multi-hop, multi-source, and policy-constrained tasks.
+            </p>
+          </div>
+          <div class="leaderboard-badges">
+            <div class="badge">Executable</div>
+            <div class="badge">Trace-level</div>
+            <div class="badge">Multi-source</div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table id="leaderboard-table" class="leaderboard-table">
+            <colgroup>
+              <col class="col-rank">
+              <col class="col-agent">
+              <col class="col-model">
+              <col class="col-metric">
+              <col class="col-metric">
+              <col class="col-metric">
+              <col class="col-metric">
+              <col class="col-metric">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Agent</th>
+                <th>Model</th>
+                <th class="sortable" data-sort="overall">
+                  Overall <span class="sort-indicator"></span>
+                </th>
+                <th class="sortable" data-sort="api_chaining">
+                  API chaining <span class="sort-indicator"></span>
+                </th>
+                <th class="sortable" data-sort="tool_selection">
+                  Tool selection <span class="sort-indicator"></span>
+                </th>
+                <th class="sortable" data-sort="multihop">
+                  Multihop <span class="sort-indicator"></span>
+                </th>
+                <th class="sortable" data-sort="multiturn">
+                  Multiturn<br>Policy adherence
+                  <span class="sort-indicator"></span>
+                </th>
+              </tr>
+            </thead>
+
+            <tbody id="leaderboard-tbody">
+              <tr><td colspan="8" style="text-align:center;padding:24px;color:var(--muted)">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="capabilities">
+        <div class="section-header">
+          <div>
+            <div class="kicker">Core benchmark capabilities</div>
+            <h2 class="section-title">Four increasingly difficult competencies</h2>
+            <p class="section-desc"> µ³-Bench is designed to test four increasingly difficult competencies that reflect enterprise reasoning behaviors.</p>
+          </div>
+        </div>
+        <div class="grid-4">
+          <div class="card">
+            <div class="icon-badge">01</div>
+            <h3>API Chaining</h3>
+            <p>Compose multi-step tool chains while carrying intermediate results across dependent calls.</p>
+          </div>
+          <div class="card">
+            <div class="icon-badge">02</div>
+            <h3>Tool Selection</h3>
+            <!-- <p>Agents choose the correct API from 100-200 candidates, based on natural-language instructions and API specifications.</p> -->
+            <p>Select the correct API from large candidate sets of 100-200 tools using natural-language tool descriptions and API specifications.</p>
+          </div>
+          <div class="card">
+            <div class="icon-badge">03</div>
+            <h3>Multihop</h3>
+            <p>Compose multi-hop API sequence through query decomposition.</p>
+          </div>
+          <div class="card">
+            <div class="icon-badge">04</div>
+            <h3>MultiTurn with Policy adherence</h3>
+            <p>Combine API outputs with document retrieval and reconcile differences in naming and format. Interpret natural-language constraints governing which tools or sources may be used.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="resources">
+        <div class="section-header">
+          <div>
+            <div class="kicker">Resources</div>
+            <h2 class="section-title">Get started</h2>
+            <!-- <p class="section-desc">Point these cards to your paper, code, environments, and submission instructions.</p> -->
+          </div>
+        </div>
+        <div class="grid-4">
+          <a class="card resource-card" href="https://github.com/IBM/M3Benchmark">
+            <div class="kicker">Code</div>
+            <h3>Framework and scripts</h3>
+            <p>Setup docs, baseline agents, and reproducible experiments.</p>
+          </a>      
+          <a class="card resource-card" href="https://github.com/IBM/M3Benchmark/setup.md">
+            <div class="kicker">Environment</div>
+            <h3>Executable backends</h3>
+            <p>Setup MCP based local APIs and retrieval stack.</p>
+          </a>
+          <div class="card resource-card clickable-card"
+              onclick="window.open('https://github.com/IBM/M3Benchmark/issues/new?template=leaderboard_submission.yml', '_blank')">
+            <div class="kicker">Submission</div>
+            <h3>Leaderboard and submissions</h3>
+            <p>
+              Please create a github issue using the 
+              <a href="https://github.com/IBM/M3Benchmark/issues/new?template=leaderboard_submission.yml" target="_blank" style="color:#3b82f6;">
+                Leaderboard Submission Template
+              </a> 
+              to submit for evaluation.
+            </p>
+          </div>
+          <a class="card resource-card" href="#">
+            <div class="kicker">Paper</div>
+            <h3>Benchmark paper</h3>
+            <p>Link to the paper or blog page describing dataset construction coming soon.</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="section" id="why">
+        <div class="section-header">
+          <div>
+            <div class="kicker">Why µ³-Bench</div>
+            <h2 class="section-title">Benchmarks the reasoning stack, not just the final answer</h2>
+
+            <p class="section-desc">
+              Enterprise agents must resolve entities, align schemas, retrieve supporting text,
+              select tools under ambiguity, and follow natural-language policies in the same interaction.
+            </p>
+          </div>
+        </div>
+        
+        <div class="bench-layout">
+          <div>
+            <div class="grid-3">
+              <div class="card">
+                <div class="icon-badge">API</div>
+                <h3>Structured APIs</h3>
+                <p>8,000+ executable APIs grounded in real databases and enterprise-style tasks.</p>
+              </div>
+              <div class="card">
+                <div class="icon-badge">DOC</div>
+                <h3>Document repositories</h3>
+                <p>Unstructured corpora that condition tool calls and enable cross-source grounding.</p>
+              </div>
+              <div class="card">
+                <div class="icon-badge">POL</div>
+                <h3>Policy constraints</h3>
+                <p>Query-dependent rules that control source selection and operational compliance.</p>
+              </div>
+            </div>
+
+            <div class="pill-row">
+              <div class="pill">Entity disambiguation</div>
+              <div class="pill">Schema alignment</div>
+              <div class="pill">Identifier chaining</div>
+              <div class="pill">Trace verification</div>
+              <div class="pill">Multi-turn state</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="kicker">Illustrative trace</div>
+            <div class="trace-box">
+              <div><span>user&gt;</span> resolve delayed shipment for Acme customer</div>
+              <div><span>agent&gt;</span> disambiguate customer record across CRM</div>
+              <div><span>tool:crm.lookup</span> → 3 candidate profiles</div>
+              <div><span>agent&gt;</span> align shipment id with logistics schema</div>
+              <div><span>tool:shipments.search</span> → customs delay</div>
+              <div><span>retrieval</span> → compensation policy section 4.2</div>
+              <div><span>agent&gt;</span> determine eligibility threshold</div>
+              <div><span>tool:finance.credit_preview</span> → refund + voucher valid</div>
+              <div><span>agent&gt;</span> produce policy-compliant response</div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </section>
+
+      <section class="section" id="api-styles">
+        <div class="section-header">
+          <div>
+            <div class="kicker">Evaluation</div>
+            <h2 class="section-title">Same underlying data, different interface abstractions</h2>
+            <p class="section-desc">
+              µ³-Bench supports multiple API interaction styles so evaluation can separate planning difficulty,
+              tool selection burden, and endpoint interpretation.
+            </p>
+          </div>
+        </div>
+
+        <!-- <div class="compare">
+          <div class="card">
+            <div class="icon-badge">C</div>
+            <h3>Compositional interfaces</h3>
+            <ul>
+              <li>Small set of generic operations such as filtering, aggregation, and transformation.</li>
+              <li>Requires explicit multi-step planning over intermediate states.</li>
+              <li>Best for testing how agents construct reasoning chains from reusable primitives.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="icon-badge">F</div>
+            <h3>Expanded function interfaces</h3>
+            <ul>
+              <li>Distinct tools materialize parameterized versions of more generic functions.</li>
+              <li>Reduces per-call complexity but increases tool selection difficulty.</li>
+              <li>Useful for evaluating retrieval over tool specs and operation choice under scale.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="icon-badge">E</div>
+            <h3>Endpoint-style interfaces</h3>
+            <ul>
+              <li>Highly specific, query-aligned endpoints encapsulate most of the computation.</li>
+              <li>Shifts the challenge toward accurate query interpretation and endpoint selection.</li>
+              <li>Supports realistic API-only reasoning chains and task-oriented orchestration.</li>
+            </ul>
+          </div>
+          <div class="card" id="reasoning">
+            <div class="icon-badge">R</div>
+            <h3>Reasoning tasks</h3>
+            <ul>
+              <li><strong>Multi-hop reasoning:</strong> 3–7 step chains over endpoint-style APIs with entity disambiguation, parameter extraction, and identifier chaining.</li>
+              <li><strong>Multi-hop multi-source reasoning:</strong> structured APIs plus unstructured documents, including cross-source grounding and content integration.</li>
+              <li><strong>Tool-use policy adherence:</strong> query-dependent constraints on source selection and permissible tools.</li>
+            </ul>
+          </div>
+        </div> -->
+      </section>
+
+      <section class="section" id="workflow">
+        <div class="section-header">
+          <div>
+            <div class="kicker">How it works</div>
+            <h2 class="section-title">Deterministic, executable, reproducible evaluation</h2>
+            <p class="section-desc">
+              µ³-Bench verifies full execution traces by replaying tool calls against persistent backends.
+            </p>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="value">8,000+</div><div class="label">Executable APIs</div></div>
+          <div class="stat"><div class="value">60+</div><div class="label">Enterprise-style domains</div></div>
+          <div class="stat"><div class="value">3–7</div><div class="label">Reasoning steps per task</div></div>
+          <div class="stat"><div class="value">Trace</div><div class="label">Trajectory-level verification</div></div>
+        </div>
+      </section>
+
+
+      <div class="footer">
+        (µ³) is built for reproducible evaluation of multi-hop, multi-source, multi-tool agents.
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ── Leaderboard: fetch from API and render rows ──────────────────────────
+    (function () {
+      const tbody = document.getElementById('leaderboard-tbody');
+
+      function fmt(val) {
+        return val === null || val === undefined ? '—' : Number(val).toFixed(2);
+      }
+
+      function buildRow(entry, maxOverall) {
+        const s = entry.scores;
+        const barPct = maxOverall > 0 ? ((entry.overall / maxOverall) * 100).toFixed(1) : '0';
+        const rank = String(entry.rank).padStart(2, '0');
+        const tr = document.createElement('tr');
+        tr.dataset.overall  = entry.overall;
+        tr.dataset.api_chaining = s.api_chaining;
+        tr.dataset.tool_selection = s.tool_selection;
+        tr.dataset.multihop = s.multihop;
+        tr.dataset.multiturn = s.multiturn;
+        tr.innerHTML = `
+          <td class="rank"><div class="rank-num">${rank}</div></td>
+          <td class="agent-cell">
+            <a href="${entry.agent_url}" target="_blank" class="agent-link"><em>${entry.agent}</em></a><br>
+            <span class="model-date">${entry.date}</span>
+          </td>
+          <td class="model-cell">
+            <strong class="model-name">${entry.model}</strong>
+          </td>
+          <td>
+            <div class="score">${fmt(entry.overall)}</div>
+            <div class="score-bar"><span style="width:${barPct}%"></span></div>
+          </td>
+          <td>${fmt(s.api_chaining)}</td>
+          <td>${fmt(s.tool_selection)}</td>
+          <td>${fmt(s.multihop)}</td>
+          <td>${fmt(s.multiturn)}</td>`;
+        return tr;
+      }
+
+      fetch('/api/leaderboard')
+        .then(r => r.json())
+        .then(rows => {
+          tbody.innerHTML = '';
+          if (!rows.length) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted)">No entries yet.</td></tr>';
+            return;
+          }
+          const maxOverall = Math.max(...rows.map(r => r.overall));
+          rows.forEach(entry => tbody.appendChild(buildRow(entry, maxOverall)));
+          // Re-run the sort to apply default sort state
+          const table = document.getElementById('leaderboard-table');
+          if (table) sortTable('overall', 'desc');
+        })
+        .catch(() => {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:#dc2626">Failed to load leaderboard data.</td></tr>';
+        });
+    })();
+
+    // ── Active nav links on scroll ───────────────────────────────────────────
+    const links = [...document.querySelectorAll('.toc a, .top-links a')];
+    const sections = [...document.querySelectorAll('main [id]')];
+
+    const setActive = () => {
+      const scroll = window.scrollY + 120;
+      let current = sections[0]?.id;
+      for (const section of sections) {
+        if (section.offsetTop <= scroll) current = section.id;
+      }
+      links.forEach(link => {
+        const target = link.getAttribute('href')?.replace('#', '');
+        link.classList.toggle('active', target === current);
+      });
+    };
+
+    window.addEventListener('scroll', setActive, { passive: true });
+    window.addEventListener('load', setActive);
+
+    // ── Leaderboard: sort logic ──────────────────────────────────────────────
+    let _lbSortKey = 'overall';
+    let _lbSortDir = 'desc';
+
+    function sortTable(sortKey, direction) {
+      const table = document.getElementById('leaderboard-table');
+      if (!table) return;
+      const tbody = table.querySelector('tbody');
+      const headers = table.querySelectorAll('th.sortable');
+
+      if (direction !== undefined) {
+        _lbSortKey = sortKey;
+        _lbSortDir = direction;
+      } else if (_lbSortKey === sortKey) {
+        _lbSortDir = _lbSortDir === 'desc' ? 'asc' : 'desc';
+      } else {
+        _lbSortKey = sortKey;
+        _lbSortDir = 'desc';
+      }
+
+      const rows = Array.from(tbody.querySelectorAll('tr[data-overall]'));
+      rows.sort((a, b) => {
+        const aVal = parseFloat(a.dataset[_lbSortKey]);
+        const bVal = parseFloat(b.dataset[_lbSortKey]);
+        return _lbSortDir === 'asc' ? aVal - bVal : bVal - aVal;
+      });
+      rows.forEach(row => tbody.appendChild(row));
+
+      // Update rank numbers
+      rows.forEach((row, i) => {
+        const rankNum = row.querySelector('.rank-num');
+        if (rankNum) rankNum.textContent = String(i + 1).padStart(2, '0');
+      });
+
+      // Update header indicators
+      headers.forEach(header => {
+        const key = header.dataset.sort;
+        const indicator = header.querySelector('.sort-indicator');
+        header.classList.toggle('active', key === _lbSortKey);
+        indicator.textContent = key === _lbSortKey ? (_lbSortDir === 'desc' ? '↓' : '↑') : '↕';
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const headers = document.querySelectorAll('#leaderboard-table th.sortable');
+      headers.forEach(header => {
+        header.addEventListener('click', () => sortTable(header.dataset.sort));
+      });
+    });
+  </script>
+</body>
+</html>
