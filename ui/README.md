@@ -73,12 +73,12 @@ podman build --platform linux/arm64 \
   -t docker.io/amurthi44g1wd/vakra-leaderboard:arm64 .
 
 # Assemble and push a multi-arch manifest
-podman manifest create docker.io/amurthi44g1wd/vakra-bench-leaderboard
+podman manifest create docker.io/amurthi44g1wd/vakra-leaderboard
 podman manifest add docker.io/amurthi44g1wd/vakra-leaderboard \
-  docker.io/amurthi44g1wd/vakra-bench-leaderboard:amd64
+  docker.io/amurthi44g1wd/vakra-leaderboard:amd64
 podman manifest add docker.io/amurthi44g1wd/vakra-leaderboard \
-  docker.io/amurthi44g1wd/vakra-bench-leaderboard:arm64
-podman manifest push docker.io/amurthi44g1wd/vakra-bench-leaderboard
+  docker.io/amurthi44g1wd/vakra-leaderboard:arm64
+podman manifest push docker.io/amurthi44g1wd/vakra-leaderboard
 ```
 
 ## Deploy to Hugging Face Spaces

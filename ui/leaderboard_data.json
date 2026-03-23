@@ -58,29 +58,5 @@
       "multihop": 25.80,
       "multiturn": 34.41
     }
-  },
-  {
-    "model": "GPT-OSS-120B",
-    "agent": "CUGA Agent",
-    "agent_url": "https://github.com/IBM/vakra",
-    "date": "Mar 19, 2026",
-    "scores": {
-      "api_chaining": 0,
-      "tool_selection": 28,
-      "multihop": 4.3,
-      "multiturn": 0
-    }
-  },
-  {
-    "model": "LLAMA-405B",
-    "agent": "CUGA Agent",
-    "agent_url": "https://github.com/IBM/vakra",
-    "date": "Mar 19, 2026",
-    "scores": {
-      "api_chaining": 0,
-      "tool_selection": 25.9,
-      "multihop": 6.57,
-      "multiturn": 0
-    }
   }
 ]
