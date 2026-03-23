@@ -124,8 +124,16 @@ def download_data() -> None:
 
         local_metadata = _load_metadata(metadata_path)
 
-        to_download = [p for p, sha in remote_files.items() if local_metadata.get(p) != sha]
-        to_delete = [p for p in local_metadata if p not in remote_files]
+        # Skip files inside a "train" directory (HuggingFace train split)
+        def _in_train_dir(path: str) -> bool:
+            parts = Path(path).parts
+            return len(parts) > 0 and parts[0] == "train"
+
+        to_download = [
+            p for p, sha in remote_files.items()
+            if local_metadata.get(p) != sha and not _in_train_dir(p)
+        ]
+        to_delete = [p for p in local_metadata if p not in remote_files and not _in_train_dir(p)]
 
         if not to_download and not to_delete:
             print(f"  [up to date] {subdir}/")
