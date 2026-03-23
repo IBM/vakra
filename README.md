@@ -523,7 +523,7 @@ Found a bug or have a question about the benchmark environment, runner, or evalu
 
 ## Acknowledgments
 
-We especially acknowledge Hamid Adebayo, Himanshu Gupta, Renuka Sindhgatta, Sameep Mehta, Huaiyu Zhu, Chulaka Gunasekara, Jaydeep Sen, and Sara Rosenthal for their contributions and insights. We also thank our interns, Raavi Gupta and Abhinav Jain, for their efforts in benchmark generation and development.
+We especially acknowledge (in alphabetical order) Chulaka Gunasekara, Hamid Adebayo, Harold Ship, Himanshu Gupta, Huaiyu Zhu, Jaydeep Sen, Nir Mashkif, Renuka Sindhgatta, Sameep Mehta, Sara Rosenthal, and Segev Shlomov for their contributions and insights. We also thank our interns, Raavi Gupta and Abhinav Jain, for their efforts in benchmark generation and development.
 
 ## Citation
 
