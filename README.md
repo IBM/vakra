@@ -131,6 +131,17 @@ Each container starts the same long-lived FastAPI services (port 8000 for M3 RES
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for full per-capability diagrams.
 
+## Requirements
+
+| Requirement | Details |
+|---|---|
+| **Python** | 3.11 or later |
+| **Container runtime** | Docker (with the `docker compose` plugin) or Podman (with `podman-compose`) |
+| **`make`** | Used for data download, image build, and container lifecycle targets |
+| **LLM provider** | At least one of: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `WATSONX_APIKEY`, or a `LITELLM_BASE_URL` — or run [Ollama](https://ollama.com) locally (no API key required) |
+| **Memory (container runtime)** | 8 GB+ allocated to Docker/Podman — capability 4 (ChromaDB) will OOM with the default 2 GB |
+| **Disk space** | ~35 GB for benchmark data downloaded via `make download` |
+
 ## Quick Start
 
 The full setup guide lives in [setup.md](setup.md). The shortest path to a working local run is:
@@ -154,6 +165,20 @@ python benchmark_runner.py \
   --domain card_games \
   --max-samples-per-domain 5 \
   --provider openai
+```
+
+**No API key? Try Ollama:**
+
+```bash
+# Install Ollama from https://ollama.com, then pull a model
+ollama pull llama3.1:8b
+
+python benchmark_runner.py \
+  --m3_capability_id 1 \
+  --domain card_games \
+  --max-samples-per-domain 5 \
+  --provider ollama \
+  --model llama3.1:8b
 ```
 
 Useful follow-up docs:
