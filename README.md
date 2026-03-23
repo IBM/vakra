@@ -88,28 +88,22 @@ The full setup guide lives in [setup.md](setup.md). The shortest path to a worki
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e ".[init]"
 pip install -r requirements_benchmark.txt
 
-export HF_TOKEN=hf_...
-
 make download
-make pull
-make start
+
+docker compose down # optional step
+make build
+docker compose up -d
+
+# Note: various providers are supported. Refer to "agents" directory for additional details.
 
 export OPENAI_API_KEY=sk-...
 python benchmark_runner.py \
   --m3_capability_id 1 \
-  --domain authors \
-  --max-samples-per-domain 1 \
+  --domain card_games \
+  --max-samples-per-domain 5 \
   --provider openai
-```
-
-For local image development instead of using the prebuilt image:
-
-```bash
-make build
-docker compose up -d
 ```
 
 Useful follow-up docs:
