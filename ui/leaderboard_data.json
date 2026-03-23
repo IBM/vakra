@@ -2,7 +2,7 @@
   {
     "model": "GPT-OSS-120B",
     "agent": "ReAct (Prompt)",
-    "agent_url": "https://github.com/IBM/M3Benchmark",
+    "agent_url": "https://github.com/IBM/vakra",
     "date": "Mar 24, 2026",
     "scores": {
       "api_chaining": 0.457,
@@ -14,7 +14,7 @@
   {
     "model": "LLAMA-405B",
     "agent": "ReAct (Prompt)",
-    "agent_url": "https://github.com/IBM/M3Benchmark",
+    "agent_url": "https://github.com/IBM/vakra",
     "date": "Mar 19, 2026",
     "scores": {
       "api_chaining": 0.0,
@@ -26,7 +26,7 @@
   {
     "model": "Claude-Sonnet-4.5",
     "agent": "ReAct (Prompt)",
-    "agent_url": "https://github.com/IBM/M3Benchmark",
+    "agent_url": "https://github.com/IBM/vakra",
     "date": "Mar 19, 2026",
     "scores": {
       "api_chaining": 0.419,
@@ -38,7 +38,7 @@
   {
     "model": "Gemini-3-Flash-Preview",
     "agent": "ReAct (Prompt)",
-    "agent_url": "https://github.com/IBM/M3Benchmark",
+    "agent_url": "https://github.com/IBM/vakra",
     "date": "Mar 19, 2026",
     "scores": {
       "api_chaining": 0.427,
@@ -50,7 +50,7 @@
   {
     "model": "Granite-4.0-h-small",
     "agent": "ReAct (Prompt)",
-    "agent_url": "https://github.com/IBM/M3Benchmark",
+    "agent_url": "https://github.com/IBM/vakra",
     "date": "Mar 19, 2026",
     "scores": {
       "api_chaining": 0.0,

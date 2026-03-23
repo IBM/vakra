@@ -1,5 +1,5 @@
 ---
-title: µ³-Bench Leaderboard
+title: VAKRA Leaderboard
 emoji: 🏆
 colorFrom: indigo
 colorTo: green
@@ -7,9 +7,9 @@ sdk: docker
 pinned: false
 ---
 
-# µ³-Bench Leaderboard UI
+# VAKRA Leaderboard UI
 
-FastAPI backend + static HTML frontend for the µ³-Bench agent leaderboard.
+FastAPI backend + static HTML frontend for the VAKRA agent leaderboard.
 The frontend (`ui.html`) fetches live data from `/api/leaderboard`; no data is hardcoded in the HTML.
 
 ## Quick Start (local, no Docker)
@@ -35,20 +35,20 @@ docker buildx create --name multiarch --use
 # Build in one step (amd64 + arm64)
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
-  -t docker.io/amurthi44g1wd/agent-leaderboard:latest \
+  -t docker.io/amurthi44g1wd/vakra-leaderboard:latest \
   .
 ```
 
 > **Single-platform local test** (no registry needed):
 > ```bash
 > docker buildx build --platform linux/amd64 \
->   -t agent-leaderboard --load .
+>   -t vakra-leaderboard --load .
 > ```
 
 ### 2. Run locally
 
 ```bash
-docker run -d --name leaderboard -p 8000:8000 agent-leaderboard
+docker run -d --name leaderboard -p 8000:8000 vakra-leaderboard
 curl http://localhost:8000/api/leaderboard   # expect JSON array
 ```
 
@@ -60,7 +60,7 @@ Clean up: `docker stop leaderboard && docker rm leaderboard`
 docker login docker.io
 # If you used --push in the buildx step above, it's already pushed.
 # To push a locally loaded image:
-docker push docker.io/amurthi44g1wd/agent-leaderboard:latest
+docker push docker.io/amurthi44g1wd/vakra-leaderboard:latest
 ```
 
 ### Podman (alternative)
@@ -70,17 +70,17 @@ cd ui
 
 # Build per-arch
 podman build --platform linux/amd64 \
-  -t docker.io/amurthi44g1wd/agent-leaderboard:amd64 .
+  -t docker.io/amurthi44g1wd/vakra-leaderboard:amd64 .
 podman build --platform linux/arm64 \
-  -t docker.io/amurthi44g1wd/agent-leaderboard:arm64 .
+  -t docker.io/amurthi44g1wd/vakra-leaderboard:arm64 .
 
 # Assemble and push a multi-arch manifest
-podman manifest create docker.io/amurthi44g1wd/agent-leaderboard
-podman manifest add docker.io/amurthi44g1wd/agent-leaderboard \
-  docker.io/amurthi44g1wd/agent-leaderboard:amd64
-podman manifest add docker.io/amurthi44g1wd/agent-leaderboard \
-  docker.io/amurthi44g1wd/agent-leaderboard:arm64
-podman manifest push docker.io/amurthi44g1wd/agent-leaderboard
+podman manifest create docker.io/amurthi44g1wd/vakra-leaderboard
+podman manifest add docker.io/amurthi44g1wd/vakra-leaderboard \
+  docker.io/amurthi44g1wd/vakra-leaderboard:amd64
+podman manifest add docker.io/amurthi44g1wd/vakra-leaderboard \
+  docker.io/amurthi44g1wd/vakra-leaderboard:arm64
+podman manifest push docker.io/amurthi44g1wd/vakra-leaderboard
 ```
 
 ## Deploy to Hugging Face Spaces
@@ -88,14 +88,14 @@ podman manifest push docker.io/amurthi44g1wd/agent-leaderboard
 ### Option A — Push source files (HF builds for you)
 
 ```bash
-git clone https://huggingface.co/spaces/<your-username>/agent-leaderboard
-cd agent-leaderboard
+git clone https://huggingface.co/spaces/<your-username>/vakra-leaderboard
+cd vakra-leaderboard
 cp /path/to/enterprise-benchmark-mar13/ui/{Dockerfile,app.py,data.py,leaderboard_data.json,ui.html,requirements.txt,README.md} .
 git add -A && git commit -m "deploy" && git push
 ```
 
 HF detects the `Dockerfile`, builds on `amd64`, and serves at
-`https://huggingface.co/spaces/<your-username>/agent-leaderboard`.
+`https://huggingface.co/spaces/<your-username>/vakra-leaderboard`.
 
 The `README.md` **must** keep the YAML frontmatter at the top (`sdk: docker`) — already present in this file.
 
@@ -104,7 +104,7 @@ The `README.md` **must** keep the YAML frontmatter at the top (`sdk: docker`) �
 Create a one-line `Dockerfile` in the Space repo:
 
 ```dockerfile
-FROM docker.io/amurthi44g1wd/agent-leaderboard:latest
+FROM docker.io/amurthi44g1wd/vakra-leaderboard:latest
 ```
 
 Push it. HF pulls the image directly with no build step.
@@ -150,7 +150,7 @@ Agent data lives in `leaderboard_data.json`:
   {
     "model":     "GPT-OSS-120B",
     "agent":     "ReAct (Prompt)",
-    "agent_url": "https://github.com/IBM/M3Benchmark",
+    "agent_url": "https://github.com/IBM/vakra",
     "date":      "Mar 24, 2026",
     "scores": {
       "api":       0.0,
