@@ -4,7 +4,6 @@
 
 Rather than testing isolated skills, **VAKRA** measures compositional reasoning across APIs and documents, using full execution traces to assess whether agents can reliably complete multi-step workflows, not just individual steps. **VAKRA** provides an executable environment where agents interact with over 8,000 locally hosted APIs backed by real databases spanning 62 domains, along with domain-aligned document collections.
 
-![image](https://github.ibm.com/user-attachments/assets/5f8009ba-d9d5-4218-ab9d-ef7fd3391af3)
 
 ## What VAKRA Provides
 
@@ -13,6 +12,7 @@ Rather than testing isolated skills, **VAKRA** measures compositional reasoning 
 - Tasks that require 3-7 step reasoning chains across APIs, documents, and natural-language tool-use constraints
 - Deterministic evaluation with live tool replay and trajectory-level verification
 - Open-source code to run agents, reproduce results, and evaluate new systems end to end
+![image](https://github.ibm.com/user-attachments/assets/4b08df40-e730-4a04-aec4-19c57b3c14d2)
 
 ## Why This Benchmark Matters
 
@@ -61,6 +61,8 @@ High-level test split statistics from the dataset card:
 | 2 | Large-scale tool selection | 17 | 1,597 |
 | 3 | Multi-hop reasoning | 38 | 869 |
 | 4 | Multi-turn, multi-source reasoning with policies | 41 | 1,676 |
+
+![image](https://github.ibm.com/user-attachments/assets/5f8009ba-d9d5-4218-ab9d-ef7fd3391af3)
 
 ## Repository Layout
 
