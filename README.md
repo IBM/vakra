@@ -1,13 +1,13 @@
-# 🔷 VAKRA: A Benchmark for Evaluating Multi-Hop, Multi-Source Tool-Calling in AI Agents
+# 🔷 VAKRA: A Benchmark for eValuating Agentic Knowledge Reasoning Across multi-hop, multi-source dialogues
 
-**VARKA** (eValuating Agentic Knowledge Reasoning Across multi-hop, multi-source dialogues) is a tool-grounded, executable benchmark designed to evaluate how well AI agents reason end-to-end in enterprise-like settings.
+**VAKRA** (eValuating Agentic Knowledge Reasoning Across multi-hop, multi-source dialogues) is a tool-grounded, executable benchmark designed to evaluate how well AI agents reason end-to-end in enterprise-like settings.
 
-Rather than testing isolated skills, **VARKA** measures compositional reasoning across APIs and documents, using full execution traces to assess whether agents can reliably complete multi-step workflows, not just individual steps. **VARKA** provides an executable environment where agents interact with over 8,000 locally hosted APIs backed by real databases spanning 62 domains, along with domain-aligned document collections.
+Rather than testing isolated skills, **VAKRA** measures compositional reasoning across APIs and documents, using full execution traces to assess whether agents can reliably complete multi-step workflows, not just individual steps. **VAKRA** provides an executable environment where agents interact with over 8,000 locally hosted APIs backed by real databases spanning 62 domains, along with domain-aligned document collections.
 
 
 ## What VAKRA Provides
 
-- An executable benchmark environment with 8,000+ locally hosted APIs backed by real databases across 62 domains
+- An *executable benchmark environment* with *8,000+* locally hosted APIs backed by real databases across 62 domains
 - Domain-aligned document collections for retrieval-augmented, cross-source reasoning
 - Tasks that require 3-7 step reasoning chains across APIs, documents, and natural-language tool-use constraints
 - Deterministic evaluation with live tool replay and trajectory-level verification
@@ -248,6 +248,12 @@ VAKRA is designed for:
 - Dataset: Hugging Face dataset release for VAKRA
 - Leaderboard: `https://huggingface.co/spaces/ibm-research/VAKRA`
 - Code and environment: this repository
+
+## Reporting Issues
+
+Found a bug or have a question about the benchmark environment, runner, or evaluation? Open an issue on GitHub:
+
+`https://github.com/IBM/M3Benchmark/issues/new`
 
 ## Acknowledgments
 
