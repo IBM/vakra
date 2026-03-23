@@ -24,61 +24,51 @@ Opens at http://localhost:8000.
 
 ## Docker
 
-### 1. Build (multi-arch with buildx)
+### 1. Build for linux/amd64 (required for HuggingFace Spaces)
+
+HF Spaces runs `linux/amd64`. Building on Apple Silicon without specifying the platform produces an `arm64` image that won't run on HF.
+
+**Podman:**
 
 ```bash
 cd ui
 
-
-# Build in one step (amd64 + arm64)
-docker buildx build \
-  --platform linux/amd64,linux/arm64 \
-  -t docker.io/amurthi44g1wd/vakra-leaderboard:latest \
-  .
+podman build --platform linux/amd64 \
+  -t docker.io/amurthi44g1wd/vakra-leaderboard:latest .
 ```
 
-> **Single-platform local test** (no registry needed):
-> ```bash
-> docker buildx build --platform linux/amd64 \
->   -t vakra-leaderboard --load .
-> ```
+**Docker:**
+
+```bash
+cd ui
+
+docker build --platform linux/amd64 \
+  -t docker.io/amurthi44g1wd/vakra-leaderboard:latest .
+```
 
 ### 2. Run locally
 
 ```bash
-docker run -d --name leaderboard -p 8000:8000 vakra-leaderboard
-curl http://localhost:8000/api/leaderboard   # expect JSON array
+# Podman
+podman run -d --name leaderboard -p 7860:7860 vakra-leaderboard:latest
+# Docker
+docker run -d --name leaderboard -p 7860:7860 vakra-leaderboard:latest
+
+curl http://localhost:7860/api/leaderboard   # expect JSON array
 ```
 
-Clean up: `docker stop leaderboard && docker rm leaderboard`
+Clean up: `podman stop leaderboard && podman rm leaderboard`
 
 ### 3. Push to Docker Hub
 
 ```bash
-docker login docker.io
-# If you used --push in the buildx step above, it's already pushed.
-# To push a locally loaded image:
+# Log in first if needed
+podman login docker.io   # or: docker login docker.io
+
+# Push
+podman push docker.io/amurthi44g1wd/vakra-leaderboard:latest
+# or:
 docker push docker.io/amurthi44g1wd/vakra-leaderboard:latest
-```
-
-### Podman (alternative)
-
-```bash
-cd ui
-
-# Build per-arch
-podman build --platform linux/amd64 \
-  -t docker.io/amurthi44g1wd/vakra-leaderboard:amd64 .
-podman build --platform linux/arm64 \
-  -t docker.io/amurthi44g1wd/vakra-leaderboard:arm64 .
-
-# Assemble and push a multi-arch manifest
-podman manifest create docker.io/amurthi44g1wd/vakra-leaderboard
-podman manifest add docker.io/amurthi44g1wd/vakra-leaderboard \
-  docker.io/amurthi44g1wd/vakra-leaderboard:amd64
-podman manifest add docker.io/amurthi44g1wd/vakra-leaderboard \
-  docker.io/amurthi44g1wd/vakra-leaderboard:arm64
-podman manifest push docker.io/amurthi44g1wd/vakra-leaderboard
 ```
 
 ## Deploy to Hugging Face Spaces
@@ -169,7 +159,7 @@ ui/
   leaderboard_data.json   # Agent scores (source of truth)
   ui.html                 # Frontend — fetches data from /api/leaderboard at load
   requirements.txt        # Python dependencies (fastapi, uvicorn, pydantic)
-  Dockerfile              # Container image (python:3.12-slim, port 8000)
+  Dockerfile              # Container image (python:3.12-slim, port 7860)
   README.md               # This file
 ```
 
