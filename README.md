@@ -190,11 +190,84 @@ Useful follow-up docs:
 
 ## Running Your Own Agent
 
-You can benchmark either the built-in runner or a custom agent implementation.
+There are three levels of integration depending on how much you want to customise.
 
-- Start from [examples/quick_start_benchmark/run_benchmark.py](examples/quick_start_benchmark/run_benchmark.py) for a minimal benchmark integration
-- Use [examples/quick_start_mcp_tools/list_tools.py](examples/quick_start_mcp_tools/list_tools.py) and [examples/quick_start_mcp_tools/invoke_tool.py](examples/quick_start_mcp_tools/invoke_tool.py) to inspect and test tools directly
-- See [agents/](agents/) for the built-in agent interface and components
+### Option 1 — Use `benchmark_runner.py` with a different provider or model
+
+The built-in runner uses `LangGraphReActAgent` out of the box. Swap provider and model without touching any code:
+
+```bash
+python benchmark_runner.py \
+  --m3_capability_id 2 \
+  --domain hockey \
+  --provider anthropic \
+  --model claude-sonnet-4-6
+
+python benchmark_runner.py \
+  --m3_capability_id 2 \
+  --domain hockey \
+  --provider ollama \
+  --model llama3.1:8b
+```
+
+### Option 2 — Extend the agent interface
+
+[agents/agent_interface.py](agents/agent_interface.py) defines an `AgentInterface` ABC with a single method to implement:
+
+```python
+from agents.agent_interface import AgentInterface, AgentResponse, Message
+from typing import List, Union
+
+class MyAgent(AgentInterface):
+    async def run(
+        self,
+        input: Union[str, List[Message]],
+        additional_instructions: str = None,
+    ) -> AgentResponse:
+        # call your LLM / tools here
+        ...
+        return AgentResponse(content=answer, tool_calls=tool_calls, ...)
+```
+
+The built-in `LangGraphReActAgent` (also in [agents/agent_interface.py](agents/agent_interface.py)) is a good reference — it wraps a LangGraph ReAct loop and supports optional tool shortlisting via embedding similarity (`--top-k-tools`).
+
+Use the `create_agent()` factory for quick instantiation without subclassing:
+
+```python
+from agents.agent_interface import create_agent
+
+agent = create_agent(provider="ollama", model="llama3.1:8b")
+```
+
+### Option 3 — Start from the minimal example runner
+
+[examples/quick_start_benchmark/run_benchmark.py](examples/quick_start_benchmark/run_benchmark.py) is a self-contained runner that handles MCP connection, data loading, and output formatting. It contains a clearly marked `TODO` block where you drop in your agent:
+
+```python
+# ----------------------------------------------------------
+# TODO: replace this block with your agent implementation.
+#
+# Your agent should:
+#   1. Call session.call_tool(name, args) as needed.
+#   2. Append each call to tool_calls_made.
+#   3. Return the final answer string.
+# ----------------------------------------------------------
+answer = "[TODO: agent answer]"
+```
+
+Run it with:
+
+```bash
+python examples/quick_start_benchmark/run_benchmark.py \
+  --capability 2 --domain card_games --out results.json
+```
+
+To inspect available tools before writing your agent:
+
+```bash
+python examples/quick_start_mcp_tools/list_tools.py    # list tools for a capability/domain
+python examples/quick_start_mcp_tools/invoke_tool.py   # call a single tool interactively
+```
 
 ## Evaluation
 
