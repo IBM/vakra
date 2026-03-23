@@ -342,15 +342,23 @@ If you modify the benchmark_runner.py, `*_tools.json` sidecars in the same direc
 ### Validating output
 
 ```bash
+# Validate all four capabilities under output/
+python validate_output.py --all
+
+# Validate a single capability (finds all output/capability_2_*/ dirs automatically)
+python validate_output.py --capability 2
+
+# Validate a specific run directory directly
+python validate_output.py output/capability_2_dashboard_apis/
+
 # Validate a single domain file
-python validate_output.py output/capability_2_mar_22_11_30am/hockey.json
+python validate_output.py output/capability_2_dashboard_apis/hockey.json
 
-# Validate an entire capability run directory
-python validate_output.py output/capability_2_mar_22_11_30am/
-
-# Validate multiple files at once
-python validate_output.py output/capability_2_mar_22_11_30am/*.json
+# Use a non-default output root
+python validate_output.py --all --output-dir my_results/
 ```
+
+`*_tools.json` sidecar files are automatically skipped — they record tool shortlisting logs and are not part of the submission schema.
 
 ### Do's and don'ts
 
