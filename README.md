@@ -81,6 +81,56 @@ enterprise-benchmark/
 └── docker-compose.yml       # Container orchestration for local benchmark services
 ```
 
+## Environment Architecture
+
+The benchmark runs entirely inside Docker. One image (`benchmark_environ`) is built and started as four named containers — one per capability. The benchmark runner communicates with each container over MCP stdio (via `docker exec`), never over a network socket.
+
+```
+                +------------------------------------------+
+                |          LLM Provider API                |
+                |  OpenAI | Anthropic | Ollama | LiteLLM  |
+                +-------------------+----------------------+
+                                    | HTTPS
+= = = = = = = = = = = = = = = = = = + = = = HOST = = = = =
+                                    |
+              +─────────────────────+──────────────────────+
+              |           benchmark_runner.py              |
+              |  · Reads questions from data/              |
+              |  · Runs a ReAct agent loop (LangGraph)     |
+              |  · Calls LLM API for reasoning             |
+              |  · Calls MCP tools for data access         |
+              |  · Scores answers → output/{task}/*.json   |
+              +─────────────────────+──────────────────────+
+                                    |
+                       docker exec -i  (MCP stdio)
+                       CAPABILITY_ID=N, MCP_DOMAIN=<domain>
+                                    |
+= = = = = = = = = = = = = = = = = = + = = CONTAINERS = = =
+                                    |
+     +──────────────────────────────+──────────────────────+
+     |                    image: benchmark_environ                 |
+     |                                                      |
+     |  cap_1_bi_apis   cap_2_dashboard   cap_3_multihop   |
+     |  cap_4_multiturn                                     |
+     |                                                      |
+     |   mcp_dispatch.py  (os.execv → per-task MCP server) |
+     |                                                      |
+     |   FastAPI :8000 — M3 REST API      FastAPI :8001     |
+     |   SQLite /app/db/ (60+ databases)  ChromaDB (cap 4) |
+     +──────────────────────────────────────────────────────+
+```
+
+Each container starts the same long-lived FastAPI services (port 8000 for M3 REST, port 8001 for the retriever in capability 4). When the benchmark needs a tool call, it runs `mcp_dispatch.py` inside the appropriate container; the dispatcher reads `CAPABILITY_ID` and `os.execv()`s into the right MCP server:
+
+| Capability | MCP server | Data source |
+|---|---|---|
+| 1 — Slot-filling / Selection | `RouterMCPServer` (Python tools) | SQLite (direct) |
+| 2 — M3 REST SQL tools | `FastAPIMCPServer` → M3 REST :8000 | SQLite (via HTTP) |
+| 3 — BPO / M3 REST router | BPO FastMCP **or** `FastAPIMCPServer` | BPO in-process / SQLite |
+| 4 — M3 REST + Retriever | `Capability4CombinedMCPServer` | SQLite + ChromaDB |
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for full per-capability diagrams.
+
 ## Quick Start
 
 The full setup guide lives in [setup.md](setup.md). The shortest path to a working local run is:
