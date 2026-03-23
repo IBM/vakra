@@ -81,11 +81,11 @@ enterprise-benchmark/
 └── docker-compose.yml       # Container orchestration for local benchmark services
 ```
 
-## Workflow Overview
+## Workflow In a Nutshell
 
 The diagram below shows the end-to-end flow — from setup through to leaderboard submission — and marks the three points where you can plug in your own agent.
 
-```
+```text
   ┌──────────────────────────────────────────────────────────────┐
   │  1. SETUP                                                     │
   │     make download  →  data/test/capability_{N}_*/input/      │
@@ -151,7 +151,7 @@ The diagram below shows the end-to-end flow — from setup through to leaderboar
 
 The benchmark runner communicates with containers exclusively over MCP stdio (via `docker exec`), never over a network socket. One Docker image (`benchmark_environ`) is built and run as four named containers — one per capability. Each container hosts long-lived FastAPI background services and an on-demand MCP server process started per benchmark call.
 
-```
+```text
                  ┌──────────────────────────────────────┐
                  │          LLM Provider API             │
                  │  OpenAI · Anthropic · Ollama · RITS   │
@@ -488,9 +488,9 @@ Submission flow:
 
 Submission links:
 
-- Leaderboard: `https://huggingface.co/spaces/ibm-research/VAKRA`
-- Submission template: `https://github.com/IBM/M3Benchmark/issues/new?template=leaderboard_submission.yml`
-- Repository: `https://github.com/IBM/VAKRA`
+- Leaderboard: [https://huggingface.co/spaces/ibm-research/VAKRA](https://huggingface.co/spaces/ibm-research/VAKRA)
+- Submission template: [https://github.com/IBM/M3Benchmark/issues/new?template=leaderboard_submission.yml](https://github.com/IBM/M3Benchmark/issues/new?template=leaderboard_submission.yml)
+- Repository: [https://github.com/IBM/VAKRA](https://github.com/IBM/VAKRA)
 
 We recommend including:
 
@@ -511,14 +511,14 @@ VAKRA is designed for:
 ## Public Availability
 
 - Dataset: Hugging Face dataset release for VAKRA
-- Leaderboard: `https://huggingface.co/spaces/ibm-research/VAKRA`
+- Leaderboard: [https://huggingface.co/spaces/ibm-research/VAKRA](https://huggingface.co/spaces/ibm-research/VAKRA)
 - Code and environment: this repository
 
 ## Reporting Issues
 
 Found a bug or have a question about the benchmark environment, runner, or evaluation? Open an issue on GitHub:
 
-`https://github.com/IBM/M3Benchmark/issues/new`
+[https://github.com/IBM/M3Benchmark/issues/new](https://github.com/IBM/M3Benchmark/issues/new)
 
 ## Acknowledgments
 
