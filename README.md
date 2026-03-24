@@ -555,4 +555,4 @@ _* Equal contributions_
 
 ## License
 
-See [LICENSE](LICENSE) for the repository license and usage terms.
+This work is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org)
