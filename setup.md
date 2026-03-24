@@ -224,11 +224,10 @@ You should see **4 containers** listed:
 
 | Container | Purpose |
 |-----------|---------|
-| `capability_1_bi_apis` | Sel/Slot MCP server |
-| `capability_2_dashboard_apis` | M3 REST MCP server |
-| `capability_3_multihop_reasoning` | BPO MCP server + M3 REST API |
-| `capability_4_multiturn` | M3 REST API + ChromaDB Retriever |
-
+| capability_1_bi_apis | Tool Chaining MCP Server |
+| capability_2_dashboard_apis | Tool Selection MCP Server |
+| capability_3_multihop_reasoning | Multi-hop Reasoning MCP Server |
+| capability_4_multiturn | Multi-hop Multi-Source MCP Server |
 ### Restarting a single container
 
 If one container fails or becomes unhealthy while the others are fine, restart it individually rather than tearing everything down.
