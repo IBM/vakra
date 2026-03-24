@@ -12,7 +12,8 @@ Rather than testing isolated skills, **VAKRA** measures compositional reasoning 
 - Deterministic evaluation with live tool replay and trajectory-level verification
 - Open-source code to run agents, reproduce results, and evaluate new systems end to end
 
-![Gemini_Generated_Image_7mh1e37mh1e37mh1](https://github.ibm.com/user-attachments/assets/c9a6768d-6dc2-4ced-9e41-8fbcd42e0ff4)
+<img width="2816" height="1536" alt="image" src="https://github.com/user-attachments/assets/d8ed707b-fbed-4157-a00d-092a9ff2a1ac" />
+
 
 
 ## Why This Benchmark Matters
@@ -285,8 +286,8 @@ uvicorn tools_explorer.app:app --reload --port 7861
 ```
 
 This is useful for understanding what tools are available in a given capability and domain, inspecting their schemas, and experimenting with calls before wiring up an agent.
+<img width="1302" height="727" alt="Screenshot 2026-03-24 at 6 57 31 AM" src="https://github.com/user-attachments/assets/a1fa2cce-fc68-4074-a5ba-e09e6a76c5a5" />
 
-<img width="1302" alt="Screenshot 2026-03-24 at 6 57 31 AM" src="https://github.ibm.com/user-attachments/assets/384907b6-b219-495b-a18a-ca2ebdcb8504" />
 
 Useful follow-up docs:
 
