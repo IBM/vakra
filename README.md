@@ -276,6 +276,7 @@ python benchmark_runner.py \
 Once the containers are up, you can use `tools_explorer` to browse and inspect all available tools interactively before running any benchmarks:
 
 ```bash
+cd tools_explorer
 uvicorn tools_explorer.app:app --reload --port 7861
 ```
 
