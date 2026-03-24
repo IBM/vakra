@@ -281,6 +281,8 @@ uvicorn tools_explorer.app:app --reload --port 7861
 
 This is useful for understanding what tools are available in a given capability and domain, inspecting their schemas, and experimenting with calls before wiring up an agent.
 
+<img width="1302" alt="Screenshot 2026-03-24 at 6 57 31 AM" src="https://github.ibm.com/user-attachments/assets/384907b6-b219-495b-a18a-ca2ebdcb8504" />
+
 Useful follow-up docs:
 
 - [setup.md](setup.md)
