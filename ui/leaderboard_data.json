@@ -7,8 +7,8 @@
     "scores": {
       "api_chaining": 45.7,
       "tool_selection": 50.46,
-      "multihop": 27.14,
-      "multiturn": 40.00
+      "multihop": 29.40,
+      "multiturn": 14.35
     }
   },
   {
@@ -20,7 +20,7 @@
       "api_chaining": 36.03,
       "tool_selection": 54.35,
       "multihop": 27.59,
-      "multiturn": 37.06
+      "multiturn": 12.13
     }
   },
   {
@@ -32,7 +32,7 @@
       "api_chaining": 41.9,
       "tool_selection": 49.5,
       "multihop": 30.08,
-      "multiturn": 35.91
+      "multiturn": 15.98
     }
   },
   {
@@ -43,8 +43,8 @@
     "scores": {
       "api_chaining": 42.7,
       "tool_selection": 60.3,
-      "multihop": 25.8,
-      "multiturn": 34.90
+      "multihop": 38.43,
+      "multiturn": 15.98
     }
   },
   {
@@ -56,7 +56,7 @@
       "api_chaining": 31.0,
       "tool_selection": 50.0,
       "multihop": 25.80,
-      "multiturn": 34.41
+      "multiturn": 11.76
     }
   }
 ]
