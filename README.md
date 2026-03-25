@@ -35,29 +35,37 @@ VAKRA is designed to surface exactly where that reasoning succeeds or fails, inc
 
 ## Benchmark Structure
 
-VAKRA organizes evaluation into four capabilities, which together reflect three progressively harder enterprise settings.
+VAKRA organizes evaluation into four capabilities, which together reflect three progressively complex settings.
 
 ### 1. Diverse API Interaction Styles
 
 These tasks focus on structured tool use over APIs with different interface abstractions.
 
-- `capability_1_bi_apis`: nested and compositional API chaining
-- `capability_2_dashboard_apis`: large-scale tool selection over query-aligned endpoints
+- `capability_1_bi_apis` (API Chaining): nested and compositional API chaining
+- `capability_2_dashboard_apis` (Tool Selection): large-scale tool selection over query-aligned endpoints
 
 ### 2. Multi-hop Reasoning over Structured APIs
 
 These tasks require dependent reasoning chains over APIs, where earlier outputs must be interpreted and transformed for later calls.
 
-- `capability_3_multihop_reasoning`
+We have single-turn queries that can be answered by a reasoning chain of 1–3 APIs. For example, a sample may be answered by a single API (API), or by two APIs where the output of API₁ is transformed and passed to API₂ (API₁ → API₂), or by three APIs (API₁ → API₂ → API₃).
+
+- `capability_3_multihop_reasoning` (Multihop API Reasoning)
 
 ### 3. Multi-hop, Multi-source Reasoning with Tool-use Policies
 
-These tasks combine APIs, document retrieval, multi-turn context, and natural-language constraints about when and how tools should be used.
+These tasks combine reasoning over APIs and document retrieval in a multi-turn setting and also include natural-language constraints about tool use.
 
-- `capability_4_multiturn`
+We have multi-turn dialogues represented as context-response-pairs wherein queries could be answered by a reasoning chain of 1-4 tools (ex., a three-turn dialogue "(API)(RAG)(API-RAG)" wherein using the context from the first two turns, an answer needs to be obtained for the (API-RAG) turn.)
+
+- `capability_4_multiturn` (MultiHop MultiSource with Policy Adherence)
+
+This represents the most challenging setting, mirroring decision workflows.
+
+<img width="2816" height="1536" alt="Core benchmark capabilities" src="ui/Core_benchmark_capabilities.png" />
 
 ## Dataset Overview
-
+  
 The public dataset release is hosted on [Hugging Face](https://huggingface.co/datasets/ibm-research/VAKRA) and accompanied by a dataset card describing the task design, schema, and split statistics.
 
 High-level test split statistics from the dataset card:
