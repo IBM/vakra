@@ -445,7 +445,7 @@ We recommend including:
 ## Workflow In a Nutshell
 
 The diagram below shows the end-to-end flow — from setup through to leaderboard submission — and marks the three points where you can plug in your own agent.
-<img width="2816" height="1536" alt="image" src="https://github.com/user-attachments/assets/340f8116-172d-4334-ae6c-6a14f06d22da" />
+<img width="2760" height="1504" alt="Gemini_Generated_Image_wt8p2pwt8p2pwt8p" src="https://github.com/user-attachments/assets/443ead78-d133-4d4c-a74f-1c65984c1a7b" />
 
 > **`MCP_DOMAIN`** must exactly match a domain name that exists under `data/test/capability_N_*/input/` (e.g. `hockey`, `card_games`, `airline`). The MCP server uses this value to scope its SQLite database and, for capability 4, its ChromaDB collection. Passing an unknown domain name will cause the server to fail silently or return empty results.
 
@@ -500,7 +500,8 @@ The diagram below shows the end-to-end flow — from setup through to leaderboar
 ## Environment Architecture
 
 The benchmark runner communicates with containers exclusively over MCP stdio (via `docker exec`), never over a network socket. One Docker image (`benchmark_environ`) is built and run as four named containers — one per capability. Each container hosts long-lived FastAPI background services and an on-demand MCP server process started per benchmark call.
-<img width="2816" height="1536" alt="image" src="https://github.com/user-attachments/assets/055f0250-c0b6-4770-87d6-85a054344145" />
+<img width="2760" height="1504" alt="Gemini_Generated_Image_ygavx9ygavx9ygav" src="https://github.com/user-attachments/assets/f1bce426-4cbe-4940-a3a9-00027a582124" />
+
 <div style="display: flex; align-items: center; white-space: nowrap; gap: 0.5rem; padding: 8px;">
   <div style="font-family: IBM Plex Sans; font-weight: 400; font-size: 16px; line-height: 22px; letter-spacing: 0px;">
     <a rel="noopener noreferrer" href="https://aiattribution.github.io/statements/AIA-EAI-Hin-R-?model=Gemini%203%20Flash-v1.0" data-cy="recommended-attribution-statement-text" target="_blank" style="font-family: IBM Plex Sans; font-weight: 400; font-size: 16px; line-height: 22px; letter-spacing: 0px;">AIA Entirely AI, Human-initiated, Reviewed, Gemini 3 Flash v1.0 </a>
