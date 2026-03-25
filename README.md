@@ -71,6 +71,9 @@ High-level test split statistics from the dataset card:
 
 ## Repository Layout
 
+This repository includes the benchmark runtime, evaluation harness, examples, and supporting environment code.
+
+```text
 enterprise-benchmark/
 ├── agents/                  # Built-in agent components and wrappers
 ├── benchmark/               # MCP client, configs, runner helpers
@@ -84,6 +87,8 @@ enterprise-benchmark/
 ├── benchmark_setup.py       # Setup utility / CLI entry point
 ├── setup.md                 # End-to-end setup guide
 └── docker-compose.yml       # Container orchestration for local benchmark services
+```
+
 
 ## Requirements
 
