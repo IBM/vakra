@@ -60,22 +60,22 @@ We have multi-turn dialogues represented as context-response-pairs wherein queri
 
 - `capability_4_multiturn` (MultiHop MultiSource with Policy Adherence)
 
-This represents the most challenging setting, mirroring decision workflows.
+This represents the most challenging setting, mirroring decision workflows. Please find below example of all the four capabilities mentioned above.
 
 <img width="2816" height="1536" alt="Core benchmark capabilities" src="ui/Core_benchmark_capabilities.png" />
 
 ## Dataset Overview
-  
+
 The public dataset release is hosted on [Hugging Face](https://huggingface.co/datasets/ibm-research/VAKRA) and accompanied by a dataset card describing the task design, schema, and split statistics.
 
 High-level test split statistics from the dataset card:
 
 | Capability | Description | Domains | Samples |
 | --- | --- | ---: | ---: |
-| 1 | Nested API tool calling | 54 | 2,077 |
-| 2 | Large-scale tool selection | 17 | 1,597 |
+| 1 | API Chaining | 54 | 2,077 |
+| 2 | Tool selection | 17 | 1,597 |
 | 3 | Multi-hop reasoning | 38 | 869 |
-| 4 | Multi-turn, multi-source reasoning with policies | 41 | 1,676 |
+| 4 | Multi-hop, multi-source reasoning with policies | 41 | 1,676 |
 
 ## Repository Layout
 
