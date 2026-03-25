@@ -523,6 +523,39 @@
       text-align: center;
     }
 
+    .capability-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 18px 0 22px;
+    }
+
+    .stat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #f3f8ff;
+      border: 1px solid var(--line);
+      color: var(--text);
+      box-shadow: 0 8px 20px rgba(15, 35, 65, 0.05);
+    }
+
+    .stat-badge .value {
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .stat-badge .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
     .table-wrap {
       overflow: auto;
       border: 1px solid var(--line);
@@ -921,7 +954,7 @@
         </div>
       </section>
 
-      <section class="section" id="workflow">
+      <!-- <section class="section" id="workflow">
         <div class="section-header">
           <div>
             <div class="kicker">How it works</div>
@@ -937,15 +970,21 @@
           <div class="stat"><div class="value">3–7</div><div class="label">Reasoning steps per task</div></div>
           <div class="stat"><div class="value">Trace</div><div class="label">Trajectory-level verification</div></div>
         </div>
-      </section>
+      </section> -->
       
       <section class="section" id="capabilities">
         <div class="section-header">
           <div>
             <div class="kicker">Core benchmark capabilities</div>
             <h2 class="section-title">Four increasingly difficult capabilities</h2>
-            <p class="section-desc">We evaluates core agent capabilities—entity resolution, schema alignment, retrieval, tool selection, and policy adherence through the following tasks</p>
+            <p class="section-desc">We evaluates core agent capabilities—entity resolution, schema alignment, retrieval, tool selection, and policy adherence through four tasks</p>
           </div>
+        </div>
+        <div class="capability-badges">
+          <div class="stat-badge"><span class="value">8,000+</span><span class="label">Executable APIs</span></div>
+          <div class="stat-badge"><span class="value">60+</span><span class="label">diverse domains</span></div>
+          <div class="stat-badge"><span class="value">3–7</span><span class="label">Reasoning steps per task</span></div>
+          <div class="stat-badge"><span class="value">Trace</span><span class="label">Trajectory-level verification</span></div>
         </div>
         <figure class="capability-figure">
           <img
@@ -987,18 +1026,18 @@
             <div class="step">
               <div class="step-num">02</div>
               <div>
-                <h3>Open the submission template</h3>
+                <h3>Validate the output</h3>
                 <p>
-                  Use the leaderboard submission issue template to share your outputs, agent description, code or system link, and capability-level results in the expected format. keep the output artifacts, model name and agent setup you want listed publicly.
+                  The outputs are expected in a particular folder structure along with a metadata file created by the validator script. Run the <a class="inline-link" href="https://github.com/IBM/vakra/blob/main/validate_output.py" target="_blank">validate_output.py</a> script on the output folder. Provide the output of the validator script along with your submission.
                 </p>
               </div>
             </div>
             <div class="step">
               <div class="step-num">03</div>
               <div>
-                <h3>Track review and publication</h3>
+                <h3>Open the submission template</h3>
                 <p>
-                  Once reviewed, approved submissions can be added to the live leaderboard so others can compare systems on the same executable benchmark.
+                  Use the <a class="inline-link" href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml" target="_blank">leaderboard submission issue template</a> to share your outputs, agent description, code or system link. Once reviewed, approved submissions will be added to the  live leaderboard.
                 </p>
               </div>
             </div>
@@ -1136,12 +1175,12 @@
           </div>
         </div>
 
-        <!-- <div class="compare">
+        <div class="compare">
           <div class="card">
-            <div class="icon-badge">C</div>
-            <h3>Compositional interfaces</h3>
+            <div class="icon-badge">B</div>
+            <h3>Benchmark Scoring</h3>
             <ul>
-              <li>Small set of generic operations such as filtering, aggregation, and transformation.</li>
+              <li>Each capability is weighted equally for the overall score calculation of the benchmark.</li>
               <li>Requires explicit multi-step planning over intermediate states.</li>
               <li>Best for testing how agents construct reasoning chains from reusable primitives.</li>
             </ul>
@@ -1173,7 +1212,7 @@
               <li><strong>Tool-use policy adherence:</strong> query-dependent constraints on source selection and permissible tools.</li>
             </ul>
           </div>
-        </div> -->
+        </div>
       </section>
 
       <div class="footer">
