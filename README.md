@@ -75,7 +75,7 @@ High-level test split statistics from the dataset card:
 | 1 | API Chaining | 54 | 2,077 |
 | 2 | Tool selection | 17 | 1,597 |
 | 3 | Multi-hop reasoning | 38 | 869 |
-| 4 | Multi-hop, multi-source reasoning with policies | 41 | 1,676 |
+| 4 | Multi-hop, multi-source reasoning with policies | 41 | 644 |
 
 ## Repository Layout
 
