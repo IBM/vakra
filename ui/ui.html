@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VAKRA — Multi-Hop, Multi-Source, Multi-Tool Agent Benchmark</title>
   <meta name="description" content="VAKRA is a public benchmark for evaluating enterprise AI agents across multi-hop, multi-source, and multi-tool reasoning in executable environments." />
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -44,6 +56,14 @@
     }
 
     a { color: inherit; text-decoration: none; }
+    .inline-link {
+      color: var(--blue);
+    }
+
+    .inline-link:hover {
+      color: var(--blue-2);
+    }
+
     code, .mono { font-family: "JetBrains Mono", monospace; }
 
     .topbar {
@@ -245,7 +265,7 @@
       text-align: center;
       color: white;
       border-radius: 28px;
-      padding: 34px;
+      padding: 20px 26px;
       box-shadow: 0 18px 40px rgba(11,47,99,0.18);
       overflow: hidden;
       position: relative;
@@ -288,9 +308,9 @@
     .hero h1 .accent { color: #ffb347; }
     .hero p {
       max-width: 850px;
-      font-size: 18px;
-      line-height: 1.6;
-      margin: 16px 0 22px;
+      font-size: 17px;
+      line-height: 1.5;
+      margin: -10px 0 14px;
       color: rgba(255,255,255,0.88);
     }
 
@@ -311,7 +331,7 @@
       justify-content: center;
       gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 6px;
+      margin-bottom: -14px;
     }
 
     .hero-logo-mark {
@@ -327,7 +347,7 @@
 
     .hero-logo-image {
       display: block;
-      width: min(560px, 72vw);
+      width: min(520px, 68vw);
       height: auto;
     }
 
@@ -471,8 +491,69 @@
     .compare ul { margin: 0; padding-left: 18px; }
     .compare li { margin-bottom: 10px; }
 
+    .eval-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .eval-grid .card {
+      min-height: 100%;
+    }
+
+    .eval-list {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .eval-list li {
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .eval-code {
+      margin-top: 14px;
+      background: #0e2344;
+      color: #dfeaff;
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 12px;
+      line-height: 1.6;
+      font-family: "JetBrains Mono", monospace;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+
+    .eval-code strong {
+      color: #ffffff;
+    }
+
+    .equation-figure {
+      margin: 14px 0 0;
+      padding: 14px;
+      border-radius: 16px;
+      background: #f6f9ff;
+      border: 1px solid var(--line);
+      overflow: auto;
+    }
+
+    .equation-figure .math-display {
+      min-width: 620px;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .equation-figure mjx-container[jax="SVG"] {
+      margin: 0;
+    }
+
     .leaderboard-badges { display: flex; gap: 10px; flex-wrap: wrap; }
     .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: 8px 12px;
       border-radius: 999px;
       background: #eef4fb;
@@ -480,6 +561,69 @@
       color: var(--blue);
       font-size: 12px;
       font-weight: 800;
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    a.badge:hover {
+      background: #e3eefc;
+      border-color: #bad1ed;
+      color: var(--text);
+    }
+
+    .capability-figure {
+      margin: 0;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(244,249,255,0.92));
+      box-shadow: var(--shadow);
+    }
+
+    .capability-figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 18px;
+    }
+
+    .capability-figure figcaption {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .capability-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 18px 0 22px;
+    }
+
+    .stat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #f3f8ff;
+      border: 1px solid var(--line);
+      color: var(--text);
+      box-shadow: 0 8px 20px rgba(15, 35, 65, 0.05);
+    }
+
+    .stat-badge .value {
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .stat-badge .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.2;
     }
 
     .table-wrap {
@@ -492,11 +636,11 @@
     table {
       border-collapse: collapse;
       width: 100%;
-      min-width: 840px;
+      min-width: 0;
     }
 
     th, td {
-      padding: 14px 16px;
+      padding: 14px 12px;
       border-bottom: 1px solid #ebf0f7;
       text-align: left;
       font-size: 14px;
@@ -508,6 +652,11 @@
       text-transform: uppercase;
       letter-spacing: 0.08em;
       background: #f8fbff;
+      line-height: 1.35;
+      white-space: normal;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      text-align: center;
     }
 
     tbody tr:hover { background: #fafcff; }
@@ -516,13 +665,24 @@
     .sortable {
       cursor: pointer;
       user-select: none;
-      white-space: nowrap;
+      white-space: normal;
       transition: color 0.18s ease;
+    }
+    .leaderboard-table thead th.sortable {
+      text-align: center;
+    }
+    .leaderboard-table thead th.sortable .header-label {
+      display: block;
+      text-align: center;
     }
     .sortable:hover { color: var(--text); }
     .sort-indicator {
       font-size: 0.85em;
       opacity: 0.7;
+      margin-left: 0;
+      display: inline-block;
+    }
+    .sort-indicator:not(:empty) {
       margin-left: 6px;
     }
     .sortable.active .sort-indicator {
@@ -612,6 +772,7 @@
         position: relative;
         top: auto;
       }
+      .eval-grid { grid-template-columns: 1fr; }
       .bench-layout, .compare, .grid-4 { grid-template-columns: 1fr 1fr; }
       .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
     }
@@ -644,24 +805,40 @@
     }
 
     .leaderboard-table .col-rank {
-      width: 60px;
+      width: 54px;
     }
 
     .leaderboard-table .col-agent {
-      width: 150px;
+      width: 120px;
     }
 
     .leaderboard-table .col-model {
-      width: 150px;
+      width: 128px;
     }
 
     .leaderboard-table .col-metric {
-      width: calc((100% - 60px - 150px - 150px) / 6);
+      width: calc((100% - 54px - 120px - 128px) / 5);
+    }
+
+    .leaderboard-table thead th:nth-child(1),
+    .leaderboard-table thead th:nth-child(2),
+    .leaderboard-table thead th:nth-child(3) {
+      white-space: nowrap;
+      overflow-wrap: normal;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .leaderboard-table tbody td:nth-child(1),
+    .leaderboard-table tbody td:nth-child(2),
+    .leaderboard-table tbody td:nth-child(3) {
+      text-align: center;
+      vertical-align: middle;
     }
 
     .model-cell {
-      min-width: 170px;
-      vertical-align: top;
+      min-width: 0;
+      vertical-align: middle;
     }
 
     .model-name {
@@ -677,7 +854,7 @@
     }
 
     .rank {
-      vertical-align: top;
+      vertical-align: middle;
       font-weight: 800;
       color: var(--blue);
     }
@@ -709,11 +886,11 @@
     <div class="topbar-inner">
       <a class="brand" href="#top">
         <div class="brand-mark">
-          <img src="/static/brand-mark.png" alt="VAKRA brand mark">
+          <img src="/static/brand-logo.png" alt="VAKRA brand mark">
         </div>
         <div class="brand-copy">
           <div>VAKRA</div>
-          <small>eValuating Agentic Knowledge Reasoning Across multi-source dialogues</small>
+          <small>eValuating API and Knowledge Retrieval Agents using multi-hop, multi-source dialogues</small>
         </div>
       </a>
 
@@ -721,7 +898,7 @@
         <a href="#overview">Overview</a>
         <a href="https://huggingface.co/datasets/ibm-research/VAKRA" onclick="event.preventDefault();var opened=window.open(this.href,'_blank','noopener,noreferrer');if(!opened){navigator.clipboard&&navigator.clipboard.writeText(this.href);alert('Could not open tab. URL copied to clipboard:\n'+this.href);}">Dataset</a>
         <a href="#leaderboard">Leaderboard</a>
-        <a href="#submission">Submission</a>
+        <a href="#https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml">Submission</a>
         <a href="#resources">Blog</a>
       </nav>
 
@@ -735,11 +912,11 @@
       <nav class="toc">
         <a href="#overview">About</a>
         <a href="#leaderboard">Leaderboard</a>
-        <a href="#submission">Submission</a>
         <a href="#capabilities">Core capabilities</a>        
         <a href="#resources">Get started</a>
-        <a href="#why">Benchmark Description</a>
-        <a href="#api-styles">Evaluation</a>
+        <a href="#submission">Submission Guidelines</a>        
+        <!-- <a href="#why">Benchmark Description</a> -->
+        <a href="#evaluation">Evaluation & Scoring</a>
         <a href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.md" target="_blank">Contact Us</a>        
         <!-- <a href="#reasoning">Reasoning tasks</a> -->
       </nav>
@@ -751,15 +928,14 @@
     <main class="content">
       <section class="hero" id="overview">
         <div class="hero-inner">
-          <div class="eyebrow">Public benchmark for enterprise AI agents</div>
+          <!-- <div class="eyebrow">Public benchmark for enterprise AI agents</div> -->
           <div class="hero-logo" aria-label="VAKRA logo">
             <div class="hero-logo-copy">
               <img class="hero-logo-image" src="/static/image.png" alt="VAKRA logo">
             </div>
           </div>
           <p>
-            Public benchmark for evaluating <strong>multi-hop, multi-source,
-            multi-tool AI agents</strong> in realistic enterprise workflows with executable APIs,
+            Evaluating AI agents with executable APIs,
             document retrieval, and policy-constrained interaction.
           </p>
           <div class="hero-actions">
@@ -794,15 +970,15 @@
         <div class="section-header">
           <div>
             <div class="kicker">Leaderboard</div>
-            <h2 class="section-title">Agent Performance</h2>
-            <p class="section-desc">
-              Trace-level evaluation of agent performance across multi-hop, multi-source, and policy-constrained tasks.
-            </p>
+            <h2 class="section-title">Agent Evaluation Overview</h2>
+            <!-- <p class="section-desc">
+              We evaluate four increasingly difficult capabilities through trace-level evaluation of agent performance across multi-hop, multi-source, and policy-constrained tasks.
+            </p> -->
           </div>
           <div class="leaderboard-badges">
-            <div class="badge">Executable</div>
-            <div class="badge">Trace-level</div>
-            <div class="badge">Multi-source</div>
+            <a class="badge" href="#capabilities">Task Descriptions</a>
+            <a class="badge" href="#evaluation">Evaluation Metric</a>
+            <!-- <a class="badge" href="#capabilities">Multi-source</a> -->
           </div>
         </div>
 
@@ -824,20 +1000,20 @@
                 <th>Agent</th>
                 <th>Model</th>
                 <th class="sortable" data-sort="overall">
-                  Overall <span class="sort-indicator"></span>
+                  <span class="header-label">Overall <span class="sort-indicator"></span></span>
                 </th>
                 <th class="sortable" data-sort="api_chaining">
-                  API chaining <span class="sort-indicator"></span>
+                  <span class="header-label">API chaining <span class="sort-indicator"></span></span>
                 </th>
                 <th class="sortable" data-sort="tool_selection">
-                  Tool selection <span class="sort-indicator"></span>
+                  <span class="header-label">Tool<br>selection<span class="sort-indicator"></span></span>
                 </th>
                 <th class="sortable" data-sort="multihop">
-                  Multihop <span class="sort-indicator"></span>
+                  <span class="header-label">Multihop Reasoning<span class="sort-indicator"></span></span>
                 </th>
                 <th class="sortable" data-sort="multiturn">
-                  Multiturn<br>Policy adherence
-                  <span class="sort-indicator"></span>
+                  <span class="header-label">MultiHop MultiSource<br>Policy adherence
+                  <span class="sort-indicator"></span></span>
                 </th>
               </tr>
             </thead>
@@ -849,37 +1025,46 @@
         </div>
       </section>
 
+      <!-- <section class="section" id="workflow">
+        <div class="section-header">
+          <div>
+            <div class="kicker">How it works</div>
+            <h2 class="section-title">Deterministic, executable, reproducible evaluation</h2>
+            <p class="section-desc">
+              VAKRA verifies full execution traces by replaying tool calls against persistent backends.
+            </p>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="value">8,000+</div><div class="label">Executable APIs</div></div>
+          <div class="stat"><div class="value">60+</div><div class="label">Enterprise-style domains</div></div>
+          <div class="stat"><div class="value">3–7</div><div class="label">Reasoning steps per task</div></div>
+          <div class="stat"><div class="value">Trace</div><div class="label">Trajectory-level verification</div></div>
+        </div>
+      </section> -->
+      
       <section class="section" id="capabilities">
         <div class="section-header">
           <div>
             <div class="kicker">Core benchmark capabilities</div>
-            <h2 class="section-title">Four increasingly difficult competencies</h2>
-            <p class="section-desc"> VAKRA is designed to test four increasingly difficult competencies that reflect enterprise reasoning behaviors.</p>
+            <h2 class="section-title">Four increasingly difficult capabilities</h2>
+            <p class="section-desc">We evaluates core agent capabilities—entity resolution, schema alignment, retrieval, tool selection, and policy adherence through four tasks</p>
           </div>
         </div>
-        <div class="grid-4">
-          <div class="card">
-            <div class="icon-badge">01</div>
-            <h3>API Chaining</h3>
-            <p>Compose multi-step tool chains while carrying intermediate results across dependent calls.</p>
-          </div>
-          <div class="card">
-            <div class="icon-badge">02</div>
-            <h3>Tool Selection</h3>
-            <!-- <p>Agents choose the correct API from 100-200 candidates, based on natural-language instructions and API specifications.</p> -->
-            <p>Select the correct API from large candidate sets of 100-200 tools using natural-language tool descriptions and API specifications.</p>
-          </div>
-          <div class="card">
-            <div class="icon-badge">03</div>
-            <h3>Multihop</h3>
-            <p>Compose multi-hop API sequence through query decomposition.</p>
-          </div>
-          <div class="card">
-            <div class="icon-badge">04</div>
-            <h3>MultiTurn with Policy adherence</h3>
-            <p>Combine API outputs with document retrieval and reconcile differences in naming and format. Interpret natural-language constraints governing which tools or sources may be used.</p>
-          </div>
+        <div class="capability-badges">
+          <div class="stat-badge"><span class="value">8,000+</span><span class="label">Executable APIs</span></div>
+          <div class="stat-badge"><span class="value">60+</span><span class="label">diverse domains</span></div>
+          <div class="stat-badge"><span class="value">3–7</span><span class="label">Reasoning steps per task</span></div>
+          <div class="stat-badge"><span class="value">Trace</span><span class="label">Trajectory-level verification</span></div>
         </div>
+        <figure class="capability-figure">
+          <img
+            src="/static/Core_benchmark_capabilities.png"
+            alt="VAKRA benchmark capabilities diagram showing API Chaining, Tool Selection, MultiHop Reasoning over structured APIs, and MultiHop MultiSource with Policy Adherence." />
+          <figcaption>
+            Capability overview spanning diverse API interaction styles and complex reasoning workflows.
+          </figcaption>
+        </figure>
       </section>
 
       <section class="section" id="submission">
@@ -888,14 +1073,14 @@
             <div class="kicker">Submission</div>
             <h2 class="section-title">Submit to the live leaderboard</h2>
             <p class="section-desc">
-              Ready to add your model to the public VAKRA leaderboard? Follow the submission flow below and use the GitHub template to send us your run details.
+              Ready to add your model to the public VAKRA leaderboard? Follow the submission flow below.
             </p>
           </div>
-          <div class="leaderboard-badges">
+          <!-- <div class="leaderboard-badges">
             <div class="badge">Public</div>
             <div class="badge">Reproducible</div>
             <div class="badge">Issue-based review</div>
-          </div>
+          </div> -->
         </div>
 
         <div class="submission-layout">
@@ -905,25 +1090,25 @@
               <div>
                 <h3>Run the benchmark</h3>
                 <p>
-                  Evaluate your agent on the released VAKRA capabilities using the benchmark runner and keep the output artifacts, model name, agent setup, and score breakdowns you want listed publicly.
+                  Evaluate your agent on the released VAKRA capabilities using the benchmark runner and evaluator present in the <a class="inline-link" href="https://github.com/IBM/VAKRA" target="_blank">github repository</a>.
                 </p>
               </div>
             </div>
             <div class="step">
               <div class="step-num">02</div>
               <div>
-                <h3>Open the submission template</h3>
+                <h3>Validate the output</h3>
                 <p>
-                  Use the leaderboard submission issue template to share your model, agent description, code or system link, and capability-level results in the expected format.
+                  The outputs are expected in a particular folder structure along with a metadata file created by the validator script. Run the <a class="inline-link" href="https://github.com/IBM/vakra/blob/main/validate_output.py" target="_blank">validate_output.py</a> script on the output folder. Provide the output of the validator script along with your submission.
                 </p>
               </div>
             </div>
             <div class="step">
               <div class="step-num">03</div>
               <div>
-                <h3>Track review and publication</h3>
+                <h3>Open the submission template</h3>
                 <p>
-                  Once reviewed, approved submissions can be added to the live leaderboard so others can compare systems on the same executable benchmark.
+                  Use the <a class="inline-link" href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml" target="_blank">leaderboard submission issue template</a> to share your outputs, agent description, code or system link. Once reviewed, approved submissions will be added to the  live leaderboard.
                 </p>
               </div>
             </div>
@@ -989,7 +1174,7 @@
         </div>
       </section>
 
-      <section class="section" id="why">
+      <!-- <section class="section" id="why">
         <div class="section-header">
           <div>
             <div class="kicker">Why VAKRA</div>
@@ -1048,78 +1233,79 @@
         </div>
         
         
-      </section>
+      </section> -->
 
-      <section class="section" id="api-styles">
+      <section class="section" id="evaluation">
         <div class="section-header">
           <div>
             <div class="kicker">Evaluation</div>
-            <h2 class="section-title">Same underlying data, different interface abstractions</h2>
+            <h2 class="section-title">Replay-based evaluation and scoring</h2>
             <p class="section-desc">
-              VAKRA supports multiple API interaction styles so evaluation can separate planning difficulty,
-              tool selection burden, and endpoint interpretation.
+              The evaluator replays predicted tool trajectories against the live VAKRA MCP environment, injects fresh tool responses, and scores whether the final answer is correct and grounded in executed tool outputs.
             </p>
           </div>
+          <!-- <div class="leaderboard-badges">
+            <div class="badge">Last-turn scoring</div>
+            <div class="badge">MCP replay</div>
+          </div> -->
         </div>
 
-        <!-- <div class="compare">
+        <div class="eval-grid">
           <div class="card">
-            <div class="icon-badge">C</div>
-            <h3>Compositional interfaces</h3>
-            <ul>
-              <li>Small set of generic operations such as filtering, aggregation, and transformation.</li>
-              <li>Requires explicit multi-step planning over intermediate states.</li>
-              <li>Best for testing how agents construct reasoning chains from reusable primitives.</li>
-            </ul>
-          </div>
-          <div class="card">
-            <div class="icon-badge">F</div>
-            <h3>Expanded function interfaces</h3>
-            <ul>
-              <li>Distinct tools materialize parameterized versions of more generic functions.</li>
-              <li>Reduces per-call complexity but increases tool selection difficulty.</li>
-              <li>Useful for evaluating retrieval over tool specs and operation choice under scale.</li>
+            <div class="icon-badge">01</div>
+            <h3>Scoring pipeline</h3>
+              <p>The current scorer evaluates the last turn for each dialogue. A waterfall judge is constructed using the following three judges :</p>            
+            <ul class="eval-list">
+              <li><strong>Policy check </strong> is only used for the multi-source with policy adherence capability. The output is programatically validated based on the policy per data sample.</li>                            
+              <li><strong>Exact-match tool-response check:</strong> looks for expected ground-truth tool responses in the predicted response set.</li>
+              <li><strong>Correctness check:</strong> if exact match fails, an LLM judge compares the predicted final answer to the ground-truth final answer.</li>
+              <li><strong>Groundedness check:</strong> acceptable answers are then checked against the executed tool outputs.</li>
+              <li><strong>Aggregation:</strong> turn scores are combined into a dialogue score using the default <code>mean</code> policy.</li>
             </ul>
           </div>
           <div class="card">
-            <div class="icon-badge">E</div>
-            <h3>Endpoint-style interfaces</h3>
-            <ul>
-              <li>Highly specific, query-aligned endpoints encapsulate most of the computation.</li>
-              <li>Shifts the challenge toward accurate query interpretation and endpoint selection.</li>
-              <li>Supports realistic API-only reasoning chains and task-oriented orchestration.</li>
+            <div class="icon-badge">02</div>
+            <h3>Aggregate Benchmark Score</h3>
+            <ul class="eval-list">
+              <li>Each of the four core capabilities are equally weighted to obtain the overall bechmark score.</li>
+              <li>For <strong>multi-source with policy adherence</strong> capability multi-source queries have twice the weightage of queries requiring only APIs or only retrievers to answer.</li>
             </ul>
+            <figure class="equation-figure">
+              <div class="math-display">
+\[
+\begin{aligned}
+\mathrm{Benchmark\ Score}
+&=
+\frac{1}{4}
+\Bigg(
+\frac{\#\ \mathrm{correct}_{\mathrm{api\_chaining}}}{\#\ \mathrm{total}_{\mathrm{api\_chaining}}}
+\\[8pt]
+&\qquad+
+\frac{\#\ \mathrm{correct}_{\mathrm{tool\_selection}}}{\#\ \mathrm{total}_{\mathrm{tool\_selection}}}
+\\[8pt]
+&\qquad+
+\frac{\#\ \mathrm{correct}_{\mathrm{multihop\_reasoning}}}{\#\ \mathrm{total}_{\mathrm{multihop\_reasoning}}}
+\\[8pt]
+&\qquad+
+\frac{
+\begin{aligned}
+\left(\#\ \mathrm{correct\ multi\text{-}source\ queries} \times 2\right) \\
++\left(\#\ \mathrm{correct\ API\ only\ or\ RAG\ only\ queries}\right)
+\end{aligned}
+}{
+\begin{aligned}
+\left(\#\ \mathrm{total\ multi\text{-}source\ queries} \times 2\right) \\
++\left(\#\ \mathrm{total\ API\ only\ or\ RAG\ only\ queries}\right)
+\end{aligned}
+}
+\Bigg)
+\end{aligned}
+\]
+              </div>
+            </figure>
           </div>
-          <div class="card" id="reasoning">
-            <div class="icon-badge">R</div>
-            <h3>Reasoning tasks</h3>
-            <ul>
-              <li><strong>Multi-hop reasoning:</strong> 3–7 step chains over endpoint-style APIs with entity disambiguation, parameter extraction, and identifier chaining.</li>
-              <li><strong>Multi-hop multi-source reasoning:</strong> structured APIs plus unstructured documents, including cross-source grounding and content integration.</li>
-              <li><strong>Tool-use policy adherence:</strong> query-dependent constraints on source selection and permissible tools.</li>
-            </ul>
-          </div>
-        </div> -->
+        </div>
       </section>
-
-      <section class="section" id="workflow">
-        <div class="section-header">
-          <div>
-            <div class="kicker">How it works</div>
-            <h2 class="section-title">Deterministic, executable, reproducible evaluation</h2>
-            <p class="section-desc">
-              VAKRA verifies full execution traces by replaying tool calls against persistent backends.
-            </p>
-          </div>
-        </div>
-        <div class="stats">
-          <div class="stat"><div class="value">8,000+</div><div class="label">Executable APIs</div></div>
-          <div class="stat"><div class="value">60+</div><div class="label">Enterprise-style domains</div></div>
-          <div class="stat"><div class="value">3–7</div><div class="label">Reasoning steps per task</div></div>
-          <div class="stat"><div class="value">Trace</div><div class="label">Trajectory-level verification</div></div>
-        </div>
-      </section>
-
 
       <div class="footer">
         VAKRA is built for reproducible evaluation of multi-hop, multi-source, multi-tool agents.
@@ -1136,9 +1322,10 @@
         return val === null || val === undefined ? '—' : Number(val).toFixed(2);
       }
 
-      function buildRow(entry, maxOverall) {
+      function buildRow(entry) {
         const s = entry.scores;
-        const barPct = maxOverall > 0 ? ((entry.overall / maxOverall) * 100).toFixed(1) : '0';
+        const overall = Number(entry.overall) || 0;
+        const barPct = Math.max(0, Math.min(overall, 100)).toFixed(1);
         const rank = String(entry.rank).padStart(2, '0');
         const tr = document.createElement('tr');
         tr.dataset.overall  = entry.overall;
@@ -1174,8 +1361,7 @@
             tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted)">No entries yet.</td></tr>';
             return;
           }
-          const maxOverall = Math.max(...rows.map(r => r.overall));
-          rows.forEach(entry => tbody.appendChild(buildRow(entry, maxOverall)));
+          rows.forEach(entry => tbody.appendChild(buildRow(entry)));
           // Re-run the sort to apply default sort state
           const table = document.getElementById('leaderboard-table');
           if (table) sortTable('overall', 'desc');

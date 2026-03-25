@@ -1,5 +1,5 @@
 # 🔷 VAKRA: A Benchmark for Evaluating Multi-Hop, Multi-Source Tool-Calling in AI Agents
-**VAKRA** (eValuating Agentic Knowledge Reasoning Across multi-hop, multi-source dialogues) is a tool-grounded, executable benchmark designed to evaluate how well AI agents reason end-to-end in enterprise-like settings.
+**VAKRA** (e**V**aluating **A**PI and **K**nowledge **R**etrieval **A**gents using multi-hop, multi-source dialogues) is a tool-grounded, executable benchmark designed to evaluate how well AI agents reason end-to-end in enterprise-like settings.
 
 Rather than testing isolated skills, **VAKRA** measures compositional reasoning across APIs and documents, using full execution traces to assess whether agents can reliably complete multi-step workflows, not just individual steps. **VAKRA** provides an executable environment where agents interact with over 8,000 locally hosted APIs backed by real databases spanning 62 domains, along with domain-aligned document collections.
 
@@ -35,26 +35,34 @@ VAKRA is designed to surface exactly where that reasoning succeeds or fails, inc
 
 ## Benchmark Structure
 
-VAKRA organizes evaluation into four capabilities, which together reflect three progressively harder enterprise settings.
+VAKRA organizes evaluation into four capabilities, which together reflect three progressively complex settings.
 
 ### 1. Diverse API Interaction Styles
 
 These tasks focus on structured tool use over APIs with different interface abstractions.
 
-- `capability_1_bi_apis`: nested and compositional API chaining
-- `capability_2_dashboard_apis`: large-scale tool selection over query-aligned endpoints
+- `capability_1_bi_apis` (API Chaining): nested and compositional API chaining
+- `capability_2_dashboard_apis` (Tool Selection): large-scale tool selection over query-aligned endpoints
 
 ### 2. Multi-hop Reasoning over Structured APIs
 
 These tasks require dependent reasoning chains over APIs, where earlier outputs must be interpreted and transformed for later calls.
 
-- `capability_3_multihop_reasoning`
+We have single-turn queries that can be answered by a reasoning chain of 1–3 APIs. For example, a sample may be answered by a single API (API), or by two APIs where the output of API₁ is transformed and passed to API₂ (API₁ → API₂), or by three APIs (API₁ → API₂ → API₃).
+
+- `capability_3_multihop_reasoning` (Multihop API Reasoning)
 
 ### 3. Multi-hop, Multi-source Reasoning with Tool-use Policies
 
-These tasks combine APIs, document retrieval, multi-turn context, and natural-language constraints about when and how tools should be used.
+These tasks combine reasoning over APIs and document retrieval in a multi-turn setting and also include natural-language constraints about tool use.
 
-- `capability_4_multiturn`
+We have multi-turn dialogues represented as context-response-pairs wherein queries could be answered by a reasoning chain of 1-4 tools (ex., a three-turn dialogue "(API)(RAG)(API-RAG)" wherein using the context from the first two turns, an answer needs to be obtained for the (API-RAG) turn.)
+
+- `capability_4_multiturn` (MultiHop MultiSource with Policy Adherence)
+
+This represents the most challenging setting, mirroring decision workflows. Please find below example of all the four capabilities mentioned above.
+
+<img width="2816" height="1536" alt="Core benchmark capabilities" src="ui/Core_benchmark_capabilities.png" />
 
 ## Dataset Overview
 
@@ -64,10 +72,10 @@ High-level test split statistics from the dataset card:
 
 | Capability | Description | Domains | Samples |
 | --- | --- | ---: | ---: |
-| 1 | Nested API tool calling | 54 | 2,077 |
-| 2 | Large-scale tool selection | 17 | 1,597 |
+| 1 | API Chaining | 54 | 2,077 |
+| 2 | Tool selection | 17 | 1,597 |
 | 3 | Multi-hop reasoning | 38 | 869 |
-| 4 | Multi-turn, multi-source reasoning with policies | 41 | 1,676 |
+| 4 | Multi-hop, multi-source reasoning with policies | 41 | 1,676 |
 
 ## Repository Layout
 
@@ -410,15 +418,6 @@ The benchmark runner communicates with containers exclusively over MCP stdio (vi
 | 4 — M3 REST + Retriever | `Capability4CombinedMCPServer` | SQLite via :8000 + ChromaDB via :8001 |
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for full per-capability stack diagrams.
-
-## Who Is This For
-
-VAKRA is designed for:
-
-- researchers studying agentic reasoning, tool use, and grounding
-- developers evaluating models for production-like agent workflows
-- engineering teams building multi-tool enterprise assistants
-- benchmark users who need reproducible, executable evaluation rather than static QA
 
 ## Public Availability
 
