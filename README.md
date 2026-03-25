@@ -21,7 +21,7 @@ Rather than testing isolated skills, **VAKRA** measures compositional reasoning 
 
 <div style="display: flex; align-items: center; white-space: nowrap; gap: 0.5rem; padding: 8px;">
   <div style="font-family: IBM Plex Sans; font-weight: 400; font-size: 16px; line-height: 22px; letter-spacing: 0px;">
-    <a rel="noopener noreferrer" href="https://aiattribution.github.io/statements/AIA-EAI-Hin-R-?model=Gemini%203%20Flash-v1.0" data-cy="recommended-attribution-statement-text" target="_blank" style="font-family: IBM Plex Sans; font-weight: 400; font-size: 16px; line-height: 22px; letter-spacing: 0px;">AIA Entirely AI, Human-initiated, Reviewed, Gemini 3 Flash v1.0 </a>
+    <a rel="noopener noreferrer" href="https://aiattribution.github.io/statements/AIA-EAI-Hin-R-?model=Gemini%203%20Flash-v1.0" data-cy="recommended-attribution-statement-text" target="_blank" style="font-family: IBM Plex Sans; font-weight: 400; font-size: 16px; line-height: 22px; letter-spacing: 0px;">VAKRA Overview (Image Attribution: AIA Entirely AI, Human-initiated, Reviewed, Gemini 3 Flash v1.0)</a>
   </div>
   <div style="display: flex; gap: 0.5rem;">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -451,7 +451,7 @@ The diagram below shows the end-to-end flow — from setup through to leaderboar
 
 <div style="display: flex; align-items: center; white-space: nowrap; gap: 0.5rem; padding: 8px;">
   <div style="font-family: IBM Plex Sans; font-weight: 400; font-size: 16px; line-height: 22px; letter-spacing: 0px;">
-    <a rel="noopener noreferrer" href="https://aiattribution.github.io/statements/AIA-EAI-Hin-R-?model=Gemini%203%20Flash-v1.0" data-cy="recommended-attribution-statement-text" target="_blank" style="font-family: IBM Plex Sans; font-weight: 400; font-size: 16px; line-height: 22px; letter-spacing: 0px;">AIA Entirely AI, Human-initiated, Reviewed, Gemini 3 Flash v1.0 </a>
+    <a rel="noopener noreferrer" href="https://aiattribution.github.io/statements/AIA-EAI-Hin-R-?model=Gemini%203%20Flash-v1.0" data-cy="recommended-attribution-statement-text" target="_blank" style="font-family: IBM Plex Sans; font-weight: 400; font-size: 16px; line-height: 22px; letter-spacing: 0px;"> Benchmark Workflow (Image Attribution: AIA Entirely AI, Human-initiated, Reviewed, Gemini 3 Flash v1.0) </a>
   </div>
   <div style="display: flex; gap: 0.5rem;">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -504,7 +504,8 @@ The benchmark runner communicates with containers exclusively over MCP stdio (vi
 
 <div style="display: flex; align-items: center; white-space: nowrap; gap: 0.5rem; padding: 8px;">
   <div style="font-family: IBM Plex Sans; font-weight: 400; font-size: 16px; line-height: 22px; letter-spacing: 0px;">
-    <a rel="noopener noreferrer" href="https://aiattribution.github.io/statements/AIA-EAI-Hin-R-?model=Gemini%203%20Flash-v1.0" data-cy="recommended-attribution-statement-text" target="_blank" style="font-family: IBM Plex Sans; font-weight: 400; font-size: 16px; line-height: 22px; letter-spacing: 0px;">AIA Entirely AI, Human-initiated, Reviewed, Gemini 3 Flash v1.0 </a>
+    <a rel="noopener noreferrer" href="https://aiattribution.github.io/statements/AIA-EAI-Hin-R-?model=Gemini%203%20Flash-v1.0" data-cy="recommended-attribution-statement-text" target="_blank" style="font-family: IBM Plex Sans; font-weight: 400; font-size: 16px; line-height: 22px; letter-spacing: 0px;"> Architecture (Image Attribution: AIA Entirely AI, Human-initiated, Reviewed, Gemini 3 Flash v1.0) </a>
+  
   </div>
   <div style="display: flex; gap: 0.5rem;">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -549,7 +550,7 @@ The benchmark runner communicates with containers exclusively over MCP stdio (vi
     </svg>
   </div>
 </div>
-
+<br>
 
 | Capability | MCP server | Data backend |
 |---|---|---|
