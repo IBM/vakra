@@ -419,15 +419,6 @@ The benchmark runner communicates with containers exclusively over MCP stdio (vi
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for full per-capability stack diagrams.
 
-## Who Is This For
-
-VAKRA is designed for:
-
-- researchers studying agentic reasoning, tool use, and grounding
-- developers evaluating models for production-like agent workflows
-- engineering teams building multi-tool enterprise assistants
-- benchmark users who need reproducible, executable evaluation rather than static QA
-
 ## Public Availability
 
 - Dataset: Hugging Face dataset release for VAKRA
