@@ -154,6 +154,59 @@
       background: #eef4fb;
     }
 
+    .top-dropdown {
+      position: relative;
+    }
+
+    .top-dropdown summary {
+      list-style: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      transition: 0.18s ease;
+      font-weight: 500;
+    }
+
+    .top-dropdown summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .top-dropdown summary:hover,
+    .top-dropdown[open] summary {
+      color: var(--text);
+      background: #eef4fb;
+    }
+
+    .top-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      min-width: 220px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.98);
+      box-shadow: 0 18px 32px rgba(15,35,65,0.12);
+      display: grid;
+      gap: 4px;
+      z-index: 30;
+    }
+
+    .top-dropdown-menu a {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+      padding: 10px 12px;
+      border-radius: 10px;
+    }
+
+    .top-dropdown-menu a:hover {
+      color: var(--text);
+      background: #eef4fb;
+    }
+
     .top-cta {
       display: inline-flex;
       align-items: center;
@@ -959,7 +1012,14 @@
         <a href="https://huggingface.co/datasets/ibm-research/VAKRA" onclick="event.preventDefault();var opened=window.open(this.href,'_blank','noopener,noreferrer');if(!opened){navigator.clipboard&&navigator.clipboard.writeText(this.href);alert('Could not open tab. URL copied to clipboard:\n'+this.href);}">Dataset</a>
         <a href="#leaderboard">Leaderboard</a>
         <a href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml">Submission</a>
-        <a href="https://www.ibm.com/new/announcements/introducing-vakra-benchmark">Blog</a>
+        <details class="top-dropdown">
+          <summary>Blog</summary>
+          <div class="top-dropdown-menu">
+            <a href="https://www.ibm.com/new/announcements/introducing-vakra-benchmark" target="_blank">Release blog</a>
+            <a href="https://huggingface.co/blog/ibm-research/vakra/" target="_blank">Dataset Description blog</a>            
+            <a href="https://huggingface.co/blog/ibm-research/vakra#evaluation-framework" target="_blank">Error Analysis & Evaluation blog</a>
+          </div>
+        </details>
       </nav>
 
       <a class="top-cta" href="#resources">Get started</a>
@@ -988,7 +1048,7 @@
         <div class="sidebar-news-panel">
           <div class="sidebar-news-item">
             <span class="sidebar-news-date">Apr 16, 2026</span>
-            We released a detailed <a href="https://huggingface.co/blog/ankita-naik/vakra-draft/" target="_blank">Hugging Face blog </a> covering the dataset design, evaluation description, and stage-wise error analysis of model behavior on VAKRA.
+            We released a detailed <a href="https://huggingface.co/blog/ibm-research/vakra/" target="_blank">Hugging Face blog </a> covering the dataset design, evaluation description, and stage-wise error analysis of model behavior on VAKRA.
           </div>
           <div class="sidebar-news-item">
             <span class="sidebar-news-date">Mar 24, 2026</span>
@@ -1022,7 +1082,7 @@
           <div class="hero-actions">
             <a class="btn secondary" href="https://huggingface.co/datasets/ibm-research/VAKRA" target="_blank">View Dataset</a>
             <!-- <a class="btn primary" href="https://huggingface.co/datasets/ibm-research/VAKRA" onclick="event.preventDefault();var opened=window.open(this.href,'_blank','noopener,noreferrer');if(!opened){navigator.clipboard&&navigator.clipboard.writeText(this.href);alert('Could not open tab. URL copied to clipboard:\n'+this.href);}">View dataset</a> -->
-            <a class="btn secondary" href="https://www.ibm.com/new/announcements/introducing-vakra-benchmark">Blog</a>
+            <a class="btn secondary" href="https://huggingface.co/blog/ibm-research/vakra/">Blog</a>
             <a class="btn primary" href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml" onclick="event.preventDefault();var opened=window.open(this.href,'_blank','noopener,noreferrer');if(!opened){navigator.clipboard&&navigator.clipboard.writeText(this.href);alert('Could not open tab. URL copied to clipboard:\n'+this.href);}">Submit to Leaderboard</a>
             <a class="btn secondary" href="https://github.com/IBM/vakra" target="_blank">GitHub repo</a>            
             <a class="btn secondary" href="#leaderboard">Leaderboard</a>          
