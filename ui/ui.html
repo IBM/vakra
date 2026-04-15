@@ -226,6 +226,65 @@
       font-size: 13px;
     }
 
+    .sidebar-news {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .sidebar-news-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 800;
+      color: var(--muted-2);
+      margin-bottom: 10px;
+    }
+
+    .sidebar-news-panel {
+      background: linear-gradient(180deg, #eef4fb 0%, #f6f9fd 100%);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 14px 12px;
+      color: var(--text);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
+    }
+
+    .sidebar-news-item {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    .sidebar-news-item + .sidebar-news-item {
+      margin-top: 12px;
+    }
+
+    .sidebar-news-date {
+      display: inline-block;
+      padding: 2px 8px;
+      margin-right: 6px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #b72f5e, #cf4f66);
+      color: white;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .sidebar-news-panel a {
+      color: var(--blue);
+      font-weight: 700;
+      display: inline;
+      padding: 0;
+    }
+
+    .sidebar-news-panel a:hover {
+      color: var(--blue);
+      text-decoration: underline;
+    }
+
     .content {
       min-width: 0;
     }
@@ -923,6 +982,27 @@
       </nav>
       <div class="sidebar-note">
         This work is licensed under a CC-BY-NC-SA-4.0
+      </div>
+      <div class="sidebar-news">
+        <div class="sidebar-news-title">News</div>
+        <div class="sidebar-news-panel">
+          <div class="sidebar-news-item">
+            <span class="sidebar-news-date">Apr 16, 2026</span>
+            We released a detailed <a href="https://huggingface.co/blog/ankita-naik/vakra-draft/" target="_blank">Hugging Face blog </a> covering the dataset design, evaluation description, and stage-wise error analysis of model behavior on VAKRA.
+          </div>
+          <div class="sidebar-news-item">
+            <span class="sidebar-news-date">Mar 24, 2026</span>
+            <a href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml" target="_blank">Leaderboard submissions</a> are open. You can also browse setup details and code in the <a href="https://github.com/IBM/vakra" target="_blank">GitHub repository</a>.
+          </div>
+          <div class="sidebar-news-item">
+            <span class="sidebar-news-date">Mar 23, 2026</span>
+            The <a href="https://huggingface.co/datasets/ibm-research/VAKRA" target="_blank">dataset release</a> is live, including executable tasks, benchmark assets, and evaluation inputs for reproducible leaderboard runs.
+          </div>          
+          <div class="sidebar-news-item">
+            <span class="sidebar-news-date">Mar 22, 2026</span>
+            Released the public <a href="https://www.ibm.com/new/announcements/introducing-vakra-benchmark" target="_blank">VAKRA benchmark</a>.
+          </div>
+        </div>
       </div>
     </aside>
 
