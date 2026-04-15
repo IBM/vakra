@@ -154,6 +154,59 @@
       background: #eef4fb;
     }
 
+    .top-dropdown {
+      position: relative;
+    }
+
+    .top-dropdown summary {
+      list-style: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      transition: 0.18s ease;
+      font-weight: 500;
+    }
+
+    .top-dropdown summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .top-dropdown summary:hover,
+    .top-dropdown[open] summary {
+      color: var(--text);
+      background: #eef4fb;
+    }
+
+    .top-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      min-width: 220px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.98);
+      box-shadow: 0 18px 32px rgba(15,35,65,0.12);
+      display: grid;
+      gap: 4px;
+      z-index: 30;
+    }
+
+    .top-dropdown-menu a {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+      padding: 10px 12px;
+      border-radius: 10px;
+    }
+
+    .top-dropdown-menu a:hover {
+      color: var(--text);
+      background: #eef4fb;
+    }
+
     .top-cta {
       display: inline-flex;
       align-items: center;
@@ -175,16 +228,27 @@
       align-items: start;
     }
 
-    .sidebar {
+    .sidebar-stack {
       position: sticky;
       top: calc(var(--topbar-h) + 18px);
       align-self: start;
+      display: grid;
+      gap: 16px;
+    }
+
+    .sidebar {
       background: rgba(255,255,255,0.72);
       border: 1px solid var(--line);
       border-radius: 18px;
       box-shadow: var(--shadow);
       padding: 18px 16px;
       backdrop-filter: blur(10px);
+    }
+
+    .sidebar-news-card {
+      max-height: calc(100vh - var(--topbar-h) - 220px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
     }
 
     .sidebar-title {
@@ -224,6 +288,61 @@
       border-top: 1px solid var(--line);
       color: var(--muted);
       font-size: 13px;
+    }
+
+    .sidebar-news {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .sidebar-news-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 800;
+      color: var(--muted-2);
+      margin-bottom: 10px;
+    }
+
+    .sidebar-news-item {
+      background: linear-gradient(180deg, #eef4fb 0%, #f6f9fd 100%);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 14px 12px;
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--text);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
+    }
+
+    .sidebar-news-item + .sidebar-news-item {
+      margin-top: 12px;
+    }
+
+    .sidebar-news-date {
+      display: inline-block;
+      padding: 2px 8px;
+      margin-right: 6px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #b72f5e, #cf4f66);
+      color: white;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .sidebar-news-item a {
+      color: var(--blue);
+      font-weight: 700;
+      display: inline;
+      padding: 0;
+    }
+
+    .sidebar-news-item a:hover {
+      color: var(--blue);
+      text-decoration: underline;
     }
 
     .content {
@@ -900,7 +1019,14 @@
         <a href="https://huggingface.co/datasets/ibm-research/VAKRA" onclick="event.preventDefault();var opened=window.open(this.href,'_blank','noopener,noreferrer');if(!opened){navigator.clipboard&&navigator.clipboard.writeText(this.href);alert('Could not open tab. URL copied to clipboard:\n'+this.href);}">Dataset</a>
         <a href="#leaderboard">Leaderboard</a>
         <a href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml">Submission</a>
-        <a href="https://www.ibm.com/new/announcements/introducing-vakra-benchmark">Blog</a>
+        <details class="top-dropdown">
+          <summary>Blog</summary>
+          <div class="top-dropdown-menu">
+            <a href="https://www.ibm.com/new/announcements/introducing-vakra-benchmark" target="_blank">Release</a>
+            <a href="https://huggingface.co/blog/ibm-research/vakra-benchmark-analysis" target="_blank">Dataset Description</a>            
+            <a href="https://huggingface.co/blog/ibm-research/vakra-benchmark-analysis#evaluation-framework" target="_blank">Evaluation & Error Analysis</a>
+          </div>
+        </details>
       </nav>
 
       <a class="top-cta" href="#resources">Get started</a>
@@ -908,21 +1034,44 @@
   </header>
 
   <div class="page" id="top">
-    <aside class="sidebar" aria-label="Contents">
-      <div class="sidebar-title">Contents</div>
-      <nav class="toc">
-        <a href="#overview">About</a>
-        <a href="#leaderboard">Leaderboard</a>
-        <a href="#capabilities">Core capabilities</a>
-        <a href="#resources">Get started</a>
-        <a href="#submission">Submission Guidelines</a>        
-        <!-- <a href="#why">Benchmark Description</a> -->
-        <a href="#evaluation">Evaluation & Scoring</a>
-        <a href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.md" target="_blank">Contact Us</a>        
-        <!-- <a href="#reasoning">Reasoning tasks</a> -->
-      </nav>
-      <div class="sidebar-note">
-        This work is licensed under a CC-BY-NC-SA-4.0
+    <aside class="sidebar-stack" aria-label="Contents and news">
+      <div class="sidebar">
+        <div class="sidebar-title">Contents</div>
+        <nav class="toc">
+          <a href="#overview">About</a>
+          <a href="#leaderboard">Leaderboard</a>
+          <a href="#capabilities">Core capabilities</a>
+          <a href="#resources">Get started</a>
+          <a href="#submission">Submission Guidelines</a>        
+          <!-- <a href="#why">Benchmark Description</a> -->
+          <a href="#evaluation">Evaluation & Scoring</a>
+          <a href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.md" target="_blank">Contact Us</a>        
+          <!-- <a href="#reasoning">Reasoning tasks</a> -->
+        </nav>
+        <div class="sidebar-note">
+          This work is licensed under a CC-BY-NC-SA-4.0
+        </div>
+      </div>
+      <div class="sidebar sidebar-news-card">
+        <div class="sidebar-news">
+        <div class="sidebar-news-title">News</div>
+            <div class="sidebar-news-item">
+              <span class="sidebar-news-date">Apr 15, 2026</span>
+              We released a detailed <a href="https://huggingface.co/blog/ibm-research/vakra-benchmark-analysis/" target="_blank">Hugging Face blog </a> covering the dataset design, evaluation description, and stage-wise error analysis of model behavior on VAKRA.
+            </div>
+            <div class="sidebar-news-item">
+              <span class="sidebar-news-date">Mar 24, 2026</span>
+              <a href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml" target="_blank">Leaderboard submissions</a> are open. You can also browse setup details and code in the <a href="https://github.com/IBM/vakra" target="_blank">GitHub repository</a>.
+            </div>
+            <div class="sidebar-news-item">
+              <span class="sidebar-news-date">Mar 23, 2026</span>
+              The <a href="https://huggingface.co/datasets/ibm-research/VAKRA" target="_blank">dataset release</a> is live, including executable tasks, benchmark assets, and evaluation inputs for reproducible leaderboard runs.
+            </div>          
+            <div class="sidebar-news-item">
+              <span class="sidebar-news-date">Mar 22, 2026</span>
+              Released the public <a href="https://www.ibm.com/new/announcements/introducing-vakra-benchmark" target="_blank">VAKRA benchmark</a>.
+            </div>
+        </div>
       </div>
     </aside>
 
@@ -942,7 +1091,7 @@
           <div class="hero-actions">
             <a class="btn secondary" href="https://huggingface.co/datasets/ibm-research/VAKRA" target="_blank">View Dataset</a>
             <!-- <a class="btn primary" href="https://huggingface.co/datasets/ibm-research/VAKRA" onclick="event.preventDefault();var opened=window.open(this.href,'_blank','noopener,noreferrer');if(!opened){navigator.clipboard&&navigator.clipboard.writeText(this.href);alert('Could not open tab. URL copied to clipboard:\n'+this.href);}">View dataset</a> -->
-            <a class="btn secondary" href="https://www.ibm.com/new/announcements/introducing-vakra-benchmark">Blog</a>
+            <a class="btn secondary" href="https://huggingface.co/blog/ibm-research/vakra-benchmark-analysis/">Blog</a>
             <a class="btn primary" href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml" onclick="event.preventDefault();var opened=window.open(this.href,'_blank','noopener,noreferrer');if(!opened){navigator.clipboard&&navigator.clipboard.writeText(this.href);alert('Could not open tab. URL copied to clipboard:\n'+this.href);}">Submit to Leaderboard</a>
             <a class="btn secondary" href="https://github.com/IBM/vakra" target="_blank">GitHub repo</a>            
             <a class="btn secondary" href="#leaderboard">Leaderboard</a>          
@@ -978,11 +1127,11 @@
               We evaluate four increasingly difficult capabilities through trace-level evaluation of agent performance across multi-hop, multi-source, and policy-constrained tasks.
             </p> -->
           </div>
-          <div class="leaderboard-badges">
+          <!-- <div class="leaderboard-badges">
             <a class="badge" href="#capabilities">Task Descriptions</a>
             <a class="badge" href="#evaluation">Evaluation Metric</a>
-            <!-- <a class="badge" href="#capabilities">Multi-source</a> -->
-          </div>
+            <a class="badge" href="#capabilities">Multi-source</a>
+          </div> -->
         </div>
 
         <div class="table-wrap">
@@ -1026,6 +1175,7 @@
             </tbody>
           </table>
         </div>
+        <p class="section-desc">** Scores for each capability measure the percentage of queries a model successfully completes end-to-end</p>        
       </section>
 
       <!-- <section class="section" id="workflow">
@@ -1062,7 +1212,7 @@
         </div>
         <figure class="capability-figure">
           <img
-            src="/static/Core_benchmark_capabilities.png"
+            src="/static/vakra_capabilities_diagram.png"
             alt="VAKRA benchmark capabilities diagram showing API Chaining, Tool Selection, MultiHop Reasoning over structured APIs, and MultiHop MultiSource with Policy Adherence." />
           <figcaption>
             Capability overview spanning diverse API interaction styles and complex reasoning workflows.
