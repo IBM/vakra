@@ -4,6 +4,8 @@ The `evaluator/` package replays predicted tool trajectories against the live VA
 
 Rather than grading only the final text, the evaluator executes the submitted tool calls, injects fresh tool responses, and then combines deterministic checks with LLM-based judging to produce per-dialogue and per-domain scores.
 
+Detailed evaluation is explained in our blog - https://huggingface.co/blog/ibm-research/vakra-benchmark-analysis#evaluation-framework
+
 ## What the Evaluator Does
 
 For each capability and domain, the evaluator:
@@ -28,7 +30,7 @@ Each paired dialogue is scored in the following order:
 3. **Groundedness check**
    If the answer is acceptable, another LLM judge verifies that the predicted answer is grounded in the executed tool outputs.
 4. **PolicyAdheranceJudge**
-   NOT INCLUDED : For the Multi-hop multi-source capability we have a PolicyAheranceJudge which programmatically checks the application of a policy by the agent. This judge is currently not included for evaluation.
+   NOT INCLUDED: For the Multi-hop multi-source capability, we use a PolicyAdherenceJudge that programmatically checks the agent's application of a policy. This judge is currently not included for evaluation.
 
 Turn scores are then aggregated into a dialogue score. The default aggregation policy in this repo is `mean`.
 
@@ -102,6 +104,10 @@ Notes:
 ## Running Evaluation
 
 Run the evaluator from the repository root:
+
+1) export `API_KEY=GROQ_API_KEY`
+
+2) Run the evaluation script using the following command
 
 ```bash
 python evaluator/evaluator.py \
