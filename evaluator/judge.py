@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 import os
 import json
+import deepcopy
 from prompt import GroundednessPrompt, CorrectnessPrompt
 from utils import JudgeInput, JudgeOutput
 from langchain_openai import ChatOpenAI
@@ -24,10 +25,31 @@ class JudgeValidationError(ValueError):
     pass
 
 class ChatModel(ChatOpenAI):
-    """openai/gpt-oss-120b chat model is being used as LLM-as-a-judge using langchain-openai."""
+    """
+    openai/gpt-oss-120b chat model is being used as LLM-as-a-judge using langchain-openai.
+    Groq-backed OpenAI-compatible chat model.
+    """
 
-    def __init__(self, config):
+    def __init__(self, config: dict):
         # Set model with model or model_name
+        model_name = config.get("model_name", "openai/gpt-oss-120b")
+        end_point = config.get("end_point", "https://api.groq.com/openai")
+
+        api_key = os.getenv("API_KEY")
+        if api_key is None or api_key == "":
+            raise ValueError("API_KEY is required")
+
+        params = config.get("params", {})
+
+        # Set default values for overriding fields
+        config = {}
+        config.setdefault("model", model_name)
+        config.setdefault("api_key", api_key)
+        config.setdefault("base_url", end_point.rstrip("/") + "/v1")
+        config.setdefault("temperature", 0)
+
+        config.update(params)
+
         super().__init__(**config)
 
 class LLMJudge:
