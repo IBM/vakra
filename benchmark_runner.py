@@ -51,6 +51,7 @@ Output:
   Results saved to: output/capability_{id}_{timestamp}/<domain>.json
   e.g. output/capability_2_feb_18_11_21am/hockey.json
 """
+import os
 import asyncio
 from contextlib import AsyncExitStack
 import json
