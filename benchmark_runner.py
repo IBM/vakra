@@ -358,6 +358,7 @@ async def run_capability(
     top_k_tools: int = 0,
     max_iterations: Optional[int] = None,
     restart: bool = False,
+    temperature: float = 0.0,
 ) -> List[BenchmarkResult]:
     """Run benchmark for a given capability_id, iterating over all domain files."""
 
@@ -398,7 +399,7 @@ async def run_capability(
             tlog(f"Restart mode: skipping {len(completed)} already-completed domain(s): {sorted(completed)}")
             domain_list = [d for d in domain_list if d not in completed]
 
-    llm = create_llm(provider=provider, model=model)
+    llm = create_llm(provider=provider, model=model, temperature=temperature)
 
     # Process each domain, writing output incrementally
     all_results: List[BenchmarkResult] = []
@@ -554,6 +555,12 @@ def main():
         default="enterprise-benchmark",
         help="Phoenix project name for grouping traces (default: enterprise-benchmark)",
     )
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=0.0,
+        help="LLM temperature (default: 0.0)"
+    )
 
     args = parser.parse_args()
     capability_ids = args.capability_id  # list of ints now
@@ -589,6 +596,7 @@ def main():
             top_k_tools=args.top_k_tools,
             max_iterations=args.max_iterations,
             restart=args.restart,
+            temperature=args.temperature
         )
 
     def _make_list_tools_coro(tid: int):

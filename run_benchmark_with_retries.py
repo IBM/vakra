@@ -51,6 +51,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--capability-id", type=int, required=True, choices=sorted(CAPABILITY_NAME_MAP))
     parser.add_argument("--provider", required=True)
     parser.add_argument("--model", required=True)
+    parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument(
         "--vakra-root",
         default=Path(__file__).resolve().parent,
@@ -268,6 +269,7 @@ def benchmark_command(
     capability_id: int,
     provider: str,
     model: str,
+    temperature: float,
     output_dir: Path,
     domains: Sequence[str] | None,
     extra_args: Sequence[str],
@@ -282,7 +284,9 @@ def benchmark_command(
         "--model",
         model,
         "--output",
-        str(output_dir)
+        str(output_dir),
+        "--temperature",
+        str(temperature),
     ]
     for domain in domains or []:
         cmd.extend(["--domain", domain])
@@ -301,7 +305,7 @@ def evaluator_command(
 ) -> list[str]:
     cmd = [
         python_exe,
-        "./evaluator/evaluator.py",
+        "/root/vakra-internal-read-only/evaluator/evaluator.py",
         "--capability_name",
         capability_name,
         "--gt_root",
@@ -371,6 +375,7 @@ def main() -> int:
         capability_id=args.capability_id,
         provider=args.provider,
         model=args.model,
+        temperature=args.temperature,
         output_dir=output_dir,
         domains=args.domain,
         extra_args=args.benchmark_extra_arg,
@@ -417,6 +422,7 @@ def main() -> int:
                 capability_id=args.capability_id,
                 provider=args.provider,
                 model=args.model,
+                temperature=args.temperature,
                 output_dir=output_dir,
                 domains=[item.domain],
                 extra_args=args.benchmark_extra_arg,
