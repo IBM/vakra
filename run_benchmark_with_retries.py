@@ -134,8 +134,13 @@ def parse_args() -> argparse.Namespace:
         default=[],
         help="Extra argument to pass through to evaluator.py. Can be repeated.",
     )
+    parser.add_argument(
+        "--run_evaluator",
+        action="store_true",
+        help="Skip the benchmark run and retries, and only run the evaluator. "
+        "Useful for testing the evaluator or if predictions are already generated.",
+    )
     return parser.parse_args()
-
 
 def default_output_dir(vakra_root: Path, capability_id: int) -> Path:
     timestamp = datetime.now().strftime("%b_%d_%I_%M%p").lower()
@@ -369,93 +374,94 @@ def main() -> int:
     print(f"[config] gt_root={gt_root}")
     print(f"[config] capability_name={capability_name}")
 
-    main_benchmark_cmd = benchmark_command(
-        python_exe=args.python,
-        vakra_root=vakra_root,
-        capability_id=args.capability_id,
-        provider=args.provider,
-        model=args.model,
-        temperature=args.temperature,
-        output_dir=output_dir,
-        domains=args.domain,
-        extra_args=args.benchmark_extra_arg,
-    )
-    benchmark_result = run_logged_command(
-        main_benchmark_cmd,
-        cwd=vakra_root,
-        env=env,
-        log_path=benchmark_log,
-        poll_seconds=args.poll_seconds,
-        label="benchmark-main",
-    )
-    if benchmark_result.return_code != 0:
-        print("[benchmark-main] non-zero exit code; continuing to inspect generated outputs before deciding retries/evaluation.")
+    if args.run_evaluator:
+        main_benchmark_cmd = benchmark_command(
+            python_exe=args.python,
+            vakra_root=vakra_root,
+            capability_id=args.capability_id,
+            provider=args.provider,
+            model=args.model,
+            temperature=args.temperature,
+            output_dir=output_dir,
+            domains=args.domain,
+            extra_args=args.benchmark_extra_arg,
+        )
+        benchmark_result = run_logged_command(
+            main_benchmark_cmd,
+            cwd=vakra_root,
+            env=env,
+            log_path=benchmark_log,
+            poll_seconds=args.poll_seconds,
+            label="benchmark-main",
+        )
+        if benchmark_result.return_code != 0:
+            print("[benchmark-main] non-zero exit code; continuing to inspect generated outputs before deciding retries/evaluation.")
 
-    requested_domains = set(args.domain) if args.domain else None
-    retry_substrings = args.retry_error_substring or list(DEFAULT_RETRY_ERROR_SUBSTRINGS)
-    retry_attempts: dict[str, int] = {}
-    retry_summaries: list[tuple[str, int, float, int]] = []
+        requested_domains = set(args.domain) if args.domain else None
+        retry_substrings = args.retry_error_substring or list(DEFAULT_RETRY_ERROR_SUBSTRINGS)
+        retry_attempts: dict[str, int] = {}
+        retry_summaries: list[tuple[str, int, float, int]] = []
 
-    for round_index in range(1, args.retry_count + 1):
-        retryable_domains = scan_retryable_domains(
+        for round_index in range(1, args.retry_count + 1):
+            retryable_domains = scan_retryable_domains(
+                output_dir,
+                retry_substrings,
+                eligible_domains=requested_domains,
+            )
+            remaining = [item for item in retryable_domains if retry_attempts.get(item.domain, 0) < args.retry_count]
+            if not remaining:
+                print("[retry] no retryable domains found.")
+                break
+
+            print(f"[retry] round {round_index}: domains to retry: {[item.domain for item in remaining]}")
+            for item in remaining:
+                retry_attempts[item.domain] = retry_attempts.get(item.domain, 0) + 1
+                print(
+                    f"[retry] domain={item.domain} "
+                    f"retryable_errors={item.retryable_errors} total_errors={item.total_errors} "
+                    f"attempt={retry_attempts[item.domain]}/{args.retry_count}"
+                )
+                remove_previous_domain_outputs(output_dir, item.domain)
+                retry_cmd = benchmark_command(
+                    python_exe=args.python,
+                    vakra_root=vakra_root,
+                    capability_id=args.capability_id,
+                    provider=args.provider,
+                    model=args.model,
+                    temperature=args.temperature,
+                    output_dir=output_dir,
+                    domains=[item.domain],
+                    extra_args=args.benchmark_extra_arg,
+                )
+                retry_result = run_logged_command(
+                    retry_cmd,
+                    cwd=vakra_root,
+                    env=env,
+                    log_path=benchmark_log,
+                    poll_seconds=args.poll_seconds,
+                    label=f"benchmark-retry-{item.domain}-attempt-{retry_attempts[item.domain]}",
+                )
+                retry_summaries.append(
+                    (
+                        item.domain,
+                        retry_attempts[item.domain],
+                        retry_result.elapsed_seconds,
+                        retry_result.return_code,
+                    )
+                )
+                if retry_result.return_code != 0:
+                    print(f"[retry] retry command for {item.domain} exited with {retry_result.return_code}")
+
+        final_retryable = scan_retryable_domains(
             output_dir,
             retry_substrings,
             eligible_domains=requested_domains,
         )
-        remaining = [item for item in retryable_domains if retry_attempts.get(item.domain, 0) < args.retry_count]
-        if not remaining:
-            print("[retry] no retryable domains found.")
-            break
-
-        print(f"[retry] round {round_index}: domains to retry: {[item.domain for item in remaining]}")
-        for item in remaining:
-            retry_attempts[item.domain] = retry_attempts.get(item.domain, 0) + 1
+        if final_retryable:
             print(
-                f"[retry] domain={item.domain} "
-                f"retryable_errors={item.retryable_errors} total_errors={item.total_errors} "
-                f"attempt={retry_attempts[item.domain]}/{args.retry_count}"
+                "[retry] retryable errors still present after retries for domains: "
+                f"{[item.domain for item in final_retryable]}"
             )
-            remove_previous_domain_outputs(output_dir, item.domain)
-            retry_cmd = benchmark_command(
-                python_exe=args.python,
-                vakra_root=vakra_root,
-                capability_id=args.capability_id,
-                provider=args.provider,
-                model=args.model,
-                temperature=args.temperature,
-                output_dir=output_dir,
-                domains=[item.domain],
-                extra_args=args.benchmark_extra_arg,
-            )
-            retry_result = run_logged_command(
-                retry_cmd,
-                cwd=vakra_root,
-                env=env,
-                log_path=benchmark_log,
-                poll_seconds=args.poll_seconds,
-                label=f"benchmark-retry-{item.domain}-attempt-{retry_attempts[item.domain]}",
-            )
-            retry_summaries.append(
-                (
-                    item.domain,
-                    retry_attempts[item.domain],
-                    retry_result.elapsed_seconds,
-                    retry_result.return_code,
-                )
-            )
-            if retry_result.return_code != 0:
-                print(f"[retry] retry command for {item.domain} exited with {retry_result.return_code}")
-
-    final_retryable = scan_retryable_domains(
-        output_dir,
-        retry_substrings,
-        eligible_domains=requested_domains,
-    )
-    if final_retryable:
-        print(
-            "[retry] retryable errors still present after retries for domains: "
-            f"{[item.domain for item in final_retryable]}"
-        )
 
     if not gt_root.exists():
         print(f"[error] ground-truth path does not exist: {gt_root}")
