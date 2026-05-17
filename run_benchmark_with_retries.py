@@ -135,7 +135,7 @@ def parse_args() -> argparse.Namespace:
         help="Extra argument to pass through to evaluator.py. Can be repeated.",
     )
     parser.add_argument(
-        "--run_evaluator",
+        "--run_only_evaluator",
         action="store_true",
         help="Skip the benchmark run and retries, and only run the evaluator. "
         "Useful for testing the evaluator or if predictions are already generated.",
@@ -373,8 +373,7 @@ def main() -> int:
     print(f"[config] output_dir={output_dir}")
     print(f"[config] gt_root={gt_root}")
     print(f"[config] capability_name={capability_name}")
-
-    if args.run_evaluator:
+    if not args.run_only_evaluator:
         main_benchmark_cmd = benchmark_command(
             python_exe=args.python,
             vakra_root=vakra_root,
@@ -488,15 +487,16 @@ def main() -> int:
     )
 
     total_elapsed_seconds = time.perf_counter() - workflow_started_at
-    print(f"[done] benchmark main time: {format_duration(benchmark_result.elapsed_seconds)}")
-    if retry_summaries:
-        for domain, attempt, elapsed_seconds, return_code in retry_summaries:
-            print(
-                f"[done] retry {domain} attempt {attempt}: "
-                f"{format_duration(elapsed_seconds)} (rc={return_code})"
-            )
-    else:
-        print("[done] retries: none")
+    if not args.run_only_evaluator:
+        print(f"[done] benchmark main time: {format_duration(benchmark_result.elapsed_seconds)}")
+        if retry_summaries:
+            for domain, attempt, elapsed_seconds, return_code in retry_summaries:
+                print(
+                    f"[done] retry {domain} attempt {attempt}: "
+                    f"{format_duration(elapsed_seconds)} (rc={return_code})"
+                )
+        else:
+            print("[done] retries: none")
     print(f"[done] evaluator time: {format_duration(eval_result.elapsed_seconds)}")
     print(f"[done] total workflow time: {format_duration(total_elapsed_seconds)}")
     print(f"[done] predictions: {output_dir}")
