@@ -139,12 +139,12 @@ METRICS = {
     "logical_consistency": {
         "title": "Logical Consistency",
         "desc": (
-            "Does the merged query avoid logically incompatible conditions or contradictions? "
-            "The different parts of the query should be simultaneously satisfiable and should "
-            "form a valid reasoning chain. For example, a question like "
-            "'Name a city on Earth which lies above the equator and is in Australia?' "
-            "contains logically incompatible constraints."
-        ),
+        "Does the merged query avoid logically incompatible conditions or contradictions? "
+        "The different parts of the query should be simultaneously satisfiable and should "
+        "form a valid reasoning chain. For example, a question like "
+        "'Name a city on Earth which lies above the equator and is in Australia?' "
+        "contains logically incompatible constraints."
+    ),
         "scale": {
             1: "Completely inconsistent: logically incompatible component queries or conditions that cannot be satisfied together were merged",
             2: "Major inconsistency: the query contains impossible or directly contradictory conditions that make the question invalid or unanswerable",
@@ -174,25 +174,25 @@ METRICS = {
     },
     "retrieval_sufficiency": {
         "title": "Retrieval Sufficiency Score",
-        "desc": "Do the ground truth documents have sufficient information to answer the RAG query? (Mark '0' is no RAG component query.)",
+        "desc": "Do the ground truth documents have sufficient information to answer the RAG query? (Mark '0' if no RAG component in query.)",
         "scale": {
-            0: "Not applicable (e.g., no retrieval needed for this query)",
+            0: "Not applicable (e.g., no retrieval needed for this query)",            
             1: "GT document have no relevant information",
             2: "GT document have some missing information",
             3: "GT document have some missing information which is common sense knowledge",
             4: "No information missing"
-        }
+        },
     },
     "cross_hop_entity_consistency": {
         "title": "Cross-Hop Entity Consistency Score",
-        "desc": "Are entities required by the arguments of the succeeding or preceding API tool calls correctly inferred and grounded in the retrieved documents or retriever questions? (Mark '0' is no RAG component query.)",
+        "desc": "Are entities required by the arguments of the succeeding or preceding API tool calls correctly inferred and grounded in the retrieved documents or retriever questions? (Mark '0' if no RAG component in query.)",
         "scale": {
             0: "Not applicable (e.g., no retrieval needed for this query)",
             1: "Not answerable",
             2: "Majorly missing context / entities cannot be answered without these entities",
             3: "Mostly sufficient have some missing information which is common sense knowledge",
-            4: "Fully sufficient"
-        }
+            4: "Fully sufficient",
+        },
     }
 }
 ```
