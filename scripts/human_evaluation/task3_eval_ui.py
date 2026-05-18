@@ -98,10 +98,12 @@ HTML = """
     .left {
       border-right: 2px solid #ddd;
       background: #ffffff;
+      z-index: 1;
     }
 
     .right {
       background: #f9f9f9;
+      z-index: 2;
     }
 
     .card {
@@ -164,8 +166,7 @@ HTML = """
       position: absolute;
       z-index: 9999;
       top: 140%;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 0;
       opacity: 0;
       transition: opacity 0.2s;
       font-size: 12px;
