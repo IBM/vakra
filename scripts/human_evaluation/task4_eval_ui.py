@@ -76,7 +76,7 @@ METRICS = {
     # },
     "retrieval_sufficiency": {
         "title": "Retrieval Sufficiency Score",
-        "desc": "Do the ground truth documents have sufficient information to answer the RAG query? (Mark '0' is no RAG component query.)",
+        "desc": "Do the ground truth documents have sufficient information to answer the RAG query? (Mark '0' if no RAG component in query.)",
         "scale": {
             0: "Not applicable (e.g., no retrieval needed for this query)",            
             1: "GT document have no relevant information",
@@ -87,7 +87,7 @@ METRICS = {
     },
     "cross_hop_entity_consistency": {
         "title": "Cross-Hop Entity Consistency Score",
-        "desc": "Are entities required by the arguments of the succeeding or preceding API tool calls correctly inferred and grounded in the retrieved documents or retriever questions? (Mark '0' is no RAG component query.)",
+        "desc": "Are entities required by the arguments of the succeeding or preceding API tool calls correctly inferred and grounded in the retrieved documents or retriever questions? (Mark '0' if no RAG component in query.)",
         "scale": {
             0: "Not applicable (e.g., no retrieval needed for this query)",
             1: "Not answerable",
