@@ -312,7 +312,7 @@ HTML = """
     </div>
 
     <div class="hint">
-      Hover over numbers for score explanations. Keyboard: 1-5 = score active metric, N = Save & Next, P = Save & Previous.
+      Hover over numbers for score explanations. Keyboard: 0-5 = score active metric when available, N = Save & Next, P = Save & Previous.
     </div>
 
     <form id="eval-form" method="post" action="{{ url_for('save', idx=idx) }}">
@@ -401,7 +401,7 @@ HTML = """
       return;
     }
 
-    if (["1", "2", "3", "4", "5"].includes(event.key)) {
+    if (["0", "1", "2", "3", "4", "5"].includes(event.key)) {
       event.preventDefault();
       selectScore(event.key);
     }
