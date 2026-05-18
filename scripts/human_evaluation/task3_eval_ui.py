@@ -55,17 +55,6 @@ METRICS = {
             3: "Mostly sufficient",
             4: "Fully sufficient"
         }
-    },
-    "reasoning_hops": {
-        "title": "Reasoning Steps / Hops",
-        "desc": "If you had to solve this query, how many reasoning steps would be required according to you?",
-        "scale": {
-            1: "Single hop",
-            2: "Two hops",
-            3: "Moderate multi-hop",
-            4: "Complex multi-hop",
-            5: "Very complex reasoning"
-        }
     }
 }
 
@@ -238,7 +227,7 @@ HTML = """
     </div>
 
     <div class="hint">
-      Hover over numbers for score explanations. Keyboard: 1–5 = score active metric, N = Save & Next, P = Save & Previous.
+      Hover over numbers for score explanations. Keyboard: 1-4 = score active metric, N = Save & Next, P = Save & Previous.
     </div>
 
     <form id="eval-form" method="post" action="{{ url_for('save', idx=idx) }}">
@@ -328,7 +317,7 @@ HTML = """
       return;
     }
 
-    if (["1", "2", "3", "4", "5"].includes(event.key)) {
+    if (["1", "2", "3", "4"].includes(event.key)) {
       event.preventDefault();
       selectScore(event.key);
     }
@@ -415,7 +404,6 @@ def make_app(data_path, output_path):
             "domain": item.get("domain"),
             "query": item.get("query"),
 
-            "reasoning_hops": int(request.form["reasoning_hops"]),
             "faithfulness": int(request.form["faithfulness"]),
             "naturalness": int(request.form["naturalness"]),
             "logical_consistency": int(request.form["logical_consistency"]),
