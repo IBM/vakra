@@ -17,16 +17,30 @@ from pydantic import Field, model_validator
 
 logger = logging.getLogger(__name__)
 
+REQUEST_TIMEOUT = float(os.getenv("RITS_REQUEST_TIMEOUT_SECONDS", 60.0))
+MAX_RETRIES = int(os.getenv("RITS_MAX_RETRIES", 2))
+
+timeout = httpx.Timeout(
+    connect=10.0,
+    read=REQUEST_TIMEOUT,
+    write=30.0,
+    pool=10.0,
+)
 
 class RITSChatModel(BaseChatModel):
     """LangChain-compatible chat model using httpx for internal RITS inference service."""
 
     # Mapping from endpoint name (short) to payload model name (full)
     MODEL_NAME_MAPPING: Dict[str, str] = {
-        "llama-3-3-70b-instruct": "meta-llama/llama-3-3-70b-instruct",
+        # Open Source Models
+        "qwen3-5-397b-a17b-fp8": "Qwen/Qwen3.5-397B-A17B-FP8", 
+        "mistral-large-3-675b-2512-fp4": "mistralai/Mistral-Large-3-675B-Instruct-2512-NVFP4",
+        "glm-5-1": "",
+        "moonshotai-kimi-k2-5":"moonshotai/Kimi-K2.5",
         "gpt-oss-120b": "openai/gpt-oss-120b",
-        "qwen3-5-397b-a17b-fp8": "qwen/qwen3.5-397B-A17B-FP8", 
-        "mistral-large-3-675b-2512-fp4": "mistralai/Mistral-Large-3-675B-Instruct-2512-NVFP4"
+        # smaller models
+        "llama-3-3-70b-instruct": "meta-llama/llama-3-3-70b-instruct",
+        "qwen2-5-72b-instruct": "Qwen/Qwen2.5-72B-Instruct",
     }
 
     model_name: str
@@ -125,12 +139,35 @@ class RITSChatModel(BaseChatModel):
         if self.bound_tools:
             payload["tools"] = self.bound_tools
 
+        # Add MAX_RETRIES and timeout handling
+        # async with httpx.AsyncClient(timeout=timeout) as client:
+        #     for attempt in range(MAX_RETRIES + 1):
+        #         try:
+        #             resp = await client.post(
+        #                 url,
+        #                 json=payload,
+        #                 headers=headers,
+        #             )
+        #             resp.raise_for_status()
+        #             break
+
+        #         except httpx.ReadTimeout:
+        #             if attempt == MAX_RETRIES:
+        #                 raise
+        #             await asyncio.sleep(2 ** attempt)
+
+        #         except httpx.HTTPError:
+        #             if attempt == MAX_RETRIES:
+        #                 raise
+        #             await asyncio.sleep(2 ** attempt)
+        #         data = resp.json()
+
         async with httpx.AsyncClient() as client:
             resp = await client.post(
                 url,
                 headers=headers,
                 json=payload,
-                timeout=60.0
+                timeout=float(os.environ.get("RITS_REQUEST_TIMEOUT_SECONDS", "60"))
             )
             resp.raise_for_status()
             data = resp.json()

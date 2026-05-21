@@ -51,6 +51,7 @@ Output:
   Results saved to: output/capability_{id}_{timestamp}/<domain>.json
   e.g. output/capability_2_feb_18_11_21am/hockey.json
 """
+import os
 import asyncio
 from contextlib import AsyncExitStack
 import json
@@ -145,7 +146,7 @@ DEFAULT_MCP_CONFIG = str(
     Path(__file__).parent / "benchmark" / "mcp_connection_config.yaml"
 )
 # Timeout for agent execution (seconds)
-AGENT_TIMEOUT_SECONDS = 300
+AGENT_TIMEOUT_SECONDS = float(os.environ.get("AGENT_TIMEOUT_SECONDS", "300"))
 
 
 async def run_benchmark_for_domain(
@@ -316,7 +317,7 @@ async def run_benchmark_for_domain(
                 except Exception as e:
                     import traceback
                     result.status = "error"
-                    result.error = str(e)
+                    result.error = f"{type(e).__name__} "+str(e)
                     tlog(f"    Status: error | {type(e).__name__}: {str(e)[:200]}")
                     tlog(f"    Traceback: {traceback.format_exc()}")
 
@@ -357,6 +358,7 @@ async def run_capability(
     top_k_tools: int = 0,
     max_iterations: Optional[int] = None,
     restart: bool = False,
+    temperature: float = 0.0,
 ) -> List[BenchmarkResult]:
     """Run benchmark for a given capability_id, iterating over all domain files."""
 
@@ -397,7 +399,7 @@ async def run_capability(
             tlog(f"Restart mode: skipping {len(completed)} already-completed domain(s): {sorted(completed)}")
             domain_list = [d for d in domain_list if d not in completed]
 
-    llm = create_llm(provider=provider, model=model)
+    llm = create_llm(provider=provider, model=model, temperature=temperature)
 
     # Process each domain, writing output incrementally
     all_results: List[BenchmarkResult] = []
@@ -553,6 +555,12 @@ def main():
         default="enterprise-benchmark",
         help="Phoenix project name for grouping traces (default: enterprise-benchmark)",
     )
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=0.0,
+        help="LLM temperature (default: 0.0)"
+    )
 
     args = parser.parse_args()
     capability_ids = args.capability_id  # list of ints now
@@ -588,6 +596,7 @@ def main():
             top_k_tools=args.top_k_tools,
             max_iterations=args.max_iterations,
             restart=args.restart,
+            temperature=args.temperature
         )
 
     def _make_list_tools_coro(tid: int):
