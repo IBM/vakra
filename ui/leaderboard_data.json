@@ -58,5 +58,17 @@
       "multihop": 25.80,
       "multiturn": 15.05
     }
-  }
+  },
+  {
+    "model": "Qwen3.6-35B-A3B",
+    "agent": "Juris",
+    "agent_url": "https://research.clerktree.com/juris",
+    "date": "May 21, 2026",
+    "scores": {
+      "api_chaining": 0.0,
+      "tool_selection": 59.42,
+      "multihop": 0.0,
+      "multiturn": 0.0
+    }
+  }  
 ]
