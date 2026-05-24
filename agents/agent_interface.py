@@ -84,7 +84,7 @@ def _extract_agent_response(
     if result and "messages" in result:
         for msg in result["messages"]:
             msg_class = msg.__class__.__name__
-            msg_content = _stringify_message_content(getattr(msg, "content", ""))
+            msg_content = getattr(msg, "content", "")
 
             trajectory_entry = {
                 "type": msg_class,
