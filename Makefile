@@ -14,7 +14,7 @@
 #   make restart     Stop and restart all containers
 #   make logs        Tail logs for all running benchmark containers
 #   make clean       Stop containers and remove the local Docker image
-#   make e2e              Run end-to-end benchmark tests (requires Hugging Face auth + OPENAI_API_KEY)
+#   make e2e              Run end-to-end benchmark tests (requires HF_TOKEN + OPENAI_API_KEY)
 #   make e2e-quick        Run e2e tests against already-running containers — OpenAI provider
 #   make e2e-quick-rits   Run e2e tests against already-running containers — RITS provider
 #   make e2e-quick-watsonx Run e2e tests against already-running containers — WatsonX provider
@@ -54,9 +54,8 @@ check-hf-auth:
 
 # ---------------------------------------------------------------------------
 # Download benchmark data from Hugging Face
-# Requires Hugging Face auth via HF_TOKEN/HUGGING_FACE_HUB_TOKEN or
-# huggingface-cli login. Uses gated test data when the token has access;
-# otherwise downloads the public train split fallback.
+# Uses gated test data when Hugging Face auth has access; otherwise downloads
+# the public train split fallback.
 # ---------------------------------------------------------------------------
 download:
 	$(PYTHON) benchmark_setup.py --download-data
@@ -114,7 +113,7 @@ logs:
 
 # ---------------------------------------------------------------------------
 # End-to-end benchmark tests
-# Requires Hugging Face auth and OPENAI_API_KEY env vars set.
+# Requires HF_TOKEN and OPENAI_API_KEY env vars set.
 # ---------------------------------------------------------------------------
 e2e:
 	@if [ -z "$(HF_TOKEN)" ]; then echo "ERROR: HF_TOKEN is not set."; exit 1; fi

@@ -271,20 +271,19 @@ def download_data() -> None:
         sys.exit(1)
 
     token = _hf_token()
-    if not token:
-        raise SystemExit(
-            "ERROR: Hugging Face authentication is required before running "
-            "make download. Set HF_TOKEN/HUGGING_FACE_HUB_TOKEN or run "
-            "'huggingface-cli login'."
-        )
-
     api = HfApi(token=token)
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     (DATA_DIR / "test").mkdir(parents=True, exist_ok=True)
     (DATA_DIR / "train").mkdir(parents=True, exist_ok=True)
 
     print(f"\n=== Syncing data into {DATA_DIR} ===")
-    test_available = _sync_gated_test(api, token)
+    if token:
+        test_available = _sync_gated_test(api, token)
+    else:
+        test_available = False
+        print(f"\n--- {GATED_TEST_REPO} -> data/test/ ---")
+        print("  No Hugging Face auth found; skipping gated test set.")
+        print("  Public train split will be downloaded instead.")
     _sync_public_support_data(api)
 
     train_available = False
@@ -297,10 +296,17 @@ def download_data() -> None:
         print(f"TEST SET DOWNLOADED: data/test was populated from {GATED_TEST_REPO}.")
     elif train_available:
         print("GATED TEST SET NOT DOWNLOADED.")
-        print("Public train split was downloaded to data/train instead.")
+        if token:
+            print("Your Hugging Face auth did not provide gated test access.")
+            print("Request access to VAKRA-GatedTest by opening a GitHub issue:")
+            print(f"  {GATED_TEST_ACCESS_ISSUE_URL}")
+        else:
+            print("No Hugging Face auth was found.")
+        print("Public train split was downloaded anonymously to data/train instead.")
         print("benchmark_runner.py will fall back to data/train when data/test is empty.")
-        print("Request gated test access by opening a GitHub issue:")
-        print(f"  {GATED_TEST_ACCESS_ISSUE_URL}")
+        if not token:
+            print("Request gated test access by opening a GitHub issue:")
+            print(f"  {GATED_TEST_ACCESS_ISSUE_URL}")
     else:
         print("WARNING: gated test and public train splits were not downloaded.")
         print("Request gated test access by opening a GitHub issue:")

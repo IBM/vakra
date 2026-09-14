@@ -172,11 +172,11 @@ make build
 docker compose up -d
 ```
 
-`make download` requires Hugging Face authentication via `HF_TOKEN`,
-`HUGGING_FACE_HUB_TOKEN`, or `huggingface-cli login`. It first tries to download
-the gated test split from
+`make download` uses Hugging Face authentication from `HF_TOKEN`,
+`HUGGING_FACE_HUB_TOKEN`, or `huggingface-cli login` when available. It first
+tries to download the gated test split from
 [`ibm-research/VAKRA-GatedTest`](https://huggingface.co/datasets/ibm-research/VAKRA-GatedTest)
-using that token. If gated access is unavailable,
+using that token. If no token is available, or gated access is unavailable,
 it downloads the public train split from
 [`ibm-research/VAKRA`](https://huggingface.co/datasets/ibm-research/VAKRA)
 instead. To request gated test access, open:

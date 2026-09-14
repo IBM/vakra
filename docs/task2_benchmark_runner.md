@@ -30,11 +30,10 @@ make download
 ```
 
 This downloads shared runtime data into `data/` and then tries to populate
-`data/test/` from the gated VAKRA-GatedTest Hugging Face repo. Authenticate with
-`HF_TOKEN`, `HUGGING_FACE_HUB_TOKEN`, or `huggingface-cli login` before running.
-If the token does not have gated test access, the public train split is
-downloaded into `data/train/` and the benchmark runner falls back to it
-automatically.
+`data/test/` from the gated VAKRA-GatedTest Hugging Face repo when Hugging Face
+auth is available. If no token is available, or the token does not have gated
+test access, the public train split is downloaded into `data/train/` and the
+benchmark runner falls back to it automatically.
 
 ### 3. Pull the Docker image and start containers
 
