@@ -153,7 +153,7 @@ enterprise-benchmark/
 | **`make`** | Used for data download, image build, and container lifecycle targets |
 | **LLM provider** | At least one of: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `WATSONX_APIKEY`, or a `LITELLM_BASE_URL` — or run [Ollama](https://ollama.com) locally (no API key required) |
 | **Memory (container runtime)** | 8 GB+ allocated to Docker/Podman — capability 4 (ChromaDB) will OOM with the default 2 GB |
-| **Disk space** | Varies by access level. `make download` downloads shared runtime data plus either the gated test split or the public train split fallback. |
+| **Disk space** | ~35 GB for benchmark data downloaded via `make download` |
 
 ## Quick Start
 

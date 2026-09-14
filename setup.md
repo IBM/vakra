@@ -25,7 +25,7 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[init]"
 pip install -r requirements_benchmark.txt
 
-# 2. Download benchmark data (gated test if available, public train fallback otherwise)
+# 2. Download benchmark data (~30 GB)
 make download
 
 # 3. Stop any existing containers, build the image, and start all 4 containers
@@ -132,9 +132,11 @@ pip install langchain-openai langchain mcp langchain-anthropic langgraph langcha
 Data download is required for both routes below:
 
 ```bash
-# Download benchmark data from Hugging Face
+# Download benchmark data from HuggingFace (~30 GB)
 make download
 ```
+
+> **Warning:** `make download` fetches ~30 GB of data. This will be reduced in a future release.
 
 `make download` creates both `data/test/` and `data/train/`. It first tries
 to populate `data/test/` from the gated
@@ -476,7 +478,7 @@ Checks file existence, BPO MCP handshake, and M3 REST MCP handshake. FastAPI hea
 **With data (full validation):**
 
 ```bash
-make download   # one-time — downloads gated test data or public train fallback into data/
+make download   # one-time — downloads ~35 GB into data/
 make test       # all 4 sections run including FastAPI health
 ```
 
