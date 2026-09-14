@@ -1,0 +1,57 @@
+name: "VAKRA-GatedTest Access Request"
+description: "Request access to the gated VAKRA test set on Hugging Face"
+title: "[VAKRA-GatedTest Access]: <name-or-organization>"
+labels: ["gated-test-access"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to request access to the VAKRA-GatedTest dataset.
+        Before opening the issue, request access on Hugging Face with the same account you list below.
+
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: Your name or the primary contact for this request.
+      placeholder: e.g. Jane Doe
+    validations:
+      required: true
+
+  - type: input
+    id: organization
+    attributes:
+      label: Organization
+      description: Your organization, institution, or independent affiliation.
+      placeholder: e.g. Example University / Example AI Lab
+    validations:
+      required: true
+
+  - type: input
+    id: hf_username
+    attributes:
+      label: Hugging Face username
+      description: The Hugging Face account that requested access to ibm-research/VAKRA-GatedTest.
+      placeholder: e.g. jane-doe
+    validations:
+      required: true
+
+  - type: textarea
+    id: intended_use
+    attributes:
+      label: Intended use
+      description: Briefly describe how you plan to use the VAKRA gated test set.
+      placeholder: |
+        We plan to evaluate...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have requested access to ibm-research/VAKRA-GatedTest on Hugging Face.
+          required: true
+        - label: I will follow the dataset license and usage terms.
+          required: true
