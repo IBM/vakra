@@ -152,9 +152,10 @@ At the end of the download, the command prints whether the gated test set was
 downloaded. If not, it prints the GitHub issue link for requesting access:
 https://github.com/IBM/vakra/issues/new?template=gated_test_access.yml
 
-`benchmark_runner.py` checks `data/test/capability_*/input/` first. If the
-test split is empty for a capability, it logs a message and falls back to
-`data/train/capability_*/input/`.
+`benchmark_runner.py` expects benchmark inputs under
+`data/test/capability_*/input/`. The public train split is downloaded to
+`data/train/` for users without gated test access, but the runner does not
+automatically fall back to it.
 
 Then choose your route:
 
