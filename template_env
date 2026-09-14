@@ -65,8 +65,8 @@ CONTAINER_RUNTIME=docker
 # Hugging Face Dataset Access
 # =============================================================================
 
-# Optional. Set this only if you have access to ibm-research/VAKRA-GatedTest.
-# Without it, make download uses the public train split fallback.
+# Required for make download. A token with access to ibm-research/VAKRA-GatedTest
+# downloads the gated test set; other valid tokens use the public train fallback.
 # HF_TOKEN=hf_your-token-here
 
 

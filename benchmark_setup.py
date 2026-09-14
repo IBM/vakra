@@ -176,10 +176,6 @@ def _sync_hf_files(
 
 def _sync_gated_test(api, token: str | None) -> bool:
     print(f"\n--- {GATED_TEST_REPO} -> data/test/ ---")
-    if not token:
-        print("  HF_TOKEN/HUGGING_FACE_HUB_TOKEN is not set; skipping gated test set.")
-        return False
-
     try:
         remote_files = _repo_files(api, GATED_TEST_REPO, token)
     except Exception as exc:
@@ -252,13 +248,20 @@ def download_data() -> None:
         print("  pip install -e '.[init]'")
         sys.exit(1)
 
-    api = HfApi(token=_hf_token())
+    token = _hf_token()
+    if not token:
+        raise SystemExit(
+            "ERROR: HF_TOKEN or HUGGING_FACE_HUB_TOKEN must be set before running "
+            "make download."
+        )
+
+    api = HfApi(token=token)
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     (DATA_DIR / "test").mkdir(parents=True, exist_ok=True)
     (DATA_DIR / "train").mkdir(parents=True, exist_ok=True)
 
     print(f"\n=== Syncing data into {DATA_DIR} ===")
-    test_available = _sync_gated_test(api, _hf_token())
+    test_available = _sync_gated_test(api, token)
     _sync_public_support_data(api)
 
     train_available = False

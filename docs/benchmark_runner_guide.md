@@ -13,7 +13,7 @@ flowchart TD
     subgraph PREREQ["① Prerequisites"]
         P1[Docker running\n≥ 8GB memory allocated]
         P2[Python 3.8+]
-        P3[API Keys ready\nLLM provider key\nHF_TOKEN optional for gated test]
+        P3[API Keys ready\nHF_TOKEN + LLM provider key]
         P1 --- P2 --- P3
     end
 
@@ -28,8 +28,8 @@ flowchart TD
 
     INSTALL --> DATA
 
-    subgraph DATA["③ Download Benchmark Data"]
-        D1["optional: export HF_TOKEN=hf_..."]
+    subgraph DATA["③ Download Benchmark Data  ~30 GB"]
+        D1["export HF_TOKEN=hf_..."]
         D2["make download"]
         D1 --> D2
     end
@@ -128,7 +128,7 @@ flowchart TD
 |------|--------|---------|
 | ① | Prerequisites | Docker ≥ 8 GB, Python 3.8+, API keys |
 | ② | Install deps | `pip install -e '.[init]' && pip install -r requirements_benchmark.txt` |
-| ③ | Download data | `make download` (`HF_TOKEN` or `HUGGING_FACE_HUB_TOKEN` enables gated test download) |
+| ③ | Download data | `export HF_TOKEN=hf_... && make download` |
 | ④ | Get Docker image | `make build` or `make pull` |
 | ⑤ | Start containers | `make start` → wait 60s → `docker ps` |
 | ⑥ | (Optional) Explore | `list_tools.py`, `invoke_tool.py`, `simple_docker.py` |

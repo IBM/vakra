@@ -13,7 +13,7 @@
 #   make restart     Stop and restart all containers
 #   make logs        Tail logs for all running benchmark containers
 #   make clean       Stop containers and remove the local Docker image
-#   make e2e              Run end-to-end benchmark tests (requires OPENAI_API_KEY; HF_TOKEN optional)
+#   make e2e              Run end-to-end benchmark tests (requires HF_TOKEN + OPENAI_API_KEY)
 #   make e2e-quick        Run e2e tests against already-running containers — OpenAI provider
 #   make e2e-quick-rits   Run e2e tests against already-running containers — RITS provider
 #   make e2e-quick-watsonx Run e2e tests against already-running containers — WatsonX provider
@@ -47,8 +47,8 @@ PYTHON ?= $(shell \
 
 # ---------------------------------------------------------------------------
 # Download benchmark data from Hugging Face
-# Uses gated test data when HF_TOKEN/HUGGING_FACE_HUB_TOKEN has access;
-# otherwise downloads the public train split fallback.
+# Requires HF_TOKEN/HUGGING_FACE_HUB_TOKEN. Uses gated test data when the token
+# has access; otherwise downloads the public train split fallback.
 # ---------------------------------------------------------------------------
 download:
 	$(PYTHON) benchmark_setup.py --download-data
@@ -106,10 +106,10 @@ logs:
 
 # ---------------------------------------------------------------------------
 # End-to-end benchmark tests
-# Requires: OPENAI_API_KEY env var set. HF_TOKEN/HUGGING_FACE_HUB_TOKEN is
-# optional and enables gated test-set download.
+# Requires: HF_TOKEN and OPENAI_API_KEY env vars set.
 # ---------------------------------------------------------------------------
 e2e:
+	@if [ -z "$(HF_TOKEN)" ]; then echo "ERROR: HF_TOKEN is not set."; exit 1; fi
 	@if [ -z "$(OPENAI_API_KEY)" ]; then echo "ERROR: OPENAI_API_KEY is not set."; exit 1; fi
 	$(PYTHON) -m pytest tests/e2e/test_benchmark_e2e.py -v -s
 

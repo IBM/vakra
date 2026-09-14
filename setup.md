@@ -377,14 +377,13 @@ Model overrides: set `RITS_MODEL`, `WATSONX_MODEL`, `OPENAI_MODEL`, `LITELLM_MOD
 
 **Option 2 — `make e2e` (full setup from scratch)**
 
-Downloads data, starts containers, then runs tests. Requires an LLM provider
-key. Set `HF_TOKEN` or `HUGGING_FACE_HUB_TOKEN` if you have gated test access;
-otherwise the public train split is used as the fallback.
+Downloads data, starts containers, then runs tests. Requires `HF_TOKEN` or
+`HUGGING_FACE_HUB_TOKEN` plus an LLM provider key. If the Hugging Face token
+does not have gated test access, the public train split is used as the fallback.
 
 ```bash
-export OPENAI_API_KEY=sk-...
-# optional for gated test access:
 export HF_TOKEN=hf_...
+export OPENAI_API_KEY=sk-...
 make e2e
 ```
 
@@ -392,7 +391,7 @@ Alternatively, use a `.env` file:
 
 ```bash
 cp template_env .env
-# edit .env: set OPENAI_API_KEY; set HF_TOKEN only if you have gated test access
+# edit .env: set HF_TOKEN and OPENAI_API_KEY
 export $(grep -v '^#' .env | xargs)
 make e2e
 ```
@@ -516,7 +515,7 @@ make setup      # download → build → test → start → validate
 | `make start-task5` | Start `capability_4_multiturn` only |
 | `make stop` | Stop and remove all benchmark containers |
 | `make clean` | Stop containers and remove the local `m3_environ` Docker image |
-| `make e2e` | Run end-to-end benchmark tests (requires `OPENAI_API_KEY`; `HF_TOKEN`/`HUGGING_FACE_HUB_TOKEN` optional for gated test data) |
+| `make e2e` | Run end-to-end benchmark tests (requires `HF_TOKEN` + `OPENAI_API_KEY`) |
 | `make e2e-quick` | Run e2e tests against already-running containers — OpenAI provider (requires `OPENAI_API_KEY`) |
 | `make e2e-quick-rits` | Same, using RITS provider (requires `RITS_API_KEY`) |
 | `make e2e-quick-watsonx` | Same, using WatsonX provider (requires `WATSONX_APIKEY` + project/space ID) |

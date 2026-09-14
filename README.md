@@ -172,9 +172,10 @@ make build
 docker compose up -d
 ```
 
-`make download` first tries to download the gated test split from
+`make download` requires `HF_TOKEN` or `HUGGING_FACE_HUB_TOKEN`. It first tries
+to download the gated test split from
 [`ibm-research/VAKRA-GatedTest`](https://huggingface.co/datasets/ibm-research/VAKRA-GatedTest)
-using `HF_TOKEN` or `HUGGING_FACE_HUB_TOKEN`. If gated access is unavailable,
+using that token. If gated access is unavailable,
 it downloads the public train split from
 [`ibm-research/VAKRA`](https://huggingface.co/datasets/ibm-research/VAKRA)
 instead. To request gated test access, open:
