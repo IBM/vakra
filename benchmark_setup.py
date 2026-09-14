@@ -303,7 +303,6 @@ def download_data() -> None:
         else:
             print("No Hugging Face auth was found.")
         print("Public train split was downloaded anonymously to data/train instead.")
-        print("benchmark_runner.py will fall back to data/train when data/test is empty.")
         if not token:
             print("Request gated test access by opening a GitHub issue:")
             print(f"  {GATED_TEST_ACCESS_ISSUE_URL}")

@@ -9,14 +9,24 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 from benchmark.utils import _extract_tool_response_values
 
 
-REPO_ROOT = Path(__file__).parent.parent
-
-# Task configurations - maps capability_id to capability folder name.
-CAPABILITY_DIR_NAMES = {
-    1: "capability_1_bi_apis",
-    2: "capability_2_dashboard_apis",
-    3: "capability_3_multihop_reasoning",
-    4: "capability_4_multiturn",
+# Task configurations - maps capability_id to input directory path
+CAPABILITY_PATHS = {
+    1: os.environ.get(
+        "CAPABILITY_1_DIR",
+        str(Path(__file__).parent.parent / "data" / "test" / "capability_1_bi_apis"),
+    ),
+    2: os.environ.get(
+        "CAPABILITY_2_DIR",
+        str(Path(__file__).parent.parent / "data" / "test" / "capability_2_dashboard_apis"),
+    ),
+    3: os.environ.get(
+        "CAPABILITY_3_DIR",
+        str(Path(__file__).parent.parent / "data" / "test" / "capability_3_multihop_reasoning"),
+    ),
+    4: os.environ.get(
+        "CAPABILITY_4_DIR",
+        str(Path(__file__).parent.parent / "data" / "test" / "capability_4_multiturn"),
+    ),
 }
 
 @dataclass
@@ -93,54 +103,6 @@ class BenchmarkResult:
     shortlisted_tools: List[str] = field(default_factory=list)  # Tool names actually presented to the agent after shortlisting
 
 
-def _json_files(input_path: Path) -> List[Path]:
-    return sorted(input_path.glob("input/*.json"))
-
-
-def _resolve_capability_input_path(capability_id: int) -> Tuple[Path, List[Path]]:
-    """Return the capability path and JSON files, preferring test over train."""
-    if capability_id not in CAPABILITY_DIR_NAMES:
-        print(f"Error: Unknown capability_id {capability_id}")
-        sys.exit(1)
-
-    override_name = f"CAPABILITY_{capability_id}_DIR"
-    if override_name in os.environ:
-        input_path = Path(os.environ[override_name])
-        if not input_path.exists():
-            print(f"Error: Input path does not exist: {input_path}")
-            sys.exit(1)
-        json_files = _json_files(input_path)
-        if not json_files:
-            print(f"Error: No JSON files found under {input_path}/input/")
-            sys.exit(1)
-        return input_path, json_files
-
-    capability_dir = CAPABILITY_DIR_NAMES[capability_id]
-    test_path = REPO_ROOT / "data" / "test" / capability_dir
-    train_path = REPO_ROOT / "data" / "train" / capability_dir
-
-    test_files = _json_files(test_path)
-    if test_files:
-        return test_path, test_files
-
-    train_files = _json_files(train_path)
-    if train_files:
-        print(
-            "Test set is missing or empty for "
-            f"capability {capability_id}; falling back to train set at {train_path}."
-        )
-        return train_path, train_files
-
-    if not test_path.exists() and not train_path.exists():
-        print(f"Error: Input paths do not exist: {test_path} or {train_path}")
-    else:
-        print(
-            "Error: No JSON files found under "
-            f"{test_path}/input/ or {train_path}/input/"
-        )
-    sys.exit(1)
-
-
 def load_benchmark_data(
     capability_id: int,
     domains: Optional[List[str]] = None,
@@ -162,13 +124,24 @@ def load_benchmark_data(
         BenchmarkItem objects (empty when domain_names_only=True) and
         domain_names is a sorted list of domain name strings.
     """
-    input_path, json_files = _resolve_capability_input_path(capability_id)
+    if capability_id not in CAPABILITY_PATHS:
+        print(f"Error: Unknown capability_id {capability_id}")
+        sys.exit(1)
+
+    input_path = Path(CAPABILITY_PATHS[capability_id])
+    if not input_path.exists():
+        print(f"Error: Input path does not exist: {input_path}")
+        sys.exit(1)
+    json_files = sorted(input_path.glob("input/*.json"))
+    if not json_files:
+        print(f"Error: No JSON files found under {input_path}/input/")
+        sys.exit(1)
 
     if domains:
         json_files = [f for f in json_files if f.stem in domains]
         if not json_files:
             available = sorted(
-                {f.stem for f in _json_files(input_path)}
+                {f.stem for f in input_path.glob("input/*.json")}
             )
             print(f"Error: No files found for domains: {domains}")
             suffix = "..." if len(available) > 10 else ""
