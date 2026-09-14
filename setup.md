@@ -132,16 +132,21 @@ pip install langchain-openai langchain mcp langchain-anthropic langgraph langcha
 Data download is required for both routes below:
 
 ```bash
+# Optional: verify Hugging Face auth before downloading
+make check-hf-auth
+
 # Download benchmark data from HuggingFace (~30 GB)
+# You will be prompted for a HuggingFace token
 make download
 ```
 
 > **Warning:** `make download` fetches ~30 GB of data. This will be reduced in a future release.
 
-`make download` creates both `data/test/` and `data/train/`. It first tries
-to populate `data/test/` from the gated
+`make download` creates both `data/test/` and `data/train/`. Authenticate by
+setting `HF_TOKEN`/`HUGGING_FACE_HUB_TOKEN` or by running `huggingface-cli login`.
+It first tries to populate `data/test/` from the gated
 [`ibm-research/VAKRA-GatedTest`](https://huggingface.co/datasets/ibm-research/VAKRA-GatedTest)
-repo using `HF_TOKEN` or `HUGGING_FACE_HUB_TOKEN`. If gated access is not
+repo using that token. If gated access is not
 available, it downloads the public train split from
 [`ibm-research/VAKRA`](https://huggingface.co/datasets/ibm-research/VAKRA)
 into `data/train/` instead.
@@ -379,13 +384,14 @@ Model overrides: set `RITS_MODEL`, `WATSONX_MODEL`, `OPENAI_MODEL`, `LITELLM_MOD
 
 **Option 2 — `make e2e` (full setup from scratch)**
 
-Downloads data, starts containers, then runs tests. Requires `HF_TOKEN` or
-`HUGGING_FACE_HUB_TOKEN` plus an LLM provider key. If the Hugging Face token
+Downloads data, starts containers, then runs tests. Requires Hugging Face
+authentication plus an LLM provider key. Authenticate with `HF_TOKEN`,
+`HUGGING_FACE_HUB_TOKEN`, or `huggingface-cli login`. If the Hugging Face token
 does not have gated test access, the public train split is used as the fallback.
 
 ```bash
 export HF_TOKEN=hf_...
-export OPENAI_API_KEY=sk-...
+export OPENAI_API_KEY=sk-...  # or another supported provider key
 make e2e
 ```
 
@@ -393,7 +399,7 @@ Alternatively, use a `.env` file:
 
 ```bash
 cp template_env .env
-# edit .env: set HF_TOKEN and OPENAI_API_KEY
+# edit .env: set one provider key and optionally HF_TOKEN if not using huggingface-cli login
 export $(grep -v '^#' .env | xargs)
 make e2e
 ```
@@ -501,6 +507,7 @@ make setup      # download → build → test → start → validate
 
 | Target | What it does |
 |--------|-------------|
+| `make check-hf-auth` | Verify Hugging Face auth is available via `HF_TOKEN`, `HUGGING_FACE_HUB_TOKEN`, or `huggingface-cli login` |
 | `make download` | `python benchmark_setup.py --download-data` — syncs shared runtime data and downloads gated `data/test` when accessible, otherwise public `data/train` |
 | `make pull` | Pull the `m3_environ` image from Docker Hub |
 | `make build` | Build the Docker image |
@@ -517,7 +524,7 @@ make setup      # download → build → test → start → validate
 | `make start-task5` | Start `capability_4_multiturn` only |
 | `make stop` | Stop and remove all benchmark containers |
 | `make clean` | Stop containers and remove the local `m3_environ` Docker image |
-| `make e2e` | Run end-to-end benchmark tests (requires `HF_TOKEN` + `OPENAI_API_KEY`) |
+| `make e2e` | Run end-to-end benchmark tests (requires Hugging Face auth + one supported LLM provider key) |
 | `make e2e-quick` | Run e2e tests against already-running containers — OpenAI provider (requires `OPENAI_API_KEY`) |
 | `make e2e-quick-rits` | Same, using RITS provider (requires `RITS_API_KEY`) |
 | `make e2e-quick-watsonx` | Same, using WatsonX provider (requires `WATSONX_APIKEY` + project/space ID) |

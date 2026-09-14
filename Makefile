@@ -2,6 +2,7 @@
 # Enterprise Benchmark — Docker image lifecycle
 # =============================================================================
 # Targets:
+#   make check-hf-auth  Verify Hugging Face auth via env vars or CLI login
 #   make download    Download benchmark data from HuggingFace
 #   make build       Build the benchmark_environ image from source
 #   make test        Smoke-test the locally built image (file checks + MCP handshakes)
@@ -13,7 +14,7 @@
 #   make restart     Stop and restart all containers
 #   make logs        Tail logs for all running benchmark containers
 #   make clean       Stop containers and remove the local Docker image
-#   make e2e              Run end-to-end benchmark tests (requires HF_TOKEN + OPENAI_API_KEY)
+#   make e2e              Run end-to-end benchmark tests (requires Hugging Face auth + OPENAI_API_KEY)
 #   make e2e-quick        Run e2e tests against already-running containers — OpenAI provider
 #   make e2e-quick-rits   Run e2e tests against already-running containers — RITS provider
 #   make e2e-quick-watsonx Run e2e tests against already-running containers — WatsonX provider
@@ -41,14 +42,21 @@ PYTHON ?= $(shell \
     command -v python3 2>/dev/null | head -1 || command -v python 2>/dev/null | head -1 || echo python3; \
   fi)
 
-.PHONY: download build test validate validate-output setup start stop restart logs clean e2e \
+.PHONY: check-hf-auth download build test validate validate-output setup start stop restart logs clean e2e \
         e2e-quick e2e-quick-rits e2e-quick-watsonx e2e-quick-litellm e2e-quick-anthropic \
         start-capability1 start-capability2 start-capability3 start-capability4
 
 # ---------------------------------------------------------------------------
+# Verify Hugging Face authentication
+# ---------------------------------------------------------------------------
+check-hf-auth:
+	$(PYTHON) benchmark_setup.py --check-hf-auth
+
+# ---------------------------------------------------------------------------
 # Download benchmark data from Hugging Face
-# Requires HF_TOKEN/HUGGING_FACE_HUB_TOKEN. Uses gated test data when the token
-# has access; otherwise downloads the public train split fallback.
+# Requires Hugging Face auth via HF_TOKEN/HUGGING_FACE_HUB_TOKEN or
+# huggingface-cli login. Uses gated test data when the token has access;
+# otherwise downloads the public train split fallback.
 # ---------------------------------------------------------------------------
 download:
 	$(PYTHON) benchmark_setup.py --download-data
@@ -106,7 +114,7 @@ logs:
 
 # ---------------------------------------------------------------------------
 # End-to-end benchmark tests
-# Requires: HF_TOKEN and OPENAI_API_KEY env vars set.
+# Requires Hugging Face auth and OPENAI_API_KEY env vars set.
 # ---------------------------------------------------------------------------
 e2e:
 	@if [ -z "$(HF_TOKEN)" ]; then echo "ERROR: HF_TOKEN is not set."; exit 1; fi

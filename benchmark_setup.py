@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 Setup script for the Enterprise Benchmark.
 
@@ -13,6 +15,7 @@ Usage:
     python benchmark_setup.py
 
     # Individual steps
+    python benchmark_setup.py --check-hf-auth
     python benchmark_setup.py --download-data
     python benchmark_setup.py --start-containers
     python benchmark_setup.py --stop-containers
@@ -78,8 +81,27 @@ def _load_metadata(path: Path) -> dict:
 
 
 def _hf_token() -> str | None:
-    """Return a Hugging Face token from the standard env vars, if present."""
-    return os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")
+    """Return a Hugging Face token from env vars or the CLI cache."""
+    token = os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")
+    if token:
+        return token
+
+    try:
+        from huggingface_hub import get_token
+    except ImportError:
+        return None
+    return get_token()
+
+
+def check_hf_auth() -> None:
+    """Exit successfully only when Hugging Face auth is available."""
+    token = _hf_token()
+    if not token:
+        raise SystemExit(
+            "ERROR: Hugging Face authentication was not found.\n"
+            "Set HF_TOKEN/HUGGING_FACE_HUB_TOKEN or run 'huggingface-cli login'."
+        )
+    print("Hugging Face authentication found.")
 
 
 def _repo_files(api, repo: str, token: str | None) -> dict[str, str]:
@@ -251,8 +273,9 @@ def download_data() -> None:
     token = _hf_token()
     if not token:
         raise SystemExit(
-            "ERROR: HF_TOKEN or HUGGING_FACE_HUB_TOKEN must be set before running "
-            "make download."
+            "ERROR: Hugging Face authentication is required before running "
+            "make download. Set HF_TOKEN/HUGGING_FACE_HUB_TOKEN or run "
+            "'huggingface-cli login'."
         )
 
     api = HfApi(token=token)
@@ -345,6 +368,10 @@ def main() -> None:
         help="Download benchmark data from HuggingFace",
     )
     parser.add_argument(
+        "--check-hf-auth", action="store_true",
+        help="Check whether Hugging Face authentication is configured",
+    )
+    parser.add_argument(
         "--start-containers", action="store_true",
         help="Start Docker containers for all tasks via docker compose",
     )
@@ -356,7 +383,16 @@ def main() -> None:
     args = parser.parse_args()
 
     # If no specific step requested, run all setup steps
-    explicit = args.download_data or args.start_containers or args.stop_containers
+    explicit = (
+        args.check_hf_auth
+        or args.download_data
+        or args.start_containers
+        or args.stop_containers
+    )
+
+    if args.check_hf_auth:
+        check_hf_auth()
+        return
 
     if args.stop_containers:
         stop_containers()

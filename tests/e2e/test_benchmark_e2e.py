@@ -16,7 +16,7 @@ Provider selection:
   - Anthropic: ANTHROPIC_API_KEY                    (requires E2E_PROVIDER=anthropic)
 
 Requirements:
-    HF_TOKEN              - HuggingFace token for data download
+    Hugging Face auth     - HF_TOKEN/HUGGING_FACE_HUB_TOKEN or huggingface-cli login
     One of the above provider key sets
     Docker                - Available on PATH
 
@@ -156,9 +156,18 @@ def containers_ready():
         yield  # containers assumed to be already running
         return
 
-    if not (os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")):
+    hf_token = os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")
+    if not hf_token:
+        try:
+            from huggingface_hub import get_token
+            hf_token = get_token()
+        except ImportError:
+            hf_token = None
+
+    if not hf_token:
         pytest.fail(
-            "Required environment variable not set: HF_TOKEN\n"
+            "Hugging Face authentication is required. Set HF_TOKEN/"
+            "HUGGING_FACE_HUB_TOKEN or run 'huggingface-cli login'.\n"
             "(or set E2E_SKIP_SETUP=1 to skip data download + container start)"
         )
 
