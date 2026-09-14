@@ -62,6 +62,15 @@ CONTAINER_RUNTIME=docker
 
 
 # =============================================================================
+# Hugging Face Dataset Access
+# =============================================================================
+
+# Optional. Set this only if you have access to ibm-research/VAKRA-GatedTest.
+# Without it, make download uses the public train split fallback.
+# HF_TOKEN=hf_your-token-here
+
+
+# =============================================================================
 # LLM Providers
 # =============================================================================
 
@@ -106,6 +115,3 @@ WATSONX_PROJECT_ID=your-watsonx-project-id-here
 
 # watsonx.ai API endpoint URL
 WATSONX_URL=https://us-south.ml.cloud.ibm.com
-
-# HF token
-HF_TOKEN=

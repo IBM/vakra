@@ -25,7 +25,7 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[init]"
 pip install -r requirements_benchmark.txt
 
-# 2. Download benchmark data (~30 GB)
+# 2. Download benchmark data (gated test if available, public train fallback otherwise)
 make download
 
 # 3. Stop any existing containers, build the image, and start all 4 containers
@@ -132,12 +132,25 @@ pip install langchain-openai langchain mcp langchain-anthropic langgraph langcha
 Data download is required for both routes below:
 
 ```bash
-# Download benchmark data from HuggingFace (~30 GB)
-# You will be prompted for a HuggingFace token
+# Download benchmark data from Hugging Face
 make download
 ```
 
-> **Warning:** `make download` fetches ~30 GB of data. This will be reduced in a future release.
+`make download` creates both `data/test/` and `data/train/`. It first tries
+to populate `data/test/` from the gated
+[`ibm-research/VAKRA-GatedTest`](https://huggingface.co/datasets/ibm-research/VAKRA-GatedTest)
+repo using `HF_TOKEN` or `HUGGING_FACE_HUB_TOKEN`. If gated access is not
+available, it downloads the public train split from
+[`ibm-research/VAKRA`](https://huggingface.co/datasets/ibm-research/VAKRA)
+into `data/train/` instead.
+
+At the end of the download, the command prints whether the gated test set was
+downloaded. If not, it prints the GitHub issue link for requesting access:
+https://github.com/IBM/vakra/issues/new?template=gated_test_access.yml
+
+`benchmark_runner.py` checks `data/test/capability_*/input/` first. If the
+test split is empty for a capability, it logs a message and falls back to
+`data/train/capability_*/input/`.
 
 Then choose your route:
 
@@ -364,11 +377,14 @@ Model overrides: set `RITS_MODEL`, `WATSONX_MODEL`, `OPENAI_MODEL`, `LITELLM_MOD
 
 **Option 2 — `make e2e` (full setup from scratch)**
 
-Downloads data, starts containers, then runs tests. Requires both tokens.
+Downloads data, starts containers, then runs tests. Requires an LLM provider
+key. Set `HF_TOKEN` or `HUGGING_FACE_HUB_TOKEN` if you have gated test access;
+otherwise the public train split is used as the fallback.
 
 ```bash
-export HF_TOKEN=hf_...
 export OPENAI_API_KEY=sk-...
+# optional for gated test access:
+export HF_TOKEN=hf_...
 make e2e
 ```
 
@@ -376,7 +392,7 @@ Alternatively, use a `.env` file:
 
 ```bash
 cp template_env .env
-# edit .env: set HF_TOKEN and OPENAI_API_KEY
+# edit .env: set OPENAI_API_KEY; set HF_TOKEN only if you have gated test access
 export $(grep -v '^#' .env | xargs)
 make e2e
 ```
@@ -461,7 +477,7 @@ Checks file existence, BPO MCP handshake, and M3 REST MCP handshake. FastAPI hea
 **With data (full validation):**
 
 ```bash
-make download   # one-time — downloads ~35 GB into data/
+make download   # one-time — downloads gated test data or public train fallback into data/
 make test       # all 4 sections run including FastAPI health
 ```
 
@@ -484,7 +500,7 @@ make setup      # download → build → test → start → validate
 
 | Target | What it does |
 |--------|-------------|
-| `make download` | `python m3_setup.py --download-data` — syncs all 4 HuggingFace repos into `data/` |
+| `make download` | `python benchmark_setup.py --download-data` — syncs shared runtime data and downloads gated `data/test` when accessible, otherwise public `data/train` |
 | `make pull` | Pull the `m3_environ` image from Docker Hub |
 | `make build` | Build the Docker image |
 | `make test` | Smoke-test the image (file checks + MCP handshakes) |
@@ -500,7 +516,7 @@ make setup      # download → build → test → start → validate
 | `make start-task5` | Start `capability_4_multiturn` only |
 | `make stop` | Stop and remove all benchmark containers |
 | `make clean` | Stop containers and remove the local `m3_environ` Docker image |
-| `make e2e` | Run end-to-end benchmark tests (requires `HF_TOKEN` + `OPENAI_API_KEY`) |
+| `make e2e` | Run end-to-end benchmark tests (requires `OPENAI_API_KEY`; `HF_TOKEN`/`HUGGING_FACE_HUB_TOKEN` optional for gated test data) |
 | `make e2e-quick` | Run e2e tests against already-running containers — OpenAI provider (requires `OPENAI_API_KEY`) |
 | `make e2e-quick-rits` | Same, using RITS provider (requires `RITS_API_KEY`) |
 | `make e2e-quick-watsonx` | Same, using WatsonX provider (requires `WATSONX_APIKEY` + project/space ID) |

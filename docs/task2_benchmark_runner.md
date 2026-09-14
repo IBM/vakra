@@ -26,11 +26,14 @@ pip install -e ".[init]"
 ### 2. Download benchmark data
 
 ```bash
-python m3_setup.py --download-data
+make download
 ```
 
-This downloads databases, task configs, and retriever data from HuggingFace into `data/`.
-You will be prompted for a HuggingFace token if `HF_TOKEN` is not set in your environment.
+This downloads shared runtime data into `data/` and then tries to populate
+`data/test/` from the gated VAKRA-GatedTest Hugging Face repo. Set `HF_TOKEN`
+or `HUGGING_FACE_HUB_TOKEN` before running if you have gated access. If the
+test set is unavailable, the public train split is downloaded into `data/train/`
+and the benchmark runner falls back to it automatically.
 
 ### 3. Pull the Docker image and start containers
 

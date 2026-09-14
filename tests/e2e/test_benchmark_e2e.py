@@ -16,7 +16,7 @@ Provider selection:
   - Anthropic: ANTHROPIC_API_KEY                    (requires E2E_PROVIDER=anthropic)
 
 Requirements:
-    HF_TOKEN              - HuggingFace token for data download
+    HF_TOKEN              - Optional; enables gated test-set download
     One of the above provider key sets
     Docker                - Available on PATH
 
@@ -25,14 +25,14 @@ Usage:
     pip install -e '.[init]'
 
     # Set env vars and run (RITS example)
-    RITS_API_KEY=... HF_TOKEN=hf_... python -m pytest tests/e2e/test_benchmark_e2e.py -v -s
+    RITS_API_KEY=... python -m pytest tests/e2e/test_benchmark_e2e.py -v -s
 
     # WatsonX
-    WATSONX_APIKEY=... WATSONX_PROJECT_ID=... HF_TOKEN=hf_... \\
+    WATSONX_APIKEY=... WATSONX_PROJECT_ID=... \\
         python -m pytest tests/e2e/test_benchmark_e2e.py -v -s
 
     # OpenAI
-    OPENAI_API_KEY=sk-... HF_TOKEN=hf_... python -m pytest tests/e2e/test_benchmark_e2e.py -v -s
+    OPENAI_API_KEY=sk-... python -m pytest tests/e2e/test_benchmark_e2e.py -v -s
 
     # Using a .env file (copy template_env → .env and fill in values)
     cp template_env .env
@@ -155,12 +155,6 @@ def containers_ready():
     if os.environ.get("E2E_SKIP_SETUP"):
         yield  # containers assumed to be already running
         return
-
-    if not (os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")):
-        pytest.fail(
-            "Required environment variable not set: HF_TOKEN\n"
-            "(or set E2E_SKIP_SETUP=1 to skip data download + container start)"
-        )
 
     sys.path.insert(0, str(PROJECT_ROOT))
     from benchmark_setup import download_data, start_containers

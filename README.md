@@ -153,7 +153,7 @@ enterprise-benchmark/
 | **`make`** | Used for data download, image build, and container lifecycle targets |
 | **LLM provider** | At least one of: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `WATSONX_APIKEY`, or a `LITELLM_BASE_URL` — or run [Ollama](https://ollama.com) locally (no API key required) |
 | **Memory (container runtime)** | 8 GB+ allocated to Docker/Podman — capability 4 (ChromaDB) will OOM with the default 2 GB |
-| **Disk space** | ~35 GB for benchmark data downloaded via `make download` |
+| **Disk space** | Varies by access level. `make download` downloads shared runtime data plus either the gated test split or the public train split fallback. |
 
 ## Quick Start
 
@@ -171,6 +171,15 @@ docker compose down # optional step
 make build
 docker compose up -d
 ```
+
+`make download` first tries to download the gated test split from
+[`ibm-research/VAKRA-GatedTest`](https://huggingface.co/datasets/ibm-research/VAKRA-GatedTest)
+using `HF_TOKEN` or `HUGGING_FACE_HUB_TOKEN`. If gated access is unavailable,
+it downloads the public train split from
+[`ibm-research/VAKRA`](https://huggingface.co/datasets/ibm-research/VAKRA)
+instead. To request gated test access, open:
+https://github.com/IBM/vakra/issues/new?template=gated_test_access.yml
+
 **No API key? Try Ollama:**
 
 ```
@@ -323,7 +332,7 @@ docker compose up -d capability_2_dashboard_apis_m3_environ
 
 **General do's and don'ts**
 
-- Do run `make download` once before any benchmark run — results will silently error without the data
+- Do run `make download` once before any benchmark run. With gated access, the runner uses `data/test`; otherwise it falls back to `data/train`.
 - Do validate output with `validate_output.py` before submitting — the evaluator will reject malformed files
 - Don't share containers between different benchmark configurations — restart with `make start` if you change `docker-compose.yml`
 - Don't interrupt a run mid-domain; partial domain files are valid JSON but may have fewer records than expected. Use `--resume` to continue a previous run from where it left off
@@ -347,10 +356,17 @@ See:
 
 ### Directory layout
 
-Output mirrors the input layout under `data/test/`. One  directory per capability:
+Output mirrors the selected input layout. The runner checks `data/test/` first and falls back to `data/train/` when the test split is empty. One directory per capability:
 
 ```
 data/test/                                    # input (read-only)
+└── capability_2_dashboard_apis/
+    └── input/
+        ├── hockey.json
+        ├── card_games.json
+        └── ...
+
+data/train/                                   # public fallback input
 └── capability_2_dashboard_apis/
     └── input/
         ├── hockey.json
@@ -447,7 +463,7 @@ We recommend including:
 The diagram below shows the end-to-end flow — from setup through to leaderboard submission — and marks the three points where you can plug in your own agent.
 <img width="2760" height="1504" alt="Gemini_Generated_Image_wt8p2pwt8p2pwt8p" src="https://github.com/user-attachments/assets/443ead78-d133-4d4c-a74f-1c65984c1a7b" />
 
-> **`MCP_DOMAIN`** must exactly match a domain name that exists under `data/test/capability_N_*/input/` (e.g. `hockey`, `card_games`, `airline`). The MCP server uses this value to scope its SQLite database and, for capability 4, its ChromaDB collection. Passing an unknown domain name will cause the server to fail silently or return empty results.
+> **`MCP_DOMAIN`** must exactly match a domain name that exists under the active split (`data/test/capability_N_*/input/` when gated test data is available, otherwise `data/train/capability_N_*/input/`). The MCP server uses this value to scope its SQLite database and, for capability 4, its ChromaDB collection. Passing an unknown domain name will cause the server to fail silently or return empty results.
 
 <div style="display: flex; align-items: center; justify-content: center; white-space: nowrap; gap: 0.5rem; padding: 8px;">
   <div style="font-family: IBM Plex Sans; font-weight: 400; font-size: 16px; line-height: 22px; letter-spacing: 0px;">
