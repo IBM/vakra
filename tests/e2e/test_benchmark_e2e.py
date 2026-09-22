@@ -16,7 +16,7 @@ Provider selection:
   - Anthropic: ANTHROPIC_API_KEY                    (requires E2E_PROVIDER=anthropic)
 
 Requirements:
-    HF_TOKEN              - HuggingFace token for data download
+    Hugging Face auth     - Optional; enables gated test-set download
     One of the above provider key sets
     Docker                - Available on PATH
 
@@ -155,12 +155,6 @@ def containers_ready():
     if os.environ.get("E2E_SKIP_SETUP"):
         yield  # containers assumed to be already running
         return
-
-    if not (os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")):
-        pytest.fail(
-            "Required environment variable not set: HF_TOKEN\n"
-            "(or set E2E_SKIP_SETUP=1 to skip data download + container start)"
-        )
 
     sys.path.insert(0, str(PROJECT_ROOT))
     from benchmark_setup import download_data, start_containers

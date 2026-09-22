@@ -139,6 +139,24 @@ make download
 
 > **Warning:** `make download` fetches ~30 GB of data. This will be reduced in a future release.
 
+`make download` creates both `data/test/` and `data/train/`. If Hugging Face
+auth is available through `HF_TOKEN`, `HUGGING_FACE_HUB_TOKEN`, or
+`huggingface-cli login`, it first tries to populate `data/test/` from the gated
+[`ibm-research/VAKRA-GatedTest`](https://huggingface.co/datasets/ibm-research/VAKRA-GatedTest)
+repo using that token. If no token is available, or gated access is not
+available, it downloads the public train split anonymously from
+[`ibm-research/VAKRA`](https://huggingface.co/datasets/ibm-research/VAKRA)
+into `data/train/` instead.
+
+At the end of the download, the command prints whether the gated test set was
+downloaded. If not, it prints the GitHub issue link for requesting access:
+https://github.com/IBM/vakra/issues/new?template=gated_test_access.yml
+
+`benchmark_runner.py` expects benchmark inputs under
+`data/test/capability_*/input/`. The public train split is downloaded to
+`data/train/` for users without gated test access, but the runner does not
+automatically fall back to it.
+
 Then choose your route:
 
 ---
@@ -364,7 +382,8 @@ Model overrides: set `RITS_MODEL`, `WATSONX_MODEL`, `OPENAI_MODEL`, `LITELLM_MOD
 
 **Option 2 — `make e2e` (full setup from scratch)**
 
-Downloads data, starts containers, then runs tests. Requires both tokens.
+Downloads data, starts containers, then runs tests. This Makefile target is
+stricter than `make download`: it requires both `HF_TOKEN` and `OPENAI_API_KEY`.
 
 ```bash
 export HF_TOKEN=hf_...
@@ -484,7 +503,8 @@ make setup      # download → build → test → start → validate
 
 | Target | What it does |
 |--------|-------------|
-| `make download` | `python m3_setup.py --download-data` — syncs all 4 HuggingFace repos into `data/` |
+| `make check-hf-auth` | Verify Hugging Face auth is available via `HF_TOKEN`, `HUGGING_FACE_HUB_TOKEN`, or `huggingface-cli login` |
+| `make download` | `python benchmark_setup.py --download-data` — syncs shared runtime data and downloads gated `data/test` when accessible, otherwise public `data/train` |
 | `make pull` | Pull the `m3_environ` image from Docker Hub |
 | `make build` | Build the Docker image |
 | `make test` | Smoke-test the image (file checks + MCP handshakes) |

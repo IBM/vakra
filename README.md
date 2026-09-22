@@ -171,6 +171,17 @@ docker compose down # optional step
 make build
 docker compose up -d
 ```
+
+`make download` uses Hugging Face authentication from `HF_TOKEN`,
+`HUGGING_FACE_HUB_TOKEN`, or `huggingface-cli login` when available. It first
+tries to download the gated test split from
+[`ibm-research/VAKRA-GatedTest`](https://huggingface.co/datasets/ibm-research/VAKRA-GatedTest)
+using that token. If no token is available, or gated access is unavailable,
+it downloads the public train split from
+[`ibm-research/VAKRA`](https://huggingface.co/datasets/ibm-research/VAKRA)
+instead. To request gated test access, open:
+https://github.com/IBM/vakra/issues/new?template=gated_test_access.yml
+
 **No API key? Try Ollama:**
 
 ```
@@ -323,7 +334,7 @@ docker compose up -d capability_2_dashboard_apis_m3_environ
 
 **General do's and don'ts**
 
-- Do run `make download` once before any benchmark run — results will silently error without the data
+- Do run `make download` once before any benchmark run. Gated test access populates `data/test`; otherwise only the public train split is downloaded to `data/train`.
 - Do validate output with `validate_output.py` before submitting — the evaluator will reject malformed files
 - Don't share containers between different benchmark configurations — restart with `make start` if you change `docker-compose.yml`
 - Don't interrupt a run mid-domain; partial domain files are valid JSON but may have fewer records than expected. Use `--resume` to continue a previous run from where it left off
@@ -347,7 +358,7 @@ See:
 
 ### Directory layout
 
-Output mirrors the input layout under `data/test/`. One  directory per capability:
+Output mirrors the input layout under `data/test/`. One directory per capability:
 
 ```
 data/test/                                    # input (read-only)

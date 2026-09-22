@@ -2,6 +2,7 @@
 # Enterprise Benchmark — Docker image lifecycle
 # =============================================================================
 # Targets:
+#   make check-hf-auth  Verify Hugging Face auth via env vars or CLI login
 #   make download    Download benchmark data from HuggingFace
 #   make build       Build the benchmark_environ image from source
 #   make test        Smoke-test the locally built image (file checks + MCP handshakes)
@@ -41,12 +42,20 @@ PYTHON ?= $(shell \
     command -v python3 2>/dev/null | head -1 || command -v python 2>/dev/null | head -1 || echo python3; \
   fi)
 
-.PHONY: download build test validate validate-output setup start stop restart logs clean e2e \
+.PHONY: check-hf-auth download build test validate validate-output setup start stop restart logs clean e2e \
         e2e-quick e2e-quick-rits e2e-quick-watsonx e2e-quick-litellm e2e-quick-anthropic \
         start-capability1 start-capability2 start-capability3 start-capability4
 
 # ---------------------------------------------------------------------------
-# Download benchmark data from HuggingFace  (prompts for HF token if not set)
+# Verify Hugging Face authentication
+# ---------------------------------------------------------------------------
+check-hf-auth:
+	$(PYTHON) benchmark_setup.py --check-hf-auth
+
+# ---------------------------------------------------------------------------
+# Download benchmark data from Hugging Face
+# Uses gated test data when Hugging Face auth has access; otherwise downloads
+# the public train split fallback.
 # ---------------------------------------------------------------------------
 download:
 	$(PYTHON) benchmark_setup.py --download-data
@@ -104,7 +113,7 @@ logs:
 
 # ---------------------------------------------------------------------------
 # End-to-end benchmark tests
-# Requires: HF_TOKEN and OPENAI_API_KEY env vars set
+# Requires HF_TOKEN and OPENAI_API_KEY env vars set.
 # ---------------------------------------------------------------------------
 e2e:
 	@if [ -z "$(HF_TOKEN)" ]; then echo "ERROR: HF_TOKEN is not set."; exit 1; fi
