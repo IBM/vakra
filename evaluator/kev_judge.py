@@ -80,8 +80,8 @@ class SystemOneJudge:
       threshold    p(yes) needed for 1.0   (default 0.5)
       timeout      seconds per request     (default 120)
       max_retries  retries on 429/5xx      (default 3)
-      max_state_chars  characters of tool responses sent per turn, longer ones lose their middle
-                       (KEV_MAX_STATE_CHARS, default 100000, about 30k tokens; 0 sends them whole)
+      max_state_chars  characters of long state fields (answers, tool responses) sent per call; longer
+                       ones lose their middle (KEV_MAX_STATE_CHARS, default 100000; 0 sends them whole)
     """
 
     question: Dict[str, Any] = {}
@@ -147,6 +147,34 @@ class SystemOneJudge:
         except Exception as e:
             return JudgeOutput(score=0.0, explanation=f"Judge Error {e}.")
 
+    def decide_within_limit(self, state: dict, long: tuple) -> JudgeOutput:
+        """
+        decide() with the `long` fields of `state` (strings or lists of strings) cut to max_state_chars in all.
+        If the server still finds the state too long, the budget is halved and the call retried, twice at most.
+        """
+        slots = [(k, i) for k in long for i in range(len(state[k]) if isinstance(state[k], list) else 1)]
+        texts = [state[k][i] if isinstance(state[k], list) else state[k] for k, i in slots]
+        total = sum(len(t) for t in texts)
+        budget = self.max_state_chars or total
+        for attempt in range(3):
+            fitted = fit_texts(texts, budget)
+            sent = dict(state, **{k: list(state[k]) for k in long if isinstance(state[k], list)})
+            for (k, i), t in zip(slots, fitted):
+                if isinstance(sent[k], list):
+                    sent[k][i] = t
+                else:
+                    sent[k] = t
+            try:
+                p = self.probability(sent)
+            except StateTooLongError as e:
+                error, budget = e, min(budget, total) // 2
+                continue
+            except Exception as e:
+                return JudgeOutput(score=0.0, explanation=f"Judge Error {e}.")
+            n = sum(len(t) for t in fitted)
+            return self.output(p, f"; long fields cut to {n} of {total} chars" if n < total else "")
+        return JudgeOutput(score=0.0, explanation=f"Judge Error {error}.")
+
     def judge(self, inp: JudgeInput) -> JudgeOutput:
         raise NotImplementedError
 
@@ -179,15 +207,14 @@ class KevCorrectnessJudge(SystemOneJudge):
         pr = self._norm(inp.pred_answer)
         if not gt and not pr:
             return JudgeOutput(score=1.0, explanation="Both empty.")
-        return self.decide({"question": query, "ground_truth_answer": gt, "prediction": pr})
+        state = {"question": query, "ground_truth_answer": gt, "prediction": pr}
+        return self.decide_within_limit(state, long=("ground_truth_answer", "prediction"))
 
 
 class KevGroundednessJudge(SystemOneJudge):
     """
     Is the predicted answer grounded in the query and the turn's tool responses?
     Same rules as GroundednessPrompt; "partial" and "unsure" count as not grounded, as in GroundednessJudge.
-    Tool responses over max_state_chars lose their middle; if the server still finds the state too long,
-    the budget is halved and the call retried, twice at most.
     """
 
     question = {
@@ -208,25 +235,8 @@ class KevGroundednessJudge(SystemOneJudge):
 
     def judge(self, inp: JudgeInput) -> JudgeOutput:
         responses = [self._norm(str(t)) for t in inp.pred_tool_responses[-N_TOOL_CALLS_PER_TURN:]]
-        total = sum(len(r) for r in responses)
-        budget = self.max_state_chars or total
-        for attempt in range(3):
-            fitted = fit_texts(responses, budget)
-            state = {
-                "user_query": self._norm(inp.query),
-                "tool_responses": fitted,
-                "response": self._norm(inp.pred_answer),
-            }
-            try:
-                p = self.probability(state)
-            except StateTooLongError as e:
-                error, budget = e, min(budget, total) // 2
-                continue
-            except Exception as e:
-                return JudgeOutput(score=0.0, explanation=f"Judge Error {e}.")
-            sent = sum(len(r) for r in fitted)
-            return self.output(p, f"; tool responses cut to {sent} of {total} chars" if sent < total else "")
-        return JudgeOutput(score=0.0, explanation=f"Judge Error {error}.")
+        state = {"user_query": self._norm(inp.query), "tool_responses": responses, "response": self._norm(inp.pred_answer)}
+        return self.decide_within_limit(state, long=("tool_responses", "response"))
 
 
 class KevExactMatchJudge(ExactMatchJudge):

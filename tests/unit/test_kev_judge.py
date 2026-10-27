@@ -222,7 +222,7 @@ def test_groundedness_cuts_long_tool_responses(fake):
     responses = ["short", "a" * 5000 + "b" * 5000]
     out = _judge(KevGroundednessJudge, fake, max_state_chars=1000).judge(_inp(pred_tool_responses=responses))
     assert out.score == 1.0
-    assert out.explanation == "p(yes)=0.900 (kev:kev-latest); tool responses cut to 1000 of 10005 chars"
+    assert out.explanation == "p(yes)=0.900 (kev:kev-latest); long fields cut to 1000 of 10035 chars"
     sent = fake.requests[0]["body"]["state"]["tool_responses"]
     assert sent[0] == "short" and sent[1].startswith("a") and sent[1].endswith("b")
 
@@ -232,7 +232,7 @@ def test_groundedness_halves_budget_when_state_is_too_long(fake):
     judge = _judge(KevGroundednessJudge, fake, max_state_chars=10_000)
     out = judge.judge(_inp(pred_tool_responses=["r" * 20_000]))
     assert out.score == 1.0
-    assert [len(r["body"]["state"]["tool_responses"][0]) for r in fake.requests] == [10_000, 5000, 2500]
+    assert [len(r["body"]["state"]["tool_responses"][0]) for r in fake.requests] == [9970, 4970, 2470]
 
 
 def test_groundedness_gives_up_after_three_too_long_states(fake):
@@ -240,6 +240,15 @@ def test_groundedness_gives_up_after_three_too_long_states(fake):
     out = _judge(KevGroundednessJudge, fake).judge(_inp(pred_tool_responses=["r" * 1000]))
     assert out.score == 0.0 and "token limit" in out.explanation
     assert len(fake.requests) == 3
+
+
+def test_correctness_cuts_long_answers(fake):
+    gt = ", ".join(str(i) for i in range(5000))
+    out = _judge(KevCorrectnessJudge, fake, max_state_chars=2000).judge(_inp(gt_answer=gt, pred_answer=gt))
+    assert out.score == 1.0 and "long fields cut to 2000" in out.explanation
+    state = fake.requests[0]["body"]["state"]
+    assert len(state["ground_truth_answer"]) == len(state["prediction"]) == 1000
+    assert state["ground_truth_answer"].startswith("0, 1, 2") and state["ground_truth_answer"].endswith("4999")
 
 
 def test_max_state_chars_zero_sends_everything(fake, monkeypatch):

@@ -178,11 +178,11 @@ python evaluator/evaluator.py ...
 | `KEV_MODEL` / `JEV_MODEL` | Model name sent in the request | `kev-latest` / `jev-latest` |
 | `KEV_API_KEY` | Bearer token, if the Kev server was started with one | unset |
 | `TYPESAFE_API_KEY` | Bearer token for Jev (required) | — |
-| `KEV_MAX_STATE_CHARS` | Characters of tool responses the groundedness judge sends per turn; longer responses lose their middle. `0` sends them whole | `100000` |
+| `KEV_MAX_STATE_CHARS` | Characters of long state fields (answers, tool responses) sent per call; longer ones lose their middle. `0` sends them whole | `100000` |
 
 Notes:
 
-- Kev refuses states over its context limit (65,536 tokens) with a 422. The groundedness judge therefore cuts the middle out of tool responses longer than `KEV_MAX_STATE_CHARS` (short responses stay whole), and if the server still refuses, halves the budget and retries, twice at most. The explanation says when responses were cut, e.g. `p(yes)=0.981 (kev:kev-latest); tool responses cut to 100000 of 4512330 chars`. Kev-0.8B/4B/9B were trained on states up to about 7.5k tokens; Kev-27B up to 32k, so the smaller models may do better with a lower limit.
+- Kev refuses states over its context limit (65,536 tokens) with a 422. The judges therefore cut the middle out of long state fields (tool responses and the response for groundedness, ground truth and prediction for correctness) once together they pass `KEV_MAX_STATE_CHARS`; short fields stay whole. If the server still refuses, the budget is halved and the call retried, twice at most. The explanation says when fields were cut, e.g. `p(yes)=0.723 (kev:kev-latest); long fields cut to 100000 of 299211 chars`. Kev-0.8B/4B/9B were trained on states up to about 7.5k tokens; Kev-27B up to 32k, so the smaller models may do better with a lower limit.
 - Scores from Kev or Jev are not comparable to leaderboard numbers produced with the default `gpt-oss-120b` judge. Report which judge you used.
 
 ## Output Format
