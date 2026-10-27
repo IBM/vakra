@@ -3,12 +3,19 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, List
 from tqdm import tqdm
 
-from judge import CorrectnessJudge, GroundednessJudge, ExactMatchJudge
+# JUDGE_BACKEND=kev|jev swaps in the System One (Kev/Jev) judges; anything else keeps the LLM judges.
+if os.getenv("JUDGE_BACKEND", "").lower() in ("kev", "jev"):
+    from kev_judge import KevCorrectnessJudge as CorrectnessJudge
+    from kev_judge import KevGroundednessJudge as GroundednessJudge
+    from kev_judge import KevExactMatchJudge as ExactMatchJudge
+else:
+    from judge import CorrectnessJudge, GroundednessJudge, ExactMatchJudge
 from benchmark.mcp_client import (
     MCPConnectionConfig,
     load_mcp_config,
