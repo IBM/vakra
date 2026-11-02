@@ -156,7 +156,7 @@ Kev (self-hosted):
 
 ```bash
 # in a Kev checkout (https://github.com/jaredpalmer/kev)
-uv run --extra serve python -m kev.serve --run jaredpalmer/kev-4b --port 8009
+uv run --extra serve python -m kev.serve --run jaredpalmer/kev-27b@v1.0 --port 8009
 
 # in VAKRA
 export JUDGE_BACKEND=kev
@@ -183,6 +183,7 @@ python evaluator/evaluator.py ...
 Notes:
 
 - Kev refuses states over its context limit (65,536 tokens) with a 422. The judges therefore cut the middle out of long state fields (tool responses and the response for groundedness, ground truth and prediction for correctness) once together they pass `KEV_MAX_STATE_CHARS`; short fields stay whole. If the server still refuses, the budget is halved and the call retried, twice at most. The explanation says when fields were cut, e.g. `p(yes)=0.723 (kev:kev-latest); long fields cut to 100000 of 299211 chars`. Kev-0.8B/4B/9B were trained on states up to about 7.5k tokens; Kev-27B up to 32k, so the smaller models may do better with a lower limit.
+- Use Kev-27B (one 80 GB GPU). On VAKRA train it agreed with `gpt-oss-120b` on 93% of tasks; Kev-9B was stable but rejected many correct answers.
 - Scores from Kev or Jev are not comparable to leaderboard numbers produced with the default `gpt-oss-120b` judge. Report which judge you used.
 
 ## Output Format
