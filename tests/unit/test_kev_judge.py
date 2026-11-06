@@ -3,7 +3,7 @@
 import json
 import sys
 import threading
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 import pytest
@@ -28,6 +28,7 @@ class FakeSystemOne:
         self.noul = 0.9
         self.fail_with = []
         self.max_state_chars = None  # answer 422 "token limit" to longer states
+        self.misbehave = []  # queued "slow", "drop" or "partial" replies
 
         fake = self
 
@@ -40,6 +41,19 @@ class FakeSystemOne:
                     self.end_headers()
                     self.wfile.write(b'{"detail": "state is over the 65536 token limit"}')
                     return
+                trick = fake.misbehave.pop(0) if fake.misbehave else None
+                if trick == "drop":
+                    self.close_connection = True
+                    return
+                if trick == "partial":
+                    self.send_response(200)
+                    self.send_header("Content-Length", "1000")
+                    self.end_headers()
+                    self.wfile.write(b'{"mod')
+                    self.close_connection = True
+                    return
+                if trick == "slow":
+                    threading.Event().wait(0.4)  # not time.sleep, which the retry tests replace
                 if fake.fail_with:
                     self.send_response(fake.fail_with.pop(0))
                     self.end_headers()
@@ -55,7 +69,7 @@ class FakeSystemOne:
             def log_message(self, *args):
                 pass
 
-        self.server = HTTPServer(("127.0.0.1", 0), Handler)
+        self.server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
         self.url = f"http://127.0.0.1:{self.server.server_port}"
         threading.Thread(target=self.server.serve_forever, daemon=True).start()
 
@@ -155,6 +169,23 @@ def test_retries_then_succeeds(fake, monkeypatch):
     assert len(fake.requests) == 3
 
 
+@pytest.mark.parametrize("trick", ["slow", "drop", "partial"])
+def test_retries_after_timeout_dropped_connection_or_cut_response(fake, monkeypatch, trick):
+    monkeypatch.setattr("kev_judge.time.sleep", lambda s: None)
+    fake.misbehave = [trick]
+    out = _judge(KevCorrectnessJudge, fake, timeout=0.2).judge(_inp())
+    assert out.score == 1.0 and out.explanation.startswith("p(yes)")
+    assert len(fake.requests) == 2
+
+
+def test_gives_up_when_every_attempt_drops(fake, monkeypatch):
+    monkeypatch.setattr("kev_judge.time.sleep", lambda s: None)
+    fake.misbehave = ["drop"] * 3
+    out = _judge(KevCorrectnessJudge, fake).judge(_inp())
+    assert out.score == 0.0 and out.explanation.startswith("Judge Error Could not reach")
+    assert len(fake.requests) == 3
+
+
 def test_http_error_scores_zero(fake):
     fake.fail_with = [422]
     out = _judge(KevCorrectnessJudge, fake).judge(_inp())
@@ -222,7 +253,7 @@ def test_groundedness_cuts_long_tool_responses(fake):
     responses = ["short", "a" * 5000 + "b" * 5000]
     out = _judge(KevGroundednessJudge, fake, max_state_chars=1000).judge(_inp(pred_tool_responses=responses))
     assert out.score == 1.0
-    assert out.explanation == "p(yes)=0.900 (kev:kev-latest); long fields cut to 1000 of 10035 chars"
+    assert out.explanation == "p(yes)=0.900 (kev:kev-latest); tool responses cut to 970 of 10005 chars"
     sent = fake.requests[0]["body"]["state"]["tool_responses"]
     assert sent[0] == "short" and sent[1].startswith("a") and sent[1].endswith("b")
 
@@ -242,13 +273,67 @@ def test_groundedness_gives_up_after_three_too_long_states(fake):
     assert len(fake.requests) == 3
 
 
-def test_correctness_cuts_long_answers(fake):
+def test_correctness_compares_long_lists_in_code(fake):
+    gt = [str(i) for i in range(5000)]
+    pred = list(gt)
+    pred[2500] = "x"
+    judge = _judge(KevCorrectnessJudge, fake, max_state_chars=2000)
+    assert judge.judge(_inp(gt_answer=", ".join(gt), pred_answer=", ".join(gt))).score == 1.0
+    out = judge.judge(_inp(gt_answer=", ".join(gt), pred_answer=", ".join(pred)))
+    assert out.score == 0.0 and "1 of 5000" in out.explanation
+    assert fake.requests == []
+
+
+def test_correctness_too_long_for_the_model_scores_zero(fake):
     gt = ", ".join(str(i) for i in range(5000))
-    out = _judge(KevCorrectnessJudge, fake, max_state_chars=2000).judge(_inp(gt_answer=gt, pred_answer=gt))
-    assert out.score == 1.0 and "long fields cut to 2000" in out.explanation
+    out = _judge(KevCorrectnessJudge, fake, max_state_chars=2000).judge(_inp(gt_answer=gt, pred_answer="I can not answer"))
+    assert out.score == 0.0 and out.explanation.startswith("Judge Error too long to judge")
+    assert fake.requests == []
+
+
+def test_correctness_never_cuts_what_reaches_the_model(fake):
+    gt, pred = "the " + "word " * 300, "a " + "word " * 300
+    _judge(KevCorrectnessJudge, fake, max_state_chars=4000).judge(_inp(gt_answer=gt, pred_answer=pred))
     state = fake.requests[0]["body"]["state"]
-    assert len(state["ground_truth_answer"]) == len(state["prediction"]) == 1000
-    assert state["ground_truth_answer"].startswith("0, 1, 2") and state["ground_truth_answer"].endswith("4999")
+    assert state["ground_truth_answer"] == gt.strip() and state["prediction"] == pred.strip()
+
+
+def test_groundedness_compares_long_lists_in_code(fake):
+    ids = list(range(5000))
+    tools = [json.dumps({"ids": ids})]
+    answer = [str(i) for i in ids]
+    judge = _judge(KevGroundednessJudge, fake, max_state_chars=2000)
+    assert judge.judge(_inp(pred_answer=", ".join(answer), pred_tool_responses=tools)).score == 1.0
+    answer[2500] = "90000"
+    out = judge.judge(_inp(pred_answer=", ".join(answer), pred_tool_responses=tools))
+    assert out.score == 0.0 and "1 of 5000" in out.explanation
+    assert fake.requests == []
+
+
+def test_groundedness_never_cuts_the_answer(fake):
+    answer = "this is a long sentence about the tool output " * 20
+    responses = ["t" * 2000 for _ in range(20)]
+    out = _judge(KevGroundednessJudge, fake, max_state_chars=3000).judge(_inp(pred_answer=answer, pred_tool_responses=responses))
+    assert out.score == 1.0
+    state = fake.requests[0]["body"]["state"]
+    assert state["response"] == answer.strip()
+    assert sum(len(t) for t in state["tool_responses"]) <= 3000 - len(state["response"])
+
+
+def test_groundedness_answer_over_the_limit_scores_zero(fake):
+    answer = "this is a long sentence about the tool output " * 200
+    out = _judge(KevGroundednessJudge, fake, max_state_chars=1000).judge(_inp(pred_answer=answer, pred_tool_responses=["r"]))
+    assert out.score == 0.0 and out.explanation.startswith("Judge Error too long to judge")
+    assert fake.requests == []
+
+
+def test_groundedness_halving_keeps_the_answer_whole(fake):
+    fake.max_state_chars = 3000
+    answer = "this is a sentence " * 50
+    judge = _judge(KevGroundednessJudge, fake, max_state_chars=10_000)
+    assert judge.judge(_inp(pred_answer=answer, pred_tool_responses=["r" * 20_000])).score == 1.0
+    assert {r["body"]["state"]["response"] for r in fake.requests} == {answer.strip()}
+    assert len(fake.requests) == 3
 
 
 def test_max_state_chars_zero_sends_everything(fake, monkeypatch):

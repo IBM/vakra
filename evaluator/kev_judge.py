@@ -3,8 +3,8 @@ Kev / Jev judges: drop-in replacements for CorrectnessJudge, GroundednessJudge a
 
 Instead of asking an autoregressive LLM to write a verdict and parsing it, each judge sends a structured
 state and one yes/no ("noul") question to a System One decision model and thresholds the returned
-probability. The model reads its answer off one forward pass and generates no text, so the same input
-gives the same score.
+probability. The model reads its answer off one forward pass and generates no text, so scores barely
+change between runs. List answers are compared value by value in code first (list_check.py).
 
 Backends (both speak POST /v1/systemone, https://docs.typesafe.ai/api):
   - "kev": a self-hosted Kev server (https://github.com/jaredpalmer/kev), e.g.
@@ -16,6 +16,7 @@ Inspired by https://github.com/danielgshea/jev-as-a-judge.
 """
 from __future__ import annotations
 
+import http.client
 import json
 import os
 import re
@@ -26,6 +27,7 @@ from typing import Any, Dict
 
 from constant import N_TOOL_CALLS_PER_TURN
 from judge import ExactMatchJudge
+from list_check import check_grounded, compare_answers
 from utils import JudgeInput, JudgeOutput
 
 _BACKENDS = {
@@ -79,9 +81,10 @@ class SystemOneJudge:
       model_name   model to request        (KEV_MODEL / JEV_MODEL)
       threshold    p(yes) needed for 1.0   (default 0.5)
       timeout      seconds per request     (default 120)
-      max_retries  retries on 429/5xx      (default 3)
-      max_state_chars  characters of long state fields (answers, tool responses) sent per call; longer
-                       ones lose their middle (KEV_MAX_STATE_CHARS, default 100000; 0 sends them whole)
+      max_retries  retries on 429/5xx, timeouts and dropped connections  (default 3)
+      max_state_chars  characters sent per call (KEV_MAX_STATE_CHARS, default 100000; 0 means no limit). Tool
+                       responses lose their middle to fit; answers are never cut, an answer that does not fit
+                       scores 0 as too long to judge
     """
 
     question: Dict[str, Any] = {}
@@ -126,9 +129,9 @@ class SystemOneJudge:
                     raise StateTooLongError(f"HTTP 422 from {url}: {detail[:500]}") from e
                 if e.code not in _RETRY_STATUS or attempt == self.max_retries:
                     raise RuntimeError(f"HTTP {e.code} from {url}: {detail[:500]}") from e
-            except urllib.error.URLError as e:
+            except (OSError, http.client.HTTPException) as e:
                 if attempt == self.max_retries:
-                    raise RuntimeError(f"Could not reach {url}: {e.reason}") from e
+                    raise RuntimeError(f"Could not reach {url}: {e}") from e
             time.sleep(min(2 ** attempt, 30))
 
     def probability(self, state: dict) -> float:
@@ -146,34 +149,6 @@ class SystemOneJudge:
             return self.output(self.probability(state))
         except Exception as e:
             return JudgeOutput(score=0.0, explanation=f"Judge Error {e}.")
-
-    def decide_within_limit(self, state: dict, long: tuple) -> JudgeOutput:
-        """
-        decide() with the `long` fields of `state` (strings or lists of strings) cut to max_state_chars in all.
-        If the server still finds the state too long, the budget is halved and the call retried, twice at most.
-        """
-        slots = [(k, i) for k in long for i in range(len(state[k]) if isinstance(state[k], list) else 1)]
-        texts = [state[k][i] if isinstance(state[k], list) else state[k] for k, i in slots]
-        total = sum(len(t) for t in texts)
-        budget = self.max_state_chars or total
-        for attempt in range(3):
-            fitted = fit_texts(texts, budget)
-            sent = dict(state, **{k: list(state[k]) for k in long if isinstance(state[k], list)})
-            for (k, i), t in zip(slots, fitted):
-                if isinstance(sent[k], list):
-                    sent[k][i] = t
-                else:
-                    sent[k] = t
-            try:
-                p = self.probability(sent)
-            except StateTooLongError as e:
-                error, budget = e, min(budget, total) // 2
-                continue
-            except Exception as e:
-                return JudgeOutput(score=0.0, explanation=f"Judge Error {e}.")
-            n = sum(len(t) for t in fitted)
-            return self.output(p, f"; long fields cut to {n} of {total} chars" if n < total else "")
-        return JudgeOutput(score=0.0, explanation=f"Judge Error {error}.")
 
     def judge(self, inp: JudgeInput) -> JudgeOutput:
         raise NotImplementedError
@@ -207,8 +182,12 @@ class KevCorrectnessJudge(SystemOneJudge):
         pr = self._norm(inp.pred_answer)
         if not gt and not pr:
             return JudgeOutput(score=1.0, explanation="Both empty.")
-        state = {"question": query, "ground_truth_answer": gt, "prediction": pr}
-        return self.decide_within_limit(state, long=("ground_truth_answer", "prediction"))
+        checked = compare_answers(inp.gt_answer, inp.pred_answer, inp.gt_tool_responses)
+        if checked:
+            return JudgeOutput(score=checked[0], explanation=checked[1])
+        if self.max_state_chars and len(gt) + len(pr) > self.max_state_chars:
+            return JudgeOutput(score=0.0, explanation=f"Judge Error too long to judge: {len(gt) + len(pr)} chars.")
+        return self.decide({"question": query, "ground_truth_answer": gt, "prediction": pr})
 
 
 class KevGroundednessJudge(SystemOneJudge):
@@ -234,9 +213,37 @@ class KevGroundednessJudge(SystemOneJudge):
     }
 
     def judge(self, inp: JudgeInput) -> JudgeOutput:
-        responses = [self._norm(str(t)) for t in inp.pred_tool_responses[-N_TOOL_CALLS_PER_TURN:]]
-        state = {"user_query": self._norm(inp.query), "tool_responses": responses, "response": self._norm(inp.pred_answer)}
-        return self.decide_within_limit(state, long=("tool_responses", "response"))
+        responses = inp.pred_tool_responses[-N_TOOL_CALLS_PER_TURN:]
+        checked = check_grounded(inp.pred_answer, responses, inp.query, inp.gt_answer)
+        if checked:
+            return JudgeOutput(score=checked[0], explanation=checked[1])
+        return self.decide_cutting_tools(
+            self._norm(inp.query), [self._norm(str(t)) for t in responses], self._norm(inp.pred_answer)
+        )
+
+    def decide_cutting_tools(self, query: str, responses: list, response: str) -> JudgeOutput:
+        """
+        decide() with the tool responses cut to what the answer leaves of max_state_chars. If the server still finds
+        the state too long, the limit is halved and the call retried, twice at most.
+        """
+        tool_chars = sum(len(t) for t in responses)
+        total = tool_chars + len(response)
+        budget = self.max_state_chars or total
+        error = None
+        for attempt in range(3):
+            if budget < len(response):
+                return JudgeOutput(score=0.0, explanation=f"Judge Error too long to judge: {len(response)} chars.")
+            fitted = fit_texts(responses, budget - len(response))
+            try:
+                p = self.probability({"user_query": query, "tool_responses": fitted, "response": response})
+            except StateTooLongError as e:
+                error, budget = e, min(budget, total) // 2
+                continue
+            except Exception as e:
+                return JudgeOutput(score=0.0, explanation=f"Judge Error {e}.")
+            n = sum(len(t) for t in fitted)
+            return self.output(p, f"; tool responses cut to {n} of {tool_chars} chars" if n < tool_chars else "")
+        return JudgeOutput(score=0.0, explanation=f"Judge Error {error}.")
 
 
 class KevExactMatchJudge(ExactMatchJudge):
