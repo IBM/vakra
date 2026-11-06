@@ -146,6 +146,55 @@ CLI arguments:
 - `--domains`: optional list of domain names to evaluate
 - `--policy-judge-path`: optional path to a PolicyJudge Python file. If omitted, policy judging is disabled.
 
+## Kev / Jev Judge (optional)
+
+LLM judges can return different verdicts for the same input even at temperature 0. As an alternative, [`kev_judge.py`](/vakra/evaluator/kev_judge.py) provides drop-in correctness, groundedness and exact-match judges backed by a System One decision model: [Kev](https://github.com/jaredpalmer/kev) (open weights, self-hosted) or TypeSafe's hosted [Jev](https://docs.typesafe.ai/introduction). Each judge sends the turn as structured state with one yes/no question to `POST /v1/systemone`, and scores `1.0` when `p(yes) >= 0.5`, `0.0` otherwise. The model generates no text, so there is nothing to parse, and scores barely change between runs. The idea follows [jev-as-a-judge](https://github.com/danielgshea/jev-as-a-judge).
+
+The judges take the same `JudgeInput` and return the same `JudgeOutput` as the LLM judges, so scoring and the output format are unchanged. The explanation field holds the probability, e.g. `p(yes)=0.973 (kev:kev-latest)`.
+
+Answers are checked value by value in code before the model is asked ([`list_check.py`](/vakra/evaluator/list_check.py)), because VAKRA answers are mostly values copied from tool output and a model reading a list misses single wrong items. Code decides when it can read the answer:
+
+- Correctness compares the prediction with the ground truth items, in any order and format, at any length. Values from other columns of the ground truth rows are allowed, because the ground truth text keeps only the first column. Two different numbers fail, and a number rounded to at least 3 digits passes.
+- Groundedness looks for every item of a list, as a whole value, in the tool responses. A short answer passes in code only if it is also the ground truth, because a short value can be in the tool output by chance.
+- One wrong item fails a list of 5 or more, and an answer that puts values of different rows side by side fails too.
+- A slip in a short answer fails, e.g. `Google Photas` for `Google Photos`.
+
+The explanation then says what differed, e.g. `1 of 300 items are not in the tool responses, e.g. ['Sarah Plays a Wolf']`. Sentences, reasoning, and answers in another form than the ground truth (codes for names, a percentage for a share) go to the model.
+
+Kev (self-hosted):
+
+```bash
+# in a Kev checkout (https://github.com/jaredpalmer/kev)
+uv run --extra serve python -m kev.serve --run jaredpalmer/kev-27b@v1.0 --port 8009
+
+# in VAKRA
+export JUDGE_BACKEND=kev
+python evaluator/evaluator.py --capability_name ... --gt_root ... --pred_root ... --output ...
+```
+
+Jev (hosted):
+
+```bash
+export JUDGE_BACKEND=jev
+export TYPESAFE_API_KEY=...
+python evaluator/evaluator.py ...
+```
+
+| Variable | Purpose | Default |
+| --- | --- | --- |
+| `JUDGE_BACKEND` | `kev` or `jev` selects these judges; unset (or `rits` / `groq`) keeps the LLM judges | unset |
+| `KEV_END_POINT` / `JEV_END_POINT` | Server base URL | `http://127.0.0.1:8009` / `https://api.typesafe.ai` |
+| `KEV_MODEL` / `JEV_MODEL` | Model name sent in the request | `kev-latest` / `jev-latest` |
+| `KEV_API_KEY` | Bearer token, if the Kev server was started with one | unset |
+| `TYPESAFE_API_KEY` | Bearer token for Jev (required) | — |
+| `KEV_MAX_STATE_CHARS` | Characters sent to the model per call. Tool responses lose their middle to fit; answers are never cut, and one that does not fit scores 0 as `Judge Error too long to judge`. `0` means no limit | `100000` |
+
+Notes:
+
+- Kev refuses states over its context limit (65,536 tokens) with a 422. If the server refuses a state, the limit is halved and the call retried, twice at most. The explanation says when tool responses were cut, e.g. `p(yes)=0.723 (kev:kev-latest); tool responses cut to 50000 of 299211 chars`. Kev-0.8B/4B/9B were trained on states up to about 7.5k tokens; Kev-27B up to 32k, so the smaller models may do better with a lower limit.
+- Use Kev-27B (one 80 GB GPU). On VAKRA train it agreed with `gpt-oss-120b` on 93% of tasks; Kev-9B was stable but rejected many correct answers.
+- Scores from Kev or Jev are not comparable to leaderboard numbers produced with the default `gpt-oss-120b` judge. Report which judge you used.
+
 ## Output Format
 
 The evaluator writes a single JSON report containing per-domain details and an overall summary.
@@ -211,6 +260,8 @@ evaluator/
 ├── evaluator.py     # CLI entry point and capability/domain evaluation loop
 ├── scorer.py        # Turn-level and dialogue-level scoring logic
 ├── judge.py         # Exact-match, correctness, and groundedness judges
+├── kev_judge.py     # Optional Kev / Jev (System One) versions of the same judges
+├── list_check.py    # Value-by-value checks that the Kev / Jev judges run first
 ├── mcp_tools.py     # Tool extraction, MCP execution, and response injection helpers
 ├── utils.py         # Data loading, pairing, and evaluator dataclasses
 ├── constant.py      # Shared schema keys
