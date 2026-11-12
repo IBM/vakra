@@ -1,0 +1,525 @@
+{
+  "capability": 4,
+  "domain": "books",
+  "uuid": "6e317bcd6839-2485928dc0a1",
+  "backend": "local",
+  "connection": {
+    "mode": "stdio",
+    "container_name": "capability_4_multiturn",
+    "container_runtime": null,
+    "container_command": [
+      "python",
+      "/app/mcp_dispatch.py"
+    ],
+    "container_env": {
+      "CAPABILITY_ID": "4",
+      "MCP_DB_ROOT": "/app/db",
+      "PRELOAD_COLLECTIONS": "false"
+    },
+    "command": null,
+    "args": null,
+    "server_url": null,
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "query_books",
+      "resolved_arguments": {
+        "question": "\nWhat is the title of the second song book by Tom Lehrer?\n"
+      },
+      "started_at": "2026-11-12T15:25:14.318390+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"results\": [\n    {\n      \"id\": \"1770318222642230000_79\",\n      \"text\": \"Tom Lehrer\\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .\",\n      \"distance\": 147.0866241455078,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642230000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642300000_84\",\n      \"text\": \"Tom Lehrer\\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .\",\n      \"distance\": 147.0866241455078,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642300000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642231000_83\",\n      \"text\": \"Tom Lehrer\\nThomas Andrew `` Tom '' Lehrer ( / \\u02c8l\\u025br\\u0259r / ; born April 9 , 1928 ) is a retired American musician , singer - songwriter , satirist , and mathematician . He has lectured on mathematics and musical theater . He is best known for the pithy , humorous songs he recorded in the 1950s and 1960s .\",\n      \"distance\": 185.7888946533203,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642231000\"\n      }\n    },\n    {\n      \"id\": \"1770322576034825000_7966\",\n      \"text\": \"Tom Lehrer\\nLehrer has said of his musical career , `` If , after hearing my songs , just one human being is inspired to say something nasty to a friend , or perhaps to strike a loved one , it will all have been worth the while . ''\",\n      \"distance\": 193.8932647705078,\n      \"metadata\": {\n        \"doc_id\": \"1770322576034825000\",\n        \"from_clapnq\": true\n      }\n    },\n    {\n      \"id\": \"1770318222642379000_90\",\n      \"text\": \"Tom Lehrer\\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )\",\n      \"distance\": 208.7812042236328,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642379000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_95\",\n      \"text\": \"Tom Lehrer\\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )\",\n      \"distance\": 208.7812042236328,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642443000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642301000_86\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 239.06532287597656,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642301000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642379000_89\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 239.06532287597656,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642379000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_94\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 239.06532287597656,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642443000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642301000_87\",\n      \"text\": \"Tom Lehrer\\nThe album -- which included the macabre `` I Hold Your Hand in Mine '' , the mildly risqu\\u00e9 `` Be Prepared '' , and `` Lobachevsky '' ( regarding plagiarizing mathematicians ) -- became a cult success via word of mouth , despite being self - published and without promotion . Lehrer embarked on a series of concert tours and in 1959 recorded a second album , which was released in two versions : the songs were the same , but More of Tom Lehrer was studio - recorded while An Evening Wasted with Tom Lehrer was recorded live in concert . In 2013 , Lehrer recalled the studio sessions :\",\n      \"distance\": 244.02272033691406,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642301000\"\n      }\n    }\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "results": [
+                {
+                  "id": "1770318222642230000_79",
+                  "text": "Tom Lehrer\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .",
+                  "distance": 147.0866241455078,
+                  "metadata": {
+                    "doc_id": "1770318222642230000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642300000_84",
+                  "text": "Tom Lehrer\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .",
+                  "distance": 147.0866241455078,
+                  "metadata": {
+                    "doc_id": "1770318222642300000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642231000_83",
+                  "text": "Tom Lehrer\nThomas Andrew `` Tom '' Lehrer ( / ˈlɛrər / ; born April 9 , 1928 ) is a retired American musician , singer - songwriter , satirist , and mathematician . He has lectured on mathematics and musical theater . He is best known for the pithy , humorous songs he recorded in the 1950s and 1960s .",
+                  "distance": 185.7888946533203,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642231000"
+                  }
+                },
+                {
+                  "id": "1770322576034825000_7966",
+                  "text": "Tom Lehrer\nLehrer has said of his musical career , `` If , after hearing my songs , just one human being is inspired to say something nasty to a friend , or perhaps to strike a loved one , it will all have been worth the while . ''",
+                  "distance": 193.8932647705078,
+                  "metadata": {
+                    "doc_id": "1770322576034825000",
+                    "from_clapnq": true
+                  }
+                },
+                {
+                  "id": "1770318222642379000_90",
+                  "text": "Tom Lehrer\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )",
+                  "distance": 208.7812042236328,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642379000"
+                  }
+                },
+                {
+                  "id": "1770318222642443000_95",
+                  "text": "Tom Lehrer\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )",
+                  "distance": 208.7812042236328,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642443000"
+                  }
+                },
+                {
+                  "id": "1770318222642301000_86",
+                  "text": "Tom Lehrer\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .",
+                  "distance": 239.06532287597656,
+                  "metadata": {
+                    "doc_id": "1770318222642301000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642379000_89",
+                  "text": "Tom Lehrer\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .",
+                  "distance": 239.06532287597656,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642379000"
+                  }
+                },
+                {
+                  "id": "1770318222642443000_94",
+                  "text": "Tom Lehrer\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .",
+                  "distance": 239.06532287597656,
+                  "metadata": {
+                    "doc_id": "1770318222642443000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642301000_87",
+                  "text": "Tom Lehrer\nThe album -- which included the macabre `` I Hold Your Hand in Mine '' , the mildly risqué `` Be Prepared '' , and `` Lobachevsky '' ( regarding plagiarizing mathematicians ) -- became a cult success via word of mouth , despite being self - published and without promotion . Lehrer embarked on a series of concert tours and in 1959 recorded a second album , which was released in two versions : the songs were the same , but More of Tom Lehrer was studio - recorded while An Evening Wasted with Tom Lehrer was recorded live in concert . In 2013 , Lehrer recalled the studio sessions :",
+                  "distance": 244.02272033691406,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642301000"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.217
+    },
+    {
+      "tool": "query_books",
+      "resolved_arguments": {
+        "question": "\nWhat is the current availability status of Tom Lehrer's Second Song Book?\n"
+      },
+      "started_at": "2026-11-12T15:25:14.536432+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"results\": [\n    {\n      \"id\": \"1770318222642230000_79\",\n      \"text\": \"Tom Lehrer\\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .\",\n      \"distance\": 223.24771118164062,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642230000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642300000_84\",\n      \"text\": \"Tom Lehrer\\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .\",\n      \"distance\": 223.24771118164062,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642300000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642301000_85\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 277.60162353515625,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642301000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642380000_92\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 277.60162353515625,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642380000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_96\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 277.60162353515625,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642443000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642379000_90\",\n      \"text\": \"Tom Lehrer\\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )\",\n      \"distance\": 280.46795654296875,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642379000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_95\",\n      \"text\": \"Tom Lehrer\\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )\",\n      \"distance\": 280.46795654296875,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642443000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642301000_86\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 289.4852294921875,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642301000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642379000_89\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 289.4852294921875,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642379000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_94\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 289.4852294921875,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642443000\",\n        \"from_clapnq\": false\n      }\n    }\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "results": [
+                {
+                  "id": "1770318222642230000_79",
+                  "text": "Tom Lehrer\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .",
+                  "distance": 223.24771118164062,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642230000"
+                  }
+                },
+                {
+                  "id": "1770318222642300000_84",
+                  "text": "Tom Lehrer\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .",
+                  "distance": 223.24771118164062,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642300000"
+                  }
+                },
+                {
+                  "id": "1770318222642301000_85",
+                  "text": "Tom Lehrer\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .",
+                  "distance": 277.60162353515625,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642301000"
+                  }
+                },
+                {
+                  "id": "1770318222642380000_92",
+                  "text": "Tom Lehrer\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .",
+                  "distance": 277.60162353515625,
+                  "metadata": {
+                    "doc_id": "1770318222642380000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642443000_96",
+                  "text": "Tom Lehrer\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .",
+                  "distance": 277.60162353515625,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642443000"
+                  }
+                },
+                {
+                  "id": "1770318222642379000_90",
+                  "text": "Tom Lehrer\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )",
+                  "distance": 280.46795654296875,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642379000"
+                  }
+                },
+                {
+                  "id": "1770318222642443000_95",
+                  "text": "Tom Lehrer\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )",
+                  "distance": 280.46795654296875,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642443000"
+                  }
+                },
+                {
+                  "id": "1770318222642301000_86",
+                  "text": "Tom Lehrer\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .",
+                  "distance": 289.4852294921875,
+                  "metadata": {
+                    "doc_id": "1770318222642301000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642379000_89",
+                  "text": "Tom Lehrer\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .",
+                  "distance": 289.4852294921875,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642379000"
+                  }
+                },
+                {
+                  "id": "1770318222642443000_94",
+                  "text": "Tom Lehrer\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .",
+                  "distance": 289.4852294921875,
+                  "metadata": {
+                    "doc_id": "1770318222642443000",
+                    "from_clapnq": false
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.138
+    },
+    {
+      "tool": "query_books",
+      "resolved_arguments": {
+        "question": "\nWhat is the name of the boxed set of CDs released by Rhino Entertainment in 2000, featuring Tom Lehrer's music?\n"
+      },
+      "started_at": "2026-11-12T15:25:14.675357+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"results\": [\n    {\n      \"id\": \"1770318222642301000_86\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 158.84413146972656,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642301000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642379000_89\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 158.84413146972656,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642379000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_94\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 158.84413146972656,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642443000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642379000_90\",\n      \"text\": \"Tom Lehrer\\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )\",\n      \"distance\": 219.61924743652344,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642379000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_95\",\n      \"text\": \"Tom Lehrer\\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )\",\n      \"distance\": 219.61924743652344,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642443000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642301000_85\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 225.13124084472656,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642301000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642380000_92\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 225.13124084472656,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642380000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_96\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 225.13124084472656,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642443000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642230000_79\",\n      \"text\": \"Tom Lehrer\\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .\",\n      \"distance\": 237.8830108642578,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642230000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642300000_84\",\n      \"text\": \"Tom Lehrer\\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .\",\n      \"distance\": 237.8830108642578,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642300000\"\n      }\n    }\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "results": [
+                {
+                  "id": "1770318222642301000_86",
+                  "text": "Tom Lehrer\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .",
+                  "distance": 158.84413146972656,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642301000"
+                  }
+                },
+                {
+                  "id": "1770318222642379000_89",
+                  "text": "Tom Lehrer\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .",
+                  "distance": 158.84413146972656,
+                  "metadata": {
+                    "doc_id": "1770318222642379000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642443000_94",
+                  "text": "Tom Lehrer\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .",
+                  "distance": 158.84413146972656,
+                  "metadata": {
+                    "doc_id": "1770318222642443000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642379000_90",
+                  "text": "Tom Lehrer\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )",
+                  "distance": 219.61924743652344,
+                  "metadata": {
+                    "doc_id": "1770318222642379000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642443000_95",
+                  "text": "Tom Lehrer\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )",
+                  "distance": 219.61924743652344,
+                  "metadata": {
+                    "doc_id": "1770318222642443000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642301000_85",
+                  "text": "Tom Lehrer\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .",
+                  "distance": 225.13124084472656,
+                  "metadata": {
+                    "doc_id": "1770318222642301000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642380000_92",
+                  "text": "Tom Lehrer\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .",
+                  "distance": 225.13124084472656,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642380000"
+                  }
+                },
+                {
+                  "id": "1770318222642443000_96",
+                  "text": "Tom Lehrer\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .",
+                  "distance": 225.13124084472656,
+                  "metadata": {
+                    "doc_id": "1770318222642443000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642230000_79",
+                  "text": "Tom Lehrer\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .",
+                  "distance": 237.8830108642578,
+                  "metadata": {
+                    "doc_id": "1770318222642230000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642300000_84",
+                  "text": "Tom Lehrer\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .",
+                  "distance": 237.8830108642578,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642300000"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.162
+    },
+    {
+      "tool": "query_books",
+      "resolved_arguments": {
+        "question": "\nWhat type of material was included in The Remains of Tom Lehrer boxed set?\n"
+      },
+      "started_at": "2026-11-12T15:25:14.838502+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"results\": [\n    {\n      \"id\": \"1770318222642301000_86\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 185.5638427734375,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642301000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642379000_89\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 185.5638427734375,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642379000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_94\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 185.5638427734375,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642443000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642379000_90\",\n      \"text\": \"Tom Lehrer\\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )\",\n      \"distance\": 270.085693359375,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642379000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_95\",\n      \"text\": \"Tom Lehrer\\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )\",\n      \"distance\": 270.085693359375,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642443000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642301000_85\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 303.4827575683594,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642301000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642380000_92\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 303.4827575683594,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642380000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_96\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 303.4827575683594,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642443000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642301000_87\",\n      \"text\": \"Tom Lehrer\\nThe album -- which included the macabre `` I Hold Your Hand in Mine '' , the mildly risqu\\u00e9 `` Be Prepared '' , and `` Lobachevsky '' ( regarding plagiarizing mathematicians ) -- became a cult success via word of mouth , despite being self - published and without promotion . Lehrer embarked on a series of concert tours and in 1959 recorded a second album , which was released in two versions : the songs were the same , but More of Tom Lehrer was studio - recorded while An Evening Wasted with Tom Lehrer was recorded live in concert . In 2013 , Lehrer recalled the studio sessions :\",\n      \"distance\": 324.55328369140625,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642301000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642231000_83\",\n      \"text\": \"Tom Lehrer\\nThomas Andrew `` Tom '' Lehrer ( / \\u02c8l\\u025br\\u0259r / ; born April 9 , 1928 ) is a retired American musician , singer - songwriter , satirist , and mathematician . He has lectured on mathematics and musical theater . He is best known for the pithy , humorous songs he recorded in the 1950s and 1960s .\",\n      \"distance\": 337.0406188964844,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642231000\",\n        \"from_clapnq\": false\n      }\n    }\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "results": [
+                {
+                  "id": "1770318222642301000_86",
+                  "text": "Tom Lehrer\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .",
+                  "distance": 185.5638427734375,
+                  "metadata": {
+                    "doc_id": "1770318222642301000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642379000_89",
+                  "text": "Tom Lehrer\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .",
+                  "distance": 185.5638427734375,
+                  "metadata": {
+                    "doc_id": "1770318222642379000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642443000_94",
+                  "text": "Tom Lehrer\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .",
+                  "distance": 185.5638427734375,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642443000"
+                  }
+                },
+                {
+                  "id": "1770318222642379000_90",
+                  "text": "Tom Lehrer\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )",
+                  "distance": 270.085693359375,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642379000"
+                  }
+                },
+                {
+                  "id": "1770318222642443000_95",
+                  "text": "Tom Lehrer\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )",
+                  "distance": 270.085693359375,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642443000"
+                  }
+                },
+                {
+                  "id": "1770318222642301000_85",
+                  "text": "Tom Lehrer\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .",
+                  "distance": 303.4827575683594,
+                  "metadata": {
+                    "doc_id": "1770318222642301000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642380000_92",
+                  "text": "Tom Lehrer\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .",
+                  "distance": 303.4827575683594,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642380000"
+                  }
+                },
+                {
+                  "id": "1770318222642443000_96",
+                  "text": "Tom Lehrer\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .",
+                  "distance": 303.4827575683594,
+                  "metadata": {
+                    "doc_id": "1770318222642443000",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770318222642301000_87",
+                  "text": "Tom Lehrer\nThe album -- which included the macabre `` I Hold Your Hand in Mine '' , the mildly risqué `` Be Prepared '' , and `` Lobachevsky '' ( regarding plagiarizing mathematicians ) -- became a cult success via word of mouth , despite being self - published and without promotion . Lehrer embarked on a series of concert tours and in 1959 recorded a second album , which was released in two versions : the songs were the same , but More of Tom Lehrer was studio - recorded while An Evening Wasted with Tom Lehrer was recorded live in concert . In 2013 , Lehrer recalled the studio sessions :",
+                  "distance": 324.55328369140625,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770318222642301000"
+                  }
+                },
+                {
+                  "id": "1770318222642231000_83",
+                  "text": "Tom Lehrer\nThomas Andrew `` Tom '' Lehrer ( / ˈlɛrər / ; born April 9 , 1928 ) is a retired American musician , singer - songwriter , satirist , and mathematician . He has lectured on mathematics and musical theater . He is best known for the pithy , humorous songs he recorded in the 1950s and 1960s .",
+                  "distance": 337.0406188964844,
+                  "metadata": {
+                    "doc_id": "1770318222642231000",
+                    "from_clapnq": false
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.139
+    }
+  ],
+  "finished": true,
+  "listed_tools": 160,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"results\": [\n    {\n      \"id\": \"1770318222642230000_79\",\n      \"text\": \"Tom Lehrer\\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .\",\n      \"distance\": 147.0866241455078,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642230000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642300000_84\",\n      \"text\": \"Tom Lehrer\\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .\",\n      \"distance\": 147.0866241455078,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642300000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642231000_83\",\n      \"text\": \"Tom Lehrer\\nThomas Andrew `` Tom '' Lehrer ( / \\u02c8l\\u025br\\u0259r / ; born April 9 , 1928 ) is a retired American musician , singer - songwriter , satirist , and mathematician . He has lectured on mathematics and musical theater . He is best known for the pithy , humorous songs he recorded in the 1950s and 1960s .\",\n      \"distance\": 185.7888946533203,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642231000\"\n      }\n    },\n    {\n      \"id\": \"1770322576034825000_7966\",\n      \"text\": \"Tom Lehrer\\nLehrer has said of his musical career , `` If , after hearing my songs , just one human being is inspired to say something nasty to a friend , or perhaps to strike a loved one , it will all have been worth the while . ''\",\n      \"distance\": 193.8932647705078,\n      \"metadata\": {\n        \"doc_id\": \"1770322576034825000\",\n        \"from_clapnq\": true\n      }\n    },\n    {\n      \"id\": \"1770318222642379000_90\",\n      \"text\": \"Tom Lehrer\\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )\",\n      \"distance\": 208.7812042236328,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642379000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_95\",\n      \"text\": \"Tom Lehrer\\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )\",\n      \"distance\": 208.7812042236328,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642443000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642301000_86\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 239.06532287597656,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642301000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642379000_89\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 239.06532287597656,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642379000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_94\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 239.06532287597656,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642443000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642301000_87\",\n      \"text\": \"Tom Lehrer\\nThe album -- which included the macabre `` I Hold Your Hand in Mine '' , the mildly risqu\\u00e9 `` Be Prepared '' , and `` Lobachevsky '' ( regarding plagiarizing mathematicians ) -- became a cult success via word of mouth , despite being self - published and without promotion . Lehrer embarked on a series of concert tours and in 1959 recorded a second album , which was released in two versions : the songs were the same , but More of Tom Lehrer was studio - recorded while An Evening Wasted with Tom Lehrer was recorded live in concert . In 2013 , Lehrer recalled the studio sessions :\",\n      \"distance\": 244.02272033691406,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642301000\"\n      }\n    }\n  ]\n}"
+      ],
+      [
+        "{\n  \"results\": [\n    {\n      \"id\": \"1770318222642230000_79\",\n      \"text\": \"Tom Lehrer\\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .\",\n      \"distance\": 223.24771118164062,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642230000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642300000_84\",\n      \"text\": \"Tom Lehrer\\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .\",\n      \"distance\": 223.24771118164062,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642300000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642301000_85\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 277.60162353515625,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642301000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642380000_92\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 277.60162353515625,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642380000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_96\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 277.60162353515625,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642443000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642379000_90\",\n      \"text\": \"Tom Lehrer\\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )\",\n      \"distance\": 280.46795654296875,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642379000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_95\",\n      \"text\": \"Tom Lehrer\\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )\",\n      \"distance\": 280.46795654296875,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642443000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642301000_86\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 289.4852294921875,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642301000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642379000_89\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 289.4852294921875,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642379000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_94\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 289.4852294921875,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642443000\",\n        \"from_clapnq\": false\n      }\n    }\n  ]\n}"
+      ],
+      [
+        "{\n  \"results\": [\n    {\n      \"id\": \"1770318222642301000_86\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 158.84413146972656,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642301000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642379000_89\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 158.84413146972656,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642379000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_94\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 158.84413146972656,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642443000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642379000_90\",\n      \"text\": \"Tom Lehrer\\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )\",\n      \"distance\": 219.61924743652344,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642379000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_95\",\n      \"text\": \"Tom Lehrer\\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )\",\n      \"distance\": 219.61924743652344,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642443000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642301000_85\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 225.13124084472656,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642301000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642380000_92\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 225.13124084472656,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642380000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_96\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 225.13124084472656,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642443000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642230000_79\",\n      \"text\": \"Tom Lehrer\\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .\",\n      \"distance\": 237.8830108642578,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642230000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642300000_84\",\n      \"text\": \"Tom Lehrer\\nThe sheet music of many songs is published in The Tom Lehrer Song Book ( Crown Publishers , Inc. , 1954 ) Library of Congress Card Catalog Number 54 - 12068 and Too Many Songs by Tom Lehrer : with not enough drawings by Ronald Searle ( Pantheon , 1981 , ISBN 0 - 394 - 74930 - 8 ; Methuen , 1999 , ISBN 978 - 0 - 413 - 74230 - 8 ) . A second song book , Tom Lehrer 's Second Song Book , is out of print , ISBN 978 - 0517502167 .\",\n      \"distance\": 237.8830108642578,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642300000\"\n      }\n    }\n  ]\n}",
+        "{\n  \"results\": [\n    {\n      \"id\": \"1770318222642301000_86\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 185.5638427734375,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642301000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642379000_89\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 185.5638427734375,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642379000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_94\",\n      \"text\": \"Tom Lehrer\\nIn 2000 a boxed set of CDs , The Remains of Tom Lehrer , was released by Rhino Entertainment . It included live and studio versions of his first two albums , That Was The Year That Was , the songs he wrote for The Electric Company , and some previously unreleased material . It was accompanied by a small hardbound book containing an introduction by Dr. Demento and lyrics for all the songs .\",\n      \"distance\": 185.5638427734375,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642443000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642379000_90\",\n      \"text\": \"Tom Lehrer\\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )\",\n      \"distance\": 270.085693359375,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642379000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_95\",\n      \"text\": \"Tom Lehrer\\nTom Lehrer Discovers Australia ( And Vice Versa ) ( 1960 ; Australia - only ) Tom Lehrer in Concert ( 1994 ; UK compilation ) Songs & More Songs by Tom Lehrer ( 1997 ; US compilation of his first two studio albums with additional songs ) The Remains of Tom Lehrer ( 2000 ) The Tom Lehrer Collection ( 2010 )\",\n      \"distance\": 270.085693359375,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642443000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642301000_85\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 303.4827575683594,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642301000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642380000_92\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 303.4827575683594,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642380000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642443000_96\",\n      \"text\": \"Tom Lehrer\\nIn 2010 , Shout ! Factory launched a reissue campaign , making his long out - of - press albums available digitally . They also issued a CD / DVD combo called The Tom Lehrer Collection , which includes his best - loved songs , plus a DVD featuring an Oslo concert .\",\n      \"distance\": 303.4827575683594,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642443000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770318222642301000_87\",\n      \"text\": \"Tom Lehrer\\nThe album -- which included the macabre `` I Hold Your Hand in Mine '' , the mildly risqu\\u00e9 `` Be Prepared '' , and `` Lobachevsky '' ( regarding plagiarizing mathematicians ) -- became a cult success via word of mouth , despite being self - published and without promotion . Lehrer embarked on a series of concert tours and in 1959 recorded a second album , which was released in two versions : the songs were the same , but More of Tom Lehrer was studio - recorded while An Evening Wasted with Tom Lehrer was recorded live in concert . In 2013 , Lehrer recalled the studio sessions :\",\n      \"distance\": 324.55328369140625,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642301000\"\n      }\n    },\n    {\n      \"id\": \"1770318222642231000_83\",\n      \"text\": \"Tom Lehrer\\nThomas Andrew `` Tom '' Lehrer ( / \\u02c8l\\u025br\\u0259r / ; born April 9 , 1928 ) is a retired American musician , singer - songwriter , satirist , and mathematician . He has lectured on mathematics and musical theater . He is best known for the pithy , humorous songs he recorded in the 1950s and 1960s .\",\n      \"distance\": 337.0406188964844,\n      \"metadata\": {\n        \"doc_id\": \"1770318222642231000\",\n        \"from_clapnq\": false\n      }\n    }\n  ]\n}"
+      ]
+    ]
+  ],
+  "seconds": 1.775,
+  "tool_errors": 0
+}

@@ -1,0 +1,501 @@
+{
+  "capability": 1,
+  "domain": "book_publishing_company",
+  "uuid": "5661cd917583-338de4806750",
+  "sample_index": 2,
+  "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/book_publishing_company.json",
+  "source_sha256": "8a98e14da572e3ebc7e2122b26b06e8375fec81082c535f89c08d10306130953",
+  "turn_count": 1,
+  "call_count": 6,
+  "status": "blocked",
+  "expected_calls": 6,
+  "local_calls": 6,
+  "code_engine_calls": 0,
+  "local_errors": 0,
+  "code_engine_errors": 0,
+  "local_exception": null,
+  "code_engine_exception": "RuntimeError: Capability 1 needs the session-preserving Code Engine bridge; redeploy docker/mcp_http_bridge.py before evaluating",
+  "differences": [
+    {
+      "call": 1,
+      "tool": "get_data",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 2,
+      "tool": "transform_data",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 3,
+      "tool": "filter_data",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 4,
+      "tool": "retrieve_data",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 5,
+      "tool": "retrieve_data",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 6,
+      "tool": "retrieve_data",
+      "reason": "call not executed on one backend"
+    }
+  ],
+  "matching_errors": [],
+  "local_tool_errors": [],
+  "code_engine_tool_errors": [],
+  "raw_results_equal": false,
+  "serialization_differences": [],
+  "diagnostic_only": {
+    "status": "blocked",
+    "expected_calls": 6,
+    "local_calls": 6,
+    "code_engine_calls": 0,
+    "local_errors": 0,
+    "code_engine_errors": 0,
+    "local_exception": null,
+    "code_engine_exception": "ExceptionGroup: HTTPStatusError: Server error '502 Bad Gateway' for url 'https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/book_publishing_company'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502",
+    "differences": [
+      {
+        "call": 1,
+        "tool": "get_data",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 2,
+        "tool": "transform_data",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 3,
+        "tool": "filter_data",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 4,
+        "tool": "retrieve_data",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 5,
+        "tool": "retrieve_data",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 6,
+        "tool": "retrieve_data",
+        "reason": "call not executed on one backend"
+      }
+    ],
+    "matching_errors": [],
+    "local_tool_errors": [],
+    "code_engine_tool_errors": [],
+    "raw_results_equal": false
+  },
+  "diagnostic_first_attempt": {
+    "status": "discrepancy",
+    "expected_calls": 6,
+    "local_calls": 6,
+    "code_engine_calls": 4,
+    "local_errors": 0,
+    "code_engine_errors": 3,
+    "local_exception": null,
+    "code_engine_exception": "ExceptionGroup: SSLError: [SSL] passed invalid argument (_ssl.c:2570)",
+    "differences": [
+      {
+        "call": 2,
+        "tool": "transform_data",
+        "difference": {
+          "path": "$.content[0].text",
+          "local": {
+            "handle": "transformed_titles_1",
+            "num_records": 18,
+            "key_details": [
+              {
+                "name": "titles_title_id",
+                "dtype": "str",
+                "first_3_values": [
+                  "BU1032",
+                  "BU1111",
+                  "BU2075"
+                ]
+              },
+              {
+                "name": "titles_title",
+                "dtype": "str",
+                "first_3_values": [
+                  "The Busy Executive's Database Guide",
+                  "Cooking with Computers: Surreptitious Balance Sheets",
+                  "You Can Combat Computer Stress!"
+                ]
+              },
+              {
+                "name": "titles_type",
+                "dtype": "str",
+                "first_3_values": [
+                  "business",
+                  "business",
+                  "business"
+                ]
+              },
+              {
+                "name": "titles_pub_id",
+                "dtype": "str",
+                "first_3_values": [
+                  "1389",
+                  "1389",
+                  "0736"
+                ]
+              },
+              {
+                "name": "titles_price",
+                "dtype": "float",
+                "first_3_values": [
+                  19.99,
+                  11.95,
+                  2.99
+                ]
+              },
+              {
+                "name": "titles_advance",
+                "dtype": "float",
+                "first_3_values": [
+                  5000.0,
+                  5000.0,
+                  10125.0
+                ]
+              },
+              {
+                "name": "titles_royalty",
+                "dtype": "float",
+                "first_3_values": [
+                  10.0,
+                  10.0,
+                  24.0
+                ]
+              },
+              {
+                "name": "titles_ytd_sales",
+                "dtype": "float",
+                "first_3_values": [
+                  4095.0,
+                  3876.0,
+                  18722.0
+                ]
+              },
+              {
+                "name": "titles_notes",
+                "dtype": "str",
+                "first_3_values": [
+                  "An overview of available database systems with emphasis on common business applications. Illustrated.",
+                  "Helpful hints on how to use your electronic resources to the best advantage.",
+                  "The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations."
+                ]
+              },
+              {
+                "name": "titles_pubdate",
+                "dtype": "int",
+                "first_3_values": [
+                  1991,
+                  1991,
+                  1991
+                ]
+              },
+              {
+                "name": "publishers_pub_id",
+                "dtype": "str",
+                "first_3_values": [
+                  "1389",
+                  "1389",
+                  "0736"
+                ]
+              },
+              {
+                "name": "publishers_pub_name",
+                "dtype": "str",
+                "first_3_values": [
+                  "Algodata Infosystems",
+                  "Algodata Infosystems",
+                  "New Moon Books"
+                ]
+              },
+              {
+                "name": "publishers_city",
+                "dtype": "str",
+                "first_3_values": [
+                  "Berkeley",
+                  "Berkeley",
+                  "Boston"
+                ]
+              },
+              {
+                "name": "publishers_state",
+                "dtype": "str",
+                "first_3_values": [
+                  "CA",
+                  "CA",
+                  "MA"
+                ]
+              },
+              {
+                "name": "publishers_country",
+                "dtype": "str",
+                "first_3_values": [
+                  "USA",
+                  "USA",
+                  "USA"
+                ]
+              }
+            ]
+          },
+          "code_engine": "Input validation error: 1 validation error for TransformDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_titles_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+          "reason": "different types"
+        }
+      },
+      {
+        "call": 3,
+        "tool": "filter_data",
+        "difference": {
+          "path": "$.content[0].text",
+          "local": {
+            "handle": "filtered_titles_1",
+            "num_records": 15,
+            "key_details": [
+              {
+                "name": "titles_title_id",
+                "dtype": "object",
+                "first_3_values": [
+                  "BU1032",
+                  "BU1111",
+                  "BU2075"
+                ]
+              },
+              {
+                "name": "titles_title",
+                "dtype": "object",
+                "first_3_values": [
+                  "The Busy Executive's Database Guide",
+                  "Cooking with Computers: Surreptitious Balance Sheets",
+                  "You Can Combat Computer Stress!"
+                ]
+              },
+              {
+                "name": "titles_type",
+                "dtype": "object",
+                "first_3_values": [
+                  "business",
+                  "business",
+                  "business"
+                ]
+              },
+              {
+                "name": "titles_pub_id",
+                "dtype": "object",
+                "first_3_values": [
+                  "1389",
+                  "1389",
+                  "0736"
+                ]
+              },
+              {
+                "name": "titles_price",
+                "dtype": "float64",
+                "first_3_values": [
+                  19.99,
+                  11.95,
+                  2.99
+                ]
+              },
+              {
+                "name": "titles_advance",
+                "dtype": "float64",
+                "first_3_values": [
+                  5000.0,
+                  5000.0,
+                  10125.0
+                ]
+              },
+              {
+                "name": "titles_royalty",
+                "dtype": "float64",
+                "first_3_values": [
+                  10.0,
+                  10.0,
+                  24.0
+                ]
+              },
+              {
+                "name": "titles_ytd_sales",
+                "dtype": "float64",
+                "first_3_values": [
+                  4095.0,
+                  3876.0,
+                  18722.0
+                ]
+              },
+              {
+                "name": "titles_notes",
+                "dtype": "object",
+                "first_3_values": [
+                  "An overview of available database systems with emphasis on common business applications. Illustrated.",
+                  "Helpful hints on how to use your electronic resources to the best advantage.",
+                  "The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations."
+                ]
+              },
+              {
+                "name": "titles_pubdate",
+                "dtype": "int64",
+                "first_3_values": [
+                  1991,
+                  1991,
+                  1991
+                ]
+              },
+              {
+                "name": "publishers_pub_id",
+                "dtype": "object",
+                "first_3_values": [
+                  "1389",
+                  "1389",
+                  "0736"
+                ]
+              },
+              {
+                "name": "publishers_pub_name",
+                "dtype": "object",
+                "first_3_values": [
+                  "Algodata Infosystems",
+                  "Algodata Infosystems",
+                  "New Moon Books"
+                ]
+              },
+              {
+                "name": "publishers_city",
+                "dtype": "object",
+                "first_3_values": [
+                  "Berkeley",
+                  "Berkeley",
+                  "Boston"
+                ]
+              },
+              {
+                "name": "publishers_state",
+                "dtype": "object",
+                "first_3_values": [
+                  "CA",
+                  "CA",
+                  "MA"
+                ]
+              },
+              {
+                "name": "publishers_country",
+                "dtype": "object",
+                "first_3_values": [
+                  "USA",
+                  "USA",
+                  "USA"
+                ]
+              }
+            ]
+          },
+          "code_engine": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$TRANSFORMED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+          "reason": "different types"
+        }
+      },
+      {
+        "call": 4,
+        "tool": "retrieve_data",
+        "difference": {
+          "path": "$",
+          "local": {
+            "content": [
+              {
+                "type": "text",
+                "text": {
+                  "handle": "retrieved_titles_2",
+                  "num_records": 15,
+                  "key_details": [
+                    {
+                      "name": "titles_title",
+                      "dtype": "str",
+                      "first_3_values": [
+                        "The Busy Executive's Database Guide",
+                        "Cooking with Computers: Surreptitious Balance Sheets",
+                        "You Can Combat Computer Stress!"
+                      ]
+                    }
+                  ]
+                }
+              }
+            ],
+            "isError": false
+          },
+          "code_engine": null,
+          "reason": "different types"
+        }
+      },
+      {
+        "call": 5,
+        "tool": "retrieve_data",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 6,
+        "tool": "retrieve_data",
+        "reason": "call not executed on one backend"
+      }
+    ],
+    "matching_errors": [],
+    "local_tool_errors": [],
+    "code_engine_tool_errors": [
+      {
+        "call": 2,
+        "tool": "transform_data",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: 1 validation error for TransformDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_titles_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+            }
+          ],
+          "isError": false
+        },
+        "exception": null
+      },
+      {
+        "call": 3,
+        "tool": "filter_data",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$TRANSFORMED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+            }
+          ],
+          "isError": false
+        },
+        "exception": null
+      },
+      {
+        "call": 4,
+        "tool": "retrieve_data",
+        "result": null,
+        "exception": "CancelledError: Cancelled via cancel scope 7f592bad7ce0"
+      }
+    ],
+    "raw_results_equal": false
+  },
+  "diagnostic_retry": {
+    "first_exception": "ExceptionGroup: SSLError: [SSL] passed invalid argument (_ssl.c:2570)",
+    "final_exception": "ExceptionGroup: HTTPStatusError: Server error '502 Bad Gateway' for url 'https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/book_publishing_company'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502",
+    "first_attempt_file": "cap1_5661cd917583-338de4806750_code_engine_diagnostic_attempt1.json"
+  },
+  "local_output_file": "cap1_5661cd917583-338de4806750_local.json",
+  "code_engine_output_file": "cap1_5661cd917583-338de4806750_code_engine.json"
+}

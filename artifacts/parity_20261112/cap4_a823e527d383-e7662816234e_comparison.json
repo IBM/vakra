@@ -1,0 +1,55 @@
+{
+  "capability": 4,
+  "domain": "beer_factory",
+  "uuid": "a823e527d383-e7662816234e",
+  "sample_index": 17,
+  "source_file": "/root/v14/internal/test/capability_4_multiturn/output/beer_factory.json",
+  "source_sha256": "a43c2bd9f65801ce699d1c359d03ec767b3a4e1c6029095d07c9918e72751782",
+  "turn_count": 3,
+  "call_count": 4,
+  "status": "pass",
+  "expected_calls": 4,
+  "local_calls": 4,
+  "code_engine_calls": 4,
+  "local_errors": 0,
+  "code_engine_errors": 0,
+  "local_exception": null,
+  "code_engine_exception": null,
+  "differences": [],
+  "matching_errors": [],
+  "local_tool_errors": [],
+  "code_engine_tool_errors": [],
+  "raw_results_equal": false,
+  "serialization_differences": [
+    {
+      "call": 1,
+      "tool": "query_beer_factory",
+      "first_differing_character": 382,
+      "local_excerpt": "\n      \"metadata\": {\n        \"doc_id\": \"1770318222542063000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"17703",
+      "code_engine_excerpt": "\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222542063000\"\n      }\n    },\n    {\n      \"id\": \"17703"
+    },
+    {
+      "call": 2,
+      "tool": "query_beer_factory",
+      "first_differing_character": 501,
+      "local_excerpt": "\n      \"metadata\": {\n        \"doc_id\": \"1770318222542145000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"17703",
+      "code_engine_excerpt": "\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222542145000\"\n      }\n    },\n    {\n      \"id\": \"17703"
+    },
+    {
+      "call": 3,
+      "tool": "query_beer_factory",
+      "first_differing_character": 2039,
+      "local_excerpt": "\n      \"metadata\": {\n        \"doc_id\": \"1770318222542242000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"17703",
+      "code_engine_excerpt": "\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222542242000\"\n      }\n    },\n    {\n      \"id\": \"17703"
+    },
+    {
+      "call": 4,
+      "tool": "query_beer_factory",
+      "first_differing_character": 1551,
+      "local_excerpt": "\n      \"metadata\": {\n        \"doc_id\": \"1770318222542063000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"17703",
+      "code_engine_excerpt": "\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222542063000\"\n      }\n    },\n    {\n      \"id\": \"17703"
+    }
+  ],
+  "local_output_file": "cap4_a823e527d383-e7662816234e_local.json",
+  "code_engine_output_file": "cap4_a823e527d383-e7662816234e_code_engine.json"
+}

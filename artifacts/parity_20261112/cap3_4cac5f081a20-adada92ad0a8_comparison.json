@@ -1,0 +1,32 @@
+{
+  "capability": 3,
+  "domain": "bpo",
+  "uuid": "4cac5f081a20-adada92ad0a8",
+  "sample_index": 0,
+  "source_file": "/root/v14/internal/test/capability_3_multihop_reasoning/output/bpo.json",
+  "source_sha256": "eaa081cad6f46d01dae9eaf74983b381a79a6bb4f7eac1e8f165d0e7a92c9bd1",
+  "turn_count": 1,
+  "call_count": 1,
+  "status": "pass",
+  "expected_calls": 1,
+  "local_calls": 1,
+  "code_engine_calls": 1,
+  "local_errors": 0,
+  "code_engine_errors": 0,
+  "local_exception": null,
+  "code_engine_exception": null,
+  "differences": [],
+  "matching_errors": [],
+  "local_tool_errors": [],
+  "code_engine_tool_errors": [],
+  "raw_results_equal": true,
+  "serialization_differences": [],
+  "transport_retry": {
+    "attempt_1_exception": "ExceptionGroup: SSLError: [SSL] passed invalid argument (_ssl.c:2570)",
+    "attempt_1_file": "cap3_4cac5f081a20-adada92ad0a8_code_engine_attempt1.json",
+    "attempt_2_exception": null,
+    "recovered": true
+  },
+  "local_output_file": "cap3_4cac5f081a20-adada92ad0a8_local.json",
+  "code_engine_output_file": "cap3_4cac5f081a20-adada92ad0a8_code_engine.json"
+}

@@ -1,0 +1,346 @@
+{
+  "capability": 4,
+  "domain": "books",
+  "uuid": "6e317bcd6839-b3632defce8e",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap4.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_titles_by_language",
+      "resolved_arguments": {
+        "language_name": "British English"
+      },
+      "started_at": "2026-11-12T15:25:09.327570+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"titles\": [\n    \"Algorithms in C  Parts 1-4: Fundamentals  Data Structures  Sorting  Searching\",\n    \"The One Tree (The Second Chronicles of Thomas Covenant  #2)\",\n    \"Glamorous Powers (Starbridge  #2)\",\n    \"Girls' Night In\",\n    \"She Came to Stay\",\n    \"Naked Empire (Sword of Truth  #8)\",\n    \"The Solace Of Leaving Early\",\n    \"My Secret: A PostSecret Book\",\n    \"The Secret Lives of Men and Women: A PostSecret Book\",\n    \"The Noonday Demon: An Anatomy of Depression\",\n    \"Choke\",\n    \"In the Pond\",\n    \"The Atom Station\",\n    \"Open House\",\n    \"Bringing Down The House\",\n    \"Shake Hands with the Devil\",\n    \"For Whom The Bell Tolls\",\n    \"Leadership in Organizations\",\n    \"Montaillou: Cathars and Catholics in a French Village  1294-1324\",\n    \"Penguin Book Of Norse Myths: Gods Of The Vikings\",\n    \"A Passage to India\",\n    \"English Passengers\",\n    \"The Periodic Table\",\n    \"White Teeth\",\n    \"The Law and the Lady\",\n    \"Twilight of the Idols/The Anti-Christ\",\n    \"Gorgias\",\n    \"The Moonstone\",\n    \"The Mill on the Floss\",\n    \"Far from the Madding Crowd\",\n    \"The Railway Children\",\n    \"Straight Talking\",\n    \"Twelfth Night\",\n    \"Citizens: A Chronicle of the French Revolution\",\n    \"Tender is the Night\",\n    \"The Flame Trees of Thika: Memories of an African Childhood\",\n    \"The Dharma Bums\",\n    \"Tortilla Flat\",\n    \"The Call of Cthulhu and Other Weird Stories\",\n    \"Moonraker\",\n    \"The Adventures of Charlie and Mr. Willy Wonka: A Fully Dramatized Recording\",\n    \"Getting Things Done: The Art of Stress-Free Productivity\",\n    \"James and the Giant Peach: a Play\",\n    \"The Secret Garden\",\n    \"The World's Last Night: And Other Essays\",\n    \"Tales of the Norse Gods\",\n    \"The Best of Pippi Longstocking (Pippi Longstocking  #1-3)\",\n    \"Manic-Depressive Illness: Bipolar Disorders and Recurrent Depression\",\n    \"The Meaning of Life\",\n    \"The Oxford Companion to Philosophy\",\n    \"The Church in Ancient Society: From Galilee to Gregory the Great (History of the Christian Church)\",\n    \"It's Not About the Bike: My Journey Back to Life\",\n    \"A Preface to Democratic Theory\",\n    \"How \\\"Natives\\\" Think: About Captain Cook  For Example\",\n    \"Inside Himalaya\",\n    \"Cuba: A New History\",\n    \"Cities of the Red Night\",\n    \"The Pretender (Liar's Club  #1)\",\n    \"Absolutely Normal Chaos\",\n    \"Last Man Standing\",\n    \"The Lovely Bones\",\n    \"How the Irish Saved Civilization\",\n    \"The Pact\",\n    \"Nightingale's Song\",\n    \"Air Gear  Vol. 4 (Air Gear  #4)\",\n    \"The Life and Death of My Lord Gilles de Rais\",\n    \"Lincoln (Narratives of a Golden Age)\",\n    \"Hitler's Willing Executioners: Ordinary Germans and the Holocaust\",\n    \"Naomi\",\n    \"The Idiot Girls' Action-Adventure Club: True Tales from a Magnificent and Clumsy Life\",\n    \"The Truth about the Drug Companies: How They Deceive Us and What to Do about It\",\n    \"Tsunamis and Other Natural Disasters (Magic Tree House Research Guide  #15)\",\n    \"Laura: The Life of Laura Ingalls Wilder\",\n    \"The King's Buccaneer (Krondor's Sons  #2)\",\n    \"The Cloud Atlas\",\n    \"A Map of the World\",\n    \"Bras & Broomsticks (Magic in Manhattan  #1)\",\n    \"iWoz\",\n    \"The Coming of Age\",\n    \"The Case of the Midwife Toad\",\n    \"Boys' Life & Search and Destroy\",\n    \"The Birds (Methuen Drama)\",\n    \"The Handmaid's Tale\",\n    \"Amber Brown Is Green With Envy\",\n    \"Hello! Is That Grandma?\",\n    \"The Giggler Treatment\",\n    \"Northern Lights (His Dark Materials  #1)\",\n    \"Trevayne\",\n    \"The Children on the Top Floor\",\n    \"The God in the Moon (Age of Conan: Hyborian Adventures: A Soldier's Quest  #1)\",\n    \"The Eye of Charon (Age of Conan: Hyborian Adventures: A Soldier's Quest  #2)\",\n    \"Message in a Bottle\",\n    \"Emergence: Labeled Autistic\",\n    \"America (The Book): A Citizen's Guide to Democracy Inaction  (Teacher's Edition)\",\n    \"Golden Urchin\",\n    \"All Quiet on the Western Front\",\n    \"Trauma\",\n    \"Savage Love: Straight Answers from America's Most Popular Sex Columnist\",\n    \"The Evolution Of Desire: Strategies of Human Mating\",\n    \"Personal Finance For Dummies\",\n    \"Extraordinary Popular Delusions and the Madness of Crowds/Confusi\\u00f3n de Confusiones (Marketplace Book)\",\n    \"Three Complete Xanth Novels (Xanth  #1-3)\",\n    \"World Atlas of Great Apes and their Conservation\",\n    \"Genres in Dialogue: Plato and the Construct of Philosophy\",\n    \"The Long Road Home\",\n    \"Witches Abroad (Discworld  #12)\",\n    \"My War Gone by  I Miss It So\",\n    \"Taking Sides (Sweet Valley High  #31)\",\n    \"Electric Light\",\n    \"Finders Keepers: Selected Prose  1971-2001\",\n    \"Fantastic Mr Fox\",\n    \"Complete Short Stories  Vol 2\",\n    \"Winston Churchill\",\n    \"Mine\",\n    \"Dragon's Eye\",\n    \"Chilly Scenes of Winter\",\n    \"Guidebook to Zen and the Art of Motorcycle Maintenance\",\n    \"Naked Pictures of Famous People\",\n    \"The Pure in Heart (Simon Serrailler  #2)\",\n    \"Different Seasons\",\n    \"The Origin of Consciousness in the Breakdown of the Bicameral Mind\",\n    \"Alfred Hitchcock and the Making of Psycho\",\n    \"Elliott Erwitt: Snaps\",\n    \"The Prodigal Son (Roger the Chapman  #15)\",\n    \"Life Management for Busy Woman: Growth and Study Guide\",\n    \"The Michael Crichton Collection: Airframe / The Lost World / Timeline\",\n    \"Bad (Fearless  #13)\",\n    \"The Languages of Pao\",\n    \"Diablo II Ultimate Strategy Guide\",\n    \"Mixed Doubles\",\n    \"Millie's Fling\",\n    \"Pilgermann\",\n    \"Trevayne\",\n    \"Evening Class\",\n    \"Exile's Valor (Heralds of Valdemar  #7)\",\n    \"CliffsNotes on Dostoevsky's The Brothers Karamazov\",\n    \"Rachel & Leah (Women of Genesis  #3)\",\n    \"Frankenstein\",\n    \"La Cucina Di Lidia: Recipes and Memories from Italy's Adriatic Coast\",\n    \"The Reverse of the Medal (Aubrey/Maturin  #11)\",\n    \"The Meanest Doll in the World (Doll People  #2)\",\n    \"The Best of the Realms: The Stories of Elaine Cunningham (Forgotten Realms: The Best of the Realms  #3)\",\n    \"Killing the Imposter God: Philip Pullman's Spiritual Imagination in His Dark Materials\",\n    \"This Is New York\",\n    \"The Last Kingdom (The Saxon Stories  #1)\",\n    \"Monster: The Autobiography of an L.A. Gang Member\",\n    \"Every Good Boy Deserves Favor & Professional Foul\",\n    \"Lectures on the History of Philosophy 1: Greek Philosophy to Plato\",\n    \"Aeschylus 2: The Persians/Seven Against Thebes/The Suppliants/Prometheus Bound\",\n    \"Drum Into Silence (Drums of Chaos  #3)\",\n    \"Convergence Culture: Where Old and New Media Collide\",\n    \"CliffNotes on Williams' Glass Menagerie & Streetcar Named Desire (Cliffs Notes)\",\n    \"Cliffs Notes on Hugo's Les Miserables\",\n    \"Cliffs Notes on Hansberry's A Raisin in the Sun\",\n    \"CliffsNotes on Faulkner's The Sound and the Fury (Cliffs Notes)\",\n    \"David Foster Wallace's Infinite Jest: A Reader's Guide\",\n    \"Arundhati Roy's The God of Small Things: A Reader's Guide\",\n    \"A History of Philosophy 1: Greece and Rome\",\n    \"Nightmare House (Harrow House  #1)\",\n    \"For the Sake of Argument: Essays and Minority Reports\",\n    \"Chekhov's Doctors: A Collection of Chekhov's Medical Tales (Literature & Medicine 5)\",\n    \"Oathblood (Valdemar: Vows and Honor  #3)\",\n    \"Sister Outsider: Essays and Speeches\",\n    \"No Price Too High: A Pentecostal Preacher Becomes Catholic - The Inspirational Story of Alex Jones as Told to Diane Hanson\",\n    \"Access the Power of Your Higher Self: Your Source of Inner Guidance and Spiritual Transformation (Pocket Guides to Practical Spirituality)\",\n    \"The Atlantis Dialogue\",\n    \"The Mind Parasites\",\n    \"Pictures Showing What Happens on Each Page of Thomas Pynchon's Novel Gravity's Rainbow\",\n    \"The American Religion\",\n    \"JLA  Vol. 14: Trial by Fire\",\n    \"Hellblazer: Setting Sun\",\n    \"Here We All Are\",\n    \"A Little Princess\",\n    \"Lila's Child: An Inquiry into Quality\",\n    \"Key Topics in Conservation Biology\",\n    \"The Rapture: In the Twinkling of an Eye   (Before They Were Left Behind  #3)\",\n    \"The Voyage of the Jerle Shannara Trilogy (Voyage of the Jerle Shannara  #1-3)\",\n    \"Controversy Creates Cash\",\n    \"Twelve Extraordinary Women Workbook\",\n    \"The Drifting Classroom  Vol. 7 (The Drifting Classroom)\",\n    \"Why I Hate Canadians\",\n    \"Heartsnatcher\",\n    \"Complete Essays 1  1920-25\",\n    \"Mugglenet.Com's What Will Happen in Harry Potter 7: Who Lives  Who Dies  Who Falls in Love and How Will the Adventure Finally End?\",\n    \"One Hundred Demons\",\n    \"The Ultimate Time Machine: A Remote Viewer's Perception of Time & Predictions for the New Millennium\",\n    \"Assembly of Women (Literary Classics)\",\n    \"The Inner Reaches of Outer Space: Metaphor as Myth and as Religion (Collected Worksl)\",\n    \"The Book of My Life\",\n    \"An Episode of Sparrows\",\n    \"Natural Theology: Comprising Nature & Grace by Professor Dr Emil Brunner & the Reply No! by Dr Karl Barth\",\n    \"A Tale of Two Cities\",\n    \"A Smart Girl's Guide to Money: How to Make It  Save It  And Spend It\",\n    \"Perilous Power: The Middle East & US Foreign Policy\",\n    \"Pop Goes the Weasel\",\n    \"Tramps Like Us  Volume 9\",\n    \"Shout Out Loud! 5\",\n    \"Ecuador & the Galapagos Islands\",\n    \"The Coming of Godot: A Short History of a Masterpiece\",\n    \"A Passage to India: A Reader's Guide to Essential Criticism\",\n    \"Introducing Philosophy\",\n    \"Introducing Mind and Brain (Introducing...)\",\n    \"The Twenty-Seventh City\",\n    \"First Meetings: In the Enderverse\",\n    \"Running with Scissors\",\n    \"Desert Dawn\",\n    \"Ghost in the Shell\",\n    \"Tom Hunter: Living in Hell and Other Stories\",\n    \"The Woman In White\",\n    \"Independent People\",\n    \"The Long Road Back: A Survivor's Guide to Anorexia\",\n    \"Earned Value Project Management\",\n    \"McSweeney's #19\",\n    \"The Kissing Hand\"\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "titles": [
+                "Algorithms in C  Parts 1-4: Fundamentals  Data Structures  Sorting  Searching",
+                "The One Tree (The Second Chronicles of Thomas Covenant  #2)",
+                "Glamorous Powers (Starbridge  #2)",
+                "Girls' Night In",
+                "She Came to Stay",
+                "Naked Empire (Sword of Truth  #8)",
+                "The Solace Of Leaving Early",
+                "My Secret: A PostSecret Book",
+                "The Secret Lives of Men and Women: A PostSecret Book",
+                "The Noonday Demon: An Anatomy of Depression",
+                "Choke",
+                "In the Pond",
+                "The Atom Station",
+                "Open House",
+                "Bringing Down The House",
+                "Shake Hands with the Devil",
+                "For Whom The Bell Tolls",
+                "Leadership in Organizations",
+                "Montaillou: Cathars and Catholics in a French Village  1294-1324",
+                "Penguin Book Of Norse Myths: Gods Of The Vikings",
+                "A Passage to India",
+                "English Passengers",
+                "The Periodic Table",
+                "White Teeth",
+                "The Law and the Lady",
+                "Twilight of the Idols/The Anti-Christ",
+                "Gorgias",
+                "The Moonstone",
+                "The Mill on the Floss",
+                "Far from the Madding Crowd",
+                "The Railway Children",
+                "Straight Talking",
+                "Twelfth Night",
+                "Citizens: A Chronicle of the French Revolution",
+                "Tender is the Night",
+                "The Flame Trees of Thika: Memories of an African Childhood",
+                "The Dharma Bums",
+                "Tortilla Flat",
+                "The Call of Cthulhu and Other Weird Stories",
+                "Moonraker",
+                "The Adventures of Charlie and Mr. Willy Wonka: A Fully Dramatized Recording",
+                "Getting Things Done: The Art of Stress-Free Productivity",
+                "James and the Giant Peach: a Play",
+                "The Secret Garden",
+                "The World's Last Night: And Other Essays",
+                "Tales of the Norse Gods",
+                "The Best of Pippi Longstocking (Pippi Longstocking  #1-3)",
+                "Manic-Depressive Illness: Bipolar Disorders and Recurrent Depression",
+                "The Meaning of Life",
+                "The Oxford Companion to Philosophy",
+                "The Church in Ancient Society: From Galilee to Gregory the Great (History of the Christian Church)",
+                "It's Not About the Bike: My Journey Back to Life",
+                "A Preface to Democratic Theory",
+                "How \"Natives\" Think: About Captain Cook  For Example",
+                "Inside Himalaya",
+                "Cuba: A New History",
+                "Cities of the Red Night",
+                "The Pretender (Liar's Club  #1)",
+                "Absolutely Normal Chaos",
+                "Last Man Standing",
+                "The Lovely Bones",
+                "How the Irish Saved Civilization",
+                "The Pact",
+                "Nightingale's Song",
+                "Air Gear  Vol. 4 (Air Gear  #4)",
+                "The Life and Death of My Lord Gilles de Rais",
+                "Lincoln (Narratives of a Golden Age)",
+                "Hitler's Willing Executioners: Ordinary Germans and the Holocaust",
+                "Naomi",
+                "The Idiot Girls' Action-Adventure Club: True Tales from a Magnificent and Clumsy Life",
+                "The Truth about the Drug Companies: How They Deceive Us and What to Do about It",
+                "Tsunamis and Other Natural Disasters (Magic Tree House Research Guide  #15)",
+                "Laura: The Life of Laura Ingalls Wilder",
+                "The King's Buccaneer (Krondor's Sons  #2)",
+                "The Cloud Atlas",
+                "A Map of the World",
+                "Bras & Broomsticks (Magic in Manhattan  #1)",
+                "iWoz",
+                "The Coming of Age",
+                "The Case of the Midwife Toad",
+                "Boys' Life & Search and Destroy",
+                "The Birds (Methuen Drama)",
+                "The Handmaid's Tale",
+                "Amber Brown Is Green With Envy",
+                "Hello! Is That Grandma?",
+                "The Giggler Treatment",
+                "Northern Lights (His Dark Materials  #1)",
+                "Trevayne",
+                "The Children on the Top Floor",
+                "The God in the Moon (Age of Conan: Hyborian Adventures: A Soldier's Quest  #1)",
+                "The Eye of Charon (Age of Conan: Hyborian Adventures: A Soldier's Quest  #2)",
+                "Message in a Bottle",
+                "Emergence: Labeled Autistic",
+                "America (The Book): A Citizen's Guide to Democracy Inaction  (Teacher's Edition)",
+                "Golden Urchin",
+                "All Quiet on the Western Front",
+                "Trauma",
+                "Savage Love: Straight Answers from America's Most Popular Sex Columnist",
+                "The Evolution Of Desire: Strategies of Human Mating",
+                "Personal Finance For Dummies",
+                "Extraordinary Popular Delusions and the Madness of Crowds/Confusión de Confusiones (Marketplace Book)",
+                "Three Complete Xanth Novels (Xanth  #1-3)",
+                "World Atlas of Great Apes and their Conservation",
+                "Genres in Dialogue: Plato and the Construct of Philosophy",
+                "The Long Road Home",
+                "Witches Abroad (Discworld  #12)",
+                "My War Gone by  I Miss It So",
+                "Taking Sides (Sweet Valley High  #31)",
+                "Electric Light",
+                "Finders Keepers: Selected Prose  1971-2001",
+                "Fantastic Mr Fox",
+                "Complete Short Stories  Vol 2",
+                "Winston Churchill",
+                "Mine",
+                "Dragon's Eye",
+                "Chilly Scenes of Winter",
+                "Guidebook to Zen and the Art of Motorcycle Maintenance",
+                "Naked Pictures of Famous People",
+                "The Pure in Heart (Simon Serrailler  #2)",
+                "Different Seasons",
+                "The Origin of Consciousness in the Breakdown of the Bicameral Mind",
+                "Alfred Hitchcock and the Making of Psycho",
+                "Elliott Erwitt: Snaps",
+                "The Prodigal Son (Roger the Chapman  #15)",
+                "Life Management for Busy Woman: Growth and Study Guide",
+                "The Michael Crichton Collection: Airframe / The Lost World / Timeline",
+                "Bad (Fearless  #13)",
+                "The Languages of Pao",
+                "Diablo II Ultimate Strategy Guide",
+                "Mixed Doubles",
+                "Millie's Fling",
+                "Pilgermann",
+                "Trevayne",
+                "Evening Class",
+                "Exile's Valor (Heralds of Valdemar  #7)",
+                "CliffsNotes on Dostoevsky's The Brothers Karamazov",
+                "Rachel & Leah (Women of Genesis  #3)",
+                "Frankenstein",
+                "La Cucina Di Lidia: Recipes and Memories from Italy's Adriatic Coast",
+                "The Reverse of the Medal (Aubrey/Maturin  #11)",
+                "The Meanest Doll in the World (Doll People  #2)",
+                "The Best of the Realms: The Stories of Elaine Cunningham (Forgotten Realms: The Best of the Realms  #3)",
+                "Killing the Imposter God: Philip Pullman's Spiritual Imagination in His Dark Materials",
+                "This Is New York",
+                "The Last Kingdom (The Saxon Stories  #1)",
+                "Monster: The Autobiography of an L.A. Gang Member",
+                "Every Good Boy Deserves Favor & Professional Foul",
+                "Lectures on the History of Philosophy 1: Greek Philosophy to Plato",
+                "Aeschylus 2: The Persians/Seven Against Thebes/The Suppliants/Prometheus Bound",
+                "Drum Into Silence (Drums of Chaos  #3)",
+                "Convergence Culture: Where Old and New Media Collide",
+                "CliffNotes on Williams' Glass Menagerie & Streetcar Named Desire (Cliffs Notes)",
+                "Cliffs Notes on Hugo's Les Miserables",
+                "Cliffs Notes on Hansberry's A Raisin in the Sun",
+                "CliffsNotes on Faulkner's The Sound and the Fury (Cliffs Notes)",
+                "David Foster Wallace's Infinite Jest: A Reader's Guide",
+                "Arundhati Roy's The God of Small Things: A Reader's Guide",
+                "A History of Philosophy 1: Greece and Rome",
+                "Nightmare House (Harrow House  #1)",
+                "For the Sake of Argument: Essays and Minority Reports",
+                "Chekhov's Doctors: A Collection of Chekhov's Medical Tales (Literature & Medicine 5)",
+                "Oathblood (Valdemar: Vows and Honor  #3)",
+                "Sister Outsider: Essays and Speeches",
+                "No Price Too High: A Pentecostal Preacher Becomes Catholic - The Inspirational Story of Alex Jones as Told to Diane Hanson",
+                "Access the Power of Your Higher Self: Your Source of Inner Guidance and Spiritual Transformation (Pocket Guides to Practical Spirituality)",
+                "The Atlantis Dialogue",
+                "The Mind Parasites",
+                "Pictures Showing What Happens on Each Page of Thomas Pynchon's Novel Gravity's Rainbow",
+                "The American Religion",
+                "JLA  Vol. 14: Trial by Fire",
+                "Hellblazer: Setting Sun",
+                "Here We All Are",
+                "A Little Princess",
+                "Lila's Child: An Inquiry into Quality",
+                "Key Topics in Conservation Biology",
+                "The Rapture: In the Twinkling of an Eye   (Before They Were Left Behind  #3)",
+                "The Voyage of the Jerle Shannara Trilogy (Voyage of the Jerle Shannara  #1-3)",
+                "Controversy Creates Cash",
+                "Twelve Extraordinary Women Workbook",
+                "The Drifting Classroom  Vol. 7 (The Drifting Classroom)",
+                "Why I Hate Canadians",
+                "Heartsnatcher",
+                "Complete Essays 1  1920-25",
+                "Mugglenet.Com's What Will Happen in Harry Potter 7: Who Lives  Who Dies  Who Falls in Love and How Will the Adventure Finally End?",
+                "One Hundred Demons",
+                "The Ultimate Time Machine: A Remote Viewer's Perception of Time & Predictions for the New Millennium",
+                "Assembly of Women (Literary Classics)",
+                "The Inner Reaches of Outer Space: Metaphor as Myth and as Religion (Collected Worksl)",
+                "The Book of My Life",
+                "An Episode of Sparrows",
+                "Natural Theology: Comprising Nature & Grace by Professor Dr Emil Brunner & the Reply No! by Dr Karl Barth",
+                "A Tale of Two Cities",
+                "A Smart Girl's Guide to Money: How to Make It  Save It  And Spend It",
+                "Perilous Power: The Middle East & US Foreign Policy",
+                "Pop Goes the Weasel",
+                "Tramps Like Us  Volume 9",
+                "Shout Out Loud! 5",
+                "Ecuador & the Galapagos Islands",
+                "The Coming of Godot: A Short History of a Masterpiece",
+                "A Passage to India: A Reader's Guide to Essential Criticism",
+                "Introducing Philosophy",
+                "Introducing Mind and Brain (Introducing...)",
+                "The Twenty-Seventh City",
+                "First Meetings: In the Enderverse",
+                "Running with Scissors",
+                "Desert Dawn",
+                "Ghost in the Shell",
+                "Tom Hunter: Living in Hell and Other Stories",
+                "The Woman In White",
+                "Independent People",
+                "The Long Road Back: A Survivor's Guide to Anorexia",
+                "Earned Value Project Management",
+                "McSweeney's #19",
+                "The Kissing Hand"
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.304
+    },
+    {
+      "tool": "get_distinct_publishers_by_title",
+      "resolved_arguments": {
+        "title": "The Secret Garden"
+      },
+      "started_at": "2026-11-12T15:25:10.632820+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"publishers\": [\n    \"Penguin Classics\",\n    \"Signet\",\n    \"Children's Classics\",\n    \"Scholastic\",\n    \"Sterling\"\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "publishers": [
+                "Penguin Classics",
+                "Signet",
+                "Children's Classics",
+                "Scholastic",
+                "Sterling"
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.233
+    },
+    {
+      "tool": "get_count_books_by_author_and_publisher",
+      "resolved_arguments": {
+        "author_name": "William Shakespeare",
+        "publisher_name": "Penguin Classics"
+      },
+      "started_at": "2026-11-12T15:25:11.866554+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"count\": 2\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "count": 2
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.276
+    }
+  ],
+  "finished": true,
+  "listed_tools": 160,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"titles\": [\n    \"Algorithms in C  Parts 1-4: Fundamentals  Data Structures  Sorting  Searching\",\n    \"The One Tree (The Second Chronicles of Thomas Covenant  #2)\",\n    \"Glamorous Powers (Starbridge  #2)\",\n    \"Girls' Night In\",\n    \"She Came to Stay\",\n    \"Naked Empire (Sword of Truth  #8)\",\n    \"The Solace Of Leaving Early\",\n    \"My Secret: A PostSecret Book\",\n    \"The Secret Lives of Men and Women: A PostSecret Book\",\n    \"The Noonday Demon: An Anatomy of Depression\",\n    \"Choke\",\n    \"In the Pond\",\n    \"The Atom Station\",\n    \"Open House\",\n    \"Bringing Down The House\",\n    \"Shake Hands with the Devil\",\n    \"For Whom The Bell Tolls\",\n    \"Leadership in Organizations\",\n    \"Montaillou: Cathars and Catholics in a French Village  1294-1324\",\n    \"Penguin Book Of Norse Myths: Gods Of The Vikings\",\n    \"A Passage to India\",\n    \"English Passengers\",\n    \"The Periodic Table\",\n    \"White Teeth\",\n    \"The Law and the Lady\",\n    \"Twilight of the Idols/The Anti-Christ\",\n    \"Gorgias\",\n    \"The Moonstone\",\n    \"The Mill on the Floss\",\n    \"Far from the Madding Crowd\",\n    \"The Railway Children\",\n    \"Straight Talking\",\n    \"Twelfth Night\",\n    \"Citizens: A Chronicle of the French Revolution\",\n    \"Tender is the Night\",\n    \"The Flame Trees of Thika: Memories of an African Childhood\",\n    \"The Dharma Bums\",\n    \"Tortilla Flat\",\n    \"The Call of Cthulhu and Other Weird Stories\",\n    \"Moonraker\",\n    \"The Adventures of Charlie and Mr. Willy Wonka: A Fully Dramatized Recording\",\n    \"Getting Things Done: The Art of Stress-Free Productivity\",\n    \"James and the Giant Peach: a Play\",\n    \"The Secret Garden\",\n    \"The World's Last Night: And Other Essays\",\n    \"Tales of the Norse Gods\",\n    \"The Best of Pippi Longstocking (Pippi Longstocking  #1-3)\",\n    \"Manic-Depressive Illness: Bipolar Disorders and Recurrent Depression\",\n    \"The Meaning of Life\",\n    \"The Oxford Companion to Philosophy\",\n    \"The Church in Ancient Society: From Galilee to Gregory the Great (History of the Christian Church)\",\n    \"It's Not About the Bike: My Journey Back to Life\",\n    \"A Preface to Democratic Theory\",\n    \"How \\\"Natives\\\" Think: About Captain Cook  For Example\",\n    \"Inside Himalaya\",\n    \"Cuba: A New History\",\n    \"Cities of the Red Night\",\n    \"The Pretender (Liar's Club  #1)\",\n    \"Absolutely Normal Chaos\",\n    \"Last Man Standing\",\n    \"The Lovely Bones\",\n    \"How the Irish Saved Civilization\",\n    \"The Pact\",\n    \"Nightingale's Song\",\n    \"Air Gear  Vol. 4 (Air Gear  #4)\",\n    \"The Life and Death of My Lord Gilles de Rais\",\n    \"Lincoln (Narratives of a Golden Age)\",\n    \"Hitler's Willing Executioners: Ordinary Germans and the Holocaust\",\n    \"Naomi\",\n    \"The Idiot Girls' Action-Adventure Club: True Tales from a Magnificent and Clumsy Life\",\n    \"The Truth about the Drug Companies: How They Deceive Us and What to Do about It\",\n    \"Tsunamis and Other Natural Disasters (Magic Tree House Research Guide  #15)\",\n    \"Laura: The Life of Laura Ingalls Wilder\",\n    \"The King's Buccaneer (Krondor's Sons  #2)\",\n    \"The Cloud Atlas\",\n    \"A Map of the World\",\n    \"Bras & Broomsticks (Magic in Manhattan  #1)\",\n    \"iWoz\",\n    \"The Coming of Age\",\n    \"The Case of the Midwife Toad\",\n    \"Boys' Life & Search and Destroy\",\n    \"The Birds (Methuen Drama)\",\n    \"The Handmaid's Tale\",\n    \"Amber Brown Is Green With Envy\",\n    \"Hello! Is That Grandma?\",\n    \"The Giggler Treatment\",\n    \"Northern Lights (His Dark Materials  #1)\",\n    \"Trevayne\",\n    \"The Children on the Top Floor\",\n    \"The God in the Moon (Age of Conan: Hyborian Adventures: A Soldier's Quest  #1)\",\n    \"The Eye of Charon (Age of Conan: Hyborian Adventures: A Soldier's Quest  #2)\",\n    \"Message in a Bottle\",\n    \"Emergence: Labeled Autistic\",\n    \"America (The Book): A Citizen's Guide to Democracy Inaction  (Teacher's Edition)\",\n    \"Golden Urchin\",\n    \"All Quiet on the Western Front\",\n    \"Trauma\",\n    \"Savage Love: Straight Answers from America's Most Popular Sex Columnist\",\n    \"The Evolution Of Desire: Strategies of Human Mating\",\n    \"Personal Finance For Dummies\",\n    \"Extraordinary Popular Delusions and the Madness of Crowds/Confusi\\u00f3n de Confusiones (Marketplace Book)\",\n    \"Three Complete Xanth Novels (Xanth  #1-3)\",\n    \"World Atlas of Great Apes and their Conservation\",\n    \"Genres in Dialogue: Plato and the Construct of Philosophy\",\n    \"The Long Road Home\",\n    \"Witches Abroad (Discworld  #12)\",\n    \"My War Gone by  I Miss It So\",\n    \"Taking Sides (Sweet Valley High  #31)\",\n    \"Electric Light\",\n    \"Finders Keepers: Selected Prose  1971-2001\",\n    \"Fantastic Mr Fox\",\n    \"Complete Short Stories  Vol 2\",\n    \"Winston Churchill\",\n    \"Mine\",\n    \"Dragon's Eye\",\n    \"Chilly Scenes of Winter\",\n    \"Guidebook to Zen and the Art of Motorcycle Maintenance\",\n    \"Naked Pictures of Famous People\",\n    \"The Pure in Heart (Simon Serrailler  #2)\",\n    \"Different Seasons\",\n    \"The Origin of Consciousness in the Breakdown of the Bicameral Mind\",\n    \"Alfred Hitchcock and the Making of Psycho\",\n    \"Elliott Erwitt: Snaps\",\n    \"The Prodigal Son (Roger the Chapman  #15)\",\n    \"Life Management for Busy Woman: Growth and Study Guide\",\n    \"The Michael Crichton Collection: Airframe / The Lost World / Timeline\",\n    \"Bad (Fearless  #13)\",\n    \"The Languages of Pao\",\n    \"Diablo II Ultimate Strategy Guide\",\n    \"Mixed Doubles\",\n    \"Millie's Fling\",\n    \"Pilgermann\",\n    \"Trevayne\",\n    \"Evening Class\",\n    \"Exile's Valor (Heralds of Valdemar  #7)\",\n    \"CliffsNotes on Dostoevsky's The Brothers Karamazov\",\n    \"Rachel & Leah (Women of Genesis  #3)\",\n    \"Frankenstein\",\n    \"La Cucina Di Lidia: Recipes and Memories from Italy's Adriatic Coast\",\n    \"The Reverse of the Medal (Aubrey/Maturin  #11)\",\n    \"The Meanest Doll in the World (Doll People  #2)\",\n    \"The Best of the Realms: The Stories of Elaine Cunningham (Forgotten Realms: The Best of the Realms  #3)\",\n    \"Killing the Imposter God: Philip Pullman's Spiritual Imagination in His Dark Materials\",\n    \"This Is New York\",\n    \"The Last Kingdom (The Saxon Stories  #1)\",\n    \"Monster: The Autobiography of an L.A. Gang Member\",\n    \"Every Good Boy Deserves Favor & Professional Foul\",\n    \"Lectures on the History of Philosophy 1: Greek Philosophy to Plato\",\n    \"Aeschylus 2: The Persians/Seven Against Thebes/The Suppliants/Prometheus Bound\",\n    \"Drum Into Silence (Drums of Chaos  #3)\",\n    \"Convergence Culture: Where Old and New Media Collide\",\n    \"CliffNotes on Williams' Glass Menagerie & Streetcar Named Desire (Cliffs Notes)\",\n    \"Cliffs Notes on Hugo's Les Miserables\",\n    \"Cliffs Notes on Hansberry's A Raisin in the Sun\",\n    \"CliffsNotes on Faulkner's The Sound and the Fury (Cliffs Notes)\",\n    \"David Foster Wallace's Infinite Jest: A Reader's Guide\",\n    \"Arundhati Roy's The God of Small Things: A Reader's Guide\",\n    \"A History of Philosophy 1: Greece and Rome\",\n    \"Nightmare House (Harrow House  #1)\",\n    \"For the Sake of Argument: Essays and Minority Reports\",\n    \"Chekhov's Doctors: A Collection of Chekhov's Medical Tales (Literature & Medicine 5)\",\n    \"Oathblood (Valdemar: Vows and Honor  #3)\",\n    \"Sister Outsider: Essays and Speeches\",\n    \"No Price Too High: A Pentecostal Preacher Becomes Catholic - The Inspirational Story of Alex Jones as Told to Diane Hanson\",\n    \"Access the Power of Your Higher Self: Your Source of Inner Guidance and Spiritual Transformation (Pocket Guides to Practical Spirituality)\",\n    \"The Atlantis Dialogue\",\n    \"The Mind Parasites\",\n    \"Pictures Showing What Happens on Each Page of Thomas Pynchon's Novel Gravity's Rainbow\",\n    \"The American Religion\",\n    \"JLA  Vol. 14: Trial by Fire\",\n    \"Hellblazer: Setting Sun\",\n    \"Here We All Are\",\n    \"A Little Princess\",\n    \"Lila's Child: An Inquiry into Quality\",\n    \"Key Topics in Conservation Biology\",\n    \"The Rapture: In the Twinkling of an Eye   (Before They Were Left Behind  #3)\",\n    \"The Voyage of the Jerle Shannara Trilogy (Voyage of the Jerle Shannara  #1-3)\",\n    \"Controversy Creates Cash\",\n    \"Twelve Extraordinary Women Workbook\",\n    \"The Drifting Classroom  Vol. 7 (The Drifting Classroom)\",\n    \"Why I Hate Canadians\",\n    \"Heartsnatcher\",\n    \"Complete Essays 1  1920-25\",\n    \"Mugglenet.Com's What Will Happen in Harry Potter 7: Who Lives  Who Dies  Who Falls in Love and How Will the Adventure Finally End?\",\n    \"One Hundred Demons\",\n    \"The Ultimate Time Machine: A Remote Viewer's Perception of Time & Predictions for the New Millennium\",\n    \"Assembly of Women (Literary Classics)\",\n    \"The Inner Reaches of Outer Space: Metaphor as Myth and as Religion (Collected Worksl)\",\n    \"The Book of My Life\",\n    \"An Episode of Sparrows\",\n    \"Natural Theology: Comprising Nature & Grace by Professor Dr Emil Brunner & the Reply No! by Dr Karl Barth\",\n    \"A Tale of Two Cities\",\n    \"A Smart Girl's Guide to Money: How to Make It  Save It  And Spend It\",\n    \"Perilous Power: The Middle East & US Foreign Policy\",\n    \"Pop Goes the Weasel\",\n    \"Tramps Like Us  Volume 9\",\n    \"Shout Out Loud! 5\",\n    \"Ecuador & the Galapagos Islands\",\n    \"The Coming of Godot: A Short History of a Masterpiece\",\n    \"A Passage to India: A Reader's Guide to Essential Criticism\",\n    \"Introducing Philosophy\",\n    \"Introducing Mind and Brain (Introducing...)\",\n    \"The Twenty-Seventh City\",\n    \"First Meetings: In the Enderverse\",\n    \"Running with Scissors\",\n    \"Desert Dawn\",\n    \"Ghost in the Shell\",\n    \"Tom Hunter: Living in Hell and Other Stories\",\n    \"The Woman In White\",\n    \"Independent People\",\n    \"The Long Road Back: A Survivor's Guide to Anorexia\",\n    \"Earned Value Project Management\",\n    \"McSweeney's #19\",\n    \"The Kissing Hand\"\n  ]\n}"
+      ],
+      [
+        "{\n  \"publishers\": [\n    \"Penguin Classics\",\n    \"Signet\",\n    \"Children's Classics\",\n    \"Scholastic\",\n    \"Sterling\"\n  ]\n}"
+      ],
+      [
+        "{\n  \"count\": 2\n}"
+      ]
+    ]
+  ],
+  "seconds": 5.379,
+  "tool_errors": 0
+}

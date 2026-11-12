@@ -224,3 +224,89 @@ evaluator/
 - [`setup.md`](/vakra/setup.md)
 - [`benchmark/mcp_connection_config.yaml`](/vakra/benchmark/mcp_connection_config.yaml)
 - [`evaluator/evaluator.py`](/vakra/evaluator/evaluator.py)
+
+## Local tools or Code Engine tools
+
+Use `--tool-backend local` (the default) for the existing Docker/subprocess
+configuration. Use `--tool-backend code-engine` for MCP over streamable HTTP.
+Local input files, tool replay, and judging remain the same.
+
+Set/export the capability app URLs supplied by the deployer, for example by
+loading their `.ce_urls.env`. The browser explorer URL is not a tool endpoint:
+
+```bash
+export VAKRA_CAP2_URL=https://vakra-cap2.YOUR_DEPLOYMENT.us-east.codeengine.appdomain.cloud
+python evaluator/evaluator.py \
+  --capability_name capability_dashboard_apis \
+  --gt_root /path/to/groundtruth --pred_root /path/to/predictions \
+  --domains california_schools --tool-backend code-engine \
+  --output /tmp/ce-dashboard-results.json
+```
+
+`benchmark/mcp_connection_config.ce.yaml` maps capabilities 1–4 to
+`VAKRA_CAP1_URL` through `VAKRA_CAP4_URL`. Only the selected capability's URL
+must be set. Each connection uses `/mcp/<domain>`. `--mcp-config PATH` overrides
+the selected backend's default YAML. A custom HTTP config can specify an
+absolute base URL or a URL containing `{domain}`.
+
+Results record the backend, transport and server URL. Resuming with a different
+backend/URL is rejected; choose a separate `--output`. Older results without
+connection metadata can be resumed only with the local backend.
+
+### Capability 1: sample state and transforms
+
+Prediction and ground-truth replay run consecutively in one private connection
+per sample. Both begin with `get_data(tool_universe_id=UUID, reset_handles=True)`.
+The first call selects the sample's universe. The second clears intermediate
+handles and counters while reusing the same initial dataset. Changing the
+universe loads a new dataset. All turns in one dialogue retain their state.
+
+Transforms receive deep copies of their input datasets before executing. Their
+results get new handles; neither earlier handles nor the initial dataset are
+modified, even if a transform fails after changing its copy. Read-only filters,
+getters and aggregations do not require this extra copy. Prediction handles are
+released before ground-truth replay, and the backend closes after the sample.
+
+**Rebuild/redeploy the backend for these semantics.** Capability 1 checks that
+`get_data` advertises `reset_handles` and fails with an upgrade message if it
+is missing. Hosted capability 1 also checks `/healthz` for `persistent_backends: true`
+before replay, so an old stateless bridge is rejected. This applies to local Docker images as well as hosted images.
+
+### Deploying the session-preserving HTTP bridge
+
+The bridge in `docker/mcp_http_bridge.py` uses the existing capability dispatcher.
+Build the unified image and set `SERVE_MODE=http`, `CAPABILITY_ID=1` (or 2–4),
+and the existing database/retriever mounts. It listens on `PORT` (default 8080).
+The evaluator supplies a random `X-Vakra-Session` header. Calls with that header
+share one domain-scoped stdio backend, owned by a dedicated worker task. A
+DELETE on the same path/header releases it; otherwise idle workers expire after
+`BRIDGE_IDLE_TIMEOUT` seconds (default 900). `BRIDGE_MAX_SESSIONS` defaults to 16.
+Tool results preserve MCP error flags and structured content.
+
+**Use one replica per capability app and one bridge process.** Worker state is
+in process memory. Unknown/expired session IDs fail explicitly rather than
+silently creating an empty backend. Multi-replica deployment requires routing
+all requests for a session to its owning replica. This implementation does not
+provide distributed session state or automatically restart a sample after loss.
+
+Clients without `X-Vakra-Session` retain the original bridge's stateless per-call
+behavior, suitable for independent tool calls. Stateful capability 1 trajectories
+must use the updated evaluator and bridge. The existing Code Engine deployment
+must be updated by its owner; changing the evaluator alone cannot preserve
+handles on a bridge that starts a fresh backend for every call.
+
+The server API targets `mcp>=1.27,<2`, as declared in the MCP dependencies.
+
+## Environment file
+
+Copy `.env.example` to `.env` in the repository root and replace the dummy values
+for your selected LLM provider and tool backend. Both `evaluator/evaluator.py`
+and `benchmark_runner.py` load that file automatically before importing helpers
+that read environment settings. Already-exported shell variables take precedence.
+The `.env` file is git-ignored; `.env.example` contains placeholders for sharing.
+
+The evaluator defaults to `JUDGE_BACKEND=rits` and uses `RITS_API_KEY`. For the
+Groq judge, set `JUDGE_BACKEND=groq` and `API_KEY`. The runner's `--provider`
+selects which provider credentials it needs. Code Engine tools additionally need
+the selected capability's `VAKRA_CAPn_URL`; local tools do not use those URLs.
+Backend and input/output selection remain CLI/configuration options.

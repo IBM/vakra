@@ -1,0 +1,220 @@
+{
+  "capability": 1,
+  "domain": "disney",
+  "uuid": "34a533dfd727-f6c3999d1e9d",
+  "backend": "code_engine_diagnostic",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_data",
+      "resolved_arguments": {
+        "tool_universe_id": "34a533dfd727-f6c3999d1e9d",
+        "reset_handles": true
+      },
+      "started_at": "2026-11-12T15:26:46.006419+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"retrieved_characters_1\", \"num_records\": 55, \"key_details\": [{\"name\": \"characters_movie_title\", \"dtype\": \"object\", \"first_3_values\": [\"Snow White and the Seven Dwarfs\", \"Pinocchio\", \"Fantasia\"]}, {\"name\": \"characters_release_date\", \"dtype\": \"object\", \"first_3_values\": [\"21-Dec-37\", \"7-Feb-40\", \"13-Nov-40\"]}, {\"name\": \"characters_hero\", \"dtype\": \"object\", \"first_3_values\": [\"Snow White\", \"Pinocchio\", null]}, {\"name\": \"characters_villian\", \"dtype\": \"object\", \"first_3_values\": [\"Evil Queen\", \"Stromboli\", \"Chernabog\"]}, {\"name\": \"characters_song\", \"dtype\": \"object\", \"first_3_values\": [\"Some Day My Prince Will Come\", \"When You Wish upon a Star\", null]}, {\"name\": \"director_name\", \"dtype\": \"object\", \"first_3_values\": [\"Snow White and the Seven Dwarfs\", \"Pinocchio\", \"Fantasia\"]}, {\"name\": \"director_director\", \"dtype\": \"object\", \"first_3_values\": [\"David Hand\", \"Ben Sharpsteen\", \"full credits\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "retrieved_characters_1",
+              "num_records": 55,
+              "key_details": [
+                {
+                  "name": "characters_movie_title",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Snow White and the Seven Dwarfs",
+                    "Pinocchio",
+                    "Fantasia"
+                  ]
+                },
+                {
+                  "name": "characters_release_date",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "21-Dec-37",
+                    "7-Feb-40",
+                    "13-Nov-40"
+                  ]
+                },
+                {
+                  "name": "characters_hero",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Snow White",
+                    "Pinocchio",
+                    null
+                  ]
+                },
+                {
+                  "name": "characters_villian",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Evil Queen",
+                    "Stromboli",
+                    "Chernabog"
+                  ]
+                },
+                {
+                  "name": "characters_song",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Some Day My Prince Will Come",
+                    "When You Wish upon a Star",
+                    null
+                  ]
+                },
+                {
+                  "name": "director_name",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Snow White and the Seven Dwarfs",
+                    "Pinocchio",
+                    "Fantasia"
+                  ]
+                },
+                {
+                  "name": "director_director",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "David Hand",
+                    "Ben Sharpsteen",
+                    "full credits"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 5.145
+    },
+    {
+      "tool": "filter_data",
+      "resolved_arguments": {
+        "data_label": "retrieved_characters_1",
+        "key_name": "director_director",
+        "value": "Ron Clements",
+        "condition": "equal_to"
+      },
+      "started_at": "2026-11-12T15:26:51.152071+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_characters_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_characters_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 4.645
+    },
+    {
+      "tool": "retrieve_data",
+      "resolved_arguments": {
+        "data_label": "$FILTERED_DF_0$",
+        "key_name": "characters_movie_title",
+        "distinct": false,
+        "limit": -1
+      },
+      "started_at": "2026-11-12T15:26:55.797994+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for RetrieveDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for RetrieveDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 4.579
+    },
+    {
+      "tool": "retrieve_data",
+      "resolved_arguments": {
+        "data_label": "$FILTERED_DF_0$",
+        "key_name": "characters_song",
+        "distinct": false,
+        "limit": -1
+      },
+      "started_at": "2026-11-12T15:27:00.377367+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for RetrieveDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for RetrieveDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 4.751
+    }
+  ],
+  "finished": true,
+  "listed_tools": 9,
+  "replay_responses": [
+    [
+      [
+        "{\"handle\": \"retrieved_characters_1\", \"num_records\": 55, \"key_details\": [{\"name\": \"characters_movie_title\", \"dtype\": \"object\", \"first_3_values\": [\"Snow White and the Seven Dwarfs\", \"Pinocchio\", \"Fantasia\"]}, {\"name\": \"characters_release_date\", \"dtype\": \"object\", \"first_3_values\": [\"21-Dec-37\", \"7-Feb-40\", \"13-Nov-40\"]}, {\"name\": \"characters_hero\", \"dtype\": \"object\", \"first_3_values\": [\"Snow White\", \"Pinocchio\", null]}, {\"name\": \"characters_villian\", \"dtype\": \"object\", \"first_3_values\": [\"Evil Queen\", \"Stromboli\", \"Chernabog\"]}, {\"name\": \"characters_song\", \"dtype\": \"object\", \"first_3_values\": [\"Some Day My Prince Will Come\", \"When You Wish upon a Star\", null]}, {\"name\": \"director_name\", \"dtype\": \"object\", \"first_3_values\": [\"Snow White and the Seven Dwarfs\", \"Pinocchio\", \"Fantasia\"]}, {\"name\": \"director_director\", \"dtype\": \"object\", \"first_3_values\": [\"David Hand\", \"Ben Sharpsteen\", \"full credits\"]}]}",
+        "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_characters_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+        "Input validation error: 1 validation error for RetrieveDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+        "Input validation error: 1 validation error for RetrieveDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+      ]
+    ]
+  ],
+  "seconds": 24.677,
+  "tool_errors": 3
+}

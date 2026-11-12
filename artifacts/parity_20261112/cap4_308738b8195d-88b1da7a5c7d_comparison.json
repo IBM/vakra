@@ -1,0 +1,34 @@
+{
+  "capability": 4,
+  "domain": "hockey",
+  "uuid": "308738b8195d-88b1da7a5c7d",
+  "sample_index": 0,
+  "source_file": "/root/v14/internal/test/capability_4_multiturn/output/hockey.json",
+  "source_sha256": "42e98b1fa97744990519c2236ceedb6ce63049935df5c6d36658c7ef52cdc171",
+  "turn_count": 2,
+  "call_count": 5,
+  "status": "pass",
+  "expected_calls": 5,
+  "local_calls": 5,
+  "code_engine_calls": 5,
+  "local_errors": 0,
+  "code_engine_errors": 0,
+  "local_exception": null,
+  "code_engine_exception": null,
+  "differences": [],
+  "matching_errors": [],
+  "local_tool_errors": [],
+  "code_engine_tool_errors": [],
+  "raw_results_equal": false,
+  "serialization_differences": [
+    {
+      "call": 4,
+      "tool": "query_hockey",
+      "first_differing_character": 1237,
+      "local_excerpt": "\n      \"metadata\": {\n        \"doc_id\": \"1770402787374248000_0\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"177",
+      "code_engine_excerpt": "\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770402787374248000_0\"\n      }\n    },\n    {\n      \"id\": \"177"
+    }
+  ],
+  "local_output_file": "cap4_308738b8195d-88b1da7a5c7d_local.json",
+  "code_engine_output_file": "cap4_308738b8195d-88b1da7a5c7d_code_engine.json"
+}

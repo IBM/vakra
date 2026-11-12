@@ -1,0 +1,70 @@
+{
+  "capability": 2,
+  "domain": "movie",
+  "uuid": "8a6ba32c9bed-2fbcbda7c02f",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap2.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_character_names_by_title",
+      "resolved_arguments": {
+        "title": "Look Who's Talking"
+      },
+      "started_at": "2026-11-12T15:24:38.153454+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"character_names\": [\n    \"James\",\n    \"Mollie\",\n    \"Rosie\",\n    \"Albert\",\n    \"Grandpa\",\n    \"Mikey\",\n    \"Rona\",\n    \"Mikey\",\n    \"Mikey\"\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "character_names": [
+                "James",
+                "Mollie",
+                "Rosie",
+                "Albert",
+                "Grandpa",
+                "Mikey",
+                "Rona",
+                "Mikey",
+                "Mikey"
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.557
+    }
+  ],
+  "finished": true,
+  "listed_tools": 702,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"character_names\": [\n    \"James\",\n    \"Mollie\",\n    \"Rosie\",\n    \"Albert\",\n    \"Grandpa\",\n    \"Mikey\",\n    \"Rona\",\n    \"Mikey\",\n    \"Mikey\"\n  ]\n}"
+      ]
+    ]
+  ],
+  "seconds": 4.204,
+  "tool_errors": 0
+}

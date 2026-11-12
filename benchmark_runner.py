@@ -63,6 +63,9 @@ from typing import Dict, List, Optional
 from dotenv import load_dotenv
 from tqdm import tqdm
 
+# Load before importing helpers that read provider settings and input paths.
+load_dotenv(Path(__file__).resolve().parent / ".env", override=False)
+
 
 def _setup_phoenix(endpoint: str, project_name: str = "enterprise-benchmark") -> bool:
     """Configure Phoenix/Arize OTEL tracing for LangChain.
@@ -137,8 +140,6 @@ from benchmark.runner_helpers import (
 )
 from benchmark.validate_clients import list_tools_for_domains
 from environment.m3.python_tools.mcp.mcp_server import DataPeek
-
-load_dotenv()
 
 
 # Default MCP connection config file path

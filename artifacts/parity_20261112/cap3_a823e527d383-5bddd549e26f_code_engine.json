@@ -1,0 +1,94 @@
+{
+  "capability": 3,
+  "domain": "beer_factory",
+  "uuid": "a823e527d383-5bddd549e26f",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap3.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_most_used_credit_card_type_for_non_alcoholic",
+      "resolved_arguments": {
+        "alcoholic": "FALSE"
+      },
+      "started_at": "2026-11-12T15:28:26.659673+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"credit_card_type\": \"Visa\"\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "credit_card_type": "Visa"
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.213
+    },
+    {
+      "tool": "get_total_purchase_price",
+      "resolved_arguments": {
+        "location_name": "Sac State American River Courtyard",
+        "credit_card_type": "Visa",
+        "start_date": "2014-06-03",
+        "end_date": "2015-11-27"
+      },
+      "started_at": "2026-11-12T15:28:27.873503+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"total_purchase_price\": 2267.0\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "total_purchase_price": 2267.0
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.229
+    }
+  ],
+  "finished": true,
+  "listed_tools": 124,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"credit_card_type\": \"Visa\"\n}",
+        "{\n  \"total_purchase_price\": 2267.0\n}"
+      ]
+    ]
+  ],
+  "seconds": 4.016,
+  "tool_errors": 0,
+  "previous_attempt": "cap3_a823e527d383-5bddd549e26f_code_engine_attempt1.json"
+}

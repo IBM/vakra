@@ -1,0 +1,1515 @@
+{
+  "capability": 1,
+  "domain": "college_completion",
+  "uuid": "2b28654158b1-d9db0719cde8",
+  "sample_index": 1,
+  "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/college_completion.json",
+  "source_sha256": "ffc7139d30ab89ce850966d05a42f801679a889cf15a4d50dbb5a17fc510c3b4",
+  "turn_count": 1,
+  "call_count": 7,
+  "status": "blocked",
+  "expected_calls": 7,
+  "local_calls": 7,
+  "code_engine_calls": 0,
+  "local_errors": 0,
+  "code_engine_errors": 0,
+  "local_exception": null,
+  "code_engine_exception": "RuntimeError: Capability 1 needs the session-preserving Code Engine bridge; redeploy docker/mcp_http_bridge.py before evaluating",
+  "differences": [
+    {
+      "call": 1,
+      "tool": "get_data",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 2,
+      "tool": "select_data_equal_to",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 3,
+      "tool": "select_data_equal_to",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 4,
+      "tool": "select_data_equal_to",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 5,
+      "tool": "select_data_less_than",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 6,
+      "tool": "get_institution_details_chronnames",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 7,
+      "tool": "get_institution_grads_grad_cohorts",
+      "reason": "call not executed on one backend"
+    }
+  ],
+  "matching_errors": [],
+  "local_tool_errors": [],
+  "code_engine_tool_errors": [],
+  "raw_results_equal": false,
+  "serialization_differences": [],
+  "diagnostic_only": {
+    "status": "discrepancy",
+    "expected_calls": 7,
+    "local_calls": 7,
+    "code_engine_calls": 1,
+    "local_errors": 0,
+    "code_engine_errors": 1,
+    "local_exception": null,
+    "code_engine_exception": "ExceptionGroup: HTTPStatusError: Server error '502 Bad Gateway' for url 'https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/college_completion'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502",
+    "differences": [
+      {
+        "call": 1,
+        "tool": "get_data",
+        "difference": {
+          "path": "$",
+          "local": {
+            "content": [
+              {
+                "type": "text",
+                "text": {
+                  "handle": "retrieved_institution_1",
+                  "num_records": 1259496,
+                  "key_details": [
+                    {
+                      "name": "institution_details_unitid",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        100760,
+                        100760,
+                        100760
+                      ]
+                    },
+                    {
+                      "name": "institution_details_chronname",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "Central Alabama Community College",
+                        "Central Alabama Community College",
+                        "Central Alabama Community College"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_city",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "Alexander City",
+                        "Alexander City",
+                        "Alexander City"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_state",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "Alabama",
+                        "Alabama",
+                        "Alabama"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_level",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "2-year",
+                        "2-year",
+                        "2-year"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_control",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "Public",
+                        "Public",
+                        "Public"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_basic",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "Associates--Public Rural-serving Medium",
+                        "Associates--Public Rural-serving Medium",
+                        "Associates--Public Rural-serving Medium"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_hbcu",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_flagship",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_long_x",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        -85.94653,
+                        -85.94653,
+                        -85.94653
+                      ]
+                    },
+                    {
+                      "name": "institution_details_lat_y",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        32.924429,
+                        32.924429,
+                        32.924429
+                      ]
+                    },
+                    {
+                      "name": "institution_details_site",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "www.cacc.edu",
+                        "www.cacc.edu",
+                        "www.cacc.edu"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_student_count",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        1906,
+                        1906,
+                        1906
+                      ]
+                    },
+                    {
+                      "name": "institution_details_awards_per_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        15.9,
+                        15.9,
+                        15.9
+                      ]
+                    },
+                    {
+                      "name": "institution_details_awards_per_state_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        15.9,
+                        15.9,
+                        15.9
+                      ]
+                    },
+                    {
+                      "name": "institution_details_awards_per_natl_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        16.5,
+                        16.5,
+                        16.5
+                      ]
+                    },
+                    {
+                      "name": "institution_details_exp_award_value",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        57572,
+                        57572,
+                        57572
+                      ]
+                    },
+                    {
+                      "name": "institution_details_exp_award_state_value",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        42194,
+                        42194,
+                        42194
+                      ]
+                    },
+                    {
+                      "name": "institution_details_exp_award_natl_value",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        37780,
+                        37780,
+                        37780
+                      ]
+                    },
+                    {
+                      "name": "institution_details_exp_award_percentile",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        83,
+                        83,
+                        83
+                      ]
+                    },
+                    {
+                      "name": "institution_details_ft_pct",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        50.0,
+                        50.0,
+                        50.0
+                      ]
+                    },
+                    {
+                      "name": "institution_details_fte_value",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        1489,
+                        1489,
+                        1489
+                      ]
+                    },
+                    {
+                      "name": "institution_details_fte_percentile",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        21,
+                        21,
+                        21
+                      ]
+                    },
+                    {
+                      "name": "institution_details_med_sat_value",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_med_sat_percentile",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_aid_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        5057.0,
+                        5057.0,
+                        5057.0
+                      ]
+                    },
+                    {
+                      "name": "institution_details_aid_percentile",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        82.0,
+                        82.0,
+                        82.0
+                      ]
+                    },
+                    {
+                      "name": "institution_details_endow_value",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "229",
+                        "229",
+                        "229"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_endow_percentile",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "22",
+                        "22",
+                        "22"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_grad_100_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        7.7,
+                        7.7,
+                        7.7
+                      ]
+                    },
+                    {
+                      "name": "institution_details_grad_100_percentile",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        39.0,
+                        39.0,
+                        39.0
+                      ]
+                    },
+                    {
+                      "name": "institution_details_grad_150_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        9.1,
+                        9.1,
+                        9.1
+                      ]
+                    },
+                    {
+                      "name": "institution_details_grad_150_percentile",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        8.0,
+                        8.0,
+                        8.0
+                      ]
+                    },
+                    {
+                      "name": "institution_details_pell_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        65.1,
+                        65.1,
+                        65.1
+                      ]
+                    },
+                    {
+                      "name": "institution_details_pell_percentile",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        93.0,
+                        93.0,
+                        93.0
+                      ]
+                    },
+                    {
+                      "name": "institution_details_retain_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        42.7,
+                        42.7,
+                        42.7
+                      ]
+                    },
+                    {
+                      "name": "institution_details_retain_percentile",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        5.0,
+                        5.0,
+                        5.0
+                      ]
+                    },
+                    {
+                      "name": "institution_details_ft_fac_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        38.3,
+                        38.3,
+                        38.3
+                      ]
+                    },
+                    {
+                      "name": "institution_details_ft_fac_percentile",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        66.0,
+                        66.0,
+                        66.0
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_year",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_grad_after4_first",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_grad_elsewhere_after4_first",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_enroll_after4_first",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_enroll_elsewhere_after4_first",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_grad_after6_first",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_grad_elsewhere_after6_first",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_enroll_after6_first",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_enroll_elsewhere_after6_first",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_grad_after4_transfer",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_grad_elsewhere_after4_transfer",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_enroll_after4_transfer",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_enroll_elsewhere_after4_transfer",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_grad_after6_transfer",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_grad_elsewhere_after6_transfer",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_enroll_after6_transfer",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_enroll_elsewhere_after6_transfer",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_similar",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "217712|227225|198491|175935|107460|206923|240745|107637|170587|238014|141158|199892|140483|176169|139357|151014|218520|207740|140599|207236",
+                        "217712|227225|198491|175935|107460|206923|240745|107637|170587|238014|141158|199892|140483|176169|139357|151014|218520|207740|140599|207236",
+                        "217712|227225|198491|175935|107460|206923|240745|107637|170587|238014|141158|199892|140483|176169|139357|151014|218520|207740|140599|207236"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_state_sector_ct",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        25,
+                        25,
+                        25
+                      ]
+                    },
+                    {
+                      "name": "institution_details_carnegie_ct",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        289,
+                        289,
+                        289
+                      ]
+                    },
+                    {
+                      "name": "institution_details_counted_pct",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "66.7|10",
+                        "66.7|10",
+                        "66.7|10"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_nicknames",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_cohort_size",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        594.0,
+                        594.0,
+                        594.0
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_unitid",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        100760,
+                        100760,
+                        100760
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_year",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        2011,
+                        2011,
+                        2011
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_gender",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "B",
+                        "M",
+                        "F"
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_race",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "X",
+                        "X",
+                        "X"
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_cohort",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "2y all",
+                        "2y all",
+                        "2y all"
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_grad_cohort",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "446",
+                        "185",
+                        "261"
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_grad_100",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "73",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_grad_150",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "105",
+                        "40",
+                        "65"
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_grad_100_rate",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "16.4",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_grad_150_rate",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "23.5",
+                        "21.6",
+                        "24.9"
+                      ]
+                    }
+                  ]
+                }
+              }
+            ],
+            "isError": false
+          },
+          "code_engine": null,
+          "reason": "different types"
+        }
+      },
+      {
+        "call": 2,
+        "tool": "select_data_equal_to",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 3,
+        "tool": "select_data_equal_to",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 4,
+        "tool": "select_data_equal_to",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 5,
+        "tool": "select_data_less_than",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 6,
+        "tool": "get_institution_details_chronnames",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 7,
+        "tool": "get_institution_grads_grad_cohorts",
+        "reason": "call not executed on one backend"
+      }
+    ],
+    "matching_errors": [],
+    "local_tool_errors": [],
+    "code_engine_tool_errors": [
+      {
+        "call": 1,
+        "tool": "get_data",
+        "result": null,
+        "exception": "CancelledError: Cancelled via cancel scope 7fb2c7220170"
+      }
+    ],
+    "raw_results_equal": false
+  },
+  "diagnostic_first_attempt": {
+    "status": "discrepancy",
+    "expected_calls": 7,
+    "local_calls": 7,
+    "code_engine_calls": 1,
+    "local_errors": 0,
+    "code_engine_errors": 1,
+    "local_exception": null,
+    "code_engine_exception": "ExceptionGroup: HTTPStatusError: Server error '502 Bad Gateway' for url 'https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/college_completion'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502",
+    "differences": [
+      {
+        "call": 1,
+        "tool": "get_data",
+        "difference": {
+          "path": "$",
+          "local": {
+            "content": [
+              {
+                "type": "text",
+                "text": {
+                  "handle": "retrieved_institution_1",
+                  "num_records": 1259496,
+                  "key_details": [
+                    {
+                      "name": "institution_details_unitid",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        100760,
+                        100760,
+                        100760
+                      ]
+                    },
+                    {
+                      "name": "institution_details_chronname",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "Central Alabama Community College",
+                        "Central Alabama Community College",
+                        "Central Alabama Community College"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_city",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "Alexander City",
+                        "Alexander City",
+                        "Alexander City"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_state",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "Alabama",
+                        "Alabama",
+                        "Alabama"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_level",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "2-year",
+                        "2-year",
+                        "2-year"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_control",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "Public",
+                        "Public",
+                        "Public"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_basic",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "Associates--Public Rural-serving Medium",
+                        "Associates--Public Rural-serving Medium",
+                        "Associates--Public Rural-serving Medium"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_hbcu",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_flagship",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_long_x",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        -85.94653,
+                        -85.94653,
+                        -85.94653
+                      ]
+                    },
+                    {
+                      "name": "institution_details_lat_y",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        32.924429,
+                        32.924429,
+                        32.924429
+                      ]
+                    },
+                    {
+                      "name": "institution_details_site",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "www.cacc.edu",
+                        "www.cacc.edu",
+                        "www.cacc.edu"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_student_count",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        1906,
+                        1906,
+                        1906
+                      ]
+                    },
+                    {
+                      "name": "institution_details_awards_per_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        15.9,
+                        15.9,
+                        15.9
+                      ]
+                    },
+                    {
+                      "name": "institution_details_awards_per_state_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        15.9,
+                        15.9,
+                        15.9
+                      ]
+                    },
+                    {
+                      "name": "institution_details_awards_per_natl_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        16.5,
+                        16.5,
+                        16.5
+                      ]
+                    },
+                    {
+                      "name": "institution_details_exp_award_value",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        57572,
+                        57572,
+                        57572
+                      ]
+                    },
+                    {
+                      "name": "institution_details_exp_award_state_value",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        42194,
+                        42194,
+                        42194
+                      ]
+                    },
+                    {
+                      "name": "institution_details_exp_award_natl_value",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        37780,
+                        37780,
+                        37780
+                      ]
+                    },
+                    {
+                      "name": "institution_details_exp_award_percentile",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        83,
+                        83,
+                        83
+                      ]
+                    },
+                    {
+                      "name": "institution_details_ft_pct",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        50.0,
+                        50.0,
+                        50.0
+                      ]
+                    },
+                    {
+                      "name": "institution_details_fte_value",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        1489,
+                        1489,
+                        1489
+                      ]
+                    },
+                    {
+                      "name": "institution_details_fte_percentile",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        21,
+                        21,
+                        21
+                      ]
+                    },
+                    {
+                      "name": "institution_details_med_sat_value",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_med_sat_percentile",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_aid_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        5057.0,
+                        5057.0,
+                        5057.0
+                      ]
+                    },
+                    {
+                      "name": "institution_details_aid_percentile",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        82.0,
+                        82.0,
+                        82.0
+                      ]
+                    },
+                    {
+                      "name": "institution_details_endow_value",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "229",
+                        "229",
+                        "229"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_endow_percentile",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "22",
+                        "22",
+                        "22"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_grad_100_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        7.7,
+                        7.7,
+                        7.7
+                      ]
+                    },
+                    {
+                      "name": "institution_details_grad_100_percentile",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        39.0,
+                        39.0,
+                        39.0
+                      ]
+                    },
+                    {
+                      "name": "institution_details_grad_150_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        9.1,
+                        9.1,
+                        9.1
+                      ]
+                    },
+                    {
+                      "name": "institution_details_grad_150_percentile",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        8.0,
+                        8.0,
+                        8.0
+                      ]
+                    },
+                    {
+                      "name": "institution_details_pell_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        65.1,
+                        65.1,
+                        65.1
+                      ]
+                    },
+                    {
+                      "name": "institution_details_pell_percentile",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        93.0,
+                        93.0,
+                        93.0
+                      ]
+                    },
+                    {
+                      "name": "institution_details_retain_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        42.7,
+                        42.7,
+                        42.7
+                      ]
+                    },
+                    {
+                      "name": "institution_details_retain_percentile",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        5.0,
+                        5.0,
+                        5.0
+                      ]
+                    },
+                    {
+                      "name": "institution_details_ft_fac_value",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        38.3,
+                        38.3,
+                        38.3
+                      ]
+                    },
+                    {
+                      "name": "institution_details_ft_fac_percentile",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        66.0,
+                        66.0,
+                        66.0
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_year",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_grad_after4_first",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_grad_elsewhere_after4_first",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_enroll_after4_first",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_enroll_elsewhere_after4_first",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_grad_after6_first",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_grad_elsewhere_after6_first",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_enroll_after6_first",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_enroll_elsewhere_after6_first",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_grad_after4_transfer",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_grad_elsewhere_after4_transfer",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_enroll_after4_transfer",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_enroll_elsewhere_after4_transfer",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_grad_after6_transfer",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_grad_elsewhere_after6_transfer",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_enroll_after6_transfer",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_vsa_enroll_elsewhere_after6_transfer",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_similar",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "217712|227225|198491|175935|107460|206923|240745|107637|170587|238014|141158|199892|140483|176169|139357|151014|218520|207740|140599|207236",
+                        "217712|227225|198491|175935|107460|206923|240745|107637|170587|238014|141158|199892|140483|176169|139357|151014|218520|207740|140599|207236",
+                        "217712|227225|198491|175935|107460|206923|240745|107637|170587|238014|141158|199892|140483|176169|139357|151014|218520|207740|140599|207236"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_state_sector_ct",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        25,
+                        25,
+                        25
+                      ]
+                    },
+                    {
+                      "name": "institution_details_carnegie_ct",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        289,
+                        289,
+                        289
+                      ]
+                    },
+                    {
+                      "name": "institution_details_counted_pct",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "66.7|10",
+                        "66.7|10",
+                        "66.7|10"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_nicknames",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "NULL",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_details_cohort_size",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        594.0,
+                        594.0,
+                        594.0
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_unitid",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        100760,
+                        100760,
+                        100760
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_year",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        2011,
+                        2011,
+                        2011
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_gender",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "B",
+                        "M",
+                        "F"
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_race",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "X",
+                        "X",
+                        "X"
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_cohort",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "2y all",
+                        "2y all",
+                        "2y all"
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_grad_cohort",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "446",
+                        "185",
+                        "261"
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_grad_100",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "73",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_grad_150",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "105",
+                        "40",
+                        "65"
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_grad_100_rate",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "16.4",
+                        "NULL",
+                        "NULL"
+                      ]
+                    },
+                    {
+                      "name": "institution_grads_grad_150_rate",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "23.5",
+                        "21.6",
+                        "24.9"
+                      ]
+                    }
+                  ]
+                }
+              }
+            ],
+            "isError": false
+          },
+          "code_engine": null,
+          "reason": "different types"
+        }
+      },
+      {
+        "call": 2,
+        "tool": "select_data_equal_to",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 3,
+        "tool": "select_data_equal_to",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 4,
+        "tool": "select_data_equal_to",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 5,
+        "tool": "select_data_less_than",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 6,
+        "tool": "get_institution_details_chronnames",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 7,
+        "tool": "get_institution_grads_grad_cohorts",
+        "reason": "call not executed on one backend"
+      }
+    ],
+    "matching_errors": [],
+    "local_tool_errors": [],
+    "code_engine_tool_errors": [
+      {
+        "call": 1,
+        "tool": "get_data",
+        "result": null,
+        "exception": "CancelledError: Cancelled via cancel scope 7f592b81c650"
+      }
+    ],
+    "raw_results_equal": false
+  },
+  "diagnostic_retry": {
+    "first_exception": "ExceptionGroup: HTTPStatusError: Server error '502 Bad Gateway' for url 'https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/college_completion'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502",
+    "final_exception": "ExceptionGroup: HTTPStatusError: Server error '502 Bad Gateway' for url 'https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/college_completion'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502",
+    "first_attempt_file": "cap1_2b28654158b1-d9db0719cde8_code_engine_diagnostic_attempt1.json"
+  },
+  "local_output_file": "cap1_2b28654158b1-d9db0719cde8_local.json",
+  "code_engine_output_file": "cap1_2b28654158b1-d9db0719cde8_code_engine.json"
+}

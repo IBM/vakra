@@ -1,0 +1,485 @@
+{
+  "capability": 1,
+  "domain": "books",
+  "uuid": "6e317bcd6839-d365c9ad58eb",
+  "sample_index": 10,
+  "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/books.json",
+  "source_sha256": "1f65b7c6d6093a42faba16cce6c6d22e039e0123a20bfe58d068c8ebe4f2ae33",
+  "turn_count": 1,
+  "call_count": 5,
+  "status": "blocked",
+  "expected_calls": 5,
+  "local_calls": 5,
+  "code_engine_calls": 0,
+  "local_errors": 0,
+  "code_engine_errors": 0,
+  "local_exception": null,
+  "code_engine_exception": "RuntimeError: Capability 1 needs the session-preserving Code Engine bridge; redeploy docker/mcp_http_bridge.py before evaluating",
+  "differences": [
+    {
+      "call": 1,
+      "tool": "get_data",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 2,
+      "tool": "select_data_equal_to",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 3,
+      "tool": "transform_data_to_datetime_part",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 4,
+      "tool": "select_data_equal_to",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 5,
+      "tool": "get_book_titles",
+      "reason": "call not executed on one backend"
+    }
+  ],
+  "matching_errors": [],
+  "local_tool_errors": [],
+  "code_engine_tool_errors": [],
+  "raw_results_equal": false,
+  "serialization_differences": [],
+  "diagnostic_only": {
+    "status": "discrepancy",
+    "expected_calls": 5,
+    "local_calls": 5,
+    "code_engine_calls": 5,
+    "local_errors": 0,
+    "code_engine_errors": 4,
+    "local_exception": null,
+    "code_engine_exception": null,
+    "differences": [
+      {
+        "call": 2,
+        "tool": "select_data_equal_to",
+        "difference": {
+          "path": "$.content[0].text",
+          "local": {
+            "handle": "filtered_book_1",
+            "num_records": 40,
+            "key_details": [
+              {
+                "name": "book_book_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  263,
+                  628,
+                  629
+                ]
+              },
+              {
+                "name": "book_title",
+                "dtype": "object",
+                "first_3_values": [
+                  "Gold: The Final Science Fiction Collection",
+                  "Treasure Box",
+                  "Homebody"
+                ]
+              },
+              {
+                "name": "book_isbn13",
+                "dtype": "object",
+                "first_3_values": [
+                  "9780060556525",
+                  "9780061093982",
+                  "9780061093999"
+                ]
+              },
+              {
+                "name": "book_language_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  1,
+                  1,
+                  1
+                ]
+              },
+              {
+                "name": "book_num_pages",
+                "dtype": "int64",
+                "first_3_values": [
+                  416,
+                  384,
+                  430
+                ]
+              },
+              {
+                "name": "book_publication_date",
+                "dtype": "object",
+                "first_3_values": [
+                  "2003-10-21",
+                  "1997-10-01",
+                  "1999-01-25"
+                ]
+              },
+              {
+                "name": "book_publisher_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  880,
+                  864,
+                  907
+                ]
+              },
+              {
+                "name": "book_author_book_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  263,
+                  628,
+                  629
+                ]
+              },
+              {
+                "name": "book_author_author_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  6560,
+                  6560,
+                  6560
+                ]
+              },
+              {
+                "name": "author_author_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  6560,
+                  6560,
+                  6560
+                ]
+              },
+              {
+                "name": "author_author_name",
+                "dtype": "object",
+                "first_3_values": [
+                  "Orson Scott Card",
+                  "Orson Scott Card",
+                  "Orson Scott Card"
+                ]
+              }
+            ]
+          },
+          "code_engine": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_book_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+          "reason": "different types"
+        }
+      },
+      {
+        "call": 3,
+        "tool": "transform_data_to_datetime_part",
+        "difference": {
+          "path": "$.content[0].text",
+          "local": {
+            "handle": "transformed_book_1",
+            "num_records": 40,
+            "key_details": [
+              {
+                "name": "book_book_id",
+                "dtype": "int",
+                "first_3_values": [
+                  263,
+                  628,
+                  629
+                ]
+              },
+              {
+                "name": "book_title",
+                "dtype": "str",
+                "first_3_values": [
+                  "Gold: The Final Science Fiction Collection",
+                  "Treasure Box",
+                  "Homebody"
+                ]
+              },
+              {
+                "name": "book_isbn13",
+                "dtype": "str",
+                "first_3_values": [
+                  "9780060556525",
+                  "9780061093982",
+                  "9780061093999"
+                ]
+              },
+              {
+                "name": "book_language_id",
+                "dtype": "int",
+                "first_3_values": [
+                  1,
+                  1,
+                  1
+                ]
+              },
+              {
+                "name": "book_num_pages",
+                "dtype": "int",
+                "first_3_values": [
+                  416,
+                  384,
+                  430
+                ]
+              },
+              {
+                "name": "book_publication_date",
+                "dtype": "int",
+                "first_3_values": [
+                  2003,
+                  1997,
+                  1999
+                ]
+              },
+              {
+                "name": "book_publisher_id",
+                "dtype": "int",
+                "first_3_values": [
+                  880,
+                  864,
+                  907
+                ]
+              },
+              {
+                "name": "book_author_book_id",
+                "dtype": "int",
+                "first_3_values": [
+                  263,
+                  628,
+                  629
+                ]
+              },
+              {
+                "name": "book_author_author_id",
+                "dtype": "int",
+                "first_3_values": [
+                  6560,
+                  6560,
+                  6560
+                ]
+              },
+              {
+                "name": "author_author_id",
+                "dtype": "int",
+                "first_3_values": [
+                  6560,
+                  6560,
+                  6560
+                ]
+              },
+              {
+                "name": "author_author_name",
+                "dtype": "str",
+                "first_3_values": [
+                  "Orson Scott Card",
+                  "Orson Scott Card",
+                  "Orson Scott Card"
+                ]
+              }
+            ]
+          },
+          "code_engine": "Input validation error: 1 validation error for TransformDataToDatetimePartInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+          "reason": "different types"
+        }
+      },
+      {
+        "call": 4,
+        "tool": "select_data_equal_to",
+        "difference": {
+          "path": "$.content[0].text",
+          "local": {
+            "handle": "filtered_book_2",
+            "num_records": 7,
+            "key_details": [
+              {
+                "name": "book_book_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  2380,
+                  2382,
+                  7209
+                ]
+              },
+              {
+                "name": "book_title",
+                "dtype": "object",
+                "first_3_values": [
+                  "Saints",
+                  "Lovelock (Mayflower Trilogy  #1)",
+                  "Legends"
+                ]
+              },
+              {
+                "name": "book_isbn13",
+                "dtype": "object",
+                "first_3_values": [
+                  "9780312876067",
+                  "9780312877514",
+                  "9780765300355"
+                ]
+              },
+              {
+                "name": "book_language_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  1,
+                  2,
+                  2
+                ]
+              },
+              {
+                "name": "book_num_pages",
+                "dtype": "int64",
+                "first_3_values": [
+                  608,
+                  288,
+                  717
+                ]
+              },
+              {
+                "name": "book_publication_date",
+                "dtype": "int64",
+                "first_3_values": [
+                  2001,
+                  2001,
+                  2001
+                ]
+              },
+              {
+                "name": "book_publisher_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  728,
+                  1885,
+                  2000
+                ]
+              },
+              {
+                "name": "book_author_book_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  2380,
+                  2382,
+                  7209
+                ]
+              },
+              {
+                "name": "book_author_author_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  6560,
+                  6560,
+                  6560
+                ]
+              },
+              {
+                "name": "author_author_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  6560,
+                  6560,
+                  6560
+                ]
+              },
+              {
+                "name": "author_author_name",
+                "dtype": "object",
+                "first_3_values": [
+                  "Orson Scott Card",
+                  "Orson Scott Card",
+                  "Orson Scott Card"
+                ]
+              }
+            ]
+          },
+          "code_engine": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$TRANSFORMED_DF_1$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+          "reason": "different types"
+        }
+      },
+      {
+        "call": 5,
+        "tool": "get_book_titles",
+        "difference": {
+          "path": "$.content[0].text",
+          "local": [
+            "Saints",
+            "Lovelock (Mayflower Trilogy  #1)",
+            "Legends",
+            "Sarah (Women of Genesis  #1)",
+            "Shadow of the Hegemon (The Shadow Series  #2)",
+            "How to Write Science Fiction & Fantasy",
+            "Xénocide (Ender's Saga  #3)"
+          ],
+          "code_engine": "Unknown tool: get_book_titles",
+          "reason": "different types"
+        }
+      }
+    ],
+    "matching_errors": [],
+    "local_tool_errors": [],
+    "code_engine_tool_errors": [
+      {
+        "call": 2,
+        "tool": "select_data_equal_to",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_book_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+            }
+          ],
+          "isError": false
+        },
+        "exception": null
+      },
+      {
+        "call": 3,
+        "tool": "transform_data_to_datetime_part",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: 1 validation error for TransformDataToDatetimePartInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+            }
+          ],
+          "isError": false
+        },
+        "exception": null
+      },
+      {
+        "call": 4,
+        "tool": "select_data_equal_to",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$TRANSFORMED_DF_1$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+            }
+          ],
+          "isError": false
+        },
+        "exception": null
+      },
+      {
+        "call": 5,
+        "tool": "get_book_titles",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Unknown tool: get_book_titles"
+            }
+          ],
+          "isError": false
+        },
+        "exception": null
+      }
+    ],
+    "raw_results_equal": false
+  },
+  "local_output_file": "cap1_6e317bcd6839-d365c9ad58eb_local.json",
+  "code_engine_output_file": "cap1_6e317bcd6839-d365c9ad58eb_code_engine.json"
+}

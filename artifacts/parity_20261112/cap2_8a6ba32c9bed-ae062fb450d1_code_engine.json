@@ -1,0 +1,62 @@
+{
+  "capability": 2,
+  "domain": "movie",
+  "uuid": "8a6ba32c9bed-ae062fb450d1",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap2.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_titles_by_character_name",
+      "resolved_arguments": {
+        "character_name": "Dr. Archibald 'Moonlight' Graham"
+      },
+      "started_at": "2026-11-12T15:24:43.016391+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"titles\": [\n    \"Field of Dreams\"\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "titles": [
+                "Field of Dreams"
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.187
+    }
+  ],
+  "finished": true,
+  "listed_tools": 702,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"titles\": [\n    \"Field of Dreams\"\n  ]\n}"
+      ]
+    ]
+  ],
+  "seconds": 3.086,
+  "tool_errors": 0
+}

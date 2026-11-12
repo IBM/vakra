@@ -1,0 +1,756 @@
+START cap=1 beer_factory a823e527d383-0a1763227b31 calls=3
+START cap=2 california_schools bd3d9a21b4c9-8c530ae54b29 calls=1
+podman not found or not working, using docker instead
+START cap=3 bpo 4cac5f081a20-adada92ad0a8 calls=1
+podman not found or not working, using docker instead
+START cap=4 disney 34a533dfd727-fb4bf2f380bd calls=2
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:24:08", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "Starting Capability 4 combined MCP server (M3 REST @ http://localhost:8000 [domains=['disney']] + Retriever @ http://localhost:8001 [domains=['college_completion', 'legislator', 'university', 'language_corpus', 'disney']])"}
+{"ts": "2026-11-12T15:24:08", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "Fetching M3 REST OpenAPI spec from http://localhost:8000 (domains: ['disney'])"}
+{"ts": "2026-11-12T15:24:08", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "__main__", "msg": "Starting MCP server 'fastapi-mcp-wrapper' wrapping FastAPI at http://localhost:8000"}
+{"ts": "2026-11-12T15:24:08", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "__main__", "msg": "Discovering FastAPI endpoints from http://localhost:8000"}
+{"ts": "2026-11-12T15:24:08", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "__main__", "msg": "Filtering to domains: ['california_schools']"}
+{"ts": "2026-11-12T15:24:08", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:08", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:08", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "__main__", "msg": "Discovered 89 tools"}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "__main__", "msg": "tool_call tool=get_highest_free_meal_ratio"}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "M3 REST: 104 tools"}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "Fetching Retriever OpenAPI spec from http://localhost:8001 (domains: ['college_completion', 'legislator', 'university', 'language_corpus', 'disney'])"}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/california_schools/highest_free_meal_ratio_by_county?county_name=Alameda \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8001/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "Retriever: 5 tools"}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "Total tools exposed: 109"}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "tool_call tool=get_directors_by_year_range"}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.cli", "msg": "Starting MCP server in STDIO mode"}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Initializing MCP Server with database: /root/vakra/data/databases/beer_factory/beer_factory.sqlite"}
+LOCAL cap=2 bd3d9a21b4c9-8c530ae54b29 calls=1 errors=0
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/disney/directors_by_year_range?start_year=1990&end_year=2000 \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "tool_call tool=get_percentage_movies_exceeding_gross_by_director"}
+{"ts": "2026-11-12T15:24:09", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/disney/percentage_movies_exceeding_gross_by_director?gross_amount=100000000.0&director=Gary+Trousdale \"HTTP/1.1 200 OK\""}
+LOCAL cap=4 34a533dfd727-fb4bf2f380bd calls=2 errors=0
+2026-11-12 15:24:10.565 | INFO     | __main__:start_server:661 - Starting MCP server (transport=stdio, port=None, host=0.0.0.0)
+2026-11-12 15:24:10.565 | INFO     | __main__:start_server:686 - Starting server in stdio mode
+[11/12/26 15:24:10] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+2026-11-12 15:24:10.589 | INFO     | __main__:track_tool_call:78 - Tracked tool call: candidate_source_full_candidate_details
+LOCAL cap=3 4cac5f081a20-adada92ad0a8 calls=1 errors=0
+{"ts": "2026-11-12T15:24:11", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: a823e527d383-0a1763227b31"}
+{"ts": "2026-11-12T15:24:11", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'': {'modified_table_name': 'rootbeerbrand', 'original_table_name': 'rootbeerbrand'}}, 'condition_sequence': [], 'database_path': '/root/vakra/data/databases/beer_factory/beer_factory.sqlite'}"}
+{"ts": "2026-11-12T15:24:11", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Regenerated 22 getter functions"}
+{"ts": "2026-11-12T15:24:11", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe 'a823e527d383-0a1763227b31' with 22 keys and 24 entries"}
+{"ts": "2026-11-12T15:24:11", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "MCP server: slot-filling-mcp-server is ready; waiting for initialize()"}
+{"ts": "2026-11-12T15:24:11", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:11", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:11", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: get_data"}
+{"ts": "2026-11-12T15:24:11", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Already in universe 'a823e527d383-0a1763227b31', no switch needed"}
+{"ts": "2026-11-12T15:24:11", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:11", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: select_data_not_equal_to"}
+{"ts": "2026-11-12T15:24:11", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:11", "level": "WARNING", "capability_id": "", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Tool 'get_BrandNames' not listed, no validation will be performed"}
+{"ts": "2026-11-12T15:24:11", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: get_BrandNames"}
+{"ts": "2026-11-12T15:24:11", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+Tool get_BrandNames not listed by server, cannot validate any structured content
+{"ts": "2026-11-12T15:24:11", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Server stopped"}
+LOCAL cap=1 a823e527d383-0a1763227b31 calls=3 errors=0
+DONE cap=2 bd3d9a21b4c9-8c530ae54b29 status=pass differences=0
+START cap=2 california_schools bd3d9a21b4c9-f7b2eae41918 calls=1
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:24:13", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "__main__", "msg": "Starting MCP server 'fastapi-mcp-wrapper' wrapping FastAPI at http://localhost:8000"}
+{"ts": "2026-11-12T15:24:13", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "__main__", "msg": "Discovering FastAPI endpoints from http://localhost:8000"}
+{"ts": "2026-11-12T15:24:13", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "__main__", "msg": "Filtering to domains: ['california_schools']"}
+{"ts": "2026-11-12T15:24:14", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:14", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "__main__", "msg": "Discovered 89 tools"}
+{"ts": "2026-11-12T15:24:14", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:14", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:14", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "__main__", "msg": "tool_call tool=get_lowest_free_meal_ratios"}
+{"ts": "2026-11-12T15:24:14", "level": "INFO", "capability_id": "2", "domain": "california_schools", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/california_schools/lowest_free_meal_ratios_by_educational_option?educational_option_type=Continuation+School \"HTTP/1.1 200 OK\""}
+LOCAL cap=2 bd3d9a21b4c9-f7b2eae41918 calls=1 errors=0
+DONE cap=2 bd3d9a21b4c9-f7b2eae41918 status=pass differences=0
+START cap=2 financial fed0e4820af4-9622565c6ac3 calls=1
+podman not found or not working, using docker instead
+DONE cap=3 4cac5f081a20-adada92ad0a8 status=discrepancy differences=1
+START cap=3 bpo 4cac5f081a20-29980c22278a calls=1
+podman not found or not working, using docker instead
+DONE cap=4 34a533dfd727-fb4bf2f380bd status=pass differences=0
+START cap=4 disney 34a533dfd727-5ad9cc4c863b calls=4
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:24:18", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "__main__", "msg": "Starting MCP server 'fastapi-mcp-wrapper' wrapping FastAPI at http://localhost:8000"}
+{"ts": "2026-11-12T15:24:18", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "__main__", "msg": "Discovering FastAPI endpoints from http://localhost:8000"}
+{"ts": "2026-11-12T15:24:18", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "__main__", "msg": "Filtering to domains: ['financial']"}
+{"ts": "2026-11-12T15:24:18", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:18", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "__main__", "msg": "Discovered 102 tools"}
+{"ts": "2026-11-12T15:24:18", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:18", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:18", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "__main__", "msg": "tool_call tool=get_count_account_ids_by_district_and_frequency"}
+{"ts": "2026-11-12T15:24:18", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/financial/count_account_ids_by_district_and_frequency?district=east+Bohemia&frequency=POPLATEK+PO+OBRATU \"HTTP/1.1 200 OK\""}
+LOCAL cap=2 fed0e4820af4-9622565c6ac3 calls=1 errors=0
+{"ts": "2026-11-12T15:24:18", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "Starting Capability 4 combined MCP server (M3 REST @ http://localhost:8000 [domains=['disney']] + Retriever @ http://localhost:8001 [domains=['college_completion', 'legislator', 'university', 'language_corpus', 'disney']])"}
+{"ts": "2026-11-12T15:24:18", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "Fetching M3 REST OpenAPI spec from http://localhost:8000 (domains: ['disney'])"}
+{"ts": "2026-11-12T15:24:19", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:19", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "M3 REST: 104 tools"}
+{"ts": "2026-11-12T15:24:19", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "Fetching Retriever OpenAPI spec from http://localhost:8001 (domains: ['college_completion', 'legislator', 'university', 'language_corpus', 'disney'])"}
+{"ts": "2026-11-12T15:24:19", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8001/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:19", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "Retriever: 5 tools"}
+{"ts": "2026-11-12T15:24:19", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "Total tools exposed: 109"}
+{"ts": "2026-11-12T15:24:19", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:19", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:19", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "tool_call tool=get_movies_and_voice_actors_by_director"}
+{"ts": "2026-11-12T15:24:19", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/disney/movies_and_voice_actors_by_director?director=Wolfgang+Reitherman \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:19", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:19", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "tool_call tool=get_top_director_by_voice_actor"}
+{"ts": "2026-11-12T15:24:19", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/disney/top_director_by_voice_actor?voice_actor=Bill+Thompson \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:19", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:19", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "tool_call tool=query_disney"}
+2026-11-12 15:24:19.726 | INFO     | __main__:start_server:661 - Starting MCP server (transport=stdio, port=None, host=0.0.0.0)
+2026-11-12 15:24:19.726 | INFO     | __main__:start_server:686 - Starting server in stdio mode
+[11/12/26 15:24:19] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+2026-11-12 15:24:19.754 | INFO     | __main__:track_tool_call:78 - Tracked tool call: skills_skill_deep_analysis
+LOCAL cap=3 4cac5f081a20-29980c22278a calls=1 errors=0
+DONE cap=2 fed0e4820af4-9622565c6ac3 status=pass differences=0
+START cap=2 financial fed0e4820af4-5884354614cf calls=1
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:24:22", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "__main__", "msg": "Starting MCP server 'fastapi-mcp-wrapper' wrapping FastAPI at http://localhost:8000"}
+{"ts": "2026-11-12T15:24:22", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "__main__", "msg": "Discovering FastAPI endpoints from http://localhost:8000"}
+{"ts": "2026-11-12T15:24:22", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "__main__", "msg": "Filtering to domains: ['financial']"}
+{"ts": "2026-11-12T15:24:22", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:22", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "__main__", "msg": "Discovered 102 tools"}
+{"ts": "2026-11-12T15:24:22", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:22", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:22", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "__main__", "msg": "tool_call tool=get_count_account_ids_by_district"}
+{"ts": "2026-11-12T15:24:22", "level": "INFO", "capability_id": "2", "domain": "financial", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/financial/count_account_ids_by_district?district=Prague \"HTTP/1.1 200 OK\""}
+LOCAL cap=2 fed0e4820af4-5884354614cf calls=1 errors=0
+{"ts": "2026-11-12T15:24:24", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "httpx", "msg": "HTTP Request: POST http://localhost:8001/disney/query \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:24", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:24", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "tool_call tool=get_voice_actors_villains_by_movie"}
+{"ts": "2026-11-12T15:24:24", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/disney/voice_actors_villains_by_movie?movie_title=Cinderella \"HTTP/1.1 200 OK\""}
+LOCAL cap=4 34a533dfd727-5ad9cc4c863b calls=4 errors=0
+DONE cap=2 fed0e4820af4-5884354614cf status=pass differences=0
+START cap=2 formula_1 1e94b912a1e2-c020b4857bd2 calls=1
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:24:26", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "__main__", "msg": "Starting MCP server 'fastapi-mcp-wrapper' wrapping FastAPI at http://localhost:8000"}
+{"ts": "2026-11-12T15:24:26", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "__main__", "msg": "Discovering FastAPI endpoints from http://localhost:8000"}
+{"ts": "2026-11-12T15:24:26", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "__main__", "msg": "Filtering to domains: ['formula_1']"}
+DONE cap=3 4cac5f081a20-29980c22278a status=pass differences=0
+START cap=3 bpo 4cac5f081a20-56ddd5e0b3d3 calls=1
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:24:26", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:26", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "__main__", "msg": "Discovered 152 tools"}
+{"ts": "2026-11-12T15:24:26", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:26", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:26", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "__main__", "msg": "tool_call tool=get_driver_references"}
+{"ts": "2026-11-12T15:24:26", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/formula_1/driver_references_by_race_id?race_id=20 \"HTTP/1.1 200 OK\""}
+LOCAL cap=2 1e94b912a1e2-c020b4857bd2 calls=1 errors=0
+2026-11-12 15:24:28.532 | INFO     | __main__:start_server:661 - Starting MCP server (transport=stdio, port=None, host=0.0.0.0)
+2026-11-12 15:24:28.532 | INFO     | __main__:start_server:686 - Starting server in stdio mode
+[11/12/26 15:24:28] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+2026-11-12 15:24:28.558 | INFO     | __main__:track_tool_call:78 - Tracked tool call: candidate_source_sla_extended
+LOCAL cap=3 4cac5f081a20-56ddd5e0b3d3 calls=1 errors=0
+DONE cap=2 1e94b912a1e2-c020b4857bd2 status=pass differences=0
+START cap=2 formula_1 1e94b912a1e2-31620d537c35 calls=1
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:24:30", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "__main__", "msg": "Starting MCP server 'fastapi-mcp-wrapper' wrapping FastAPI at http://localhost:8000"}
+{"ts": "2026-11-12T15:24:30", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "__main__", "msg": "Discovering FastAPI endpoints from http://localhost:8000"}
+{"ts": "2026-11-12T15:24:30", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "__main__", "msg": "Filtering to domains: ['formula_1']"}
+{"ts": "2026-11-12T15:24:30", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:30", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "__main__", "msg": "Discovered 152 tools"}
+{"ts": "2026-11-12T15:24:30", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:30", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:30", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "__main__", "msg": "tool_call tool=get_fastest_q2_surname"}
+{"ts": "2026-11-12T15:24:30", "level": "INFO", "capability_id": "2", "domain": "formula_1", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/formula_1/fastest_q2_surname_by_race_id?race_id=19 \"HTTP/1.1 200 OK\""}
+LOCAL cap=2 1e94b912a1e2-31620d537c35 calls=1 errors=0
+DONE cap=2 1e94b912a1e2-31620d537c35 status=pass differences=0
+START cap=2 movie 8a6ba32c9bed-2fbcbda7c02f calls=1
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:24:35", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "__main__", "msg": "Starting MCP server 'fastapi-mcp-wrapper' wrapping FastAPI at http://localhost:8000"}
+{"ts": "2026-11-12T15:24:35", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "__main__", "msg": "Discovering FastAPI endpoints from http://localhost:8000"}
+{"ts": "2026-11-12T15:24:35", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "__main__", "msg": "Filtering to domains: ['movie']"}
+DONE cap=3 4cac5f081a20-56ddd5e0b3d3 status=pass differences=0
+START cap=3 bpo 4cac5f081a20-45a058cc9056 calls=2
+{"ts": "2026-11-12T15:24:35", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:24:35", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "__main__", "msg": "Discovered 706 tools"}
+{"ts": "2026-11-12T15:24:35", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:35", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:35", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "__main__", "msg": "tool_call tool=get_character_names_by_title"}
+{"ts": "2026-11-12T15:24:35", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/movie/character_names_by_title?title=Look+Who%27s+Talking \"HTTP/1.1 200 OK\""}
+LOCAL cap=2 8a6ba32c9bed-2fbcbda7c02f calls=1 errors=0
+2026-11-12 15:24:37.261 | INFO     | __main__:start_server:661 - Starting MCP server (transport=stdio, port=None, host=0.0.0.0)
+2026-11-12 15:24:37.261 | INFO     | __main__:start_server:686 - Starting server in stdio mode
+[11/12/26 15:24:37] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+LOCAL cap=3 4cac5f081a20-45a058cc9056 calls=2 errors=2
+DONE cap=1 a823e527d383-0a1763227b31 status=blocked differences=3
+START cap=1 beer_factory a823e527d383-86c438a4c62f calls=3
+{"ts": "2026-11-12T15:24:38", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.cli", "msg": "Starting MCP server in STDIO mode"}
+{"ts": "2026-11-12T15:24:38", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Initializing MCP Server with database: /root/vakra/data/databases/beer_factory/beer_factory.sqlite"}
+DONE cap=2 8a6ba32c9bed-2fbcbda7c02f status=pass differences=0
+START cap=2 movie 8a6ba32c9bed-ae062fb450d1 calls=1
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:24:40", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "__main__", "msg": "Starting MCP server 'fastapi-mcp-wrapper' wrapping FastAPI at http://localhost:8000"}
+{"ts": "2026-11-12T15:24:40", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "__main__", "msg": "Discovering FastAPI endpoints from http://localhost:8000"}
+{"ts": "2026-11-12T15:24:40", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "__main__", "msg": "Filtering to domains: ['movie']"}
+{"ts": "2026-11-12T15:24:40", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:40", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "__main__", "msg": "Discovered 706 tools"}
+{"ts": "2026-11-12T15:24:40", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:40", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:40", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "__main__", "msg": "tool_call tool=get_titles_by_character_name"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "2", "domain": "movie", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/movie/titles_by_character_name?character_name=Dr.+Archibald+%27Moonlight%27+Graham \"HTTP/1.1 200 OK\""}
+LOCAL cap=2 8a6ba32c9bed-ae062fb450d1 calls=1 errors=0
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: a823e527d383-0a1763227b31"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'': {'modified_table_name': 'rootbeerbrand', 'original_table_name': 'rootbeerbrand'}}, 'condition_sequence': [], 'database_path': '/root/vakra/data/databases/beer_factory/beer_factory.sqlite'}"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Regenerated 22 getter functions"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe 'a823e527d383-0a1763227b31' with 22 keys and 24 entries"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "MCP server: slot-filling-mcp-server is ready; waiting for initialize()"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: get_data"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Switching from 'a823e527d383-0a1763227b31' to 'a823e527d383-86c438a4c62f'"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: a823e527d383-86c438a4c62f"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'': {'modified_table_name': 'rootbeerbrand', 'original_table_name': 'rootbeerbrand'}}, 'condition_sequence': [], 'database_path': '/root/vakra/data/databases/beer_factory/beer_factory.sqlite'}"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Regenerated 22 getter functions"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe 'a823e527d383-86c438a4c62f' with 22 keys and 24 entries"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: select_data_equal_to"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: get_Descriptions"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:41", "level": "INFO", "capability_id": "", "domain": "beer_factory", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Server stopped"}
+LOCAL cap=1 a823e527d383-86c438a4c62f calls=3 errors=0
+DONE cap=3 4cac5f081a20-45a058cc9056 status=discrepancy differences=2
+START cap=3 bpo 4cac5f081a20-9c9cce152beb calls=3
+podman not found or not working, using docker instead
+DONE cap=4 34a533dfd727-5ad9cc4c863b status=pass differences=0
+START cap=4 disney 34a533dfd727-fe64aef88dc0 calls=3
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "Starting Capability 4 combined MCP server (M3 REST @ http://localhost:8000 [domains=['disney']] + Retriever @ http://localhost:8001 [domains=['college_completion', 'legislator', 'university', 'language_corpus', 'disney']])"}
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "Fetching M3 REST OpenAPI spec from http://localhost:8000 (domains: ['disney'])"}
+DONE cap=2 8a6ba32c9bed-ae062fb450d1 status=pass differences=0
+START cap=2 superhero 7a1c36ae40bb-870719f02863 calls=1
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "M3 REST: 104 tools"}
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "Fetching Retriever OpenAPI spec from http://localhost:8001 (domains: ['college_completion', 'legislator', 'university', 'language_corpus', 'disney'])"}
+2026-11-12 15:24:44.540 | INFO     | __main__:start_server:661 - Starting MCP server (transport=stdio, port=None, host=0.0.0.0)
+2026-11-12 15:24:44.540 | INFO     | __main__:start_server:686 - Starting server in stdio mode
+[11/12/26 15:24:44] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8001/openapi.json \"HTTP/1.1 200 OK\""}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "Retriever: 5 tools"}
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "Total tools exposed: 109"}
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+                    INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "tool_call tool=get_director_by_song"}
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/disney/director_by_song?song=Once+Upon+a+Dream \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "tool_call tool=query_disney"}
+LOCAL cap=3 4cac5f081a20-9c9cce152beb calls=3 errors=3
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "httpx", "msg": "HTTP Request: POST http://localhost:8001/disney/query \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "__main__", "msg": "tool_call tool=get_voice_actors_villains_by_movie"}
+{"ts": "2026-11-12T15:24:44", "level": "INFO", "capability_id": "4", "domain": "disney", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/disney/voice_actors_villains_by_movie?movie_title=Cinderella \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:45", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "__main__", "msg": "Starting MCP server 'fastapi-mcp-wrapper' wrapping FastAPI at http://localhost:8000"}
+{"ts": "2026-11-12T15:24:45", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "__main__", "msg": "Discovering FastAPI endpoints from http://localhost:8000"}
+{"ts": "2026-11-12T15:24:45", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "__main__", "msg": "Filtering to domains: ['superhero']"}
+LOCAL cap=4 34a533dfd727-fe64aef88dc0 calls=3 errors=0
+{"ts": "2026-11-12T15:24:45", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:45", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "__main__", "msg": "Discovered 109 tools"}
+{"ts": "2026-11-12T15:24:45", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:45", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:45", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "__main__", "msg": "tool_call tool=get_power_names_by_superhero"}
+{"ts": "2026-11-12T15:24:45", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/superhero/power_names_by_superhero?superhero_name=3-D+Man \"HTTP/1.1 200 OK\""}
+LOCAL cap=2 7a1c36ae40bb-870719f02863 calls=1 errors=0
+DONE cap=2 7a1c36ae40bb-870719f02863 status=pass differences=0
+START cap=2 superhero 7a1c36ae40bb-5afef876842e calls=1
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:24:48", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "__main__", "msg": "Starting MCP server 'fastapi-mcp-wrapper' wrapping FastAPI at http://localhost:8000"}
+{"ts": "2026-11-12T15:24:48", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "__main__", "msg": "Discovering FastAPI endpoints from http://localhost:8000"}
+{"ts": "2026-11-12T15:24:48", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "__main__", "msg": "Filtering to domains: ['superhero']"}
+{"ts": "2026-11-12T15:24:49", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:49", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "__main__", "msg": "Discovered 109 tools"}
+{"ts": "2026-11-12T15:24:49", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:49", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:49", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "__main__", "msg": "tool_call tool=get_count_heroes_by_power"}
+{"ts": "2026-11-12T15:24:49", "level": "INFO", "capability_id": "2", "domain": "superhero", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/superhero/count_heroes_by_power?power_name=Super+Strength \"HTTP/1.1 200 OK\""}
+LOCAL cap=2 7a1c36ae40bb-5afef876842e calls=1 errors=0
+DONE cap=4 34a533dfd727-fe64aef88dc0 status=discrepancy differences=2
+START cap=4 beer_factory a823e527d383-769208ced562 calls=3
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "Starting Capability 4 combined MCP server (M3 REST @ http://localhost:8000 [domains=['beer_factory']] + Retriever @ http://localhost:8001 [domains=['beer_factory', 'app_store', 'simpson_episodes', 'movies_4', 'music_platform_2']])"}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "Fetching M3 REST OpenAPI spec from http://localhost:8000 (domains: ['beer_factory'])"}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "M3 REST: 124 tools"}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "Fetching Retriever OpenAPI spec from http://localhost:8001 (domains: ['beer_factory', 'app_store', 'simpson_episodes', 'movies_4', 'music_platform_2'])"}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8001/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "Retriever: 5 tools"}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "Total tools exposed: 129"}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "tool_call tool=get_most_and_least_profitable_rootbeers"}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/beer_factory/most_and_least_profitable_rootbeers \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "tool_call tool=get_top_location_by_container_type"}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/beer_factory/top_location_by_container_type?container_type=Bottle \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "tool_call tool=get_transaction_count_by_location"}
+{"ts": "2026-11-12T15:24:50", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/beer_factory/transaction_count_by_location?location_name=Sac+State+Union&credit_card_type=American+Express&start_date=2014-01-01&end_date=2014-12-31 \"HTTP/1.1 200 OK\""}
+LOCAL cap=4 a823e527d383-769208ced562 calls=3 errors=0
+DONE cap=2 7a1c36ae40bb-5afef876842e status=pass differences=0
+DONE cap=3 4cac5f081a20-9c9cce152beb status=discrepancy differences=3
+START cap=3 beer_factory a823e527d383-5bddd549e26f calls=2
+podman not found or not working, using docker instead
+DONE cap=1 a823e527d383-86c438a4c62f status=blocked differences=3
+START cap=1 book_publishing_company 5661cd917583-338de4806750 calls=6
+{"ts": "2026-11-12T15:24:52", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "__main__", "msg": "Starting MCP server 'fastapi-mcp-wrapper' wrapping FastAPI at http://localhost:8000"}
+{"ts": "2026-11-12T15:24:52", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "__main__", "msg": "Discovering FastAPI endpoints from http://localhost:8000"}
+{"ts": "2026-11-12T15:24:52", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "__main__", "msg": "Filtering to domains: ['beer_factory']"}
+{"ts": "2026-11-12T15:24:53", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:53", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "__main__", "msg": "Discovered 124 tools"}
+{"ts": "2026-11-12T15:24:53", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:53", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:53", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "__main__", "msg": "tool_call tool=get_most_used_credit_card_type_for_non_alcoholic"}
+{"ts": "2026-11-12T15:24:53", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/beer_factory/most_used_credit_card_type_for_non_alcoholic?alcoholic=FALSE \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:53", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:53", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "__main__", "msg": "tool_call tool=get_total_purchase_price"}
+{"ts": "2026-11-12T15:24:53", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/beer_factory/total_purchase_price?location_name=Sac+State+American+River+Courtyard&credit_card_type=Visa&start_date=2014-06-03&end_date=2015-11-27 \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:53", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.cli", "msg": "Starting MCP server in STDIO mode"}
+{"ts": "2026-11-12T15:24:53", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Initializing MCP Server with database: /root/vakra/data/databases/book_publishing_company/book_publishing_company.sqlite"}
+LOCAL cap=3 a823e527d383-5bddd549e26f calls=2 errors=0
+DONE cap=4 a823e527d383-769208ced562 status=discrepancy differences=2
+START cap=4 beer_factory a823e527d383-e7662816234e calls=4
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:24:54", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "Starting Capability 4 combined MCP server (M3 REST @ http://localhost:8000 [domains=['beer_factory']] + Retriever @ http://localhost:8001 [domains=['beer_factory', 'app_store', 'simpson_episodes', 'movies_4', 'music_platform_2']])"}
+{"ts": "2026-11-12T15:24:54", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "Fetching M3 REST OpenAPI spec from http://localhost:8000 (domains: ['beer_factory'])"}
+{"ts": "2026-11-12T15:24:54", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:54", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "M3 REST: 124 tools"}
+{"ts": "2026-11-12T15:24:54", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "Fetching Retriever OpenAPI spec from http://localhost:8001 (domains: ['beer_factory', 'app_store', 'simpson_episodes', 'movies_4', 'music_platform_2'])"}
+{"ts": "2026-11-12T15:24:54", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8001/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:54", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "Retriever: 5 tools"}
+{"ts": "2026-11-12T15:24:54", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "Total tools exposed: 129"}
+{"ts": "2026-11-12T15:24:54", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:54", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:54", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "tool_call tool=query_beer_factory"}
+{"ts": "2026-11-12T15:24:55", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: POST http://localhost:8001/beer_factory/query \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:55", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:55", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "tool_call tool=query_beer_factory"}
+{"ts": "2026-11-12T15:24:55", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: POST http://localhost:8001/beer_factory/query \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:55", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:55", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "tool_call tool=query_beer_factory"}
+{"ts": "2026-11-12T15:24:55", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: POST http://localhost:8001/beer_factory/query \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:55", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:55", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "__main__", "msg": "tool_call tool=query_beer_factory"}
+{"ts": "2026-11-12T15:24:55", "level": "INFO", "capability_id": "4", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: POST http://localhost:8001/beer_factory/query \"HTTP/1.1 200 OK\""}
+LOCAL cap=4 a823e527d383-e7662816234e calls=4 errors=0
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: 5661cd917583-0de85c285e1d"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'T1': {'modified_table_name': 'titles', 'original_table_name': 'titles'}, 'T2': {'modified_table_name': 'publishers', 'original_table_name': 'publishers'}, 'T3': {'modified_table_name': 'roysched', 'original_table_name': 'roysched'}}, 'condition_sequence': [['T1.pub_id', 'T2.pub_id', 'INNER'], ['T1.title_id', 'T3.title_id', 'INNER']], 'database_path': '/root/vakra/data/databases/book_publishing_company/book_publishing_company.sqlite'}"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe '5661cd917583-0de85c285e1d' with 19 keys and 86 entries"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "MCP server: slot-filling-mcp-server is ready; waiting for initialize()"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: get_data"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Switching from '5661cd917583-0de85c285e1d' to '5661cd917583-338de4806750'"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: 5661cd917583-338de4806750"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'T1': {'modified_table_name': 'titles', 'original_table_name': 'titles'}, 'T2': {'modified_table_name': 'publishers', 'original_table_name': 'publishers'}}, 'condition_sequence': [['T1.pub_id', 'T2.pub_id', 'INNER']], 'database_path': '/root/vakra/data/databases/book_publishing_company/book_publishing_company.sqlite'}"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe '5661cd917583-338de4806750' with 15 keys and 18 entries"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: transform_data"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: filter_data"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: retrieve_data"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: retrieve_data"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: retrieve_data"}
+{"ts": "2026-11-12T15:24:56", "level": "INFO", "capability_id": "", "domain": "book_publishing_company", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Server stopped"}
+LOCAL cap=1 5661cd917583-338de4806750 calls=6 errors=0
+DONE cap=3 a823e527d383-5bddd549e26f status=discrepancy differences=1
+START cap=3 beer_factory a823e527d383-907a00b01d6b calls=2
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:24:58", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "__main__", "msg": "Starting MCP server 'fastapi-mcp-wrapper' wrapping FastAPI at http://localhost:8000"}
+{"ts": "2026-11-12T15:24:58", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "__main__", "msg": "Discovering FastAPI endpoints from http://localhost:8000"}
+{"ts": "2026-11-12T15:24:58", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "__main__", "msg": "Filtering to domains: ['beer_factory']"}
+{"ts": "2026-11-12T15:24:58", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:59", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "__main__", "msg": "Discovered 124 tools"}
+{"ts": "2026-11-12T15:24:59", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:24:59", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:59", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "__main__", "msg": "tool_call tool=get_top_location_by_brand"}
+{"ts": "2026-11-12T15:24:59", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/beer_factory/top_location_by_brand?brand_name=Dog+n+Suds&location_name_1=Sac+State+American+River+Courtyard&location_name_2=Sac+State+Union \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:24:59", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:24:59", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "__main__", "msg": "tool_call tool=get_transaction_count_by_location"}
+{"ts": "2026-11-12T15:24:59", "level": "INFO", "capability_id": "3", "domain": "beer_factory", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/beer_factory/transaction_count_by_location?location_name=Sac+State+Union&credit_card_type=American+Express&start_date=2014-01-01&end_date=2014-12-31 \"HTTP/1.1 200 OK\""}
+LOCAL cap=3 a823e527d383-907a00b01d6b calls=2 errors=0
+DONE cap=3 a823e527d383-907a00b01d6b status=pass differences=0
+START cap=3 books 6e317bcd6839-be3f4a72d000 calls=2
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:25:04", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "__main__", "msg": "Starting MCP server 'fastapi-mcp-wrapper' wrapping FastAPI at http://localhost:8000"}
+{"ts": "2026-11-12T15:25:04", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "__main__", "msg": "Discovering FastAPI endpoints from http://localhost:8000"}
+{"ts": "2026-11-12T15:25:04", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "__main__", "msg": "Filtering to domains: ['books']"}
+{"ts": "2026-11-12T15:25:04", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:04", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "__main__", "msg": "Discovered 155 tools"}
+{"ts": "2026-11-12T15:25:04", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:25:04", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:04", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "__main__", "msg": "tool_call tool=get_language_names_by_publication_date"}
+{"ts": "2026-11-12T15:25:04", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/books/language_names_by_publication_date \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:04", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:04", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "__main__", "msg": "tool_call tool=get_count_books_by_language"}
+{"ts": "2026-11-12T15:25:04", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/books/count_books_by_language?language_name=English \"HTTP/1.1 200 OK\""}
+LOCAL cap=3 6e317bcd6839-be3f4a72d000 calls=2 errors=0
+DONE cap=4 a823e527d383-e7662816234e status=pass differences=0
+START cap=4 books 6e317bcd6839-b3632defce8e calls=3
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "Starting Capability 4 combined MCP server (M3 REST @ http://localhost:8000 [domains=['books']] + Retriever @ http://localhost:8001 [domains=['books', 'simpson_episodes', 'movie', 'talkingdata', 'music_tracker']])"}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "Fetching M3 REST OpenAPI spec from http://localhost:8000 (domains: ['books'])"}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "M3 REST: 155 tools"}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "Fetching Retriever OpenAPI spec from http://localhost:8001 (domains: ['books', 'simpson_episodes', 'movie', 'talkingdata', 'music_tracker'])"}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8001/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "Retriever: 5 tools"}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "Total tools exposed: 160"}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "tool_call tool=get_titles_by_language"}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/books/titles_by_language?language_name=British+English \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "tool_call tool=get_distinct_publishers_by_title"}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/books/distinct_publishers_by_title?title=The+Secret+Garden \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "tool_call tool=get_count_books_by_author_and_publisher"}
+{"ts": "2026-11-12T15:25:07", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/books/count_books_by_author_and_publisher?author_name=William+Shakespeare&publisher_name=Penguin+Classics \"HTTP/1.1 200 OK\""}
+LOCAL cap=4 6e317bcd6839-b3632defce8e calls=3 errors=0
+DONE cap=3 6e317bcd6839-be3f4a72d000 status=pass differences=0
+START cap=3 books 6e317bcd6839-652486238c1f calls=2
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:25:10", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "__main__", "msg": "Starting MCP server 'fastapi-mcp-wrapper' wrapping FastAPI at http://localhost:8000"}
+{"ts": "2026-11-12T15:25:10", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "__main__", "msg": "Discovering FastAPI endpoints from http://localhost:8000"}
+{"ts": "2026-11-12T15:25:10", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "__main__", "msg": "Filtering to domains: ['books']"}
+{"ts": "2026-11-12T15:25:10", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:10", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "__main__", "msg": "Discovered 155 tools"}
+{"ts": "2026-11-12T15:25:10", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:25:10", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:10", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "__main__", "msg": "tool_call tool=get_year_with_most_orders"}
+{"ts": "2026-11-12T15:25:10", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/books/year_with_most_orders \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:10", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:10", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "__main__", "msg": "tool_call tool=get_percentage_orders_by_shipping_method_year"}
+{"ts": "2026-11-12T15:25:10", "level": "INFO", "capability_id": "3", "domain": "books", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/books/percentage_orders_by_shipping_method_year?method_name=International&year=2020 \"HTTP/1.1 200 OK\""}
+LOCAL cap=3 6e317bcd6839-652486238c1f calls=2 errors=0
+DONE cap=4 6e317bcd6839-b3632defce8e status=pass differences=0
+START cap=4 books 6e317bcd6839-2485928dc0a1 calls=4
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:25:13", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "Starting Capability 4 combined MCP server (M3 REST @ http://localhost:8000 [domains=['books']] + Retriever @ http://localhost:8001 [domains=['books', 'simpson_episodes', 'movie', 'talkingdata', 'music_tracker']])"}
+{"ts": "2026-11-12T15:25:13", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "Fetching M3 REST OpenAPI spec from http://localhost:8000 (domains: ['books'])"}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "M3 REST: 155 tools"}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "Fetching Retriever OpenAPI spec from http://localhost:8001 (domains: ['books', 'simpson_episodes', 'movie', 'talkingdata', 'music_tracker'])"}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8001/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "Retriever: 5 tools"}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "Total tools exposed: 160"}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "tool_call tool=query_books"}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "httpx", "msg": "HTTP Request: POST http://localhost:8001/books/query \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "tool_call tool=query_books"}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "httpx", "msg": "HTTP Request: POST http://localhost:8001/books/query \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "tool_call tool=query_books"}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "httpx", "msg": "HTTP Request: POST http://localhost:8001/books/query \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "__main__", "msg": "tool_call tool=query_books"}
+{"ts": "2026-11-12T15:25:14", "level": "INFO", "capability_id": "4", "domain": "books", "logger": "httpx", "msg": "HTTP Request: POST http://localhost:8001/books/query \"HTTP/1.1 200 OK\""}
+LOCAL cap=4 6e317bcd6839-2485928dc0a1 calls=4 errors=0
+DONE cap=3 6e317bcd6839-652486238c1f status=pass differences=0
+START cap=3 movie 8a6ba32c9bed-3432ae474e32 calls=2
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:25:15", "level": "INFO", "capability_id": "3", "domain": "movie", "logger": "__main__", "msg": "Starting MCP server 'fastapi-mcp-wrapper' wrapping FastAPI at http://localhost:8000"}
+{"ts": "2026-11-12T15:25:15", "level": "INFO", "capability_id": "3", "domain": "movie", "logger": "__main__", "msg": "Discovering FastAPI endpoints from http://localhost:8000"}
+{"ts": "2026-11-12T15:25:15", "level": "INFO", "capability_id": "3", "domain": "movie", "logger": "__main__", "msg": "Filtering to domains: ['movie']"}
+{"ts": "2026-11-12T15:25:16", "level": "INFO", "capability_id": "3", "domain": "movie", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:16", "level": "INFO", "capability_id": "3", "domain": "movie", "logger": "__main__", "msg": "Discovered 706 tools"}
+{"ts": "2026-11-12T15:25:16", "level": "INFO", "capability_id": "3", "domain": "movie", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:25:16", "level": "INFO", "capability_id": "3", "domain": "movie", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:16", "level": "INFO", "capability_id": "3", "domain": "movie", "logger": "__main__", "msg": "tool_call tool=get_character_most_screen_time"}
+{"ts": "2026-11-12T15:25:16", "level": "INFO", "capability_id": "3", "domain": "movie", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/movie/character_most_screen_time?title=Batman \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:16", "level": "INFO", "capability_id": "3", "domain": "movie", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:16", "level": "INFO", "capability_id": "3", "domain": "movie", "logger": "__main__", "msg": "tool_call tool=get_screentime_percentage_difference"}
+{"ts": "2026-11-12T15:25:16", "level": "INFO", "capability_id": "3", "domain": "movie", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/movie/screentime_percentage_difference?title=Batman \"HTTP/1.1 200 OK\""}
+LOCAL cap=3 8a6ba32c9bed-3432ae474e32 calls=2 errors=0
+DONE cap=1 5661cd917583-338de4806750 status=blocked differences=6
+START cap=1 books 6e317bcd6839-050c465e9be1 calls=5
+{"ts": "2026-11-12T15:25:17", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.cli", "msg": "Starting MCP server in STDIO mode"}
+{"ts": "2026-11-12T15:25:17", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Initializing MCP Server with database: /root/vakra/data/databases/books/books.sqlite"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: 6e317bcd6839-050c465e9be1"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'T1': {'modified_table_name': 'order_status', 'original_table_name': 'order_status'}, 'T2': {'modified_table_name': 'order_history', 'original_table_name': 'order_history'}}, 'condition_sequence': [['T1.status_id', 'T2.status_id', 'INNER']], 'database_path': '/root/vakra/data/databases/books/books.sqlite'}"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Regenerated 6 getter functions"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe '6e317bcd6839-050c465e9be1' with 6 keys and 22348 entries"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "MCP server: slot-filling-mcp-server is ready; waiting for initialize()"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: get_data"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Already in universe '6e317bcd6839-050c465e9be1', no switch needed"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: select_data_equal_to"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: transform_data_to_datetime_part"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: select_data_equal_to"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: compute_data_count"}
+{"ts": "2026-11-12T15:25:20", "level": "ERROR", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Invalid key_name ['']. Valid keys in current universe ('6e317bcd6839-050c465e9be1'): ['order_status_status_id', 'order_status_status_value', 'order_history_history_id', 'order_history_order_id', 'order_history_status_id', 'order_history_status_date']"}
+{"ts": "2026-11-12T15:25:20", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Server stopped"}
+LOCAL cap=1 6e317bcd6839-050c465e9be1 calls=5 errors=1
+DONE cap=3 8a6ba32c9bed-3432ae474e32 status=pass differences=0
+DONE cap=4 6e317bcd6839-2485928dc0a1 status=pass differences=0
+START cap=4 hockey 308738b8195d-88b1da7a5c7d calls=5
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "Starting Capability 4 combined MCP server (M3 REST @ http://localhost:8000 [domains=['hockey']] + Retriever @ http://localhost:8001 [domains=['sales_in_weather', 'genes', 'hockey', 'legislator', 'coinmarketcap']])"}
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "Fetching M3 REST OpenAPI spec from http://localhost:8000 (domains: ['hockey'])"}
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "M3 REST: 206 tools"}
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "Fetching Retriever OpenAPI spec from http://localhost:8001 (domains: ['sales_in_weather', 'genes', 'hockey', 'legislator', 'coinmarketcap'])"}
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8001/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "Retriever: 5 tools"}
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "Total tools exposed: 211"}
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "tool_call tool=check_player_note"}
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/hockey/check_player_note?note=posthumous&legendsID=P194502 \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "tool_call tool=get_hof_status_tallest_player"}
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/hockey/hof_status_tallest_player \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:29", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "tool_call tool=get_goalies_names_team_year"}
+{"ts": "2026-11-12T15:25:30", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/hockey/goalies_names_team_year?team_id=BOS&year=1972 \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:30", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:30", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "tool_call tool=query_hockey"}
+{"ts": "2026-11-12T15:25:30", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "httpx", "msg": "HTTP Request: POST http://localhost:8001/hockey/query \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:30", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:30", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "tool_call tool=get_ppg_to_ppc_ratio"}
+{"ts": "2026-11-12T15:25:30", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/hockey/ppg_to_ppc_ratio?year=2009&team_name=New+York+Rangers \"HTTP/1.1 200 OK\""}
+LOCAL cap=4 308738b8195d-88b1da7a5c7d calls=5 errors=0
+DONE cap=4 308738b8195d-88b1da7a5c7d status=pass differences=0
+START cap=4 hockey 308738b8195d-33b90474d236 calls=2
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:25:40", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "Starting Capability 4 combined MCP server (M3 REST @ http://localhost:8000 [domains=['hockey']] + Retriever @ http://localhost:8001 [domains=['sales_in_weather', 'genes', 'hockey', 'legislator', 'coinmarketcap']])"}
+{"ts": "2026-11-12T15:25:40", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "Fetching M3 REST OpenAPI spec from http://localhost:8000 (domains: ['hockey'])"}
+{"ts": "2026-11-12T15:25:40", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:40", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "M3 REST: 206 tools"}
+{"ts": "2026-11-12T15:25:40", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "Fetching Retriever OpenAPI spec from http://localhost:8001 (domains: ['sales_in_weather', 'genes', 'hockey', 'legislator', 'coinmarketcap'])"}
+{"ts": "2026-11-12T15:25:40", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8001/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:40", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "Retriever: 5 tools"}
+{"ts": "2026-11-12T15:25:40", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "Total tools exposed: 211"}
+{"ts": "2026-11-12T15:25:40", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:25:40", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:40", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "tool_call tool=get_top_coach_by_bench_minor"}
+{"ts": "2026-11-12T15:25:41", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/v1/hockey/top_coach_by_bench_minor?year=2003 \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:41", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:41", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "__main__", "msg": "tool_call tool=query_hockey"}
+{"ts": "2026-11-12T15:25:41", "level": "INFO", "capability_id": "4", "domain": "hockey", "logger": "httpx", "msg": "HTTP Request: POST http://localhost:8001/hockey/query \"HTTP/1.1 200 OK\""}
+LOCAL cap=4 308738b8195d-33b90474d236 calls=2 errors=0
+DONE cap=4 308738b8195d-33b90474d236 status=pass differences=0
+START cap=4 movie 8a6ba32c9bed-ba5d1e29b4fa calls=4
+podman not found or not working, using docker instead
+{"ts": "2026-11-12T15:25:46", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "__main__", "msg": "Starting Capability 4 combined MCP server (M3 REST @ http://localhost:8000 [domains=['movie']] + Retriever @ http://localhost:8001 [domains=['world', 'trains', 'cars', 'codebase_comments', 'movie']])"}
+{"ts": "2026-11-12T15:25:46", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "__main__", "msg": "Fetching M3 REST OpenAPI spec from http://localhost:8000 (domains: ['movie'])"}
+{"ts": "2026-11-12T15:25:46", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8000/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:46", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "__main__", "msg": "M3 REST: 706 tools"}
+{"ts": "2026-11-12T15:25:46", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "__main__", "msg": "Fetching Retriever OpenAPI spec from http://localhost:8001 (domains: ['world', 'trains', 'cars', 'codebase_comments', 'movie'])"}
+{"ts": "2026-11-12T15:25:46", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "httpx", "msg": "HTTP Request: GET http://localhost:8001/openapi.json \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:46", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "__main__", "msg": "Retriever: 5 tools"}
+{"ts": "2026-11-12T15:25:46", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "__main__", "msg": "Total tools exposed: 711"}
+{"ts": "2026-11-12T15:25:46", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:25:46", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:46", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "__main__", "msg": "tool_call tool=query_movie"}
+{"ts": "2026-11-12T15:25:47", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "httpx", "msg": "HTTP Request: POST http://localhost:8001/movie/query \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:47", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:47", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "__main__", "msg": "tool_call tool=query_movie"}
+{"ts": "2026-11-12T15:25:47", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "httpx", "msg": "HTTP Request: POST http://localhost:8001/movie/query \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:47", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:47", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "__main__", "msg": "tool_call tool=query_movie"}
+{"ts": "2026-11-12T15:25:47", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "httpx", "msg": "HTTP Request: POST http://localhost:8001/movie/query \"HTTP/1.1 200 OK\""}
+{"ts": "2026-11-12T15:25:47", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:47", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "__main__", "msg": "tool_call tool=query_movie"}
+{"ts": "2026-11-12T15:25:47", "level": "INFO", "capability_id": "4", "domain": "movie", "logger": "httpx", "msg": "HTTP Request: POST http://localhost:8001/movie/query \"HTTP/1.1 200 OK\""}
+LOCAL cap=4 8a6ba32c9bed-ba5d1e29b4fa calls=4 errors=0
+DONE cap=1 6e317bcd6839-050c465e9be1 status=blocked differences=5
+START cap=1 books 6e317bcd6839-d365c9ad58eb calls=5
+{"ts": "2026-11-12T15:25:53", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.cli", "msg": "Starting MCP server in STDIO mode"}
+{"ts": "2026-11-12T15:25:53", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Initializing MCP Server with database: /root/vakra/data/databases/books/books.sqlite"}
+{"ts": "2026-11-12T15:25:55", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: 6e317bcd6839-050c465e9be1"}
+{"ts": "2026-11-12T15:25:55", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'T1': {'modified_table_name': 'order_status', 'original_table_name': 'order_status'}, 'T2': {'modified_table_name': 'order_history', 'original_table_name': 'order_history'}}, 'condition_sequence': [['T1.status_id', 'T2.status_id', 'INNER']], 'database_path': '/root/vakra/data/databases/books/books.sqlite'}"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Regenerated 6 getter functions"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe '6e317bcd6839-050c465e9be1' with 6 keys and 22348 entries"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "MCP server: slot-filling-mcp-server is ready; waiting for initialize()"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: get_data"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Switching from '6e317bcd6839-050c465e9be1' to '6e317bcd6839-d365c9ad58eb'"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: 6e317bcd6839-d365c9ad58eb"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'T1': {'modified_table_name': 'book', 'original_table_name': 'book'}, 'T2': {'modified_table_name': 'book_author', 'original_table_name': 'book_author'}, 'T3': {'modified_table_name': 'author', 'original_table_name': 'author'}}, 'condition_sequence': [['T1.book_id', 'T2.book_id', 'INNER'], ['T3.author_id', 'T2.author_id', 'INNER']], 'database_path': '/root/vakra/data/databases/books/books.sqlite'}"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Regenerated 11 getter functions"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe '6e317bcd6839-d365c9ad58eb' with 11 keys and 17642 entries"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: select_data_equal_to"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: transform_data_to_datetime_part"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: select_data_equal_to"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: get_book_titles"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:25:56", "level": "INFO", "capability_id": "", "domain": "books", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Server stopped"}
+LOCAL cap=1 6e317bcd6839-d365c9ad58eb calls=5 errors=0
+DONE cap=4 8a6ba32c9bed-ba5d1e29b4fa status=pass differences=0
+Tool get_book_titles not listed by server, cannot validate any structured content
+DONE cap=1 6e317bcd6839-d365c9ad58eb status=blocked differences=5
+START cap=1 disney 34a533dfd727-f6c3999d1e9d calls=4
+{"ts": "2026-11-12T15:26:37", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "environment.m3.python_tools.mcp.cli", "msg": "Starting MCP server in STDIO mode"}
+{"ts": "2026-11-12T15:26:37", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Initializing MCP Server with database: /root/vakra/data/databases/disney/disney.sqlite"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: 34a533dfd727-2644091446a0"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'': {'modified_table_name': 'director', 'original_table_name': 'director'}}, 'condition_sequence': [], 'database_path': '/root/vakra/data/databases/disney/disney.sqlite'}"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe '34a533dfd727-2644091446a0' with 2 keys and 56 entries"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "MCP server: slot-filling-mcp-server is ready; waiting for initialize()"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: get_data"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Switching from '34a533dfd727-2644091446a0' to '34a533dfd727-f6c3999d1e9d'"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: 34a533dfd727-f6c3999d1e9d"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'T1': {'modified_table_name': 'characters', 'original_table_name': 'characters'}, 'T2': {'modified_table_name': 'director', 'original_table_name': 'director'}}, 'condition_sequence': [['T1.movie_title', 'T2.name', 'INNER']], 'database_path': '/root/vakra/data/databases/disney/disney.sqlite'}"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe '34a533dfd727-f6c3999d1e9d' with 7 keys and 55 entries"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: filter_data"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: retrieve_data"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: retrieve_data"}
+{"ts": "2026-11-12T15:26:40", "level": "INFO", "capability_id": "", "domain": "disney", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Server stopped"}
+LOCAL cap=1 34a533dfd727-f6c3999d1e9d calls=4 errors=0
+DONE cap=1 34a533dfd727-f6c3999d1e9d status=blocked differences=4
+START cap=1 computer_student 39a28b2592a2-32c88e5e5bd6 calls=5
+{"ts": "2026-11-12T15:27:06", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.cli", "msg": "Starting MCP server in STDIO mode"}
+{"ts": "2026-11-12T15:27:06", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Initializing MCP Server with database: /root/vakra/data/databases/computer_student/computer_student.sqlite"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: 39a28b2592a2-19a69e5eb160"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'T1': {'modified_table_name': 'person', 'original_table_name': 'person'}, 'T2': {'modified_table_name': 'taughtBy', 'original_table_name': 'taughtBy'}, 'T3': {'modified_table_name': 'course', 'original_table_name': 'course'}}, 'condition_sequence': [['T1.p_id', 'T2.p_id', 'INNER'], ['T3.course_id', 'T2.course_id', 'INNER']], 'database_path': '/root/vakra/data/databases/computer_student/computer_student.sqlite'}"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Regenerated 10 getter functions"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe '39a28b2592a2-19a69e5eb160' with 10 keys and 189 entries"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "MCP server: slot-filling-mcp-server is ready; waiting for initialize()"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: get_data"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Switching from '39a28b2592a2-19a69e5eb160' to '39a28b2592a2-32c88e5e5bd6'"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: 39a28b2592a2-32c88e5e5bd6"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'T1': {'modified_table_name': 'advisedBy', 'original_table_name': 'advisedBy'}, 'T2': {'modified_table_name': 'person', 'original_table_name': 'person'}}, 'condition_sequence': [['T1.p_id', 'T2.p_id', 'INNER']], 'database_path': '/root/vakra/data/databases/computer_student/computer_student.sqlite'}"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Regenerated 8 getter functions"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe '39a28b2592a2-32c88e5e5bd6' with 8 keys and 113 entries"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: select_data_equal_to"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: select_data_equal_to"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: select_data_equal_to"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: compute_data_count"}
+{"ts": "2026-11-12T15:27:08", "level": "ERROR", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Invalid key_name ['']. Valid keys in current universe ('39a28b2592a2-32c88e5e5bd6'): ['advisedBy_p_id', 'advisedBy_p_id_dummy', 'person_p_id', 'person_professor', 'person_student', 'person_hasPosition', 'person_inPhase', 'person_yearsInProgram']"}
+{"ts": "2026-11-12T15:27:08", "level": "INFO", "capability_id": "", "domain": "computer_student", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Server stopped"}
+LOCAL cap=1 39a28b2592a2-32c88e5e5bd6 calls=5 errors=1
+DONE cap=1 39a28b2592a2-32c88e5e5bd6 status=blocked differences=5
+START cap=1 craftbeer cad7f2b7d2a5-e110a9fc84d2 calls=5
+{"ts": "2026-11-12T15:27:40", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.cli", "msg": "Starting MCP server in STDIO mode"}
+{"ts": "2026-11-12T15:27:40", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Initializing MCP Server with database: /root/vakra/data/databases/craftbeer/craftbeer.sqlite"}
+{"ts": "2026-11-12T15:27:42", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: cad7f2b7d2a5-31f4422a6a60"}
+{"ts": "2026-11-12T15:27:42", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'T1': {'modified_table_name': 'beers', 'original_table_name': 'beers'}, 'T2': {'modified_table_name': 'breweries', 'original_table_name': 'breweries'}}, 'condition_sequence': [['T1.brewery_id', 'T2.id', 'INNER']], 'database_path': '/root/vakra/data/databases/craftbeer/craftbeer.sqlite'}"}
+{"ts": "2026-11-12T15:27:42", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe 'cad7f2b7d2a5-31f4422a6a60' with 11 keys and 2410 entries"}
+{"ts": "2026-11-12T15:27:42", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "MCP server: slot-filling-mcp-server is ready; waiting for initialize()"}
+{"ts": "2026-11-12T15:27:42", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:27:42", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:27:42", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: get_data"}
+{"ts": "2026-11-12T15:27:42", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Switching from 'cad7f2b7d2a5-31f4422a6a60' to 'cad7f2b7d2a5-e110a9fc84d2'"}
+{"ts": "2026-11-12T15:27:42", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: cad7f2b7d2a5-e110a9fc84d2"}
+{"ts": "2026-11-12T15:27:42", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'T1': {'modified_table_name': 'beers', 'original_table_name': 'beers'}, 'T2': {'modified_table_name': 'breweries', 'original_table_name': 'breweries'}}, 'condition_sequence': [['T1.brewery_id', 'T2.id', 'INNER']], 'database_path': '/root/vakra/data/databases/craftbeer/craftbeer.sqlite'}"}
+{"ts": "2026-11-12T15:27:42", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe 'cad7f2b7d2a5-e110a9fc84d2' with 11 keys and 2410 entries"}
+{"ts": "2026-11-12T15:27:43", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:27:43", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: filter_data"}
+{"ts": "2026-11-12T15:27:43", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:27:43", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: sort_data"}
+{"ts": "2026-11-12T15:27:43", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:27:43", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: retrieve_data"}
+{"ts": "2026-11-12T15:27:43", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:27:43", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: retrieve_data"}
+{"ts": "2026-11-12T15:27:43", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Server stopped"}
+LOCAL cap=1 cad7f2b7d2a5-e110a9fc84d2 calls=5 errors=0
+DONE cap=1 cad7f2b7d2a5-e110a9fc84d2 status=blocked differences=5
+START cap=1 craftbeer cad7f2b7d2a5-31f4422a6a60 calls=4
+{"ts": "2026-11-12T15:28:14", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.cli", "msg": "Starting MCP server in STDIO mode"}
+{"ts": "2026-11-12T15:28:14", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Initializing MCP Server with database: /root/vakra/data/databases/craftbeer/craftbeer.sqlite"}
+{"ts": "2026-11-12T15:28:17", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: cad7f2b7d2a5-31f4422a6a60"}
+{"ts": "2026-11-12T15:28:17", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'T1': {'modified_table_name': 'beers', 'original_table_name': 'beers'}, 'T2': {'modified_table_name': 'breweries', 'original_table_name': 'breweries'}}, 'condition_sequence': [['T1.brewery_id', 'T2.id', 'INNER']], 'database_path': '/root/vakra/data/databases/craftbeer/craftbeer.sqlite'}"}
+{"ts": "2026-11-12T15:28:17", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe 'cad7f2b7d2a5-31f4422a6a60' with 11 keys and 2410 entries"}
+{"ts": "2026-11-12T15:28:17", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "MCP server: slot-filling-mcp-server is ready; waiting for initialize()"}
+{"ts": "2026-11-12T15:28:17", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:28:17", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:28:17", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: get_data"}
+{"ts": "2026-11-12T15:28:17", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Already in universe 'cad7f2b7d2a5-31f4422a6a60', no switch needed"}
+{"ts": "2026-11-12T15:28:17", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:28:17", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: filter_data"}
+{"ts": "2026-11-12T15:28:17", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:28:17", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: filter_data"}
+{"ts": "2026-11-12T15:28:17", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:28:17", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: aggregate_data"}
+{"ts": "2026-11-12T15:28:17", "level": "INFO", "capability_id": "", "domain": "craftbeer", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Server stopped"}
+LOCAL cap=1 cad7f2b7d2a5-31f4422a6a60 calls=4 errors=0
+DONE cap=1 cad7f2b7d2a5-31f4422a6a60 status=blocked differences=4
+START cap=1 college_completion 2b28654158b1-d9db0719cde8 calls=7
+{"ts": "2026-11-12T15:28:43", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.cli", "msg": "Starting MCP server in STDIO mode"}
+{"ts": "2026-11-12T15:28:43", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Initializing MCP Server with database: /root/vakra/data/databases/college_completion/college_completion.sqlite"}
+{"ts": "2026-11-12T15:28:46", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: 2b28654158b1-2a28e4b1717b"}
+{"ts": "2026-11-12T15:28:46", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'T1': {'modified_table_name': 'state_sector_details', 'original_table_name': 'state_sector_details'}, 'T2': {'modified_table_name': 'state_sector_grads', 'original_table_name': 'state_sector_grads'}}, 'condition_sequence': [['T2.stateid', 'T1.stateid', 'INNER']], 'database_path': '/root/vakra/data/databases/college_completion/college_completion.sqlite'}"}
+{"ts": "2026-11-12T15:29:01", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Regenerated 30 getter functions"}
+{"ts": "2026-11-12T15:29:01", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe '2b28654158b1-2a28e4b1717b' with 30 keys and 509652 entries"}
+{"ts": "2026-11-12T15:29:01", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "MCP server: slot-filling-mcp-server is ready; waiting for initialize()"}
+{"ts": "2026-11-12T15:29:02", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:29:02", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:29:02", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: get_data"}
+{"ts": "2026-11-12T15:29:02", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Switching from '2b28654158b1-2a28e4b1717b' to '2b28654158b1-d9db0719cde8'"}
+{"ts": "2026-11-12T15:29:02", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loading tool universe: 2b28654158b1-d9db0719cde8"}
+{"ts": "2026-11-12T15:29:02", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Init args: {'alias_to_table_dict': {'T1': {'modified_table_name': 'institution_details', 'original_table_name': 'institution_details'}, 'T2': {'modified_table_name': 'institution_grads', 'original_table_name': 'institution_grads'}}, 'condition_sequence': [['T1.unitid', 'T2.unitid', 'INNER']], 'database_path': '/root/vakra/data/databases/college_completion/college_completion.sqlite'}"}
+{"ts": "2026-11-12T15:30:35", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Regenerated 72 getter functions"}
+{"ts": "2026-11-12T15:30:35", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Loaded universe '2b28654158b1-d9db0719cde8' with 72 keys and 1259496 entries"}
+{"ts": "2026-11-12T15:30:35", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:30:35", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: select_data_equal_to"}
+{"ts": "2026-11-12T15:31:26", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:31:26", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: select_data_equal_to"}
+{"ts": "2026-11-12T15:31:31", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:31:31", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: select_data_equal_to"}
+{"ts": "2026-11-12T15:31:33", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:31:33", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: select_data_less_than"}
+{"ts": "2026-11-12T15:31:33", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:31:33", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: get_institution_details_chronnames"}
+{"ts": "2026-11-12T15:31:33", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type ListToolsRequest"}
+{"ts": "2026-11-12T15:31:33", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "mcp.server.lowlevel.server", "msg": "Processing request of type CallToolRequest"}
+{"ts": "2026-11-12T15:31:33", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "call_tool: get_institution_grads_grad_cohorts"}
+{"ts": "2026-11-12T15:31:33", "level": "INFO", "capability_id": "", "domain": "college_completion", "logger": "environment.m3.python_tools.mcp.mcp_server", "msg": "Server stopped"}
+LOCAL cap=1 2b28654158b1-d9db0719cde8 calls=7 errors=0
+DONE cap=1 2b28654158b1-d9db0719cde8 status=blocked differences=7
+REPORT /root/vakra/artifacts/parity_20261112/REPORT.md

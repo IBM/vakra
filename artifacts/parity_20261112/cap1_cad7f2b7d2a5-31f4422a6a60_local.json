@@ -1,0 +1,468 @@
+{
+  "capability": 1,
+  "domain": "craftbeer",
+  "uuid": "cad7f2b7d2a5-31f4422a6a60",
+  "backend": "local",
+  "connection": {
+    "mode": "stdio",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": "/root/cuga-eval/.venv/bin/python",
+    "args": [
+      "-m",
+      "environment.m3.python_tools.mcp"
+    ],
+    "server_url": null,
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_data",
+      "resolved_arguments": {
+        "tool_universe_id": "cad7f2b7d2a5-31f4422a6a60",
+        "reset_handles": true
+      },
+      "started_at": "2026-11-12T15:28:17.142140+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"retrieved_beers_1\", \"num_records\": 2410, \"key_details\": [{\"name\": \"beers_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 4, 5]}, {\"name\": \"beers_brewery_id\", \"dtype\": \"int64\", \"first_3_values\": [166, 166, 166]}, {\"name\": \"beers_abv\", \"dtype\": \"float64\", \"first_3_values\": [0.065, 0.087, 0.08]}, {\"name\": \"beers_ibu\", \"dtype\": \"float64\", \"first_3_values\": [65.0, 85.0, 35.0]}, {\"name\": \"beers_name\", \"dtype\": \"object\", \"first_3_values\": [\"Dale's Pale Ale\", \"Gordon Ale (2009)\", \"Old Chub\"]}, {\"name\": \"beers_style\", \"dtype\": \"object\", \"first_3_values\": [\"American Pale Ale (APA)\", \"American Double / Imperial IPA\", \"Scottish Ale\"]}, {\"name\": \"beers_ounces\", \"dtype\": \"float64\", \"first_3_values\": [12.0, 12.0, 12.0]}, {\"name\": \"breweries_id\", \"dtype\": \"int64\", \"first_3_values\": [166, 166, 166]}, {\"name\": \"breweries_name\", \"dtype\": \"object\", \"first_3_values\": [\"Oskar Blues Brewery\", \"Oskar Blues Brewery\", \"Oskar Blues Brewery\"]}, {\"name\": \"breweries_city\", \"dtype\": \"object\", \"first_3_values\": [\"Longmont\", \"Longmont\", \"Longmont\"]}, {\"name\": \"breweries_state\", \"dtype\": \"object\", \"first_3_values\": [\"CO\", \"CO\", \"CO\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "retrieved_beers_1",
+              "num_records": 2410,
+              "key_details": [
+                {
+                  "name": "beers_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "name": "beers_brewery_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    166,
+                    166,
+                    166
+                  ]
+                },
+                {
+                  "name": "beers_abv",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    0.065,
+                    0.087,
+                    0.08
+                  ]
+                },
+                {
+                  "name": "beers_ibu",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    65.0,
+                    85.0,
+                    35.0
+                  ]
+                },
+                {
+                  "name": "beers_name",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Dale's Pale Ale",
+                    "Gordon Ale (2009)",
+                    "Old Chub"
+                  ]
+                },
+                {
+                  "name": "beers_style",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "American Pale Ale (APA)",
+                    "American Double / Imperial IPA",
+                    "Scottish Ale"
+                  ]
+                },
+                {
+                  "name": "beers_ounces",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    12.0,
+                    12.0,
+                    12.0
+                  ]
+                },
+                {
+                  "name": "breweries_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    166,
+                    166,
+                    166
+                  ]
+                },
+                {
+                  "name": "breweries_name",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Oskar Blues Brewery",
+                    "Oskar Blues Brewery",
+                    "Oskar Blues Brewery"
+                  ]
+                },
+                {
+                  "name": "breweries_city",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Longmont",
+                    "Longmont",
+                    "Longmont"
+                  ]
+                },
+                {
+                  "name": "breweries_state",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "CO",
+                    "CO",
+                    "CO"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.004
+    },
+    {
+      "tool": "filter_data",
+      "resolved_arguments": {
+        "data_label": "retrieved_beers_1",
+        "key_name": "breweries_name",
+        "value": "Boston Beer Company",
+        "condition": "equal_to"
+      },
+      "started_at": "2026-11-12T15:28:17.147291+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"filtered_beers_1\", \"num_records\": 9, \"key_details\": [{\"name\": \"beers_id\", \"dtype\": \"int64\", \"first_3_values\": [1143, 1144, 1281]}, {\"name\": \"beers_brewery_id\", \"dtype\": \"int64\", \"first_3_values\": [300, 300, 300]}, {\"name\": \"beers_abv\", \"dtype\": \"float64\", \"first_3_values\": [0.049, 0.053, 0.053]}, {\"name\": \"beers_ibu\", \"dtype\": \"float64\", \"first_3_values\": [30.0, 7.0, 15.0]}, {\"name\": \"beers_name\", \"dtype\": \"object\", \"first_3_values\": [\"Boston Lager\", \"Samuel Adams Summer Ale\", \"Samuel Adams Octoberfest\"]}, {\"name\": \"beers_style\", \"dtype\": \"object\", \"first_3_values\": [\"Vienna Lager\", \"American Pale Wheat Ale\", \"M\\u00e4rzen / Oktoberfest\"]}, {\"name\": \"beers_ounces\", \"dtype\": \"float64\", \"first_3_values\": [12.0, 12.0, 12.0]}, {\"name\": \"breweries_id\", \"dtype\": \"int64\", \"first_3_values\": [300, 300, 300]}, {\"name\": \"breweries_name\", \"dtype\": \"object\", \"first_3_values\": [\"Boston Beer Company\", \"Boston Beer Company\", \"Boston Beer Company\"]}, {\"name\": \"breweries_city\", \"dtype\": \"object\", \"first_3_values\": [\"Boston\", \"Boston\", \"Boston\"]}, {\"name\": \"breweries_state\", \"dtype\": \"object\", \"first_3_values\": [\"MA\", \"MA\", \"MA\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "filtered_beers_1",
+              "num_records": 9,
+              "key_details": [
+                {
+                  "name": "beers_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1143,
+                    1144,
+                    1281
+                  ]
+                },
+                {
+                  "name": "beers_brewery_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    300,
+                    300,
+                    300
+                  ]
+                },
+                {
+                  "name": "beers_abv",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    0.049,
+                    0.053,
+                    0.053
+                  ]
+                },
+                {
+                  "name": "beers_ibu",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    30.0,
+                    7.0,
+                    15.0
+                  ]
+                },
+                {
+                  "name": "beers_name",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Boston Lager",
+                    "Samuel Adams Summer Ale",
+                    "Samuel Adams Octoberfest"
+                  ]
+                },
+                {
+                  "name": "beers_style",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Vienna Lager",
+                    "American Pale Wheat Ale",
+                    "Märzen / Oktoberfest"
+                  ]
+                },
+                {
+                  "name": "beers_ounces",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    12.0,
+                    12.0,
+                    12.0
+                  ]
+                },
+                {
+                  "name": "breweries_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    300,
+                    300,
+                    300
+                  ]
+                },
+                {
+                  "name": "breweries_name",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Boston Beer Company",
+                    "Boston Beer Company",
+                    "Boston Beer Company"
+                  ]
+                },
+                {
+                  "name": "breweries_city",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Boston",
+                    "Boston",
+                    "Boston"
+                  ]
+                },
+                {
+                  "name": "breweries_state",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "MA",
+                    "MA",
+                    "MA"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.013
+    },
+    {
+      "tool": "filter_data",
+      "resolved_arguments": {
+        "data_label": "filtered_beers_1",
+        "key_name": "beers_ounces",
+        "value": "12",
+        "condition": "equal_to"
+      },
+      "started_at": "2026-11-12T15:28:17.161251+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"filtered_beers_2\", \"num_records\": 7, \"key_details\": [{\"name\": \"beers_id\", \"dtype\": \"int64\", \"first_3_values\": [1143, 1144, 1281]}, {\"name\": \"beers_brewery_id\", \"dtype\": \"int64\", \"first_3_values\": [300, 300, 300]}, {\"name\": \"beers_abv\", \"dtype\": \"float64\", \"first_3_values\": [0.049, 0.053, 0.053]}, {\"name\": \"beers_ibu\", \"dtype\": \"float64\", \"first_3_values\": [30.0, 7.0, 15.0]}, {\"name\": \"beers_name\", \"dtype\": \"object\", \"first_3_values\": [\"Boston Lager\", \"Samuel Adams Summer Ale\", \"Samuel Adams Octoberfest\"]}, {\"name\": \"beers_style\", \"dtype\": \"object\", \"first_3_values\": [\"Vienna Lager\", \"American Pale Wheat Ale\", \"M\\u00e4rzen / Oktoberfest\"]}, {\"name\": \"beers_ounces\", \"dtype\": \"float64\", \"first_3_values\": [12.0, 12.0, 12.0]}, {\"name\": \"breweries_id\", \"dtype\": \"int64\", \"first_3_values\": [300, 300, 300]}, {\"name\": \"breweries_name\", \"dtype\": \"object\", \"first_3_values\": [\"Boston Beer Company\", \"Boston Beer Company\", \"Boston Beer Company\"]}, {\"name\": \"breweries_city\", \"dtype\": \"object\", \"first_3_values\": [\"Boston\", \"Boston\", \"Boston\"]}, {\"name\": \"breweries_state\", \"dtype\": \"object\", \"first_3_values\": [\"MA\", \"MA\", \"MA\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "filtered_beers_2",
+              "num_records": 7,
+              "key_details": [
+                {
+                  "name": "beers_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1143,
+                    1144,
+                    1281
+                  ]
+                },
+                {
+                  "name": "beers_brewery_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    300,
+                    300,
+                    300
+                  ]
+                },
+                {
+                  "name": "beers_abv",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    0.049,
+                    0.053,
+                    0.053
+                  ]
+                },
+                {
+                  "name": "beers_ibu",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    30.0,
+                    7.0,
+                    15.0
+                  ]
+                },
+                {
+                  "name": "beers_name",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Boston Lager",
+                    "Samuel Adams Summer Ale",
+                    "Samuel Adams Octoberfest"
+                  ]
+                },
+                {
+                  "name": "beers_style",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Vienna Lager",
+                    "American Pale Wheat Ale",
+                    "Märzen / Oktoberfest"
+                  ]
+                },
+                {
+                  "name": "beers_ounces",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    12.0,
+                    12.0,
+                    12.0
+                  ]
+                },
+                {
+                  "name": "breweries_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    300,
+                    300,
+                    300
+                  ]
+                },
+                {
+                  "name": "breweries_name",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Boston Beer Company",
+                    "Boston Beer Company",
+                    "Boston Beer Company"
+                  ]
+                },
+                {
+                  "name": "breweries_city",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Boston",
+                    "Boston",
+                    "Boston"
+                  ]
+                },
+                {
+                  "name": "breweries_state",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "MA",
+                    "MA",
+                    "MA"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.007
+    },
+    {
+      "tool": "aggregate_data",
+      "resolved_arguments": {
+        "data_label": "filtered_beers_2",
+        "key_name": "beers_abv",
+        "aggregation_operation": "mean",
+        "distinct": false,
+        "limit": -1
+      },
+      "started_at": "2026-11-12T15:28:17.169659+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "0.05142857142857143"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": 0.05142857142857143
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.005
+    }
+  ],
+  "finished": true,
+  "listed_tools": 9,
+  "replay_responses": [
+    [
+      [
+        "{\"handle\": \"retrieved_beers_1\", \"num_records\": 2410, \"key_details\": [{\"name\": \"beers_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 4, 5]}, {\"name\": \"beers_brewery_id\", \"dtype\": \"int64\", \"first_3_values\": [166, 166, 166]}, {\"name\": \"beers_abv\", \"dtype\": \"float64\", \"first_3_values\": [0.065, 0.087, 0.08]}, {\"name\": \"beers_ibu\", \"dtype\": \"float64\", \"first_3_values\": [65.0, 85.0, 35.0]}, {\"name\": \"beers_name\", \"dtype\": \"object\", \"first_3_values\": [\"Dale's Pale Ale\", \"Gordon Ale (2009)\", \"Old Chub\"]}, {\"name\": \"beers_style\", \"dtype\": \"object\", \"first_3_values\": [\"American Pale Ale (APA)\", \"American Double / Imperial IPA\", \"Scottish Ale\"]}, {\"name\": \"beers_ounces\", \"dtype\": \"float64\", \"first_3_values\": [12.0, 12.0, 12.0]}, {\"name\": \"breweries_id\", \"dtype\": \"int64\", \"first_3_values\": [166, 166, 166]}, {\"name\": \"breweries_name\", \"dtype\": \"object\", \"first_3_values\": [\"Oskar Blues Brewery\", \"Oskar Blues Brewery\", \"Oskar Blues Brewery\"]}, {\"name\": \"breweries_city\", \"dtype\": \"object\", \"first_3_values\": [\"Longmont\", \"Longmont\", \"Longmont\"]}, {\"name\": \"breweries_state\", \"dtype\": \"object\", \"first_3_values\": [\"CO\", \"CO\", \"CO\"]}]}",
+        "{\"handle\": \"filtered_beers_1\", \"num_records\": 9, \"key_details\": [{\"name\": \"beers_id\", \"dtype\": \"int64\", \"first_3_values\": [1143, 1144, 1281]}, {\"name\": \"beers_brewery_id\", \"dtype\": \"int64\", \"first_3_values\": [300, 300, 300]}, {\"name\": \"beers_abv\", \"dtype\": \"float64\", \"first_3_values\": [0.049, 0.053, 0.053]}, {\"name\": \"beers_ibu\", \"dtype\": \"float64\", \"first_3_values\": [30.0, 7.0, 15.0]}, {\"name\": \"beers_name\", \"dtype\": \"object\", \"first_3_values\": [\"Boston Lager\", \"Samuel Adams Summer Ale\", \"Samuel Adams Octoberfest\"]}, {\"name\": \"beers_style\", \"dtype\": \"object\", \"first_3_values\": [\"Vienna Lager\", \"American Pale Wheat Ale\", \"M\\u00e4rzen / Oktoberfest\"]}, {\"name\": \"beers_ounces\", \"dtype\": \"float64\", \"first_3_values\": [12.0, 12.0, 12.0]}, {\"name\": \"breweries_id\", \"dtype\": \"int64\", \"first_3_values\": [300, 300, 300]}, {\"name\": \"breweries_name\", \"dtype\": \"object\", \"first_3_values\": [\"Boston Beer Company\", \"Boston Beer Company\", \"Boston Beer Company\"]}, {\"name\": \"breweries_city\", \"dtype\": \"object\", \"first_3_values\": [\"Boston\", \"Boston\", \"Boston\"]}, {\"name\": \"breweries_state\", \"dtype\": \"object\", \"first_3_values\": [\"MA\", \"MA\", \"MA\"]}]}",
+        "{\"handle\": \"filtered_beers_2\", \"num_records\": 7, \"key_details\": [{\"name\": \"beers_id\", \"dtype\": \"int64\", \"first_3_values\": [1143, 1144, 1281]}, {\"name\": \"beers_brewery_id\", \"dtype\": \"int64\", \"first_3_values\": [300, 300, 300]}, {\"name\": \"beers_abv\", \"dtype\": \"float64\", \"first_3_values\": [0.049, 0.053, 0.053]}, {\"name\": \"beers_ibu\", \"dtype\": \"float64\", \"first_3_values\": [30.0, 7.0, 15.0]}, {\"name\": \"beers_name\", \"dtype\": \"object\", \"first_3_values\": [\"Boston Lager\", \"Samuel Adams Summer Ale\", \"Samuel Adams Octoberfest\"]}, {\"name\": \"beers_style\", \"dtype\": \"object\", \"first_3_values\": [\"Vienna Lager\", \"American Pale Wheat Ale\", \"M\\u00e4rzen / Oktoberfest\"]}, {\"name\": \"beers_ounces\", \"dtype\": \"float64\", \"first_3_values\": [12.0, 12.0, 12.0]}, {\"name\": \"breweries_id\", \"dtype\": \"int64\", \"first_3_values\": [300, 300, 300]}, {\"name\": \"breweries_name\", \"dtype\": \"object\", \"first_3_values\": [\"Boston Beer Company\", \"Boston Beer Company\", \"Boston Beer Company\"]}, {\"name\": \"breweries_city\", \"dtype\": \"object\", \"first_3_values\": [\"Boston\", \"Boston\", \"Boston\"]}, {\"name\": \"breweries_state\", \"dtype\": \"object\", \"first_3_values\": [\"MA\", \"MA\", \"MA\"]}]}",
+        "0.05142857142857143"
+      ]
+    ]
+  ],
+  "seconds": 4.094,
+  "tool_errors": 0
+}

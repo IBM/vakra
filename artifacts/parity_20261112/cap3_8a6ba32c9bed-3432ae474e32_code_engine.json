@@ -1,0 +1,90 @@
+{
+  "capability": 3,
+  "domain": "movie",
+  "uuid": "8a6ba32c9bed-3432ae474e32",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap3.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_character_most_screen_time",
+      "resolved_arguments": {
+        "title": "Batman"
+      },
+      "started_at": "2026-11-12T15:25:18.173259+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"character_name\": \"Batman\"\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "character_name": "Batman"
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.521
+    },
+    {
+      "tool": "get_screentime_percentage_difference",
+      "resolved_arguments": {
+        "title": "Batman"
+      },
+      "started_at": "2026-11-12T15:25:19.694461+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"percentage_difference\": 1500.0\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "percentage_difference": 1500.0
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.898
+    }
+  ],
+  "finished": true,
+  "listed_tools": 702,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"character_name\": \"Batman\"\n}",
+        "{\n  \"percentage_difference\": 1500.0\n}"
+      ]
+    ]
+  ],
+  "seconds": 5.283,
+  "tool_errors": 0
+}

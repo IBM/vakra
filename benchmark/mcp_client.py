@@ -5,6 +5,8 @@ import os
 import subprocess
 import sys
 import yaml
+from uuid import uuid4
+from urllib.parse import quote, urlsplit
 
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
@@ -29,6 +31,7 @@ class MCPConnectionConfig:
     command: Optional[str] = None
     args: Optional[List[str]] = None
     server_url: Optional[str] = None
+    require_persistent_backend: bool = False
     # Optional second MCP server launched in the same container (e.g. Task 3:
     # primary=BPO server, secondary=M3 REST server).  When set, benchmark_runner
     # opens a second docker-exec session and merges the tool lists.
@@ -57,10 +60,80 @@ def load_mcp_config(config_path: str) -> Dict[int, MCPConnectionConfig]:
             container_env=v.get("container_env", None),
             command=cmd,
             args=v.get("args", None),
-            server_url=v.get("server_url", None),
+            server_url=os.path.expandvars(v["server_url"]) if v.get("server_url") else None,
             secondary_container_command=v.get("secondary_container_command", None),
         )
     return result
+
+
+def select_evaluator_mcp_config(capability_id: int, backend: str = "local", config_path: Optional[str] = None) -> MCPConnectionConfig:
+    """Select a transport without changing the existing local configuration."""
+    if backend not in ("local", "code-engine"):
+        raise ValueError(f"Unknown tool backend: {backend}")
+    path = config_path or ("benchmark/mcp_connection_config.ce.yaml" if backend == "code-engine" else "benchmark/mcp_connection_config.yaml")
+    configs = load_mcp_config(path)
+    if capability_id not in configs:
+        raise ValueError(f"No MCP configuration for capability {capability_id} in {path}")
+    cfg = configs[capability_id]
+    cfg.require_persistent_backend = capability_id == 1 and cfg.mode in ("http", "streamable-http")
+    if backend == "code-engine":
+        if cfg.mode not in ("http", "streamable-http"):
+            raise ValueError("code-engine requires an HTTP MCP configuration")
+        resolve_http_url(cfg, "validation")
+    return cfg
+
+
+def resolve_http_url(cfg: MCPConnectionConfig, domain: str) -> str:
+    if not cfg.server_url or "$" in cfg.server_url:
+        raise ValueError("Set the selected VAKRA_CAPn_URL environment variable or provide server_url in --mcp-config")
+    if not domain:
+        raise ValueError("HTTP MCP connections require a domain")
+    base = cfg.server_url
+    url = base.replace("{domain}", quote(domain, safe="")) if "{domain}" in base else f"{base.rstrip('/')}/mcp/{quote(domain, safe='')}"
+    parsed = urlsplit(url)
+    if parsed.scheme not in ("http", "https") or not parsed.netloc:
+        raise ValueError("server_url must be an absolute HTTP(S) URL")
+    return url
+
+
+@contextlib.asynccontextmanager
+async def _http_session(url: str, domain: str, *, require_persistent_backend: bool = False):
+    """One private bridge backend for this connection; release it on close."""
+    headers = {"X-MCP-Domain": domain, "X-Vakra-Session": uuid4().hex}
+    if require_persistent_backend:
+        import httpx
+        health_url = url.split("/mcp/", 1)[0] + "/healthz"
+        async with httpx.AsyncClient(timeout=60) as client:
+            response = await client.get(health_url)
+            response.raise_for_status()
+            if response.json().get("persistent_backends") is not True:
+                raise RuntimeError("Capability 1 needs the session-preserving Code Engine bridge; redeploy docker/mcp_http_bridge.py before evaluating")
+    # MCP 1.x and 2.x expose different HTTP transport constructors.
+    import mcp.client.streamable_http as transport
+    legacy_client = getattr(transport, "streamablehttp_client", None)
+    try:
+        async with contextlib.AsyncExitStack() as stack:
+            if legacy_client is not None:
+                connection = legacy_client(url, headers=headers, timeout=600, sse_read_timeout=1800)
+            else:
+                import httpx2
+                client = await stack.enter_async_context(httpx2.AsyncClient(headers=headers, timeout=600))
+                connection = transport.streamable_http_client(url, http_client=client)
+            read, write, _ = await stack.enter_async_context(connection)
+            session = await stack.enter_async_context(ClientSession(read, write))
+            await session.initialize()
+            yield session
+    finally:
+        await _release_http_backend(url, headers)
+
+
+async def _release_http_backend(url: str, headers: dict) -> None:
+    import httpx
+    try:
+        async with httpx.AsyncClient(timeout=15) as client:
+            await client.delete(url, headers=headers)
+    except Exception:
+        logger.warning("Could not release remote backend; bridge idle expiry will clean it up", exc_info=True)
 
 
 @contextlib.asynccontextmanager
@@ -72,6 +145,7 @@ async def create_client_and_connect(
     Connection mode is determined by cfg.mode:
     - "stdio" without cfg.command: container exec (default)
     - "stdio" with cfg.command: local subprocess
+    - "http" / "streamable-http": remote domain-scoped HTTP connection
     - "websocket": WebSocket connection
 
     Yields:
@@ -135,6 +209,12 @@ async def create_client_and_connect(
                 f"Failed to connect to MCP server via stdio: {e}"
             ) from e
 
+    elif cfg.mode in ("http", "streamable-http"):
+        url = resolve_http_url(cfg, domain)
+        logger.info("Connecting to remote MCP server: %s", url)
+        async with _http_session(url, domain, require_persistent_backend=cfg.require_persistent_backend) as session:
+            yield session
+
     elif cfg.mode == "websocket":
         if not cfg.server_url:
             raise ValueError("websocket mode requires server_url")
@@ -152,7 +232,7 @@ async def create_client_and_connect(
 
     else:
         raise ValueError(
-            f"Unknown mode: {cfg.mode!r}. Must be 'stdio' or 'websocket'"
+            f"Unknown mode: {cfg.mode!r}. Must be 'stdio', 'http', 'streamable-http', or 'websocket'"
         )
     
 def stop_mcp_server(cfg: MCPConnectionConfig):
@@ -162,7 +242,7 @@ def stop_mcp_server(cfg: MCPConnectionConfig):
     container.  For subprocess stdio and websocket modes the transport's own
     context manager handles teardown, so this is a no-op.
     """
-    if cfg.mode == "websocket":
+    if cfg.mode in ("websocket", "http", "streamable-http"):
         # WebSocket connection is closed by the context manager; nothing to do.
         return
 

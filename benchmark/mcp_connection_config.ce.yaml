@@ -1,0 +1,21 @@
+# Hosted capability MCP endpoints. Export the VAKRA_CAPn_URL variables for the
+# selected capability; use the capability app URLs, not the explorer URL.
+# Evaluator: --tool-backend code-engine
+# Requires the session-preserving bridge for capability 1; see evaluator/README.md.
+
+tasks:
+  1:
+    mode: http
+    server_url: "${VAKRA_CAP1_URL}/mcp/{domain}"
+
+  2:
+    mode: http
+    server_url: "${VAKRA_CAP2_URL}/mcp/{domain}"
+
+  3:
+    mode: http
+    server_url: "${VAKRA_CAP3_URL}/mcp/{domain}"
+
+  4:
+    mode: http
+    server_url: "${VAKRA_CAP4_URL}/mcp/{domain}"

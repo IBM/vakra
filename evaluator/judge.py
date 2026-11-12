@@ -49,8 +49,8 @@ class ChatRits(ChatOpenAI):
 
     def __init__(self, config):
         # Set model with model or model_name
-        model_name=config.get("model_name", "openai/gpt-oss-120b")
-        end_point=config.get("end_point","https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/gpt-oss-120b")
+        model_name=config.get("model_name", "openai/gpt-oss-120b-a100")
+        end_point=config.get("end_point","https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/gpt-oss-120b-a100")
         rits_api_key = os.getenv("RITS_API_KEY")
         if rits_api_key is None:
             raise ValueError("rits_api_key is required")

@@ -1,0 +1,281 @@
+{
+  "capability": 1,
+  "domain": "books",
+  "uuid": "6e317bcd6839-d365c9ad58eb",
+  "backend": "code_engine_diagnostic",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_data",
+      "resolved_arguments": {
+        "tool_universe_id": "6e317bcd6839-d365c9ad58eb",
+        "reset_handles": true
+      },
+      "started_at": "2026-11-12T15:26:01.894556+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"retrieved_book_1\", \"num_records\": 17642, \"key_details\": [{\"name\": \"book_book_id\", \"dtype\": \"int64\", \"first_3_values\": [10539, 8109, 2792]}, {\"name\": \"book_title\", \"dtype\": \"object\", \"first_3_values\": [\"Baseball: a Literary Anthology\", \"Having Our Say: The Delany Sisters' First 100 Years\", \"Tales Before Tolkien: The Roots of Modern Fantasy\"]}, {\"name\": \"book_isbn13\", \"dtype\": \"object\", \"first_3_values\": [\"9781931082099\", \"9780822215028\", \"9780345458568\"]}, {\"name\": \"book_language_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 1, 1]}, {\"name\": \"book_num_pages\", \"dtype\": \"int64\", \"first_3_values\": [733, 62, 528]}, {\"name\": \"book_publication_date\", \"dtype\": \"object\", \"first_3_values\": [\"2002-03-04\", \"1996-03-01\", \"2005-11-29\"]}, {\"name\": \"book_publisher_id\", \"dtype\": \"int64\", \"first_3_values\": [1130, 590, 514]}, {\"name\": \"book_author_book_id\", \"dtype\": \"int64\", \"first_3_values\": [10539, 8109, 2792]}, {\"name\": \"book_author_author_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 2, 3]}, {\"name\": \"author_author_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 2, 3]}, {\"name\": \"author_author_name\", \"dtype\": \"object\", \"first_3_values\": [\"A. Bartlett Giamatti\", \"A. Elizabeth Delany\", \"A. Merritt\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "retrieved_book_1",
+              "num_records": 17642,
+              "key_details": [
+                {
+                  "name": "book_book_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    10539,
+                    8109,
+                    2792
+                  ]
+                },
+                {
+                  "name": "book_title",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Baseball: a Literary Anthology",
+                    "Having Our Say: The Delany Sisters' First 100 Years",
+                    "Tales Before Tolkien: The Roots of Modern Fantasy"
+                  ]
+                },
+                {
+                  "name": "book_isbn13",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "9781931082099",
+                    "9780822215028",
+                    "9780345458568"
+                  ]
+                },
+                {
+                  "name": "book_language_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1,
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "name": "book_num_pages",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    733,
+                    62,
+                    528
+                  ]
+                },
+                {
+                  "name": "book_publication_date",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "2002-03-04",
+                    "1996-03-01",
+                    "2005-11-29"
+                  ]
+                },
+                {
+                  "name": "book_publisher_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1130,
+                    590,
+                    514
+                  ]
+                },
+                {
+                  "name": "book_author_book_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    10539,
+                    8109,
+                    2792
+                  ]
+                },
+                {
+                  "name": "book_author_author_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1,
+                    2,
+                    3
+                  ]
+                },
+                {
+                  "name": "author_author_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1,
+                    2,
+                    3
+                  ]
+                },
+                {
+                  "name": "author_author_name",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "A. Bartlett Giamatti",
+                    "A. Elizabeth Delany",
+                    "A. Merritt"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 5.204
+    },
+    {
+      "tool": "select_data_equal_to",
+      "resolved_arguments": {
+        "data_label": "retrieved_book_1",
+        "key_name": "author_author_name",
+        "value": "Orson Scott Card"
+      },
+      "started_at": "2026-11-12T15:26:07.098905+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_book_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_book_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 4.809
+    },
+    {
+      "tool": "transform_data_to_datetime_part",
+      "resolved_arguments": {
+        "data_label": "$FILTERED_DF_0$",
+        "key_name": "book_publication_date",
+        "datetime_pattern": "%Y"
+      },
+      "started_at": "2026-11-12T15:26:11.909161+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for TransformDataToDatetimePartInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for TransformDataToDatetimePartInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 4.892
+    },
+    {
+      "tool": "select_data_equal_to",
+      "resolved_arguments": {
+        "data_label": "$TRANSFORMED_DF_1$",
+        "key_name": "book_publication_date",
+        "value": "2001"
+      },
+      "started_at": "2026-11-12T15:26:16.802431+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$TRANSFORMED_DF_1$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$TRANSFORMED_DF_1$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 4.781
+    },
+    {
+      "tool": "get_book_titles",
+      "resolved_arguments": {
+        "data_label": "$FILTERED_DF_2$"
+      },
+      "started_at": "2026-11-12T15:26:21.584366+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Unknown tool: get_book_titles"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Unknown tool: get_book_titles"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 14.668
+    }
+  ],
+  "finished": true,
+  "listed_tools": 26,
+  "replay_responses": [
+    [
+      [
+        "{\"handle\": \"retrieved_book_1\", \"num_records\": 17642, \"key_details\": [{\"name\": \"book_book_id\", \"dtype\": \"int64\", \"first_3_values\": [10539, 8109, 2792]}, {\"name\": \"book_title\", \"dtype\": \"object\", \"first_3_values\": [\"Baseball: a Literary Anthology\", \"Having Our Say: The Delany Sisters' First 100 Years\", \"Tales Before Tolkien: The Roots of Modern Fantasy\"]}, {\"name\": \"book_isbn13\", \"dtype\": \"object\", \"first_3_values\": [\"9781931082099\", \"9780822215028\", \"9780345458568\"]}, {\"name\": \"book_language_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 1, 1]}, {\"name\": \"book_num_pages\", \"dtype\": \"int64\", \"first_3_values\": [733, 62, 528]}, {\"name\": \"book_publication_date\", \"dtype\": \"object\", \"first_3_values\": [\"2002-03-04\", \"1996-03-01\", \"2005-11-29\"]}, {\"name\": \"book_publisher_id\", \"dtype\": \"int64\", \"first_3_values\": [1130, 590, 514]}, {\"name\": \"book_author_book_id\", \"dtype\": \"int64\", \"first_3_values\": [10539, 8109, 2792]}, {\"name\": \"book_author_author_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 2, 3]}, {\"name\": \"author_author_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 2, 3]}, {\"name\": \"author_author_name\", \"dtype\": \"object\", \"first_3_values\": [\"A. Bartlett Giamatti\", \"A. Elizabeth Delany\", \"A. Merritt\"]}]}",
+        "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_book_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+        "Input validation error: 1 validation error for TransformDataToDatetimePartInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+        "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$TRANSFORMED_DF_1$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+        "Unknown tool: get_book_titles"
+      ]
+    ]
+  ],
+  "seconds": 39.718,
+  "tool_errors": 4
+}

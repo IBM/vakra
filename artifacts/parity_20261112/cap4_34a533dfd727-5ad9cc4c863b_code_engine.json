@@ -1,0 +1,643 @@
+{
+  "capability": 4,
+  "domain": "disney",
+  "uuid": "34a533dfd727-5ad9cc4c863b",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap4.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_movies_and_voice_actors_by_director",
+      "resolved_arguments": {
+        "director": "Wolfgang Reitherman"
+      },
+      "started_at": "2026-11-12T15:24:26.045890+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"movies_and_voice_actors\": [\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Monica Evans\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"John Abbott\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Roger Miller\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Carole Shelley\"\n    },\n    {\n      \"movie\": \"101 Dalmatians\",\n      \"voice_actor\": \"Lisa Davis\"\n    },\n    {\n      \"movie\": \"The Sword in the Stone\",\n      \"voice_actor\": \"Junius Matthews\"\n    },\n    {\n      \"movie\": \"The Sword in the Stone\",\n      \"voice_actor\": \"Rickie Sorensen\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Sebastian Cabot\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Phil Harris\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Dean Clark\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Bob Newheart\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Thurl Ravenscroft\"\n    },\n    {\n      \"movie\": \"The Sword in the Stone\",\n      \"voice_actor\": \"Thurl Ravenscroft\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Candy Candido\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"J. Pat O'Malley\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Bernard Fox\"\n    },\n    {\n      \"movie\": \"101 Dalmatians\",\n      \"voice_actor\": \"J. Pat O'Malley\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"J. Pat O'Malley\"\n    },\n    {\n      \"movie\": \"101 Dalmatians\",\n      \"voice_actor\": \"Betty Lou Gerson\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Dub Taylor\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Lord Tim Hudson\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Eva Gabor\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Roddy Maude-Roxby\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Jeanette Nolan\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Jimmy MacDonald\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Ben Wright\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Chad Stuart\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Leo De Lyon\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Andy Devine\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Nancy Kulp\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Charles Lane\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Larry Clemmons\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Lord Tim Hudson\"\n    },\n    {\n      \"movie\": \"101 Dalmatians\",\n      \"voice_actor\": \"Frederick Worlock; J. Pat O'Malley\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Clint Howard\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Sterling Holloway; Jim Cummings\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Louis Prima\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Peter Ustinov\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Carole Shelley\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"George Lindsey\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Phil Harris\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Pat Buttram\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Hermione Baddeley\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Geraldine Page\"\n    },\n    {\n      \"movie\": \"The Sword in the Stone\",\n      \"voice_actor\": \"Martha Wentworth\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Monica Evans\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Liz English\"\n    },\n    {\n      \"movie\": \"The Sword in the Stone\",\n      \"voice_actor\": \"Karl Swenson\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Eva Gabor\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Barbara Luddy\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Bruce Reitherman\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Joe Flynn\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Pat Buttram\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Ken Curtis\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Jim Jordan\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"J. Pat O'Malley\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Vito Scotti\"\n    },\n    {\n      \"movie\": \"101 Dalmatians\",\n      \"voice_actor\": \"Cate Bauer\"\n    },\n    {\n      \"movie\": \"101 Dalmatians\",\n      \"voice_actor\": \"Rod Taylor\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Peter Ustinov\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Brian Bedford\"\n    },\n    {\n      \"movie\": \"101 Dalmatians\",\n      \"voice_actor\": \"Ben Wright\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Sterling Holloway\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"John McIntire\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Scatman Crothers\"\n    },\n    {\n      \"movie\": \"101 Dalmatians\",\n      \"voice_actor\": \"David Frankham\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Darleen Carr\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"George Sanders\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Pat Buttram\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Paul Winchell\"\n    },\n    {\n      \"movie\": \"The Sword in the Stone\",\n      \"voice_actor\": \"Sebastian Cabot\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Terry-Thomas\"\n    },\n    {\n      \"movie\": \"The Sword in the Stone\",\n      \"voice_actor\": \"Norman Alden\"\n    },\n    {\n      \"movie\": \"The Sword in the Stone\",\n      \"voice_actor\": \"Alan Napier\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Dana Laurita\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Billy Whittaker\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Dori Whittaker\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Phil Harris\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Richie Sanders\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Gary Dubin\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"George Lindsey\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Bill Thompson\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Verna Felton\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Digby Wolfe\"\n    }\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "movies_and_voice_actors": [
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Monica Evans"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "John Abbott"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "Roger Miller"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Carole Shelley"
+                },
+                {
+                  "movie": "101 Dalmatians",
+                  "voice_actor": "Lisa Davis"
+                },
+                {
+                  "movie": "The Sword in the Stone",
+                  "voice_actor": "Junius Matthews"
+                },
+                {
+                  "movie": "The Sword in the Stone",
+                  "voice_actor": "Rickie Sorensen"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "Sebastian Cabot"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "Phil Harris"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Dean Clark"
+                },
+                {
+                  "movie": "The Rescuers",
+                  "voice_actor": "Bob Newheart"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Thurl Ravenscroft"
+                },
+                {
+                  "movie": "The Sword in the Stone",
+                  "voice_actor": "Thurl Ravenscroft"
+                },
+                {
+                  "movie": "The Rescuers",
+                  "voice_actor": "Candy Candido"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "J. Pat O'Malley"
+                },
+                {
+                  "movie": "The Rescuers",
+                  "voice_actor": "Bernard Fox"
+                },
+                {
+                  "movie": "101 Dalmatians",
+                  "voice_actor": "J. Pat O'Malley"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "J. Pat O'Malley"
+                },
+                {
+                  "movie": "101 Dalmatians",
+                  "voice_actor": "Betty Lou Gerson"
+                },
+                {
+                  "movie": "The Rescuers",
+                  "voice_actor": "Dub Taylor"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "Lord Tim Hudson"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Eva Gabor"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Roddy Maude-Roxby"
+                },
+                {
+                  "movie": "The Rescuers",
+                  "voice_actor": "Jeanette Nolan"
+                },
+                {
+                  "movie": "The Rescuers",
+                  "voice_actor": "Jimmy MacDonald"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "Ben Wright"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "Chad Stuart"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "Leo De Lyon"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "Andy Devine"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Nancy Kulp"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Charles Lane"
+                },
+                {
+                  "movie": "The Rescuers",
+                  "voice_actor": "Larry Clemmons"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Lord Tim Hudson"
+                },
+                {
+                  "movie": "101 Dalmatians",
+                  "voice_actor": "Frederick Worlock; J. Pat O'Malley"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "Clint Howard"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "Sterling Holloway; Jim Cummings"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "Louis Prima"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "Peter Ustinov"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "Carole Shelley"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "George Lindsey"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "Phil Harris"
+                },
+                {
+                  "movie": "The Rescuers",
+                  "voice_actor": "Pat Buttram"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Hermione Baddeley"
+                },
+                {
+                  "movie": "The Rescuers",
+                  "voice_actor": "Geraldine Page"
+                },
+                {
+                  "movie": "The Sword in the Stone",
+                  "voice_actor": "Martha Wentworth"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "Monica Evans"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Liz English"
+                },
+                {
+                  "movie": "The Sword in the Stone",
+                  "voice_actor": "Karl Swenson"
+                },
+                {
+                  "movie": "The Rescuers",
+                  "voice_actor": "Eva Gabor"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "Barbara Luddy"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "Bruce Reitherman"
+                },
+                {
+                  "movie": "The Rescuers",
+                  "voice_actor": "Joe Flynn"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Pat Buttram"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "Ken Curtis"
+                },
+                {
+                  "movie": "The Rescuers",
+                  "voice_actor": "Jim Jordan"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "J. Pat O'Malley"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Vito Scotti"
+                },
+                {
+                  "movie": "101 Dalmatians",
+                  "voice_actor": "Cate Bauer"
+                },
+                {
+                  "movie": "101 Dalmatians",
+                  "voice_actor": "Rod Taylor"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "Peter Ustinov"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "Brian Bedford"
+                },
+                {
+                  "movie": "101 Dalmatians",
+                  "voice_actor": "Ben Wright"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Sterling Holloway"
+                },
+                {
+                  "movie": "The Rescuers",
+                  "voice_actor": "John McIntire"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Scatman Crothers"
+                },
+                {
+                  "movie": "101 Dalmatians",
+                  "voice_actor": "David Frankham"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "Darleen Carr"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "George Sanders"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "Pat Buttram"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Paul Winchell"
+                },
+                {
+                  "movie": "The Sword in the Stone",
+                  "voice_actor": "Sebastian Cabot"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "Terry-Thomas"
+                },
+                {
+                  "movie": "The Sword in the Stone",
+                  "voice_actor": "Norman Alden"
+                },
+                {
+                  "movie": "The Sword in the Stone",
+                  "voice_actor": "Alan Napier"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "Dana Laurita"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "Billy Whittaker"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "Dori Whittaker"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Phil Harris"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "Richie Sanders"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Gary Dubin"
+                },
+                {
+                  "movie": "Robin Hood",
+                  "voice_actor": "George Lindsey"
+                },
+                {
+                  "movie": "The Aristocats",
+                  "voice_actor": "Bill Thompson"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "Verna Felton"
+                },
+                {
+                  "movie": "The Jungle Book",
+                  "voice_actor": "Digby Wolfe"
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.166
+    },
+    {
+      "tool": "get_top_director_by_voice_actor",
+      "resolved_arguments": {
+        "voice_actor": "Bill Thompson"
+      },
+      "started_at": "2026-11-12T15:24:27.212824+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"director\": \"Clyde Geronimi\"\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "director": "Clyde Geronimi"
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.526
+    },
+    {
+      "tool": "query_disney",
+      "resolved_arguments": {
+        "question": "\nWhich film directed by Clyde Geronimi was based on Charles Perrault's fairy tale?"
+      },
+      "started_at": "2026-11-12T15:24:28.740086+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"results\": [\n    {\n      \"id\": \"1770402790941161000_0_453\",\n      \"text\": \"After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\\n\\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.\",\n      \"distance\": 279.2718505859375,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770402790941161000_0\"\n      }\n    },\n    {\n      \"id\": \"1770402790952687000_0_465\",\n      \"text\": \"After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\\n\\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.\",\n      \"distance\": 279.2718505859375,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770402790952687000_0\"\n      }\n    },\n    {\n      \"id\": \"1770402790952951000_0_477\",\n      \"text\": \"After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\\n\\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.\",\n      \"distance\": 279.2718505859375,\n      \"metadata\": {\n        \"doc_id\": \"1770402790952951000_0\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770402790953153000_0_489\",\n      \"text\": \"After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\\n\\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.\",\n      \"distance\": 279.2718505859375,\n      \"metadata\": {\n        \"doc_id\": \"1770402790953153000_0\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770402790953298000_0_501\",\n      \"text\": \"After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\\n\\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.\",\n      \"distance\": 279.2718505859375,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770402790953298000_0\"\n      }\n    },\n    {\n      \"id\": \"1770402790953395000_0_513\",\n      \"text\": \"After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\\n\\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.\",\n      \"distance\": 279.2718505859375,\n      \"metadata\": {\n        \"doc_id\": \"1770402790953395000_0\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770402790953535000_0_529\",\n      \"text\": \"After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\\n\\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.\",\n      \"distance\": 279.2718505859375,\n      \"metadata\": {\n        \"doc_id\": \"1770402790953535000_0\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770402790952954000_0_478\",\n      \"text\": \"Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince. The production was supervised by Ben Sharpsteen, and was directed by Wilfred Jackson, Hamilton Luske, and Clyde Geronimi. It features the voices of Ilene Woods, Eleanor Audley, Verna Felton, Rhoda Williams, June Foray, James MacDonald, and Luis van Rooten.\\nDuring the early 1940s, Walt Disney Productions had suffered financially after losing connections to the European film markets due to the outbreak of World War II. Because of this, the studio endured commercial failures such as Pinocchio, Fantasia (both 1940) and Bambi (1942), all of which would later become more successful with several re-releases in theaters and on home video. By 1947, the studio was over $4 million in debt and was on the verge of bankruptcy.\",\n      \"distance\": 282.9869079589844,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770402790952954000_0\"\n      }\n    },\n    {\n      \"id\": \"1770402790953301000_0_502\",\n      \"text\": \"Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince. The production was supervised by Ben Sharpsteen, and was directed by Wilfred Jackson, Hamilton Luske, and Clyde Geronimi. It features the voices of Ilene Woods, Eleanor Audley, Verna Felton, Rhoda Williams, June Foray, James MacDonald, and Luis van Rooten.\\nDuring the early 1940s, Walt Disney Productions had suffered financially after losing connections to the European film markets due to the outbreak of World War II. Because of this, the studio endured commercial failures such as Pinocchio, Fantasia (both 1940) and Bambi (1942), all of which would later become more successful with several re-releases in theaters and on home video. By 1947, the studio was over $4 million in debt and was on the verge of bankruptcy.\",\n      \"distance\": 282.9869079589844,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770402790953301000_0\"\n      }\n    },\n    {\n      \"id\": \"1770402790953538000_0_530\",\n      \"text\": \"Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince. The production was supervised by Ben Sharpsteen, and was directed by Wilfred Jackson, Hamilton Luske, and Clyde Geronimi. It features the voices of Ilene Woods, Eleanor Audley, Verna Felton, Rhoda Williams, June Foray, James MacDonald, and Luis van Rooten.\\nDuring the early 1940s, Walt Disney Productions had suffered financially after losing connections to the European film markets due to the outbreak of World War II. Because of this, the studio endured commercial failures such as Pinocchio, Fantasia (both 1940) and Bambi (1942), all of which would later become more successful with several re-releases in theaters and on home video. By 1947, the studio was over $4 million in debt and was on the verge of bankruptcy.\",\n      \"distance\": 282.9869079589844,\n      \"metadata\": {\n        \"doc_id\": \"1770402790953538000_0\",\n        \"from_clapnq\": false\n      }\n    }\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "results": [
+                {
+                  "id": "1770402790941161000_0_453",
+                  "text": "After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\n\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.",
+                  "distance": 279.2718505859375,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770402790941161000_0"
+                  }
+                },
+                {
+                  "id": "1770402790952687000_0_465",
+                  "text": "After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\n\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.",
+                  "distance": 279.2718505859375,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770402790952687000_0"
+                  }
+                },
+                {
+                  "id": "1770402790952951000_0_477",
+                  "text": "After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\n\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.",
+                  "distance": 279.2718505859375,
+                  "metadata": {
+                    "doc_id": "1770402790952951000_0",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770402790953153000_0_489",
+                  "text": "After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\n\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.",
+                  "distance": 279.2718505859375,
+                  "metadata": {
+                    "doc_id": "1770402790953153000_0",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770402790953298000_0_501",
+                  "text": "After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\n\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.",
+                  "distance": 279.2718505859375,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770402790953298000_0"
+                  }
+                },
+                {
+                  "id": "1770402790953395000_0_513",
+                  "text": "After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\n\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.",
+                  "distance": 279.2718505859375,
+                  "metadata": {
+                    "doc_id": "1770402790953395000_0",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770402790953535000_0_529",
+                  "text": "After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\n\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.",
+                  "distance": 279.2718505859375,
+                  "metadata": {
+                    "doc_id": "1770402790953535000_0",
+                    "from_clapnq": false
+                  }
+                },
+                {
+                  "id": "1770402790952954000_0_478",
+                  "text": "Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince. The production was supervised by Ben Sharpsteen, and was directed by Wilfred Jackson, Hamilton Luske, and Clyde Geronimi. It features the voices of Ilene Woods, Eleanor Audley, Verna Felton, Rhoda Williams, June Foray, James MacDonald, and Luis van Rooten.\nDuring the early 1940s, Walt Disney Productions had suffered financially after losing connections to the European film markets due to the outbreak of World War II. Because of this, the studio endured commercial failures such as Pinocchio, Fantasia (both 1940) and Bambi (1942), all of which would later become more successful with several re-releases in theaters and on home video. By 1947, the studio was over $4 million in debt and was on the verge of bankruptcy.",
+                  "distance": 282.9869079589844,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770402790952954000_0"
+                  }
+                },
+                {
+                  "id": "1770402790953301000_0_502",
+                  "text": "Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince. The production was supervised by Ben Sharpsteen, and was directed by Wilfred Jackson, Hamilton Luske, and Clyde Geronimi. It features the voices of Ilene Woods, Eleanor Audley, Verna Felton, Rhoda Williams, June Foray, James MacDonald, and Luis van Rooten.\nDuring the early 1940s, Walt Disney Productions had suffered financially after losing connections to the European film markets due to the outbreak of World War II. Because of this, the studio endured commercial failures such as Pinocchio, Fantasia (both 1940) and Bambi (1942), all of which would later become more successful with several re-releases in theaters and on home video. By 1947, the studio was over $4 million in debt and was on the verge of bankruptcy.",
+                  "distance": 282.9869079589844,
+                  "metadata": {
+                    "from_clapnq": false,
+                    "doc_id": "1770402790953301000_0"
+                  }
+                },
+                {
+                  "id": "1770402790953538000_0_530",
+                  "text": "Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince. The production was supervised by Ben Sharpsteen, and was directed by Wilfred Jackson, Hamilton Luske, and Clyde Geronimi. It features the voices of Ilene Woods, Eleanor Audley, Verna Felton, Rhoda Williams, June Foray, James MacDonald, and Luis van Rooten.\nDuring the early 1940s, Walt Disney Productions had suffered financially after losing connections to the European film markets due to the outbreak of World War II. Because of this, the studio endured commercial failures such as Pinocchio, Fantasia (both 1940) and Bambi (1942), all of which would later become more successful with several re-releases in theaters and on home video. By 1947, the studio was over $4 million in debt and was on the verge of bankruptcy.",
+                  "distance": 282.9869079589844,
+                  "metadata": {
+                    "doc_id": "1770402790953538000_0",
+                    "from_clapnq": false
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 13.606
+    },
+    {
+      "tool": "get_voice_actors_villains_by_movie",
+      "resolved_arguments": {
+        "movie_title": "Cinderella"
+      },
+      "started_at": "2026-11-12T15:24:42.347310+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"voice_actors_villains\": [\n    [\n      \"Lucille Bliss\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Jimmy MacDonald; Frank Welker\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Ilene Woods\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Don Barclay\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Rhoda Williams; Russi Taylor\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Verna Felton; Russi Taylor\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Larry Grey\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Luis Van Rooten; Rob Paulsen\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Jimmy MacDonald; Corey Burton\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Jimmy MacDonald; Rob Paulsen\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Luis Van Rooten\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Eleanor Audley; Susanne Blakeslee\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"June Foray\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"None\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"William Phipps\",\n      \"Lady Tremaine\"\n    ]\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "voice_actors_villains": [
+                [
+                  "Lucille Bliss",
+                  "Lady Tremaine"
+                ],
+                [
+                  "Jimmy MacDonald; Frank Welker",
+                  "Lady Tremaine"
+                ],
+                [
+                  "Ilene Woods",
+                  "Lady Tremaine"
+                ],
+                [
+                  "Don Barclay",
+                  "Lady Tremaine"
+                ],
+                [
+                  "Rhoda Williams; Russi Taylor",
+                  "Lady Tremaine"
+                ],
+                [
+                  "Verna Felton; Russi Taylor",
+                  "Lady Tremaine"
+                ],
+                [
+                  "Larry Grey",
+                  "Lady Tremaine"
+                ],
+                [
+                  "Luis Van Rooten; Rob Paulsen",
+                  "Lady Tremaine"
+                ],
+                [
+                  "Jimmy MacDonald; Corey Burton",
+                  "Lady Tremaine"
+                ],
+                [
+                  "Jimmy MacDonald; Rob Paulsen",
+                  "Lady Tremaine"
+                ],
+                [
+                  "Luis Van Rooten",
+                  "Lady Tremaine"
+                ],
+                [
+                  "Eleanor Audley; Susanne Blakeslee",
+                  "Lady Tremaine"
+                ],
+                [
+                  "June Foray",
+                  "Lady Tremaine"
+                ],
+                [
+                  "None",
+                  "Lady Tremaine"
+                ],
+                [
+                  "William Phipps",
+                  "Lady Tremaine"
+                ]
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.043
+    }
+  ],
+  "finished": true,
+  "listed_tools": 109,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"movies_and_voice_actors\": [\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Monica Evans\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"John Abbott\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Roger Miller\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Carole Shelley\"\n    },\n    {\n      \"movie\": \"101 Dalmatians\",\n      \"voice_actor\": \"Lisa Davis\"\n    },\n    {\n      \"movie\": \"The Sword in the Stone\",\n      \"voice_actor\": \"Junius Matthews\"\n    },\n    {\n      \"movie\": \"The Sword in the Stone\",\n      \"voice_actor\": \"Rickie Sorensen\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Sebastian Cabot\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Phil Harris\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Dean Clark\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Bob Newheart\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Thurl Ravenscroft\"\n    },\n    {\n      \"movie\": \"The Sword in the Stone\",\n      \"voice_actor\": \"Thurl Ravenscroft\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Candy Candido\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"J. Pat O'Malley\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Bernard Fox\"\n    },\n    {\n      \"movie\": \"101 Dalmatians\",\n      \"voice_actor\": \"J. Pat O'Malley\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"J. Pat O'Malley\"\n    },\n    {\n      \"movie\": \"101 Dalmatians\",\n      \"voice_actor\": \"Betty Lou Gerson\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Dub Taylor\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Lord Tim Hudson\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Eva Gabor\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Roddy Maude-Roxby\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Jeanette Nolan\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Jimmy MacDonald\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Ben Wright\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Chad Stuart\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Leo De Lyon\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Andy Devine\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Nancy Kulp\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Charles Lane\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Larry Clemmons\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Lord Tim Hudson\"\n    },\n    {\n      \"movie\": \"101 Dalmatians\",\n      \"voice_actor\": \"Frederick Worlock; J. Pat O'Malley\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Clint Howard\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Sterling Holloway; Jim Cummings\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Louis Prima\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Peter Ustinov\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Carole Shelley\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"George Lindsey\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Phil Harris\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Pat Buttram\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Hermione Baddeley\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Geraldine Page\"\n    },\n    {\n      \"movie\": \"The Sword in the Stone\",\n      \"voice_actor\": \"Martha Wentworth\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Monica Evans\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Liz English\"\n    },\n    {\n      \"movie\": \"The Sword in the Stone\",\n      \"voice_actor\": \"Karl Swenson\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Eva Gabor\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Barbara Luddy\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Bruce Reitherman\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Joe Flynn\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Pat Buttram\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Ken Curtis\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"Jim Jordan\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"J. Pat O'Malley\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Vito Scotti\"\n    },\n    {\n      \"movie\": \"101 Dalmatians\",\n      \"voice_actor\": \"Cate Bauer\"\n    },\n    {\n      \"movie\": \"101 Dalmatians\",\n      \"voice_actor\": \"Rod Taylor\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Peter Ustinov\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Brian Bedford\"\n    },\n    {\n      \"movie\": \"101 Dalmatians\",\n      \"voice_actor\": \"Ben Wright\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Sterling Holloway\"\n    },\n    {\n      \"movie\": \"The Rescuers\",\n      \"voice_actor\": \"John McIntire\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Scatman Crothers\"\n    },\n    {\n      \"movie\": \"101 Dalmatians\",\n      \"voice_actor\": \"David Frankham\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Darleen Carr\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"George Sanders\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Pat Buttram\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Paul Winchell\"\n    },\n    {\n      \"movie\": \"The Sword in the Stone\",\n      \"voice_actor\": \"Sebastian Cabot\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Terry-Thomas\"\n    },\n    {\n      \"movie\": \"The Sword in the Stone\",\n      \"voice_actor\": \"Norman Alden\"\n    },\n    {\n      \"movie\": \"The Sword in the Stone\",\n      \"voice_actor\": \"Alan Napier\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Dana Laurita\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Billy Whittaker\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Dori Whittaker\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Phil Harris\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"Richie Sanders\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Gary Dubin\"\n    },\n    {\n      \"movie\": \"Robin Hood\",\n      \"voice_actor\": \"George Lindsey\"\n    },\n    {\n      \"movie\": \"The Aristocats\",\n      \"voice_actor\": \"Bill Thompson\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Verna Felton\"\n    },\n    {\n      \"movie\": \"The Jungle Book\",\n      \"voice_actor\": \"Digby Wolfe\"\n    }\n  ]\n}"
+      ],
+      [
+        "{\n  \"director\": \"Clyde Geronimi\"\n}"
+      ],
+      [
+        "{\n  \"results\": [\n    {\n      \"id\": \"1770402790941161000_0_453\",\n      \"text\": \"After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\\n\\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.\",\n      \"distance\": 279.2718505859375,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770402790941161000_0\"\n      }\n    },\n    {\n      \"id\": \"1770402790952687000_0_465\",\n      \"text\": \"After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\\n\\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.\",\n      \"distance\": 279.2718505859375,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770402790952687000_0\"\n      }\n    },\n    {\n      \"id\": \"1770402790952951000_0_477\",\n      \"text\": \"After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\\n\\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.\",\n      \"distance\": 279.2718505859375,\n      \"metadata\": {\n        \"doc_id\": \"1770402790952951000_0\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770402790953153000_0_489\",\n      \"text\": \"After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\\n\\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.\",\n      \"distance\": 279.2718505859375,\n      \"metadata\": {\n        \"doc_id\": \"1770402790953153000_0\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770402790953298000_0_501\",\n      \"text\": \"After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\\n\\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.\",\n      \"distance\": 279.2718505859375,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770402790953298000_0\"\n      }\n    },\n    {\n      \"id\": \"1770402790953395000_0_513\",\n      \"text\": \"After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\\n\\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.\",\n      \"distance\": 279.2718505859375,\n      \"metadata\": {\n        \"doc_id\": \"1770402790953395000_0\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770402790953535000_0_529\",\n      \"text\": \"After Geronimi left Disney in 1959, he worked in television for a number of years (mostly at UPA), including directing many episodes of the 1967 animated Spider-Man series. He retired from animation sometime in the late 1960s, and provided illustrations for children's books.\\nGeronimi received the 1978 Winsor McCay Award from the International Animated Film Society, ASIFA-Hollywood, for his lifetime of contributions to the animation field. The award was presented by his long-time friend and colleague Walter Lantz. Geronimi was also posthumously inducted as a Disney Legend on July 14, 2017.\\nGeronimi died on April 24, 1989, at his home in Newport Beach, California, aged 87.\\n\\nCinderella is a 1950 American animated musical fantasy film produced by Walt Disney Productions and released by RKO Radio Pictures. Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince.\",\n      \"distance\": 279.2718505859375,\n      \"metadata\": {\n        \"doc_id\": \"1770402790953535000_0\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"1770402790952954000_0_478\",\n      \"text\": \"Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince. The production was supervised by Ben Sharpsteen, and was directed by Wilfred Jackson, Hamilton Luske, and Clyde Geronimi. It features the voices of Ilene Woods, Eleanor Audley, Verna Felton, Rhoda Williams, June Foray, James MacDonald, and Luis van Rooten.\\nDuring the early 1940s, Walt Disney Productions had suffered financially after losing connections to the European film markets due to the outbreak of World War II. Because of this, the studio endured commercial failures such as Pinocchio, Fantasia (both 1940) and Bambi (1942), all of which would later become more successful with several re-releases in theaters and on home video. By 1947, the studio was over $4 million in debt and was on the verge of bankruptcy.\",\n      \"distance\": 282.9869079589844,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770402790952954000_0\"\n      }\n    },\n    {\n      \"id\": \"1770402790953301000_0_502\",\n      \"text\": \"Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince. The production was supervised by Ben Sharpsteen, and was directed by Wilfred Jackson, Hamilton Luske, and Clyde Geronimi. It features the voices of Ilene Woods, Eleanor Audley, Verna Felton, Rhoda Williams, June Foray, James MacDonald, and Luis van Rooten.\\nDuring the early 1940s, Walt Disney Productions had suffered financially after losing connections to the European film markets due to the outbreak of World War II. Because of this, the studio endured commercial failures such as Pinocchio, Fantasia (both 1940) and Bambi (1942), all of which would later become more successful with several re-releases in theaters and on home video. By 1947, the studio was over $4 million in debt and was on the verge of bankruptcy.\",\n      \"distance\": 282.9869079589844,\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770402790953301000_0\"\n      }\n    },\n    {\n      \"id\": \"1770402790953538000_0_530\",\n      \"text\": \"Based on Charles Perrault's 1697 fairy tale, the film follows Cinderella, the daughter of a widowed aristocrat, who is forced to become a servant of her cruel stepmother and stepsisters, until Cinderella's fairy godmother grants her the chance to attend the royal ball and meet the prince. The production was supervised by Ben Sharpsteen, and was directed by Wilfred Jackson, Hamilton Luske, and Clyde Geronimi. It features the voices of Ilene Woods, Eleanor Audley, Verna Felton, Rhoda Williams, June Foray, James MacDonald, and Luis van Rooten.\\nDuring the early 1940s, Walt Disney Productions had suffered financially after losing connections to the European film markets due to the outbreak of World War II. Because of this, the studio endured commercial failures such as Pinocchio, Fantasia (both 1940) and Bambi (1942), all of which would later become more successful with several re-releases in theaters and on home video. By 1947, the studio was over $4 million in debt and was on the verge of bankruptcy.\",\n      \"distance\": 282.9869079589844,\n      \"metadata\": {\n        \"doc_id\": \"1770402790953538000_0\",\n        \"from_clapnq\": false\n      }\n    }\n  ]\n}",
+        "{\n  \"voice_actors_villains\": [\n    [\n      \"Lucille Bliss\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Jimmy MacDonald; Frank Welker\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Ilene Woods\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Don Barclay\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Rhoda Williams; Russi Taylor\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Verna Felton; Russi Taylor\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Larry Grey\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Luis Van Rooten; Rob Paulsen\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Jimmy MacDonald; Corey Burton\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Jimmy MacDonald; Rob Paulsen\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Luis Van Rooten\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"Eleanor Audley; Susanne Blakeslee\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"June Foray\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"None\",\n      \"Lady Tremaine\"\n    ],\n    [\n      \"William Phipps\",\n      \"Lady Tremaine\"\n    ]\n  ]\n}"
+      ]
+    ]
+  ],
+  "seconds": 18.973,
+  "tool_errors": 0
+}

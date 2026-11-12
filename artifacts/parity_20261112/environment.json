@@ -1,0 +1,16 @@
+{
+  "recorded_at": "2026-11-12T15:30:17.672559+00:00",
+  "branch": "feat/evaluator-code-engine-tools",
+  "commit": "f0a7e79035270dfe8ded93e46cd9ef2a3395a05f",
+  "implementation_sha256": {
+    "benchmark/mcp_client.py": "29ee94ce1bfddf60099d0427d80ee7914b96a9672b5c81c7a11577f462b6d74c",
+    "evaluator/mcp_tools.py": "17e5b7e475463c2cabef0afd0f037db177c3ba9a6b3a8d59aebb27dae23df9c3",
+    "environment/m3/python_tools/mcp/mcp_server.py": "59b4cca7edba01e6b47d51dca55c7777fea6dd93c0d40323b546640464b3042d",
+    "docker/mcp_http_bridge.py": "a7d655443cabcc7cf3c0078e244f83fb3c58293f87fd931994339d81997d6852"
+  },
+  "client_python": "/root/cuga-eval/.venv/bin/python",
+  "local_capability_1": "Current workspace subprocess; MCP_DB_ROOT=/root/vakra/data/databases",
+  "local_capabilities_2_3_4": "Existing capability-specific Docker containers",
+  "selection": "Fixed coverage-driven selection; no failed samples replaced",
+  "comparison": "Full MCP content and error flags; text parsed as JSON when possible; raw equality retained; no list sorting or float tolerance"
+}
