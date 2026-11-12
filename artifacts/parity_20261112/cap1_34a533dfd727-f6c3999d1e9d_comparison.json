@@ -1,0 +1,232 @@
+{
+  "capability": 1,
+  "domain": "disney",
+  "uuid": "34a533dfd727-f6c3999d1e9d",
+  "sample_index": 4,
+  "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/disney.json",
+  "source_sha256": "cce310953d37153fa830ef80c66e7f4af2094a8befb03a8852c1820c5e8486bd",
+  "turn_count": 1,
+  "call_count": 4,
+  "status": "blocked",
+  "expected_calls": 4,
+  "local_calls": 4,
+  "code_engine_calls": 0,
+  "local_errors": 0,
+  "code_engine_errors": 0,
+  "local_exception": null,
+  "code_engine_exception": "RuntimeError: Capability 1 needs the session-preserving Code Engine bridge; redeploy docker/mcp_http_bridge.py before evaluating",
+  "differences": [
+    {
+      "call": 1,
+      "tool": "get_data",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 2,
+      "tool": "filter_data",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 3,
+      "tool": "retrieve_data",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 4,
+      "tool": "retrieve_data",
+      "reason": "call not executed on one backend"
+    }
+  ],
+  "matching_errors": [],
+  "local_tool_errors": [],
+  "code_engine_tool_errors": [],
+  "raw_results_equal": false,
+  "serialization_differences": [],
+  "diagnostic_only": {
+    "status": "discrepancy",
+    "expected_calls": 4,
+    "local_calls": 4,
+    "code_engine_calls": 4,
+    "local_errors": 0,
+    "code_engine_errors": 3,
+    "local_exception": null,
+    "code_engine_exception": null,
+    "differences": [
+      {
+        "call": 2,
+        "tool": "filter_data",
+        "difference": {
+          "path": "$.content[0].text",
+          "local": {
+            "handle": "filtered_characters_1",
+            "num_records": 7,
+            "key_details": [
+              {
+                "name": "characters_movie_title",
+                "dtype": "object",
+                "first_3_values": [
+                  "The Great Mouse Detective",
+                  "The Little Mermaid",
+                  "Aladdin"
+                ]
+              },
+              {
+                "name": "characters_release_date",
+                "dtype": "object",
+                "first_3_values": [
+                  "2-Jul-86",
+                  "17-Nov-89",
+                  "25-Nov-92"
+                ]
+              },
+              {
+                "name": "characters_hero",
+                "dtype": "object",
+                "first_3_values": [
+                  "Basil",
+                  "Ariel",
+                  "Aladdin"
+                ]
+              },
+              {
+                "name": "characters_villian",
+                "dtype": "object",
+                "first_3_values": [
+                  "Professor Ratigan",
+                  "Ursula",
+                  "Jafar"
+                ]
+              },
+              {
+                "name": "characters_song",
+                "dtype": "object",
+                "first_3_values": [
+                  "The World's Greatest Criminal Mind",
+                  "Under the Sea",
+                  "A Whole New World"
+                ]
+              },
+              {
+                "name": "director_name",
+                "dtype": "object",
+                "first_3_values": [
+                  "The Great Mouse Detective",
+                  "The Little Mermaid",
+                  "Aladdin"
+                ]
+              },
+              {
+                "name": "director_director",
+                "dtype": "object",
+                "first_3_values": [
+                  "Ron Clements",
+                  "Ron Clements",
+                  "Ron Clements"
+                ]
+              }
+            ]
+          },
+          "code_engine": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_characters_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+          "reason": "different types"
+        }
+      },
+      {
+        "call": 3,
+        "tool": "retrieve_data",
+        "difference": {
+          "path": "$.content[0].text",
+          "local": {
+            "handle": "retrieved_characters_2",
+            "num_records": 7,
+            "key_details": [
+              {
+                "name": "characters_movie_title",
+                "dtype": "str",
+                "first_3_values": [
+                  "The Great Mouse Detective",
+                  "The Little Mermaid",
+                  "Aladdin"
+                ]
+              }
+            ]
+          },
+          "code_engine": "Input validation error: 1 validation error for RetrieveDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+          "reason": "different types"
+        }
+      },
+      {
+        "call": 4,
+        "tool": "retrieve_data",
+        "difference": {
+          "path": "$.content[0].text",
+          "local": {
+            "handle": "retrieved_characters_3",
+            "num_records": 7,
+            "key_details": [
+              {
+                "name": "characters_song",
+                "dtype": "str",
+                "first_3_values": [
+                  "The World's Greatest Criminal Mind",
+                  "Under the Sea",
+                  "A Whole New World"
+                ]
+              }
+            ]
+          },
+          "code_engine": "Input validation error: 1 validation error for RetrieveDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+          "reason": "different types"
+        }
+      }
+    ],
+    "matching_errors": [],
+    "local_tool_errors": [],
+    "code_engine_tool_errors": [
+      {
+        "call": 2,
+        "tool": "filter_data",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_characters_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+            }
+          ],
+          "isError": false
+        },
+        "exception": null
+      },
+      {
+        "call": 3,
+        "tool": "retrieve_data",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: 1 validation error for RetrieveDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+            }
+          ],
+          "isError": false
+        },
+        "exception": null
+      },
+      {
+        "call": 4,
+        "tool": "retrieve_data",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: 1 validation error for RetrieveDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+            }
+          ],
+          "isError": false
+        },
+        "exception": null
+      }
+    ],
+    "raw_results_equal": false
+  },
+  "local_output_file": "cap1_34a533dfd727-f6c3999d1e9d_local.json",
+  "code_engine_output_file": "cap1_34a533dfd727-f6c3999d1e9d_code_engine.json"
+}

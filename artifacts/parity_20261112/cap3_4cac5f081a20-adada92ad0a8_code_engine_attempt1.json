@@ -1,0 +1,34 @@
+{
+  "capability": 3,
+  "domain": "bpo",
+  "uuid": "4cac5f081a20-adada92ad0a8",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap3.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "candidate_source_full_candidate_details",
+      "resolved_arguments": {
+        "requisition_id": "05958BR"
+      },
+      "started_at": "2026-11-12T15:24:14.811036+00:00",
+      "exception": "CancelledError: Cancelled via cancel scope 7f592b81f7a0",
+      "seconds": 2.693
+    }
+  ],
+  "finished": true,
+  "listed_tools": 32,
+  "exception": "ExceptionGroup: SSLError: [SSL] passed invalid argument (_ssl.c:2570)",
+  "seconds": 6.696,
+  "tool_errors": 1
+}

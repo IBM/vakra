@@ -1,0 +1,34 @@
+{
+  "capability": 4,
+  "domain": "disney",
+  "uuid": "34a533dfd727-5ad9cc4c863b",
+  "sample_index": 5,
+  "source_file": "/root/v14/internal/test/capability_4_multiturn/output/disney.json",
+  "source_sha256": "bb4c9e721e402fd23e965d6fbe3ae4ece95ea75d38d85d6b3400323f5d90effb",
+  "turn_count": 3,
+  "call_count": 4,
+  "status": "pass",
+  "expected_calls": 4,
+  "local_calls": 4,
+  "code_engine_calls": 4,
+  "local_errors": 0,
+  "code_engine_errors": 0,
+  "local_exception": null,
+  "code_engine_exception": null,
+  "differences": [],
+  "matching_errors": [],
+  "local_tool_errors": [],
+  "code_engine_tool_errors": [],
+  "raw_results_equal": false,
+  "serialization_differences": [
+    {
+      "call": 3,
+      "tool": "query_disney",
+      "first_differing_character": 1254,
+      "local_excerpt": "\n      \"metadata\": {\n        \"doc_id\": \"1770402790941161000_0\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"177",
+      "code_engine_excerpt": "\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770402790941161000_0\"\n      }\n    },\n    {\n      \"id\": \"177"
+    }
+  ],
+  "local_output_file": "cap4_34a533dfd727-5ad9cc4c863b_local.json",
+  "code_engine_output_file": "cap4_34a533dfd727-5ad9cc4c863b_code_engine.json"
+}

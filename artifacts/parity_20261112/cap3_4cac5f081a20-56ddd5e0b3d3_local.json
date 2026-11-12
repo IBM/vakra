@@ -1,0 +1,95 @@
+{
+  "capability": 3,
+  "domain": "bpo",
+  "uuid": "4cac5f081a20-56ddd5e0b3d3",
+  "backend": "local",
+  "connection": {
+    "mode": "stdio",
+    "container_name": "capability_3_multihop_reasoning",
+    "container_runtime": null,
+    "container_command": [
+      "python",
+      "/app/mcp_dispatch.py"
+    ],
+    "container_env": {
+      "CAPABILITY_ID": "3",
+      "MCP_DB_ROOT": "/app/db"
+    },
+    "command": null,
+    "args": null,
+    "server_url": null,
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "candidate_source_sla_extended",
+      "resolved_arguments": {
+        "requisition_id": "05958BR",
+        "source_name": "Dice"
+      },
+      "started_at": "2026-11-12T15:24:28.554687+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"requisition_id\": \"05958BR\", \"source_name\": \"Dice\", \"sla_percentage\": 95, \"_internal_id\": \"sla-ext-7f3a9b2c\", \"_cache_ttl\": 3600, \"_version\": \"2.3.1\", \"_debug_query_ms\": 42, \"_shard_id\": 3, \"_region\": \"us-east-1\", \"_feature_flags\": [\"sla_v2\", \"extended_metrics\"], \"_experiment_group\": \"control\", \"_sampling_rate\": 0.95, \"_data_quality_score\": 0.98, \"_last_recomputed\": \"2025-04-29T03:00:00Z\", \"_computation_engine\": \"spark-3.5\", \"_model_version\": \"sla-impact-v1.4.2\", \"_confidence_interval\": [92, 98], \"_p_value\": 0.023, \"_sample_size\": 57, \"_outliers_removed\": 2, \"_normalization_method\": \"min-max\", \"_correlation_with_hires\": 0.67, \"_seasonal_adjustment\": true}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "requisition_id": "05958BR",
+              "source_name": "Dice",
+              "sla_percentage": 95,
+              "_internal_id": "sla-ext-7f3a9b2c",
+              "_cache_ttl": 3600,
+              "_version": "2.3.1",
+              "_debug_query_ms": 42,
+              "_shard_id": 3,
+              "_region": "us-east-1",
+              "_feature_flags": [
+                "sla_v2",
+                "extended_metrics"
+              ],
+              "_experiment_group": "control",
+              "_sampling_rate": 0.95,
+              "_data_quality_score": 0.98,
+              "_last_recomputed": "2025-04-29T03:00:00Z",
+              "_computation_engine": "spark-3.5",
+              "_model_version": "sla-impact-v1.4.2",
+              "_confidence_interval": [
+                92,
+                98
+              ],
+              "_p_value": 0.023,
+              "_sample_size": 57,
+              "_outliers_removed": 2,
+              "_normalization_method": "min-max",
+              "_correlation_with_hires": 0.67,
+              "_seasonal_adjustment": true
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.02
+    }
+  ],
+  "finished": true,
+  "listed_tools": 32,
+  "replay_responses": [
+    [
+      [
+        "{\"requisition_id\": \"05958BR\", \"source_name\": \"Dice\", \"sla_percentage\": 95, \"_internal_id\": \"sla-ext-7f3a9b2c\", \"_cache_ttl\": 3600, \"_version\": \"2.3.1\", \"_debug_query_ms\": 42, \"_shard_id\": 3, \"_region\": \"us-east-1\", \"_feature_flags\": [\"sla_v2\", \"extended_metrics\"], \"_experiment_group\": \"control\", \"_sampling_rate\": 0.95, \"_data_quality_score\": 0.98, \"_last_recomputed\": \"2025-04-29T03:00:00Z\", \"_computation_engine\": \"spark-3.5\", \"_model_version\": \"sla-impact-v1.4.2\", \"_confidence_interval\": [92, 98], \"_p_value\": 0.023, \"_sample_size\": 57, \"_outliers_removed\": 2, \"_normalization_method\": \"min-max\", \"_correlation_with_hires\": 0.67, \"_seasonal_adjustment\": true}"
+      ]
+    ]
+  ],
+  "seconds": 2.224,
+  "tool_errors": 0
+}

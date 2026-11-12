@@ -1,0 +1,344 @@
+{
+  "capability": 1,
+  "domain": "craftbeer",
+  "uuid": "cad7f2b7d2a5-31f4422a6a60",
+  "sample_index": 1,
+  "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/craftbeer.json",
+  "source_sha256": "9f4f4f73c511cd3df732a4155a6cb4adaf8a0857040ab5b71dcdd9f46da0a3a9",
+  "turn_count": 1,
+  "call_count": 4,
+  "status": "blocked",
+  "expected_calls": 4,
+  "local_calls": 4,
+  "code_engine_calls": 0,
+  "local_errors": 0,
+  "code_engine_errors": 0,
+  "local_exception": null,
+  "code_engine_exception": "RuntimeError: Capability 1 needs the session-preserving Code Engine bridge; redeploy docker/mcp_http_bridge.py before evaluating",
+  "differences": [
+    {
+      "call": 1,
+      "tool": "get_data",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 2,
+      "tool": "filter_data",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 3,
+      "tool": "filter_data",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 4,
+      "tool": "aggregate_data",
+      "reason": "call not executed on one backend"
+    }
+  ],
+  "matching_errors": [],
+  "local_tool_errors": [],
+  "code_engine_tool_errors": [],
+  "raw_results_equal": false,
+  "serialization_differences": [],
+  "diagnostic_only": {
+    "status": "discrepancy",
+    "expected_calls": 4,
+    "local_calls": 4,
+    "code_engine_calls": 4,
+    "local_errors": 0,
+    "code_engine_errors": 3,
+    "local_exception": null,
+    "code_engine_exception": null,
+    "differences": [
+      {
+        "call": 2,
+        "tool": "filter_data",
+        "difference": {
+          "path": "$.content[0].text",
+          "local": {
+            "handle": "filtered_beers_1",
+            "num_records": 9,
+            "key_details": [
+              {
+                "name": "beers_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  1143,
+                  1144,
+                  1281
+                ]
+              },
+              {
+                "name": "beers_brewery_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  300,
+                  300,
+                  300
+                ]
+              },
+              {
+                "name": "beers_abv",
+                "dtype": "float64",
+                "first_3_values": [
+                  0.049,
+                  0.053,
+                  0.053
+                ]
+              },
+              {
+                "name": "beers_ibu",
+                "dtype": "float64",
+                "first_3_values": [
+                  30.0,
+                  7.0,
+                  15.0
+                ]
+              },
+              {
+                "name": "beers_name",
+                "dtype": "object",
+                "first_3_values": [
+                  "Boston Lager",
+                  "Samuel Adams Summer Ale",
+                  "Samuel Adams Octoberfest"
+                ]
+              },
+              {
+                "name": "beers_style",
+                "dtype": "object",
+                "first_3_values": [
+                  "Vienna Lager",
+                  "American Pale Wheat Ale",
+                  "Märzen / Oktoberfest"
+                ]
+              },
+              {
+                "name": "beers_ounces",
+                "dtype": "float64",
+                "first_3_values": [
+                  12.0,
+                  12.0,
+                  12.0
+                ]
+              },
+              {
+                "name": "breweries_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  300,
+                  300,
+                  300
+                ]
+              },
+              {
+                "name": "breweries_name",
+                "dtype": "object",
+                "first_3_values": [
+                  "Boston Beer Company",
+                  "Boston Beer Company",
+                  "Boston Beer Company"
+                ]
+              },
+              {
+                "name": "breweries_city",
+                "dtype": "object",
+                "first_3_values": [
+                  "Boston",
+                  "Boston",
+                  "Boston"
+                ]
+              },
+              {
+                "name": "breweries_state",
+                "dtype": "object",
+                "first_3_values": [
+                  "MA",
+                  "MA",
+                  "MA"
+                ]
+              }
+            ]
+          },
+          "code_engine": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_beers_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+          "reason": "different types"
+        }
+      },
+      {
+        "call": 3,
+        "tool": "filter_data",
+        "difference": {
+          "path": "$.content[0].text",
+          "local": {
+            "handle": "filtered_beers_2",
+            "num_records": 7,
+            "key_details": [
+              {
+                "name": "beers_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  1143,
+                  1144,
+                  1281
+                ]
+              },
+              {
+                "name": "beers_brewery_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  300,
+                  300,
+                  300
+                ]
+              },
+              {
+                "name": "beers_abv",
+                "dtype": "float64",
+                "first_3_values": [
+                  0.049,
+                  0.053,
+                  0.053
+                ]
+              },
+              {
+                "name": "beers_ibu",
+                "dtype": "float64",
+                "first_3_values": [
+                  30.0,
+                  7.0,
+                  15.0
+                ]
+              },
+              {
+                "name": "beers_name",
+                "dtype": "object",
+                "first_3_values": [
+                  "Boston Lager",
+                  "Samuel Adams Summer Ale",
+                  "Samuel Adams Octoberfest"
+                ]
+              },
+              {
+                "name": "beers_style",
+                "dtype": "object",
+                "first_3_values": [
+                  "Vienna Lager",
+                  "American Pale Wheat Ale",
+                  "Märzen / Oktoberfest"
+                ]
+              },
+              {
+                "name": "beers_ounces",
+                "dtype": "float64",
+                "first_3_values": [
+                  12.0,
+                  12.0,
+                  12.0
+                ]
+              },
+              {
+                "name": "breweries_id",
+                "dtype": "int64",
+                "first_3_values": [
+                  300,
+                  300,
+                  300
+                ]
+              },
+              {
+                "name": "breweries_name",
+                "dtype": "object",
+                "first_3_values": [
+                  "Boston Beer Company",
+                  "Boston Beer Company",
+                  "Boston Beer Company"
+                ]
+              },
+              {
+                "name": "breweries_city",
+                "dtype": "object",
+                "first_3_values": [
+                  "Boston",
+                  "Boston",
+                  "Boston"
+                ]
+              },
+              {
+                "name": "breweries_state",
+                "dtype": "object",
+                "first_3_values": [
+                  "MA",
+                  "MA",
+                  "MA"
+                ]
+              }
+            ]
+          },
+          "code_engine": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+          "reason": "different types"
+        }
+      },
+      {
+        "call": 4,
+        "tool": "aggregate_data",
+        "difference": {
+          "path": "$.content[0].text",
+          "local": 0.05142857142857143,
+          "code_engine": "Input validation error: 1 validation error for AggregateDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_1$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+          "reason": "different types"
+        }
+      }
+    ],
+    "matching_errors": [],
+    "local_tool_errors": [],
+    "code_engine_tool_errors": [
+      {
+        "call": 2,
+        "tool": "filter_data",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_beers_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+            }
+          ],
+          "isError": false
+        },
+        "exception": null
+      },
+      {
+        "call": 3,
+        "tool": "filter_data",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+            }
+          ],
+          "isError": false
+        },
+        "exception": null
+      },
+      {
+        "call": 4,
+        "tool": "aggregate_data",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: 1 validation error for AggregateDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_1$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+            }
+          ],
+          "isError": false
+        },
+        "exception": null
+      }
+    ],
+    "raw_results_equal": false
+  },
+  "local_output_file": "cap1_cad7f2b7d2a5-31f4422a6a60_local.json",
+  "code_engine_output_file": "cap1_cad7f2b7d2a5-31f4422a6a60_code_engine.json"
+}

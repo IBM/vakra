@@ -1,0 +1,353 @@
+{
+  "capability": 1,
+  "domain": "beer_factory",
+  "uuid": "a823e527d383-0a1763227b31",
+  "sample_index": 0,
+  "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/beer_factory.json",
+  "source_sha256": "f4a2f1f7cf390710817a798b1e97cf89dcae50fe225e409ffb84d9bd1fb89edd",
+  "turn_count": 1,
+  "call_count": 3,
+  "status": "blocked",
+  "expected_calls": 3,
+  "local_calls": 3,
+  "code_engine_calls": 0,
+  "local_errors": 0,
+  "code_engine_errors": 0,
+  "local_exception": null,
+  "code_engine_exception": "RuntimeError: Capability 1 needs the session-preserving Code Engine bridge; redeploy docker/mcp_http_bridge.py before evaluating",
+  "differences": [
+    {
+      "call": 1,
+      "tool": "get_data",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 2,
+      "tool": "select_data_not_equal_to",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 3,
+      "tool": "get_BrandNames",
+      "reason": "call not executed on one backend"
+    }
+  ],
+  "matching_errors": [],
+  "local_tool_errors": [],
+  "code_engine_tool_errors": [],
+  "raw_results_equal": false,
+  "serialization_differences": [],
+  "diagnostic_only": {
+    "status": "blocked",
+    "expected_calls": 3,
+    "local_calls": 3,
+    "code_engine_calls": 0,
+    "local_errors": 0,
+    "code_engine_errors": 0,
+    "local_exception": null,
+    "code_engine_exception": "ExceptionGroup: HTTPStatusError: Server error '502 Bad Gateway' for url 'https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/beer_factory'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502",
+    "differences": [
+      {
+        "call": 1,
+        "tool": "get_data",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 2,
+        "tool": "select_data_not_equal_to",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 3,
+        "tool": "get_BrandNames",
+        "reason": "call not executed on one backend"
+      }
+    ],
+    "matching_errors": [],
+    "local_tool_errors": [],
+    "code_engine_tool_errors": [],
+    "raw_results_equal": false
+  },
+  "diagnostic_first_attempt": {
+    "status": "discrepancy",
+    "expected_calls": 3,
+    "local_calls": 3,
+    "code_engine_calls": 3,
+    "local_errors": 0,
+    "code_engine_errors": 2,
+    "local_exception": null,
+    "code_engine_exception": "ExceptionGroup: SSLError: [SSL] passed invalid argument (_ssl.c:2570)",
+    "differences": [
+      {
+        "call": 2,
+        "tool": "select_data_not_equal_to",
+        "difference": {
+          "path": "$.content[0].text",
+          "local": {
+            "handle": "filtered_data_1",
+            "num_records": 6,
+            "key_details": [
+              {
+                "name": "BrandID",
+                "dtype": "int64",
+                "first_3_values": [
+                  10009,
+                  10010,
+                  10012
+                ]
+              },
+              {
+                "name": "BrandName",
+                "dtype": "object",
+                "first_3_values": [
+                  "Dad's",
+                  "Dog n Suds",
+                  "Fitz's"
+                ]
+              },
+              {
+                "name": "FirstBrewedYear",
+                "dtype": "int64",
+                "first_3_values": [
+                  1937,
+                  1953,
+                  1947
+                ]
+              },
+              {
+                "name": "BreweryName",
+                "dtype": "object",
+                "first_3_values": [
+                  "The Dad's Root Beer Company ",
+                  "DNS Distributing",
+                  "Fitz's"
+                ]
+              },
+              {
+                "name": "City",
+                "dtype": "object",
+                "first_3_values": [
+                  "Chicago",
+                  "Chicago",
+                  "St. Louis"
+                ]
+              },
+              {
+                "name": "State",
+                "dtype": "object",
+                "first_3_values": [
+                  "IL",
+                  "IL",
+                  "MO"
+                ]
+              },
+              {
+                "name": "Country",
+                "dtype": "object",
+                "first_3_values": [
+                  "United States",
+                  "United States",
+                  "United States"
+                ]
+              },
+              {
+                "name": "Description",
+                "dtype": "object",
+                "first_3_values": [
+                  "Dad’s originated in Chicago in 1937. This old time favorite quickly found a following around the country and became one of the most iconic names in soda. A tribute to all the Dad’s who made root beer for their families it was also known as “America’s Prem",
+                  "The Dog 'n Suds Brand\n …in the early 50’s two school teachers from Champaign, Illinois started a small hot dog & Root Beer stand that rapidly grew thru out the Midwest. Soon there were Dog ‘n Suds Drive-In restaurants from coast to coast. Canada, our neig",
+                  "An old-fashioned thick and creamy root beer with plenty of flavors blended together in perfect balance."
+                ]
+              },
+              {
+                "name": "CaneSugar",
+                "dtype": "object",
+                "first_3_values": [
+                  "TRUE",
+                  "FALSE",
+                  "TRUE"
+                ]
+              },
+              {
+                "name": "CornSyrup",
+                "dtype": "object",
+                "first_3_values": [
+                  "FALSE",
+                  "TRUE",
+                  "FALSE"
+                ]
+              },
+              {
+                "name": "Honey",
+                "dtype": "object",
+                "first_3_values": [
+                  "FALSE",
+                  "FALSE",
+                  "FALSE"
+                ]
+              },
+              {
+                "name": "ArtificialSweetener",
+                "dtype": "object",
+                "first_3_values": [
+                  "FALSE",
+                  "FALSE",
+                  "FALSE"
+                ]
+              },
+              {
+                "name": "Caffeinated",
+                "dtype": "object",
+                "first_3_values": [
+                  "FALSE",
+                  "FALSE",
+                  "FALSE"
+                ]
+              },
+              {
+                "name": "Alcoholic",
+                "dtype": "object",
+                "first_3_values": [
+                  "FALSE",
+                  "FALSE",
+                  "FALSE"
+                ]
+              },
+              {
+                "name": "AvailableInCans",
+                "dtype": "object",
+                "first_3_values": [
+                  "FALSE",
+                  "FALSE",
+                  "FALSE"
+                ]
+              },
+              {
+                "name": "AvailableInBottles",
+                "dtype": "object",
+                "first_3_values": [
+                  "TRUE",
+                  "TRUE",
+                  "TRUE"
+                ]
+              },
+              {
+                "name": "AvailableInKegs",
+                "dtype": "object",
+                "first_3_values": [
+                  "FALSE",
+                  "FALSE",
+                  "FALSE"
+                ]
+              },
+              {
+                "name": "Website",
+                "dtype": "object",
+                "first_3_values": [
+                  "http://www.dadsrootbeer.com/dads/dads.nsf/vwContent/Homepage",
+                  "http://supplies.dog-n-suds.com/page.php?5",
+                  "https://fitzsrootbeer.com/"
+                ]
+              },
+              {
+                "name": "FacebookPage",
+                "dtype": "object",
+                "first_3_values": [
+                  "https://www.facebook.com/Dads-Old-Fashioned-Root-Beer-and-Cream-Soda-117159998301204/",
+                  "https://www.facebook.com/Dog-N-Suds-Bottled-Root-Beer-117372294947833/",
+                  "https://www.facebook.com/fitzsrootbeer"
+                ]
+              },
+              {
+                "name": "Twitter",
+                "dtype": "object",
+                "first_3_values": [
+                  "https://twitter.com/ilovedads",
+                  null,
+                  null
+                ]
+              },
+              {
+                "name": "WholesaleCost",
+                "dtype": "float64",
+                "first_3_values": [
+                  1.26,
+                  0.91,
+                  1.09
+                ]
+              },
+              {
+                "name": "CurrentRetailPrice",
+                "dtype": "float64",
+                "first_3_values": [
+                  3.0,
+                  3.0,
+                  3.0
+                ]
+              }
+            ]
+          },
+          "code_engine": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_data_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+          "reason": "different types"
+        }
+      },
+      {
+        "call": 3,
+        "tool": "get_BrandNames",
+        "difference": {
+          "path": "$",
+          "local": {
+            "content": [
+              {
+                "type": "text",
+                "text": [
+                  "Dad's",
+                  "Dog n Suds",
+                  "Fitz's",
+                  "Gales",
+                  "Mug",
+                  "1919"
+                ]
+              }
+            ],
+            "isError": false
+          },
+          "code_engine": null,
+          "reason": "different types"
+        }
+      }
+    ],
+    "matching_errors": [],
+    "local_tool_errors": [],
+    "code_engine_tool_errors": [
+      {
+        "call": 2,
+        "tool": "select_data_not_equal_to",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_data_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+            }
+          ],
+          "isError": false
+        },
+        "exception": null
+      },
+      {
+        "call": 3,
+        "tool": "get_BrandNames",
+        "result": null,
+        "exception": "CancelledError: Cancelled via cancel scope 7f592bad61e0"
+      }
+    ],
+    "raw_results_equal": false
+  },
+  "diagnostic_retry": {
+    "first_exception": "ExceptionGroup: SSLError: [SSL] passed invalid argument (_ssl.c:2570)",
+    "final_exception": "ExceptionGroup: HTTPStatusError: Server error '502 Bad Gateway' for url 'https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/beer_factory'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502",
+    "first_attempt_file": "cap1_a823e527d383-0a1763227b31_code_engine_diagnostic_attempt1.json"
+  },
+  "local_output_file": "cap1_a823e527d383-0a1763227b31_local.json",
+  "code_engine_output_file": "cap1_a823e527d383-0a1763227b31_code_engine.json"
+}

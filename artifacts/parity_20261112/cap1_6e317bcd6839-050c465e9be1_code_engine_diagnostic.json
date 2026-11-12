@@ -1,0 +1,238 @@
+{
+  "capability": 1,
+  "domain": "books",
+  "uuid": "6e317bcd6839-050c465e9be1",
+  "backend": "code_engine_diagnostic",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_data",
+      "resolved_arguments": {
+        "tool_universe_id": "6e317bcd6839-050c465e9be1",
+        "reset_handles": true
+      },
+      "started_at": "2026-11-12T15:25:27.301560+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"retrieved_order_1\", \"num_records\": 22348, \"key_details\": [{\"name\": \"order_status_status_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 1, 1]}, {\"name\": \"order_status_status_value\", \"dtype\": \"object\", \"first_3_values\": [\"Order Received\", \"Order Received\", \"Order Received\"]}, {\"name\": \"order_history_history_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 2, 3]}, {\"name\": \"order_history_order_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 2, 3]}, {\"name\": \"order_history_status_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 1, 1]}, {\"name\": \"order_history_status_date\", \"dtype\": \"object\", \"first_3_values\": [\"2021-07-14 17:04:28\", \"2020-08-16 20:23:19\", \"2021-08-20 05:34:51\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "retrieved_order_1",
+              "num_records": 22348,
+              "key_details": [
+                {
+                  "name": "order_status_status_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1,
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "name": "order_status_status_value",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Order Received",
+                    "Order Received",
+                    "Order Received"
+                  ]
+                },
+                {
+                  "name": "order_history_history_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1,
+                    2,
+                    3
+                  ]
+                },
+                {
+                  "name": "order_history_order_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1,
+                    2,
+                    3
+                  ]
+                },
+                {
+                  "name": "order_history_status_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1,
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "name": "order_history_status_date",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "2021-07-14 17:04:28",
+                    "2020-08-16 20:23:19",
+                    "2021-08-20 05:34:51"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 4.81
+    },
+    {
+      "tool": "select_data_equal_to",
+      "resolved_arguments": {
+        "data_label": "retrieved_order_1",
+        "key_name": "order_status_status_value",
+        "value": "Delivered"
+      },
+      "started_at": "2026-11-12T15:25:32.112408+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_order_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_order_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 4.774
+    },
+    {
+      "tool": "transform_data_to_datetime_part",
+      "resolved_arguments": {
+        "data_label": "$FILTERED_DF_0$",
+        "key_name": "order_history_status_date",
+        "datetime_pattern": "%Y"
+      },
+      "started_at": "2026-11-12T15:25:36.887070+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for TransformDataToDatetimePartInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for TransformDataToDatetimePartInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 4.946
+    },
+    {
+      "tool": "select_data_equal_to",
+      "resolved_arguments": {
+        "data_label": "$TRANSFORMED_DF_1$",
+        "key_name": "order_history_status_date",
+        "value": "2021"
+      },
+      "started_at": "2026-11-12T15:25:41.834232+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$TRANSFORMED_DF_1$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$TRANSFORMED_DF_1$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 5.008
+    },
+    {
+      "tool": "compute_data_count",
+      "resolved_arguments": {
+        "data_label": "$FILTERED_DF_2$",
+        "key_name": "",
+        "distinct": false
+      },
+      "started_at": "2026-11-12T15:25:46.843127+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for AggregateDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_2$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for AggregateDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_2$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 4.927
+    }
+  ],
+  "finished": true,
+  "listed_tools": 26,
+  "replay_responses": [
+    [
+      [
+        "{\"handle\": \"retrieved_order_1\", \"num_records\": 22348, \"key_details\": [{\"name\": \"order_status_status_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 1, 1]}, {\"name\": \"order_status_status_value\", \"dtype\": \"object\", \"first_3_values\": [\"Order Received\", \"Order Received\", \"Order Received\"]}, {\"name\": \"order_history_history_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 2, 3]}, {\"name\": \"order_history_order_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 2, 3]}, {\"name\": \"order_history_status_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 1, 1]}, {\"name\": \"order_history_status_date\", \"dtype\": \"object\", \"first_3_values\": [\"2021-07-14 17:04:28\", \"2020-08-16 20:23:19\", \"2021-08-20 05:34:51\"]}]}",
+        "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_order_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+        "Input validation error: 1 validation error for TransformDataToDatetimePartInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+        "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$TRANSFORMED_DF_1$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+        "Input validation error: 1 validation error for AggregateDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_2$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+      ]
+    ]
+  ],
+  "seconds": 30.869,
+  "tool_errors": 4
+}

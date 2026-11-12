@@ -231,6 +231,39 @@ def _coerce_args_to_schema(args: Dict[str, Any], input_schema: Optional[Dict[str
 # Batch tool execution
 # -----------------------------
 
+async def replay_paired_tools(config, domain, batch_pred, batch_gt, *, is_bi=False):
+    """Keep BI prediction/GT adjacent so the initial sample is loaded once."""
+    from benchmark.mcp_client import create_client_and_connect
+
+    def schemas(tools):
+        return {
+            tool.name: getattr(tool, "input_schema", None) or getattr(tool, "inputSchema", {})
+            for tool in tools
+        }
+
+    if not is_bi:
+        async with create_client_and_connect(config, domain) as session:
+            schema_map = schemas((await session.list_tools()).tools)
+            pred = await execute_tools_batch(session, batch_pred, schema_map)
+            gt = await execute_tools_batch(session, batch_gt, schema_map)
+            return pred, gt
+
+    pred_responses, gt_responses = [], []
+    for pred, gt in zip(batch_pred, batch_gt):
+        # One backend lives through all turns and both replays of this sample.
+        async with create_client_and_connect(config, domain) as session:
+            schema_map = schemas((await session.list_tools()).tools)
+            if "reset_handles" not in schema_map.get("get_data", {}).get("properties", {}):
+                raise RuntimeError(
+                    "Capability 1 requires the updated MCP backend with get_data(reset_handles). "
+                    "Rebuild the local image or redeploy the session-preserving Code Engine bridge."
+                )
+            pred_responses.extend(await execute_tools_batch(session, [pred], schema_map))
+            # get_data in GT clears prediction handles but reuses active_data.
+            gt_responses.extend(await execute_tools_batch(session, [gt], schema_map, is_gt=True))
+    return pred_responses, gt_responses
+
+
 def _resolve_gt_reference(value: Any, responses: Dict[str, Any], argument: str) -> Any:
     """Resolve exact label references without replacing text inside literals."""
     if isinstance(value, str):

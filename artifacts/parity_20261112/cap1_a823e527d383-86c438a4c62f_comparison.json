@@ -1,0 +1,332 @@
+{
+  "capability": 1,
+  "domain": "beer_factory",
+  "uuid": "a823e527d383-86c438a4c62f",
+  "sample_index": 1,
+  "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/beer_factory.json",
+  "source_sha256": "f4a2f1f7cf390710817a798b1e97cf89dcae50fe225e409ffb84d9bd1fb89edd",
+  "turn_count": 1,
+  "call_count": 3,
+  "status": "blocked",
+  "expected_calls": 3,
+  "local_calls": 3,
+  "code_engine_calls": 0,
+  "local_errors": 0,
+  "code_engine_errors": 0,
+  "local_exception": null,
+  "code_engine_exception": "RuntimeError: Capability 1 needs the session-preserving Code Engine bridge; redeploy docker/mcp_http_bridge.py before evaluating",
+  "differences": [
+    {
+      "call": 1,
+      "tool": "get_data",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 2,
+      "tool": "select_data_equal_to",
+      "reason": "call not executed on one backend"
+    },
+    {
+      "call": 3,
+      "tool": "get_Descriptions",
+      "reason": "call not executed on one backend"
+    }
+  ],
+  "matching_errors": [],
+  "local_tool_errors": [],
+  "code_engine_tool_errors": [],
+  "raw_results_equal": false,
+  "serialization_differences": [],
+  "diagnostic_only": {
+    "status": "blocked",
+    "expected_calls": 3,
+    "local_calls": 3,
+    "code_engine_calls": 0,
+    "local_errors": 0,
+    "code_engine_errors": 0,
+    "local_exception": null,
+    "code_engine_exception": "ExceptionGroup: HTTPStatusError: Server error '502 Bad Gateway' for url 'https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/beer_factory'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502",
+    "differences": [
+      {
+        "call": 1,
+        "tool": "get_data",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 2,
+        "tool": "select_data_equal_to",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 3,
+        "tool": "get_Descriptions",
+        "reason": "call not executed on one backend"
+      }
+    ],
+    "matching_errors": [],
+    "local_tool_errors": [],
+    "code_engine_tool_errors": [],
+    "raw_results_equal": false
+  },
+  "diagnostic_first_attempt": {
+    "status": "discrepancy",
+    "expected_calls": 3,
+    "local_calls": 3,
+    "code_engine_calls": 1,
+    "local_errors": 0,
+    "code_engine_errors": 1,
+    "local_exception": null,
+    "code_engine_exception": "ExceptionGroup: SSLError: [SSL] passed invalid argument (_ssl.c:2570)",
+    "differences": [
+      {
+        "call": 1,
+        "tool": "get_data",
+        "difference": {
+          "path": "$",
+          "local": {
+            "content": [
+              {
+                "type": "text",
+                "text": {
+                  "handle": "retrieved_data_1",
+                  "num_records": 24,
+                  "key_details": [
+                    {
+                      "name": "BrandID",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        10001,
+                        10002,
+                        10003
+                      ]
+                    },
+                    {
+                      "name": "BrandName",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "A&W",
+                        "A.J. Stephans",
+                        "Abita"
+                      ]
+                    },
+                    {
+                      "name": "FirstBrewedYear",
+                      "dtype": "int64",
+                      "first_3_values": [
+                        1919,
+                        1926,
+                        1986
+                      ]
+                    },
+                    {
+                      "name": "BreweryName",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "Dr Pepper Snapple Group",
+                        "AJ Stephans Beverages",
+                        "Abita Brewery"
+                      ]
+                    },
+                    {
+                      "name": "City",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "Lodi",
+                        "Fall River",
+                        "Covington"
+                      ]
+                    },
+                    {
+                      "name": "State",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "CA",
+                        "MA",
+                        "LA"
+                      ]
+                    },
+                    {
+                      "name": "Country",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "United States",
+                        "United States",
+                        "United States"
+                      ]
+                    },
+                    {
+                      "name": "Description",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "After setting up the first A&W Root Beer stand in California in 1919, Roy Allen partnered with Frank Wright to name their beverage A&W. The two partners then set out to open more root beer stands all across the United States.",
+                        "AJ Stephans Company makes \nthe finest elixirs and mixers in New England",
+                        "Abita Root Beer is made with a hot mix process using spring water, herbs, vanilla and yucca (which creates foam). Unlike most soft drink manufacturers, Abita sweetens its root beer with pure Louisiana cane sugar. The resulting taste is reminiscent of soft"
+                      ]
+                    },
+                    {
+                      "name": "CaneSugar",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "FALSE",
+                        "TRUE",
+                        "TRUE"
+                      ]
+                    },
+                    {
+                      "name": "CornSyrup",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "TRUE",
+                        "FALSE",
+                        "FALSE"
+                      ]
+                    },
+                    {
+                      "name": "Honey",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "FALSE",
+                        "FALSE",
+                        "FALSE"
+                      ]
+                    },
+                    {
+                      "name": "ArtificialSweetener",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "FALSE",
+                        "FALSE",
+                        "FALSE"
+                      ]
+                    },
+                    {
+                      "name": "Caffeinated",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "FALSE",
+                        "FALSE",
+                        "FALSE"
+                      ]
+                    },
+                    {
+                      "name": "Alcoholic",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "FALSE",
+                        "FALSE",
+                        "FALSE"
+                      ]
+                    },
+                    {
+                      "name": "AvailableInCans",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "TRUE",
+                        "FALSE",
+                        "FALSE"
+                      ]
+                    },
+                    {
+                      "name": "AvailableInBottles",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "FALSE",
+                        "TRUE",
+                        "TRUE"
+                      ]
+                    },
+                    {
+                      "name": "AvailableInKegs",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "FALSE",
+                        "FALSE",
+                        "FALSE"
+                      ]
+                    },
+                    {
+                      "name": "Website",
+                      "dtype": "object",
+                      "first_3_values": [
+                        "http://www.rootbeer.com/",
+                        "http://www.ajstephans.com/",
+                        "https://abita.com/brews/our_brews/abita-root-beer"
+                      ]
+                    },
+                    {
+                      "name": "FacebookPage",
+                      "dtype": "object",
+                      "first_3_values": [
+                        null,
+                        null,
+                        null
+                      ]
+                    },
+                    {
+                      "name": "Twitter",
+                      "dtype": "object",
+                      "first_3_values": [
+                        null,
+                        null,
+                        null
+                      ]
+                    },
+                    {
+                      "name": "WholesaleCost",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        0.42,
+                        0.98,
+                        1.13
+                      ]
+                    },
+                    {
+                      "name": "CurrentRetailPrice",
+                      "dtype": "float64",
+                      "first_3_values": [
+                        1.0,
+                        3.0,
+                        3.0
+                      ]
+                    }
+                  ]
+                }
+              }
+            ],
+            "isError": false
+          },
+          "code_engine": null,
+          "reason": "different types"
+        }
+      },
+      {
+        "call": 2,
+        "tool": "select_data_equal_to",
+        "reason": "call not executed on one backend"
+      },
+      {
+        "call": 3,
+        "tool": "get_Descriptions",
+        "reason": "call not executed on one backend"
+      }
+    ],
+    "matching_errors": [],
+    "local_tool_errors": [],
+    "code_engine_tool_errors": [
+      {
+        "call": 1,
+        "tool": "get_data",
+        "result": null,
+        "exception": "CancelledError: Cancelled via cancel scope 7f592b6731d0"
+      }
+    ],
+    "raw_results_equal": false
+  },
+  "diagnostic_retry": {
+    "first_exception": "ExceptionGroup: SSLError: [SSL] passed invalid argument (_ssl.c:2570)",
+    "final_exception": "ExceptionGroup: HTTPStatusError: Server error '502 Bad Gateway' for url 'https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/beer_factory'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502",
+    "first_attempt_file": "cap1_a823e527d383-86c438a4c62f_code_engine_diagnostic_attempt1.json"
+  },
+  "local_output_file": "cap1_a823e527d383-86c438a4c62f_local.json",
+  "code_engine_output_file": "cap1_a823e527d383-86c438a4c62f_code_engine.json"
+}

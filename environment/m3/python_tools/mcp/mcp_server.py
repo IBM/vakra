@@ -8,6 +8,7 @@ import yaml
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional, TypedDict
 import pathlib
+from copy import deepcopy
 
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
@@ -56,6 +57,10 @@ class GetDataInput(BaseModel):
         description="Optional tool universe ID to switch to before retrieving data. "
         "If provided and different from current universe, the server will reload "
         "active_data for the specified universe before returning it."
+    )
+    reset_handles: bool = Field(
+        False,
+        description="Start an independent replay: discard previous handles and reset their counters, without reloading the initial dataset when the universe is unchanged.",
     )
 
 
@@ -259,13 +264,15 @@ class LiveMCPServer(ABC):
             schema["required"] = [_DATA_FIELD_RENAMES.get(r, r) for r in required]
         return schema
 
-    def _resolve_handles(self, arguments: dict) -> dict:
+    def _resolve_handles(self, arguments: dict, *, copy_data: bool = False) -> dict:
         """Replace handle strings in tool arguments with the stored data dicts."""
         resolved = dict(arguments)
         for key in ("data", "data_1", "data_2", "data_label", "data_label_1", "data_label_2"):
             if key in resolved and isinstance(resolved[key], str):
                 if resolved[key] in self._handle_store:
                     resolved[key] = self._handle_store[resolved[key]]
+            if copy_data and key in resolved and isinstance(resolved[key], (dict, list)):
+                resolved[key] = deepcopy(resolved[key])
         return resolved
 
     def _clear_handles(self) -> None:
@@ -433,6 +440,9 @@ class LiveMCPServer(ABC):
                             error_msg = f"Error switching to universe: {str(e)}"
                             return [TextContent(type="text", text=json.dumps({"error": error_msg}))]
 
+                if input_data.reset_handles:
+                    self._clear_handles()
+
                 # Store active_data server-side; return compact peek over MCP
                 handle = self._store_handle(GET_DATA_FCN, self.active_data)
                 peek = self._make_data_peek(handle, self.active_data)
@@ -444,7 +454,11 @@ class LiveMCPServer(ABC):
                 raise ValueError(f"Unknown tool: {name}")
 
             # Resolve any handle references in arguments to actual data dicts
-            resolved_arguments = self._resolve_handles(arguments)
+            # Raw transforms mutate their inputs. Protect active_data and older
+            # handles independently of optional validation / IO wrappers.
+            resolved_arguments = self._resolve_handles(
+                arguments, copy_data=name == "transform_data" or name.startswith("transform_data_to_")
+            )
 
             # Remap data_label* → data* for underlying tool functions
             resolved_arguments = {

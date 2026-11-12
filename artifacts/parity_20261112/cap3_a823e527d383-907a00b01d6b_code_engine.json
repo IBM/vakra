@@ -1,0 +1,95 @@
+{
+  "capability": 3,
+  "domain": "beer_factory",
+  "uuid": "a823e527d383-907a00b01d6b",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap3.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_top_location_by_brand",
+      "resolved_arguments": {
+        "brand_name": "Dog n Suds",
+        "location_name_1": "Sac State American River Courtyard",
+        "location_name_2": "Sac State Union"
+      },
+      "started_at": "2026-11-12T15:25:00.924578+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"location_name\": \"Sac State Union\"\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "location_name": "Sac State Union"
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.373
+    },
+    {
+      "tool": "get_transaction_count_by_location",
+      "resolved_arguments": {
+        "location_name": "Sac State Union",
+        "credit_card_type": "American Express",
+        "start_date": "2014-01-01",
+        "end_date": "2014-12-31"
+      },
+      "started_at": "2026-11-12T15:25:02.298276+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"count\": 43\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "count": 43
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.315
+    }
+  ],
+  "finished": true,
+  "listed_tools": 124,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"location_name\": \"Sac State Union\"\n}",
+        "{\n  \"count\": 43\n}"
+      ]
+    ]
+  ],
+  "seconds": 4.417,
+  "tool_errors": 0
+}

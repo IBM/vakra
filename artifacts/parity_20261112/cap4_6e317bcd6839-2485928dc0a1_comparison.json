@@ -1,0 +1,55 @@
+{
+  "capability": 4,
+  "domain": "books",
+  "uuid": "6e317bcd6839-2485928dc0a1",
+  "sample_index": 6,
+  "source_file": "/root/v14/internal/test/capability_4_multiturn/output/books.json",
+  "source_sha256": "0a8deafd298d46d8a41489690958bdd04f98cbe20bfef590ccbcbcb0e58c68dc",
+  "turn_count": 3,
+  "call_count": 4,
+  "status": "pass",
+  "expected_calls": 4,
+  "local_calls": 4,
+  "code_engine_calls": 4,
+  "local_errors": 0,
+  "code_engine_errors": 0,
+  "local_exception": null,
+  "code_engine_exception": null,
+  "differences": [],
+  "matching_errors": [],
+  "local_tool_errors": [],
+  "code_engine_tool_errors": [],
+  "raw_results_equal": false,
+  "serialization_differences": [
+    {
+      "call": 1,
+      "tool": "query_books",
+      "first_differing_character": 1229,
+      "local_excerpt": "\n      \"metadata\": {\n        \"doc_id\": \"1770318222642300000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"17703",
+      "code_engine_excerpt": "\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642300000\"\n      }\n    },\n    {\n      \"id\": \"17703"
+    },
+    {
+      "call": 2,
+      "tool": "query_books",
+      "first_differing_character": 586,
+      "local_excerpt": "\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642230000\"\n      }\n    },\n    {\n      \"id\": \"17703",
+      "code_engine_excerpt": "\n      \"metadata\": {\n        \"doc_id\": \"1770318222642230000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"17703"
+    },
+    {
+      "call": 3,
+      "tool": "query_books",
+      "first_differing_character": 550,
+      "local_excerpt": "\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642301000\"\n      }\n    },\n    {\n      \"id\": \"17703",
+      "code_engine_excerpt": "\n      \"metadata\": {\n        \"doc_id\": \"1770318222642301000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"17703"
+    },
+    {
+      "call": 4,
+      "tool": "query_books",
+      "first_differing_character": 549,
+      "local_excerpt": "\n      \"metadata\": {\n        \"doc_id\": \"1770318222642301000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"17703",
+      "code_engine_excerpt": "\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222642301000\"\n      }\n    },\n    {\n      \"id\": \"17703"
+    }
+  ],
+  "local_output_file": "cap4_6e317bcd6839-2485928dc0a1_local.json",
+  "code_engine_output_file": "cap4_6e317bcd6839-2485928dc0a1_code_engine.json"
+}

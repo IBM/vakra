@@ -1,0 +1,66 @@
+{
+  "capability": 2,
+  "domain": "formula_1",
+  "uuid": "1e94b912a1e2-31620d537c35",
+  "backend": "local",
+  "connection": {
+    "mode": "stdio",
+    "container_name": "capability_2_dashboard_apis",
+    "container_runtime": null,
+    "container_command": [
+      "python",
+      "/app/mcp_dispatch.py"
+    ],
+    "container_env": {
+      "CAPABILITY_ID": "2",
+      "MCP_DB_ROOT": "/app/db"
+    },
+    "command": null,
+    "args": null,
+    "server_url": null,
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_fastest_q2_surname",
+      "resolved_arguments": {
+        "race_id": 19
+      },
+      "started_at": "2026-11-12T15:24:30.793083+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"surname\": \"Fisichella\"\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "surname": "Fisichella"
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.044
+    }
+  ],
+  "finished": true,
+  "listed_tools": 152,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"surname\": \"Fisichella\"\n}"
+      ]
+    ]
+  ],
+  "seconds": 1.208,
+  "tool_errors": 0
+}

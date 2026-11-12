@@ -1,0 +1,36 @@
+{
+  "capability": 1,
+  "domain": "college_completion",
+  "uuid": "2b28654158b1-d9db0719cde8",
+  "backend": "code_engine_diagnostic",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_data",
+      "resolved_arguments": {
+        "tool_universe_id": "2b28654158b1-d9db0719cde8",
+        "reset_handles": true
+      },
+      "started_at": "2026-11-12T15:36:27.748589+00:00",
+      "exception": "CancelledError: Cancelled via cancel scope 7fb2c7220170",
+      "seconds": 32.006
+    }
+  ],
+  "finished": true,
+  "listed_tools": 26,
+  "exception": "ExceptionGroup: HTTPStatusError: Server error '502 Bad Gateway' for url 'https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/college_completion'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502",
+  "seconds": 54.122,
+  "tool_errors": 1,
+  "previous_attempt": "cap1_2b28654158b1-d9db0719cde8_code_engine_diagnostic_attempt1.json"
+}

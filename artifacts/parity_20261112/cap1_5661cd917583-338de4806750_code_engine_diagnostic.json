@@ -1,0 +1,24 @@
+{
+  "capability": 1,
+  "domain": "book_publishing_company",
+  "uuid": "5661cd917583-338de4806750",
+  "backend": "code_engine_diagnostic",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [],
+  "finished": true,
+  "exception": "ExceptionGroup: HTTPStatusError: Server error '502 Bad Gateway' for url 'https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/book_publishing_company'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502",
+  "seconds": 0.34,
+  "tool_errors": 0,
+  "previous_attempt": "cap1_5661cd917583-338de4806750_code_engine_diagnostic_attempt1.json"
+}

@@ -1,0 +1,402 @@
+[
+  {
+    "capability": 1,
+    "domain": "beer_factory",
+    "uuid": "a823e527d383-0a1763227b31",
+    "sample_index": 0,
+    "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/beer_factory.json",
+    "source_sha256": "f4a2f1f7cf390710817a798b1e97cf89dcae50fe225e409ffb84d9bd1fb89edd",
+    "turn_count": 1,
+    "call_count": 3
+  },
+  {
+    "capability": 1,
+    "domain": "beer_factory",
+    "uuid": "a823e527d383-86c438a4c62f",
+    "sample_index": 1,
+    "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/beer_factory.json",
+    "source_sha256": "f4a2f1f7cf390710817a798b1e97cf89dcae50fe225e409ffb84d9bd1fb89edd",
+    "turn_count": 1,
+    "call_count": 3
+  },
+  {
+    "capability": 1,
+    "domain": "book_publishing_company",
+    "uuid": "5661cd917583-338de4806750",
+    "sample_index": 2,
+    "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/book_publishing_company.json",
+    "source_sha256": "8a98e14da572e3ebc7e2122b26b06e8375fec81082c535f89c08d10306130953",
+    "turn_count": 1,
+    "call_count": 6
+  },
+  {
+    "capability": 1,
+    "domain": "books",
+    "uuid": "6e317bcd6839-050c465e9be1",
+    "sample_index": 4,
+    "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/books.json",
+    "source_sha256": "1f65b7c6d6093a42faba16cce6c6d22e039e0123a20bfe58d068c8ebe4f2ae33",
+    "turn_count": 1,
+    "call_count": 5
+  },
+  {
+    "capability": 1,
+    "domain": "books",
+    "uuid": "6e317bcd6839-d365c9ad58eb",
+    "sample_index": 10,
+    "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/books.json",
+    "source_sha256": "1f65b7c6d6093a42faba16cce6c6d22e039e0123a20bfe58d068c8ebe4f2ae33",
+    "turn_count": 1,
+    "call_count": 5
+  },
+  {
+    "capability": 1,
+    "domain": "disney",
+    "uuid": "34a533dfd727-f6c3999d1e9d",
+    "sample_index": 4,
+    "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/disney.json",
+    "source_sha256": "cce310953d37153fa830ef80c66e7f4af2094a8befb03a8852c1820c5e8486bd",
+    "turn_count": 1,
+    "call_count": 4
+  },
+  {
+    "capability": 1,
+    "domain": "computer_student",
+    "uuid": "39a28b2592a2-32c88e5e5bd6",
+    "sample_index": 0,
+    "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/computer_student.json",
+    "source_sha256": "5d24b8b142cbcd112e333f2d839eb56463dd0f67aba5ec5228251b4b9c803cbc",
+    "turn_count": 1,
+    "call_count": 5
+  },
+  {
+    "capability": 1,
+    "domain": "craftbeer",
+    "uuid": "cad7f2b7d2a5-e110a9fc84d2",
+    "sample_index": 0,
+    "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/craftbeer.json",
+    "source_sha256": "9f4f4f73c511cd3df732a4155a6cb4adaf8a0857040ab5b71dcdd9f46da0a3a9",
+    "turn_count": 1,
+    "call_count": 5
+  },
+  {
+    "capability": 1,
+    "domain": "craftbeer",
+    "uuid": "cad7f2b7d2a5-31f4422a6a60",
+    "sample_index": 1,
+    "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/craftbeer.json",
+    "source_sha256": "9f4f4f73c511cd3df732a4155a6cb4adaf8a0857040ab5b71dcdd9f46da0a3a9",
+    "turn_count": 1,
+    "call_count": 4
+  },
+  {
+    "capability": 1,
+    "domain": "college_completion",
+    "uuid": "2b28654158b1-d9db0719cde8",
+    "sample_index": 1,
+    "source_file": "/root/v14/internal/test/capability_1_bi_apis/output/college_completion.json",
+    "source_sha256": "ffc7139d30ab89ce850966d05a42f801679a889cf15a4d50dbb5a17fc510c3b4",
+    "turn_count": 1,
+    "call_count": 7
+  },
+  {
+    "capability": 2,
+    "domain": "california_schools",
+    "uuid": "bd3d9a21b4c9-8c530ae54b29",
+    "sample_index": 0,
+    "source_file": "/root/v14/internal/test/capability_2_dashboard_apis/output/california_schools.json",
+    "source_sha256": "ea1305a341765248a8712bf36fe7a21351ff82045700363a88f4d043ab43f670",
+    "turn_count": 1,
+    "call_count": 1
+  },
+  {
+    "capability": 2,
+    "domain": "california_schools",
+    "uuid": "bd3d9a21b4c9-f7b2eae41918",
+    "sample_index": 1,
+    "source_file": "/root/v14/internal/test/capability_2_dashboard_apis/output/california_schools.json",
+    "source_sha256": "ea1305a341765248a8712bf36fe7a21351ff82045700363a88f4d043ab43f670",
+    "turn_count": 1,
+    "call_count": 1
+  },
+  {
+    "capability": 2,
+    "domain": "financial",
+    "uuid": "fed0e4820af4-9622565c6ac3",
+    "sample_index": 0,
+    "source_file": "/root/v14/internal/test/capability_2_dashboard_apis/output/financial.json",
+    "source_sha256": "9f99f97f5477d2596c68463384c013e44e3bdddcb14a6e7d49db58cada1aaabd",
+    "turn_count": 1,
+    "call_count": 1
+  },
+  {
+    "capability": 2,
+    "domain": "financial",
+    "uuid": "fed0e4820af4-5884354614cf",
+    "sample_index": 1,
+    "source_file": "/root/v14/internal/test/capability_2_dashboard_apis/output/financial.json",
+    "source_sha256": "9f99f97f5477d2596c68463384c013e44e3bdddcb14a6e7d49db58cada1aaabd",
+    "turn_count": 1,
+    "call_count": 1
+  },
+  {
+    "capability": 2,
+    "domain": "formula_1",
+    "uuid": "1e94b912a1e2-c020b4857bd2",
+    "sample_index": 0,
+    "source_file": "/root/v14/internal/test/capability_2_dashboard_apis/output/formula_1.json",
+    "source_sha256": "8095fdc1cc6da6c01f394d4a12bd98e7f9fc0208e47dc2607f4fda53ff0176f0",
+    "turn_count": 1,
+    "call_count": 1
+  },
+  {
+    "capability": 2,
+    "domain": "formula_1",
+    "uuid": "1e94b912a1e2-31620d537c35",
+    "sample_index": 1,
+    "source_file": "/root/v14/internal/test/capability_2_dashboard_apis/output/formula_1.json",
+    "source_sha256": "8095fdc1cc6da6c01f394d4a12bd98e7f9fc0208e47dc2607f4fda53ff0176f0",
+    "turn_count": 1,
+    "call_count": 1
+  },
+  {
+    "capability": 2,
+    "domain": "movie",
+    "uuid": "8a6ba32c9bed-2fbcbda7c02f",
+    "sample_index": 0,
+    "source_file": "/root/v14/internal/test/capability_2_dashboard_apis/output/movie.json",
+    "source_sha256": "d677b09cae815deb7a862c8958ebd887b6e5dad44b68778ca434a55c94f252a9",
+    "turn_count": 1,
+    "call_count": 1
+  },
+  {
+    "capability": 2,
+    "domain": "movie",
+    "uuid": "8a6ba32c9bed-ae062fb450d1",
+    "sample_index": 1,
+    "source_file": "/root/v14/internal/test/capability_2_dashboard_apis/output/movie.json",
+    "source_sha256": "d677b09cae815deb7a862c8958ebd887b6e5dad44b68778ca434a55c94f252a9",
+    "turn_count": 1,
+    "call_count": 1
+  },
+  {
+    "capability": 2,
+    "domain": "superhero",
+    "uuid": "7a1c36ae40bb-870719f02863",
+    "sample_index": 0,
+    "source_file": "/root/v14/internal/test/capability_2_dashboard_apis/output/superhero.json",
+    "source_sha256": "4dc769b32693dbfc9be72c0230b4b6cba4090761def3dc09f331e470a85812ff",
+    "turn_count": 1,
+    "call_count": 1
+  },
+  {
+    "capability": 2,
+    "domain": "superhero",
+    "uuid": "7a1c36ae40bb-5afef876842e",
+    "sample_index": 1,
+    "source_file": "/root/v14/internal/test/capability_2_dashboard_apis/output/superhero.json",
+    "source_sha256": "4dc769b32693dbfc9be72c0230b4b6cba4090761def3dc09f331e470a85812ff",
+    "turn_count": 1,
+    "call_count": 1
+  },
+  {
+    "capability": 3,
+    "domain": "bpo",
+    "uuid": "4cac5f081a20-adada92ad0a8",
+    "sample_index": 0,
+    "source_file": "/root/v14/internal/test/capability_3_multihop_reasoning/output/bpo.json",
+    "source_sha256": "eaa081cad6f46d01dae9eaf74983b381a79a6bb4f7eac1e8f165d0e7a92c9bd1",
+    "turn_count": 1,
+    "call_count": 1
+  },
+  {
+    "capability": 3,
+    "domain": "bpo",
+    "uuid": "4cac5f081a20-29980c22278a",
+    "sample_index": 2,
+    "source_file": "/root/v14/internal/test/capability_3_multihop_reasoning/output/bpo.json",
+    "source_sha256": "eaa081cad6f46d01dae9eaf74983b381a79a6bb4f7eac1e8f165d0e7a92c9bd1",
+    "turn_count": 1,
+    "call_count": 1
+  },
+  {
+    "capability": 3,
+    "domain": "bpo",
+    "uuid": "4cac5f081a20-56ddd5e0b3d3",
+    "sample_index": 3,
+    "source_file": "/root/v14/internal/test/capability_3_multihop_reasoning/output/bpo.json",
+    "source_sha256": "eaa081cad6f46d01dae9eaf74983b381a79a6bb4f7eac1e8f165d0e7a92c9bd1",
+    "turn_count": 1,
+    "call_count": 1
+  },
+  {
+    "capability": 3,
+    "domain": "bpo",
+    "uuid": "4cac5f081a20-45a058cc9056",
+    "sample_index": 9,
+    "source_file": "/root/v14/internal/test/capability_3_multihop_reasoning/output/bpo.json",
+    "source_sha256": "eaa081cad6f46d01dae9eaf74983b381a79a6bb4f7eac1e8f165d0e7a92c9bd1",
+    "turn_count": 1,
+    "call_count": 2
+  },
+  {
+    "capability": 3,
+    "domain": "bpo",
+    "uuid": "4cac5f081a20-9c9cce152beb",
+    "sample_index": 10,
+    "source_file": "/root/v14/internal/test/capability_3_multihop_reasoning/output/bpo.json",
+    "source_sha256": "eaa081cad6f46d01dae9eaf74983b381a79a6bb4f7eac1e8f165d0e7a92c9bd1",
+    "turn_count": 1,
+    "call_count": 3
+  },
+  {
+    "capability": 3,
+    "domain": "beer_factory",
+    "uuid": "a823e527d383-5bddd549e26f",
+    "sample_index": 0,
+    "source_file": "/root/v14/internal/test/capability_3_multihop_reasoning/output/beer_factory.json",
+    "source_sha256": "4fcc10bcec41383a715005f3449e9050b72726f6b3384ae85ef0f4c935281c97",
+    "turn_count": 1,
+    "call_count": 2
+  },
+  {
+    "capability": 3,
+    "domain": "beer_factory",
+    "uuid": "a823e527d383-907a00b01d6b",
+    "sample_index": 3,
+    "source_file": "/root/v14/internal/test/capability_3_multihop_reasoning/output/beer_factory.json",
+    "source_sha256": "4fcc10bcec41383a715005f3449e9050b72726f6b3384ae85ef0f4c935281c97",
+    "turn_count": 1,
+    "call_count": 2
+  },
+  {
+    "capability": 3,
+    "domain": "books",
+    "uuid": "6e317bcd6839-be3f4a72d000",
+    "sample_index": 0,
+    "source_file": "/root/v14/internal/test/capability_3_multihop_reasoning/output/books.json",
+    "source_sha256": "c28d4b6a4f0ed90b7c6604135574c09a61060f6beb32db6886137033b7e87646",
+    "turn_count": 1,
+    "call_count": 2
+  },
+  {
+    "capability": 3,
+    "domain": "books",
+    "uuid": "6e317bcd6839-652486238c1f",
+    "sample_index": 1,
+    "source_file": "/root/v14/internal/test/capability_3_multihop_reasoning/output/books.json",
+    "source_sha256": "c28d4b6a4f0ed90b7c6604135574c09a61060f6beb32db6886137033b7e87646",
+    "turn_count": 1,
+    "call_count": 2
+  },
+  {
+    "capability": 3,
+    "domain": "movie",
+    "uuid": "8a6ba32c9bed-3432ae474e32",
+    "sample_index": 0,
+    "source_file": "/root/v14/internal/test/capability_3_multihop_reasoning/output/movie.json",
+    "source_sha256": "39f08bc8403e3f7e7f0e22ca8e0b24df6629c67ea9659d58f3b0a779b5aa8be3",
+    "turn_count": 1,
+    "call_count": 2
+  },
+  {
+    "capability": 4,
+    "domain": "disney",
+    "uuid": "34a533dfd727-fb4bf2f380bd",
+    "sample_index": 0,
+    "source_file": "/root/v14/internal/test/capability_4_multiturn/output/disney.json",
+    "source_sha256": "bb4c9e721e402fd23e965d6fbe3ae4ece95ea75d38d85d6b3400323f5d90effb",
+    "turn_count": 2,
+    "call_count": 2
+  },
+  {
+    "capability": 4,
+    "domain": "disney",
+    "uuid": "34a533dfd727-5ad9cc4c863b",
+    "sample_index": 5,
+    "source_file": "/root/v14/internal/test/capability_4_multiturn/output/disney.json",
+    "source_sha256": "bb4c9e721e402fd23e965d6fbe3ae4ece95ea75d38d85d6b3400323f5d90effb",
+    "turn_count": 3,
+    "call_count": 4
+  },
+  {
+    "capability": 4,
+    "domain": "disney",
+    "uuid": "34a533dfd727-fe64aef88dc0",
+    "sample_index": 6,
+    "source_file": "/root/v14/internal/test/capability_4_multiturn/output/disney.json",
+    "source_sha256": "bb4c9e721e402fd23e965d6fbe3ae4ece95ea75d38d85d6b3400323f5d90effb",
+    "turn_count": 2,
+    "call_count": 3
+  },
+  {
+    "capability": 4,
+    "domain": "beer_factory",
+    "uuid": "a823e527d383-769208ced562",
+    "sample_index": 0,
+    "source_file": "/root/v14/internal/test/capability_4_multiturn/output/beer_factory.json",
+    "source_sha256": "a43c2bd9f65801ce699d1c359d03ec767b3a4e1c6029095d07c9918e72751782",
+    "turn_count": 3,
+    "call_count": 3
+  },
+  {
+    "capability": 4,
+    "domain": "beer_factory",
+    "uuid": "a823e527d383-e7662816234e",
+    "sample_index": 17,
+    "source_file": "/root/v14/internal/test/capability_4_multiturn/output/beer_factory.json",
+    "source_sha256": "a43c2bd9f65801ce699d1c359d03ec767b3a4e1c6029095d07c9918e72751782",
+    "turn_count": 3,
+    "call_count": 4
+  },
+  {
+    "capability": 4,
+    "domain": "books",
+    "uuid": "6e317bcd6839-b3632defce8e",
+    "sample_index": 0,
+    "source_file": "/root/v14/internal/test/capability_4_multiturn/output/books.json",
+    "source_sha256": "0a8deafd298d46d8a41489690958bdd04f98cbe20bfef590ccbcbcb0e58c68dc",
+    "turn_count": 3,
+    "call_count": 3
+  },
+  {
+    "capability": 4,
+    "domain": "books",
+    "uuid": "6e317bcd6839-2485928dc0a1",
+    "sample_index": 6,
+    "source_file": "/root/v14/internal/test/capability_4_multiturn/output/books.json",
+    "source_sha256": "0a8deafd298d46d8a41489690958bdd04f98cbe20bfef590ccbcbcb0e58c68dc",
+    "turn_count": 3,
+    "call_count": 4
+  },
+  {
+    "capability": 4,
+    "domain": "hockey",
+    "uuid": "308738b8195d-88b1da7a5c7d",
+    "sample_index": 0,
+    "source_file": "/root/v14/internal/test/capability_4_multiturn/output/hockey.json",
+    "source_sha256": "42e98b1fa97744990519c2236ceedb6ce63049935df5c6d36658c7ef52cdc171",
+    "turn_count": 2,
+    "call_count": 5
+  },
+  {
+    "capability": 4,
+    "domain": "hockey",
+    "uuid": "308738b8195d-33b90474d236",
+    "sample_index": 7,
+    "source_file": "/root/v14/internal/test/capability_4_multiturn/output/hockey.json",
+    "source_sha256": "42e98b1fa97744990519c2236ceedb6ce63049935df5c6d36658c7ef52cdc171",
+    "turn_count": 1,
+    "call_count": 2
+  },
+  {
+    "capability": 4,
+    "domain": "movie",
+    "uuid": "8a6ba32c9bed-ba5d1e29b4fa",
+    "sample_index": 4,
+    "source_file": "/root/v14/internal/test/capability_4_multiturn/output/movie.json",
+    "source_sha256": "896651cfe6925f147c7c83822bf9c51e869513ac3b7ac9a4833a948b95a666e9",
+    "turn_count": 3,
+    "call_count": 4
+  }
+]

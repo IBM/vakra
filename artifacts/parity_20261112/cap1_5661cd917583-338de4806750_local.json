@@ -1,0 +1,681 @@
+{
+  "capability": 1,
+  "domain": "book_publishing_company",
+  "uuid": "5661cd917583-338de4806750",
+  "backend": "local",
+  "connection": {
+    "mode": "stdio",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": "/root/cuga-eval/.venv/bin/python",
+    "args": [
+      "-m",
+      "environment.m3.python_tools.mcp"
+    ],
+    "server_url": null,
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_data",
+      "resolved_arguments": {
+        "tool_universe_id": "5661cd917583-338de4806750",
+        "reset_handles": true
+      },
+      "started_at": "2026-11-12T15:24:56.411104+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"retrieved_titles_1\", \"num_records\": 18, \"key_details\": [{\"name\": \"titles_title_id\", \"dtype\": \"object\", \"first_3_values\": [\"BU1032\", \"BU1111\", \"BU2075\"]}, {\"name\": \"titles_title\", \"dtype\": \"object\", \"first_3_values\": [\"The Busy Executive's Database Guide\", \"Cooking with Computers: Surreptitious Balance Sheets\", \"You Can Combat Computer Stress!\"]}, {\"name\": \"titles_type\", \"dtype\": \"object\", \"first_3_values\": [\"business\", \"business\", \"business\"]}, {\"name\": \"titles_pub_id\", \"dtype\": \"object\", \"first_3_values\": [\"1389\", \"1389\", \"0736\"]}, {\"name\": \"titles_price\", \"dtype\": \"float64\", \"first_3_values\": [19.99, 11.95, 2.99]}, {\"name\": \"titles_advance\", \"dtype\": \"float64\", \"first_3_values\": [5000.0, 5000.0, 10125.0]}, {\"name\": \"titles_royalty\", \"dtype\": \"float64\", \"first_3_values\": [10.0, 10.0, 24.0]}, {\"name\": \"titles_ytd_sales\", \"dtype\": \"float64\", \"first_3_values\": [4095.0, 3876.0, 18722.0]}, {\"name\": \"titles_notes\", \"dtype\": \"object\", \"first_3_values\": [\"An overview of available database systems with emphasis on common business applications. Illustrated.\", \"Helpful hints on how to use your electronic resources to the best advantage.\", \"The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations.\"]}, {\"name\": \"titles_pubdate\", \"dtype\": \"object\", \"first_3_values\": [\"1991-06-12 00:00:00.0\", \"1991-06-09 00:00:00.0\", \"1991-06-30 00:00:00.0\"]}, {\"name\": \"publishers_pub_id\", \"dtype\": \"object\", \"first_3_values\": [\"1389\", \"1389\", \"0736\"]}, {\"name\": \"publishers_pub_name\", \"dtype\": \"object\", \"first_3_values\": [\"Algodata Infosystems\", \"Algodata Infosystems\", \"New Moon Books\"]}, {\"name\": \"publishers_city\", \"dtype\": \"object\", \"first_3_values\": [\"Berkeley\", \"Berkeley\", \"Boston\"]}, {\"name\": \"publishers_state\", \"dtype\": \"object\", \"first_3_values\": [\"CA\", \"CA\", \"MA\"]}, {\"name\": \"publishers_country\", \"dtype\": \"object\", \"first_3_values\": [\"USA\", \"USA\", \"USA\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "retrieved_titles_1",
+              "num_records": 18,
+              "key_details": [
+                {
+                  "name": "titles_title_id",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "BU1032",
+                    "BU1111",
+                    "BU2075"
+                  ]
+                },
+                {
+                  "name": "titles_title",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "The Busy Executive's Database Guide",
+                    "Cooking with Computers: Surreptitious Balance Sheets",
+                    "You Can Combat Computer Stress!"
+                  ]
+                },
+                {
+                  "name": "titles_type",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "business",
+                    "business",
+                    "business"
+                  ]
+                },
+                {
+                  "name": "titles_pub_id",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "1389",
+                    "1389",
+                    "0736"
+                  ]
+                },
+                {
+                  "name": "titles_price",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    19.99,
+                    11.95,
+                    2.99
+                  ]
+                },
+                {
+                  "name": "titles_advance",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    5000.0,
+                    5000.0,
+                    10125.0
+                  ]
+                },
+                {
+                  "name": "titles_royalty",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    10.0,
+                    10.0,
+                    24.0
+                  ]
+                },
+                {
+                  "name": "titles_ytd_sales",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    4095.0,
+                    3876.0,
+                    18722.0
+                  ]
+                },
+                {
+                  "name": "titles_notes",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "An overview of available database systems with emphasis on common business applications. Illustrated.",
+                    "Helpful hints on how to use your electronic resources to the best advantage.",
+                    "The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations."
+                  ]
+                },
+                {
+                  "name": "titles_pubdate",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "1991-06-12 00:00:00.0",
+                    "1991-06-09 00:00:00.0",
+                    "1991-06-30 00:00:00.0"
+                  ]
+                },
+                {
+                  "name": "publishers_pub_id",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "1389",
+                    "1389",
+                    "0736"
+                  ]
+                },
+                {
+                  "name": "publishers_pub_name",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Algodata Infosystems",
+                    "Algodata Infosystems",
+                    "New Moon Books"
+                  ]
+                },
+                {
+                  "name": "publishers_city",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Berkeley",
+                    "Berkeley",
+                    "Boston"
+                  ]
+                },
+                {
+                  "name": "publishers_state",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "CA",
+                    "CA",
+                    "MA"
+                  ]
+                },
+                {
+                  "name": "publishers_country",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "USA",
+                    "USA",
+                    "USA"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.007
+    },
+    {
+      "tool": "transform_data",
+      "resolved_arguments": {
+        "data_label": "retrieved_titles_1",
+        "key_name": "titles_pubdate",
+        "operation_type": "datetime",
+        "operation_args": {
+          "pattern": "%Y"
+        }
+      },
+      "started_at": "2026-11-12T15:24:56.419225+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"transformed_titles_1\", \"num_records\": 18, \"key_details\": [{\"name\": \"titles_title_id\", \"dtype\": \"str\", \"first_3_values\": [\"BU1032\", \"BU1111\", \"BU2075\"]}, {\"name\": \"titles_title\", \"dtype\": \"str\", \"first_3_values\": [\"The Busy Executive's Database Guide\", \"Cooking with Computers: Surreptitious Balance Sheets\", \"You Can Combat Computer Stress!\"]}, {\"name\": \"titles_type\", \"dtype\": \"str\", \"first_3_values\": [\"business\", \"business\", \"business\"]}, {\"name\": \"titles_pub_id\", \"dtype\": \"str\", \"first_3_values\": [\"1389\", \"1389\", \"0736\"]}, {\"name\": \"titles_price\", \"dtype\": \"float\", \"first_3_values\": [19.99, 11.95, 2.99]}, {\"name\": \"titles_advance\", \"dtype\": \"float\", \"first_3_values\": [5000.0, 5000.0, 10125.0]}, {\"name\": \"titles_royalty\", \"dtype\": \"float\", \"first_3_values\": [10.0, 10.0, 24.0]}, {\"name\": \"titles_ytd_sales\", \"dtype\": \"float\", \"first_3_values\": [4095.0, 3876.0, 18722.0]}, {\"name\": \"titles_notes\", \"dtype\": \"str\", \"first_3_values\": [\"An overview of available database systems with emphasis on common business applications. Illustrated.\", \"Helpful hints on how to use your electronic resources to the best advantage.\", \"The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations.\"]}, {\"name\": \"titles_pubdate\", \"dtype\": \"int\", \"first_3_values\": [1991, 1991, 1991]}, {\"name\": \"publishers_pub_id\", \"dtype\": \"str\", \"first_3_values\": [\"1389\", \"1389\", \"0736\"]}, {\"name\": \"publishers_pub_name\", \"dtype\": \"str\", \"first_3_values\": [\"Algodata Infosystems\", \"Algodata Infosystems\", \"New Moon Books\"]}, {\"name\": \"publishers_city\", \"dtype\": \"str\", \"first_3_values\": [\"Berkeley\", \"Berkeley\", \"Boston\"]}, {\"name\": \"publishers_state\", \"dtype\": \"str\", \"first_3_values\": [\"CA\", \"CA\", \"MA\"]}, {\"name\": \"publishers_country\", \"dtype\": \"str\", \"first_3_values\": [\"USA\", \"USA\", \"USA\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "transformed_titles_1",
+              "num_records": 18,
+              "key_details": [
+                {
+                  "name": "titles_title_id",
+                  "dtype": "str",
+                  "first_3_values": [
+                    "BU1032",
+                    "BU1111",
+                    "BU2075"
+                  ]
+                },
+                {
+                  "name": "titles_title",
+                  "dtype": "str",
+                  "first_3_values": [
+                    "The Busy Executive's Database Guide",
+                    "Cooking with Computers: Surreptitious Balance Sheets",
+                    "You Can Combat Computer Stress!"
+                  ]
+                },
+                {
+                  "name": "titles_type",
+                  "dtype": "str",
+                  "first_3_values": [
+                    "business",
+                    "business",
+                    "business"
+                  ]
+                },
+                {
+                  "name": "titles_pub_id",
+                  "dtype": "str",
+                  "first_3_values": [
+                    "1389",
+                    "1389",
+                    "0736"
+                  ]
+                },
+                {
+                  "name": "titles_price",
+                  "dtype": "float",
+                  "first_3_values": [
+                    19.99,
+                    11.95,
+                    2.99
+                  ]
+                },
+                {
+                  "name": "titles_advance",
+                  "dtype": "float",
+                  "first_3_values": [
+                    5000.0,
+                    5000.0,
+                    10125.0
+                  ]
+                },
+                {
+                  "name": "titles_royalty",
+                  "dtype": "float",
+                  "first_3_values": [
+                    10.0,
+                    10.0,
+                    24.0
+                  ]
+                },
+                {
+                  "name": "titles_ytd_sales",
+                  "dtype": "float",
+                  "first_3_values": [
+                    4095.0,
+                    3876.0,
+                    18722.0
+                  ]
+                },
+                {
+                  "name": "titles_notes",
+                  "dtype": "str",
+                  "first_3_values": [
+                    "An overview of available database systems with emphasis on common business applications. Illustrated.",
+                    "Helpful hints on how to use your electronic resources to the best advantage.",
+                    "The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations."
+                  ]
+                },
+                {
+                  "name": "titles_pubdate",
+                  "dtype": "int",
+                  "first_3_values": [
+                    1991,
+                    1991,
+                    1991
+                  ]
+                },
+                {
+                  "name": "publishers_pub_id",
+                  "dtype": "str",
+                  "first_3_values": [
+                    "1389",
+                    "1389",
+                    "0736"
+                  ]
+                },
+                {
+                  "name": "publishers_pub_name",
+                  "dtype": "str",
+                  "first_3_values": [
+                    "Algodata Infosystems",
+                    "Algodata Infosystems",
+                    "New Moon Books"
+                  ]
+                },
+                {
+                  "name": "publishers_city",
+                  "dtype": "str",
+                  "first_3_values": [
+                    "Berkeley",
+                    "Berkeley",
+                    "Boston"
+                  ]
+                },
+                {
+                  "name": "publishers_state",
+                  "dtype": "str",
+                  "first_3_values": [
+                    "CA",
+                    "CA",
+                    "MA"
+                  ]
+                },
+                {
+                  "name": "publishers_country",
+                  "dtype": "str",
+                  "first_3_values": [
+                    "USA",
+                    "USA",
+                    "USA"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.005
+    },
+    {
+      "tool": "filter_data",
+      "resolved_arguments": {
+        "data_label": "transformed_titles_1",
+        "key_name": "titles_pubdate",
+        "value": "1991",
+        "condition": "equal_to"
+      },
+      "started_at": "2026-11-12T15:24:56.425671+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"filtered_titles_1\", \"num_records\": 15, \"key_details\": [{\"name\": \"titles_title_id\", \"dtype\": \"object\", \"first_3_values\": [\"BU1032\", \"BU1111\", \"BU2075\"]}, {\"name\": \"titles_title\", \"dtype\": \"object\", \"first_3_values\": [\"The Busy Executive's Database Guide\", \"Cooking with Computers: Surreptitious Balance Sheets\", \"You Can Combat Computer Stress!\"]}, {\"name\": \"titles_type\", \"dtype\": \"object\", \"first_3_values\": [\"business\", \"business\", \"business\"]}, {\"name\": \"titles_pub_id\", \"dtype\": \"object\", \"first_3_values\": [\"1389\", \"1389\", \"0736\"]}, {\"name\": \"titles_price\", \"dtype\": \"float64\", \"first_3_values\": [19.99, 11.95, 2.99]}, {\"name\": \"titles_advance\", \"dtype\": \"float64\", \"first_3_values\": [5000.0, 5000.0, 10125.0]}, {\"name\": \"titles_royalty\", \"dtype\": \"float64\", \"first_3_values\": [10.0, 10.0, 24.0]}, {\"name\": \"titles_ytd_sales\", \"dtype\": \"float64\", \"first_3_values\": [4095.0, 3876.0, 18722.0]}, {\"name\": \"titles_notes\", \"dtype\": \"object\", \"first_3_values\": [\"An overview of available database systems with emphasis on common business applications. Illustrated.\", \"Helpful hints on how to use your electronic resources to the best advantage.\", \"The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations.\"]}, {\"name\": \"titles_pubdate\", \"dtype\": \"int64\", \"first_3_values\": [1991, 1991, 1991]}, {\"name\": \"publishers_pub_id\", \"dtype\": \"object\", \"first_3_values\": [\"1389\", \"1389\", \"0736\"]}, {\"name\": \"publishers_pub_name\", \"dtype\": \"object\", \"first_3_values\": [\"Algodata Infosystems\", \"Algodata Infosystems\", \"New Moon Books\"]}, {\"name\": \"publishers_city\", \"dtype\": \"object\", \"first_3_values\": [\"Berkeley\", \"Berkeley\", \"Boston\"]}, {\"name\": \"publishers_state\", \"dtype\": \"object\", \"first_3_values\": [\"CA\", \"CA\", \"MA\"]}, {\"name\": \"publishers_country\", \"dtype\": \"object\", \"first_3_values\": [\"USA\", \"USA\", \"USA\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "filtered_titles_1",
+              "num_records": 15,
+              "key_details": [
+                {
+                  "name": "titles_title_id",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "BU1032",
+                    "BU1111",
+                    "BU2075"
+                  ]
+                },
+                {
+                  "name": "titles_title",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "The Busy Executive's Database Guide",
+                    "Cooking with Computers: Surreptitious Balance Sheets",
+                    "You Can Combat Computer Stress!"
+                  ]
+                },
+                {
+                  "name": "titles_type",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "business",
+                    "business",
+                    "business"
+                  ]
+                },
+                {
+                  "name": "titles_pub_id",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "1389",
+                    "1389",
+                    "0736"
+                  ]
+                },
+                {
+                  "name": "titles_price",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    19.99,
+                    11.95,
+                    2.99
+                  ]
+                },
+                {
+                  "name": "titles_advance",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    5000.0,
+                    5000.0,
+                    10125.0
+                  ]
+                },
+                {
+                  "name": "titles_royalty",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    10.0,
+                    10.0,
+                    24.0
+                  ]
+                },
+                {
+                  "name": "titles_ytd_sales",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    4095.0,
+                    3876.0,
+                    18722.0
+                  ]
+                },
+                {
+                  "name": "titles_notes",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "An overview of available database systems with emphasis on common business applications. Illustrated.",
+                    "Helpful hints on how to use your electronic resources to the best advantage.",
+                    "The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations."
+                  ]
+                },
+                {
+                  "name": "titles_pubdate",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1991,
+                    1991,
+                    1991
+                  ]
+                },
+                {
+                  "name": "publishers_pub_id",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "1389",
+                    "1389",
+                    "0736"
+                  ]
+                },
+                {
+                  "name": "publishers_pub_name",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Algodata Infosystems",
+                    "Algodata Infosystems",
+                    "New Moon Books"
+                  ]
+                },
+                {
+                  "name": "publishers_city",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Berkeley",
+                    "Berkeley",
+                    "Boston"
+                  ]
+                },
+                {
+                  "name": "publishers_state",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "CA",
+                    "CA",
+                    "MA"
+                  ]
+                },
+                {
+                  "name": "publishers_country",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "USA",
+                    "USA",
+                    "USA"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.009
+    },
+    {
+      "tool": "retrieve_data",
+      "resolved_arguments": {
+        "data_label": "filtered_titles_1",
+        "key_name": "titles_title",
+        "distinct": false,
+        "limit": -1
+      },
+      "started_at": "2026-11-12T15:24:56.435339+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"retrieved_titles_2\", \"num_records\": 15, \"key_details\": [{\"name\": \"titles_title\", \"dtype\": \"str\", \"first_3_values\": [\"The Busy Executive's Database Guide\", \"Cooking with Computers: Surreptitious Balance Sheets\", \"You Can Combat Computer Stress!\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "retrieved_titles_2",
+              "num_records": 15,
+              "key_details": [
+                {
+                  "name": "titles_title",
+                  "dtype": "str",
+                  "first_3_values": [
+                    "The Busy Executive's Database Guide",
+                    "Cooking with Computers: Surreptitious Balance Sheets",
+                    "You Can Combat Computer Stress!"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.005
+    },
+    {
+      "tool": "retrieve_data",
+      "resolved_arguments": {
+        "data_label": "filtered_titles_1",
+        "key_name": "titles_notes",
+        "distinct": false,
+        "limit": -1
+      },
+      "started_at": "2026-11-12T15:24:56.441201+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"retrieved_titles_3\", \"num_records\": 15, \"key_details\": [{\"name\": \"titles_notes\", \"dtype\": \"str\", \"first_3_values\": [\"An overview of available database systems with emphasis on common business applications. Illustrated.\", \"Helpful hints on how to use your electronic resources to the best advantage.\", \"The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations.\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "retrieved_titles_3",
+              "num_records": 15,
+              "key_details": [
+                {
+                  "name": "titles_notes",
+                  "dtype": "str",
+                  "first_3_values": [
+                    "An overview of available database systems with emphasis on common business applications. Illustrated.",
+                    "Helpful hints on how to use your electronic resources to the best advantage.",
+                    "The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations."
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.005
+    },
+    {
+      "tool": "retrieve_data",
+      "resolved_arguments": {
+        "data_label": "filtered_titles_1",
+        "key_name": "publishers_pub_name",
+        "distinct": false,
+        "limit": -1
+      },
+      "started_at": "2026-11-12T15:24:56.447160+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"retrieved_publishers_4\", \"num_records\": 15, \"key_details\": [{\"name\": \"publishers_pub_name\", \"dtype\": \"str\", \"first_3_values\": [\"Algodata Infosystems\", \"Algodata Infosystems\", \"New Moon Books\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "retrieved_publishers_4",
+              "num_records": 15,
+              "key_details": [
+                {
+                  "name": "publishers_pub_name",
+                  "dtype": "str",
+                  "first_3_values": [
+                    "Algodata Infosystems",
+                    "Algodata Infosystems",
+                    "New Moon Books"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.005
+    }
+  ],
+  "finished": true,
+  "listed_tools": 9,
+  "replay_responses": [
+    [
+      [
+        "{\"handle\": \"retrieved_titles_1\", \"num_records\": 18, \"key_details\": [{\"name\": \"titles_title_id\", \"dtype\": \"object\", \"first_3_values\": [\"BU1032\", \"BU1111\", \"BU2075\"]}, {\"name\": \"titles_title\", \"dtype\": \"object\", \"first_3_values\": [\"The Busy Executive's Database Guide\", \"Cooking with Computers: Surreptitious Balance Sheets\", \"You Can Combat Computer Stress!\"]}, {\"name\": \"titles_type\", \"dtype\": \"object\", \"first_3_values\": [\"business\", \"business\", \"business\"]}, {\"name\": \"titles_pub_id\", \"dtype\": \"object\", \"first_3_values\": [\"1389\", \"1389\", \"0736\"]}, {\"name\": \"titles_price\", \"dtype\": \"float64\", \"first_3_values\": [19.99, 11.95, 2.99]}, {\"name\": \"titles_advance\", \"dtype\": \"float64\", \"first_3_values\": [5000.0, 5000.0, 10125.0]}, {\"name\": \"titles_royalty\", \"dtype\": \"float64\", \"first_3_values\": [10.0, 10.0, 24.0]}, {\"name\": \"titles_ytd_sales\", \"dtype\": \"float64\", \"first_3_values\": [4095.0, 3876.0, 18722.0]}, {\"name\": \"titles_notes\", \"dtype\": \"object\", \"first_3_values\": [\"An overview of available database systems with emphasis on common business applications. Illustrated.\", \"Helpful hints on how to use your electronic resources to the best advantage.\", \"The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations.\"]}, {\"name\": \"titles_pubdate\", \"dtype\": \"object\", \"first_3_values\": [\"1991-06-12 00:00:00.0\", \"1991-06-09 00:00:00.0\", \"1991-06-30 00:00:00.0\"]}, {\"name\": \"publishers_pub_id\", \"dtype\": \"object\", \"first_3_values\": [\"1389\", \"1389\", \"0736\"]}, {\"name\": \"publishers_pub_name\", \"dtype\": \"object\", \"first_3_values\": [\"Algodata Infosystems\", \"Algodata Infosystems\", \"New Moon Books\"]}, {\"name\": \"publishers_city\", \"dtype\": \"object\", \"first_3_values\": [\"Berkeley\", \"Berkeley\", \"Boston\"]}, {\"name\": \"publishers_state\", \"dtype\": \"object\", \"first_3_values\": [\"CA\", \"CA\", \"MA\"]}, {\"name\": \"publishers_country\", \"dtype\": \"object\", \"first_3_values\": [\"USA\", \"USA\", \"USA\"]}]}",
+        "{\"handle\": \"transformed_titles_1\", \"num_records\": 18, \"key_details\": [{\"name\": \"titles_title_id\", \"dtype\": \"str\", \"first_3_values\": [\"BU1032\", \"BU1111\", \"BU2075\"]}, {\"name\": \"titles_title\", \"dtype\": \"str\", \"first_3_values\": [\"The Busy Executive's Database Guide\", \"Cooking with Computers: Surreptitious Balance Sheets\", \"You Can Combat Computer Stress!\"]}, {\"name\": \"titles_type\", \"dtype\": \"str\", \"first_3_values\": [\"business\", \"business\", \"business\"]}, {\"name\": \"titles_pub_id\", \"dtype\": \"str\", \"first_3_values\": [\"1389\", \"1389\", \"0736\"]}, {\"name\": \"titles_price\", \"dtype\": \"float\", \"first_3_values\": [19.99, 11.95, 2.99]}, {\"name\": \"titles_advance\", \"dtype\": \"float\", \"first_3_values\": [5000.0, 5000.0, 10125.0]}, {\"name\": \"titles_royalty\", \"dtype\": \"float\", \"first_3_values\": [10.0, 10.0, 24.0]}, {\"name\": \"titles_ytd_sales\", \"dtype\": \"float\", \"first_3_values\": [4095.0, 3876.0, 18722.0]}, {\"name\": \"titles_notes\", \"dtype\": \"str\", \"first_3_values\": [\"An overview of available database systems with emphasis on common business applications. Illustrated.\", \"Helpful hints on how to use your electronic resources to the best advantage.\", \"The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations.\"]}, {\"name\": \"titles_pubdate\", \"dtype\": \"int\", \"first_3_values\": [1991, 1991, 1991]}, {\"name\": \"publishers_pub_id\", \"dtype\": \"str\", \"first_3_values\": [\"1389\", \"1389\", \"0736\"]}, {\"name\": \"publishers_pub_name\", \"dtype\": \"str\", \"first_3_values\": [\"Algodata Infosystems\", \"Algodata Infosystems\", \"New Moon Books\"]}, {\"name\": \"publishers_city\", \"dtype\": \"str\", \"first_3_values\": [\"Berkeley\", \"Berkeley\", \"Boston\"]}, {\"name\": \"publishers_state\", \"dtype\": \"str\", \"first_3_values\": [\"CA\", \"CA\", \"MA\"]}, {\"name\": \"publishers_country\", \"dtype\": \"str\", \"first_3_values\": [\"USA\", \"USA\", \"USA\"]}]}",
+        "{\"handle\": \"filtered_titles_1\", \"num_records\": 15, \"key_details\": [{\"name\": \"titles_title_id\", \"dtype\": \"object\", \"first_3_values\": [\"BU1032\", \"BU1111\", \"BU2075\"]}, {\"name\": \"titles_title\", \"dtype\": \"object\", \"first_3_values\": [\"The Busy Executive's Database Guide\", \"Cooking with Computers: Surreptitious Balance Sheets\", \"You Can Combat Computer Stress!\"]}, {\"name\": \"titles_type\", \"dtype\": \"object\", \"first_3_values\": [\"business\", \"business\", \"business\"]}, {\"name\": \"titles_pub_id\", \"dtype\": \"object\", \"first_3_values\": [\"1389\", \"1389\", \"0736\"]}, {\"name\": \"titles_price\", \"dtype\": \"float64\", \"first_3_values\": [19.99, 11.95, 2.99]}, {\"name\": \"titles_advance\", \"dtype\": \"float64\", \"first_3_values\": [5000.0, 5000.0, 10125.0]}, {\"name\": \"titles_royalty\", \"dtype\": \"float64\", \"first_3_values\": [10.0, 10.0, 24.0]}, {\"name\": \"titles_ytd_sales\", \"dtype\": \"float64\", \"first_3_values\": [4095.0, 3876.0, 18722.0]}, {\"name\": \"titles_notes\", \"dtype\": \"object\", \"first_3_values\": [\"An overview of available database systems with emphasis on common business applications. Illustrated.\", \"Helpful hints on how to use your electronic resources to the best advantage.\", \"The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations.\"]}, {\"name\": \"titles_pubdate\", \"dtype\": \"int64\", \"first_3_values\": [1991, 1991, 1991]}, {\"name\": \"publishers_pub_id\", \"dtype\": \"object\", \"first_3_values\": [\"1389\", \"1389\", \"0736\"]}, {\"name\": \"publishers_pub_name\", \"dtype\": \"object\", \"first_3_values\": [\"Algodata Infosystems\", \"Algodata Infosystems\", \"New Moon Books\"]}, {\"name\": \"publishers_city\", \"dtype\": \"object\", \"first_3_values\": [\"Berkeley\", \"Berkeley\", \"Boston\"]}, {\"name\": \"publishers_state\", \"dtype\": \"object\", \"first_3_values\": [\"CA\", \"CA\", \"MA\"]}, {\"name\": \"publishers_country\", \"dtype\": \"object\", \"first_3_values\": [\"USA\", \"USA\", \"USA\"]}]}",
+        "{\"handle\": \"retrieved_titles_2\", \"num_records\": 15, \"key_details\": [{\"name\": \"titles_title\", \"dtype\": \"str\", \"first_3_values\": [\"The Busy Executive's Database Guide\", \"Cooking with Computers: Surreptitious Balance Sheets\", \"You Can Combat Computer Stress!\"]}]}",
+        "{\"handle\": \"retrieved_titles_3\", \"num_records\": 15, \"key_details\": [{\"name\": \"titles_notes\", \"dtype\": \"str\", \"first_3_values\": [\"An overview of available database systems with emphasis on common business applications. Illustrated.\", \"Helpful hints on how to use your electronic resources to the best advantage.\", \"The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations.\"]}]}",
+        "{\"handle\": \"retrieved_publishers_4\", \"num_records\": 15, \"key_details\": [{\"name\": \"publishers_pub_name\", \"dtype\": \"str\", \"first_3_values\": [\"Algodata Infosystems\", \"Algodata Infosystems\", \"New Moon Books\"]}]}"
+      ]
+    ]
+  ],
+  "seconds": 4.323,
+  "tool_errors": 0
+}

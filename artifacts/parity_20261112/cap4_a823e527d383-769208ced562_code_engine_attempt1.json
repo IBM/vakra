@@ -1,0 +1,70 @@
+{
+  "capability": 4,
+  "domain": "beer_factory",
+  "uuid": "a823e527d383-769208ced562",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap4.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_most_and_least_profitable_rootbeers",
+      "resolved_arguments": {},
+      "started_at": "2026-11-12T15:24:52.400091+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"rootbeers\": [\n    [\n      \"Dog n Suds\",\n      \"Bottle\"\n    ],\n    [\n      \"A&W\",\n      \"Bottle\"\n    ]\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "rootbeers": [
+                [
+                  "Dog n Suds",
+                  "Bottle"
+                ],
+                [
+                  "A&W",
+                  "Bottle"
+                ]
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.282
+    },
+    {
+      "tool": "get_top_location_by_container_type",
+      "resolved_arguments": {
+        "container_type": "Bottle"
+      },
+      "started_at": "2026-11-12T15:24:53.682957+00:00",
+      "exception": "CancelledError: Cancelled via cancel scope 7f592babe840",
+      "seconds": 0.001
+    }
+  ],
+  "finished": true,
+  "listed_tools": 129,
+  "exception": "ExceptionGroup: SSLError: [SSL] passed invalid argument (_ssl.c:2570)",
+  "seconds": 2.808,
+  "tool_errors": 1
+}

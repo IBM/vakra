@@ -1,0 +1,71 @@
+{
+  "capability": 2,
+  "domain": "superhero",
+  "uuid": "7a1c36ae40bb-870719f02863",
+  "backend": "local",
+  "connection": {
+    "mode": "stdio",
+    "container_name": "capability_2_dashboard_apis",
+    "container_runtime": null,
+    "container_command": [
+      "python",
+      "/app/mcp_dispatch.py"
+    ],
+    "container_env": {
+      "CAPABILITY_ID": "2",
+      "MCP_DB_ROOT": "/app/db"
+    },
+    "command": null,
+    "args": null,
+    "server_url": null,
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_power_names_by_superhero",
+      "resolved_arguments": {
+        "superhero_name": "3-D Man"
+      },
+      "started_at": "2026-11-12T15:24:45.343291+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"power_names\": [\n    \"Agility\",\n    \"Super Strength\",\n    \"Stamina\",\n    \"Super Speed\"\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "power_names": [
+                "Agility",
+                "Super Strength",
+                "Stamina",
+                "Super Speed"
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.043
+    }
+  ],
+  "finished": true,
+  "listed_tools": 109,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"power_names\": [\n    \"Agility\",\n    \"Super Strength\",\n    \"Stamina\",\n    \"Super Speed\"\n  ]\n}"
+      ]
+    ]
+  ],
+  "seconds": 1.168,
+  "tool_errors": 0
+}

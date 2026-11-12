@@ -1,0 +1,66 @@
+{
+  "capability": 2,
+  "domain": "california_schools",
+  "uuid": "bd3d9a21b4c9-8c530ae54b29",
+  "backend": "local",
+  "connection": {
+    "mode": "stdio",
+    "container_name": "capability_2_dashboard_apis",
+    "container_runtime": null,
+    "container_command": [
+      "python",
+      "/app/mcp_dispatch.py"
+    ],
+    "container_env": {
+      "CAPABILITY_ID": "2",
+      "MCP_DB_ROOT": "/app/db"
+    },
+    "command": null,
+    "args": null,
+    "server_url": null,
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_highest_free_meal_ratio",
+      "resolved_arguments": {
+        "county_name": "Alameda"
+      },
+      "started_at": "2026-11-12T15:24:09.005643+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"ratio\": 1.0\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "ratio": 1.0
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.05
+    }
+  ],
+  "finished": true,
+  "listed_tools": 89,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"ratio\": 1.0\n}"
+      ]
+    ]
+  ],
+  "seconds": 1.448,
+  "tool_errors": 0
+}

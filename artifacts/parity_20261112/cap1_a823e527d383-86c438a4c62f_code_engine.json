@@ -1,0 +1,23 @@
+{
+  "capability": 1,
+  "domain": "beer_factory",
+  "uuid": "a823e527d383-86c438a4c62f",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": true,
+    "secondary_container_command": null
+  },
+  "calls": [],
+  "finished": true,
+  "exception": "RuntimeError: Capability 1 needs the session-preserving Code Engine bridge; redeploy docker/mcp_http_bridge.py before evaluating",
+  "seconds": 0.154,
+  "tool_errors": 0
+}
