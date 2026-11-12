@@ -107,12 +107,17 @@ def _prepend_get_data_to_batch(
             result.append(dialogue_tools)
             continue
         first_turn = list(dialogue_tools[0])
+        initial_label = None
         if skip_initialize_active_data and first_turn and (
             first_turn[0].get("name") == "initialize_active_data"
             or first_turn[0].get("name") == "get_data"
         ):
+            initial_label = first_turn[0].get("label")
             first_turn = first_turn[1:]
-        first_turn = [{"name": "get_data", "arguments": {"tool_universe_id": uuid}}] + first_turn
+        initial_tool = {"name": "get_data", "arguments": {"tool_universe_id": uuid}}
+        if initial_label:
+            initial_tool["label"] = initial_label
+        first_turn = [initial_tool] + first_turn
         result.append([first_turn] + list(dialogue_tools[1:]))
     return result
 
@@ -222,7 +227,7 @@ async def evaluate_domain(
         async with create_client_and_connect(mcp_config, domain) as session:
             # Get schema from tools
             tools_result = await session.list_tools()
-            schema_map = {tool.name: tool.inputSchema for tool in tools_result.tools}
+            schema_map = {tool.name: tool.input_schema for tool in tools_result.tools}
 
             # Batch execute tools
             batch_tools_pred = [extract_toolcalls_for_mcp(pr, limit_last_n=N_TOOL_CALLS_PER_TURN) for _, pr in paired]
