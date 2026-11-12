@@ -1,0 +1,89 @@
+{
+  "capability": 3,
+  "domain": "books",
+  "uuid": "6e317bcd6839-652486238c1f",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap3.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_year_with_most_orders",
+      "resolved_arguments": {},
+      "started_at": "2026-11-12T15:25:12.412793+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"year\": \"2020\"\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "year": "2020"
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.313
+    },
+    {
+      "tool": "get_percentage_orders_by_shipping_method_year",
+      "resolved_arguments": {
+        "method_name": "International",
+        "year": "2020"
+      },
+      "started_at": "2026-11-12T15:25:13.726104+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"percentage\": 25.139442231075698\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "percentage": 25.139442231075698
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.258
+    }
+  ],
+  "finished": true,
+  "listed_tools": 155,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"year\": \"2020\"\n}",
+        "{\n  \"percentage\": 25.139442231075698\n}"
+      ]
+    ]
+  ],
+  "seconds": 4.263,
+  "tool_errors": 0
+}

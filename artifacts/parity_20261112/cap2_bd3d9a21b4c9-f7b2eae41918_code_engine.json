@@ -1,0 +1,64 @@
+{
+  "capability": 2,
+  "domain": "california_schools",
+  "uuid": "bd3d9a21b4c9-f7b2eae41918",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap2.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_lowest_free_meal_ratios",
+      "resolved_arguments": {
+        "educational_option_type": "Continuation School"
+      },
+      "started_at": "2026-11-12T15:24:16.137829+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"ratios\": [\n    0.043478260869565216,\n    0.07042253521126761,\n    0.11363636363636363\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "ratios": [
+                0.043478260869565216,
+                0.07042253521126761,
+                0.11363636363636363
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.326
+    }
+  ],
+  "finished": true,
+  "listed_tools": 89,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"ratios\": [\n    0.043478260869565216,\n    0.07042253521126761,\n    0.11363636363636363\n  ]\n}"
+      ]
+    ]
+  ],
+  "seconds": 3.211,
+  "tool_errors": 0
+}

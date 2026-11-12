@@ -1,0 +1,108 @@
+{
+  "capability": 3,
+  "domain": "bpo",
+  "uuid": "4cac5f081a20-9c9cce152beb",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap3.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "candidate_source_sla_per_source",
+      "resolved_arguments": {},
+      "started_at": "2026-11-12T15:24:51.117217+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 'requisition_id' is a required property"
+          }
+        ],
+        "isError": true
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 'requisition_id' is a required property"
+          }
+        ],
+        "isError": true
+      },
+      "tool_error": true,
+      "seconds": 0.077
+    },
+    {
+      "tool": "candidate_source_candidate_volume_by_source",
+      "resolved_arguments": {},
+      "started_at": "2026-11-12T15:24:51.194852+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 'requisition_id' is a required property"
+          }
+        ],
+        "isError": true
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 'requisition_id' is a required property"
+          }
+        ],
+        "isError": true
+      },
+      "tool_error": true,
+      "seconds": 0.321
+    },
+    {
+      "tool": "candidate_source_funnel_conversion_by_source",
+      "resolved_arguments": {},
+      "started_at": "2026-11-12T15:24:51.516433+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 'requisition_id' is a required property"
+          }
+        ],
+        "isError": true
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 'requisition_id' is a required property"
+          }
+        ],
+        "isError": true
+      },
+      "tool_error": true,
+      "seconds": 0.673
+    }
+  ],
+  "finished": true,
+  "listed_tools": 32,
+  "replay_responses": [
+    [
+      [
+        "Input validation error: 'requisition_id' is a required property",
+        "Input validation error: 'requisition_id' is a required property",
+        "Input validation error: 'requisition_id' is a required property"
+      ]
+    ]
+  ],
+  "seconds": 7.503,
+  "tool_errors": 3
+}

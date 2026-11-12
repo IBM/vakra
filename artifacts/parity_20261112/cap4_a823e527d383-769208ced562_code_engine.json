@@ -1,0 +1,135 @@
+{
+  "capability": 4,
+  "domain": "beer_factory",
+  "uuid": "a823e527d383-769208ced562",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap4.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_most_and_least_profitable_rootbeers",
+      "resolved_arguments": {},
+      "started_at": "2026-11-12T15:28:36.633726+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"rootbeers\": [\n    [\n      \"Dog n Suds\",\n      \"Bottle\"\n    ],\n    [\n      \"A&W\",\n      \"Bottle\"\n    ]\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "rootbeers": [
+                [
+                  "Dog n Suds",
+                  "Bottle"
+                ],
+                [
+                  "A&W",
+                  "Bottle"
+                ]
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.184
+    },
+    {
+      "tool": "get_top_location_by_container_type",
+      "resolved_arguments": {
+        "container_type": "Bottle"
+      },
+      "started_at": "2026-11-12T15:28:37.817943+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"location_name\": \"Sac State Union\"\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "location_name": "Sac State Union"
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.094
+    },
+    {
+      "tool": "get_transaction_count_by_location",
+      "resolved_arguments": {
+        "location_name": "Sac State Union",
+        "credit_card_type": "American Express",
+        "start_date": "2014-01-01",
+        "end_date": "2014-12-31"
+      },
+      "started_at": "2026-11-12T15:28:38.912158+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"count\": 43\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "count": 43
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.12
+    }
+  ],
+  "finished": true,
+  "listed_tools": 129,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"rootbeers\": [\n    [\n      \"Dog n Suds\",\n      \"Bottle\"\n    ],\n    [\n      \"A&W\",\n      \"Bottle\"\n    ]\n  ]\n}"
+      ],
+      [
+        "{\n  \"location_name\": \"Sac State Union\"\n}"
+      ],
+      [
+        "{\n  \"count\": 43\n}"
+      ]
+    ]
+  ],
+  "seconds": 4.975,
+  "tool_errors": 0,
+  "previous_attempt": "cap4_a823e527d383-769208ced562_code_engine_attempt1.json"
+}

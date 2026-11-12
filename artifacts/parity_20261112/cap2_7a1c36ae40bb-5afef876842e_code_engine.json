@@ -1,0 +1,60 @@
+{
+  "capability": 2,
+  "domain": "superhero",
+  "uuid": "7a1c36ae40bb-5afef876842e",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap2.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_count_heroes_by_power",
+      "resolved_arguments": {
+        "power_name": "Super Strength"
+      },
+      "started_at": "2026-11-12T15:24:50.950019+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"count\": 358\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "count": 358
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.143
+    }
+  ],
+  "finished": true,
+  "listed_tools": 109,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"count\": 358\n}"
+      ]
+    ]
+  ],
+  "seconds": 2.837,
+  "tool_errors": 0
+}

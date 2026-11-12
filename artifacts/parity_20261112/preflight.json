@@ -1,0 +1,46 @@
+{
+  "remote": {
+    "1": {
+      "base_url": "https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud",
+      "status": 200,
+      "body": "{\"status\": \"ok\", \"capability_id\": \"1\"}"
+    },
+    "2": {
+      "base_url": "https://vakra-cap2.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud",
+      "status": 200,
+      "body": "{\"status\": \"ok\", \"capability_id\": \"2\"}"
+    },
+    "3": {
+      "base_url": "https://vakra-cap3.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud",
+      "status": 200,
+      "body": "{\"status\": \"ok\", \"capability_id\": \"3\"}"
+    },
+    "4": {
+      "base_url": "https://vakra-cap4.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud",
+      "status": 200,
+      "body": "{\"status\": \"ok\", \"capability_id\": \"4\"}"
+    }
+  },
+  "local": {
+    "1": {
+      "stdout": "mcp 1.30.0\nreset_handles False\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    "2": {
+      "stdout": "mcp 1.30.0\nreset_handles False\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    "3": {
+      "stdout": "mcp 1.30.0\nreset_handles False\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    "4": {
+      "stdout": "mcp 1.30.0\nreset_handles False\n",
+      "stderr": "",
+      "exit_code": 0
+    }
+  }
+}

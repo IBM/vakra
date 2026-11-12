@@ -1,0 +1,104 @@
+{
+  "capability": 4,
+  "domain": "disney",
+  "uuid": "34a533dfd727-fb4bf2f380bd",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap4.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_directors_by_year_range",
+      "resolved_arguments": {
+        "start_year": 1990,
+        "end_year": 2000
+      },
+      "started_at": "2026-11-12T15:24:11.013051+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"directors\": [\n    \"Barry Cook\",\n    \"Chris Buck\",\n    \"Gary Trousdale\",\n    \"Mark Dindal\",\n    \"Mike Gabriel\",\n    \"Ralph Zondag\",\n    \"Roger Allers\",\n    \"Ron Clements\",\n    \"Wolfgang Reitherman\"\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "directors": [
+                "Barry Cook",
+                "Chris Buck",
+                "Gary Trousdale",
+                "Mark Dindal",
+                "Mike Gabriel",
+                "Ralph Zondag",
+                "Roger Allers",
+                "Ron Clements",
+                "Wolfgang Reitherman"
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 4.811
+    },
+    {
+      "tool": "get_percentage_movies_exceeding_gross_by_director",
+      "resolved_arguments": {
+        "gross_amount": 100000000.0,
+        "director": "Gary Trousdale"
+      },
+      "started_at": "2026-11-12T15:24:15.825001+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"percentage\": 66.66666666666667\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "percentage": 66.66666666666667
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 2.113
+    }
+  ],
+  "finished": true,
+  "listed_tools": 109,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"directors\": [\n    \"Barry Cook\",\n    \"Chris Buck\",\n    \"Gary Trousdale\",\n    \"Mark Dindal\",\n    \"Mike Gabriel\",\n    \"Ralph Zondag\",\n    \"Roger Allers\",\n    \"Ron Clements\",\n    \"Wolfgang Reitherman\"\n  ]\n}"
+      ],
+      [
+        "{\n  \"percentage\": 66.66666666666667\n}"
+      ]
+    ]
+  ],
+  "seconds": 8.654,
+  "tool_errors": 0
+}

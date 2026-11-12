@@ -1,0 +1,72 @@
+{
+  "capability": 2,
+  "domain": "formula_1",
+  "uuid": "1e94b912a1e2-c020b4857bd2",
+  "backend": "local",
+  "connection": {
+    "mode": "stdio",
+    "container_name": "capability_2_dashboard_apis",
+    "container_runtime": null,
+    "container_command": [
+      "python",
+      "/app/mcp_dispatch.py"
+    ],
+    "container_env": {
+      "CAPABILITY_ID": "2",
+      "MCP_DB_ROOT": "/app/db"
+    },
+    "command": null,
+    "args": null,
+    "server_url": null,
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_driver_references",
+      "resolved_arguments": {
+        "race_id": 20
+      },
+      "started_at": "2026-11-12T15:24:26.857823+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"driver_references\": [\n    \"sato\",\n    \"davidson\",\n    \"vettel\",\n    \"sutil\",\n    \"fisichella\"\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "driver_references": [
+                "sato",
+                "davidson",
+                "vettel",
+                "sutil",
+                "fisichella"
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.046
+    }
+  ],
+  "finished": true,
+  "listed_tools": 152,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"driver_references\": [\n    \"sato\",\n    \"davidson\",\n    \"vettel\",\n    \"sutil\",\n    \"fisichella\"\n  ]\n}"
+      ]
+    ]
+  ],
+  "seconds": 1.154,
+  "tool_errors": 0
+}

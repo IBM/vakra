@@ -1,0 +1,96 @@
+{
+  "capability": 3,
+  "domain": "movie",
+  "uuid": "8a6ba32c9bed-3432ae474e32",
+  "backend": "local",
+  "connection": {
+    "mode": "stdio",
+    "container_name": "capability_3_multihop_reasoning",
+    "container_runtime": null,
+    "container_command": [
+      "python",
+      "/app/mcp_dispatch.py"
+    ],
+    "container_env": {
+      "CAPABILITY_ID": "3",
+      "MCP_DB_ROOT": "/app/db"
+    },
+    "command": null,
+    "args": null,
+    "server_url": null,
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_character_most_screen_time",
+      "resolved_arguments": {
+        "title": "Batman"
+      },
+      "started_at": "2026-11-12T15:25:16.188605+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"character_name\": \"Batman\"\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "character_name": "Batman"
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.078
+    },
+    {
+      "tool": "get_screentime_percentage_difference",
+      "resolved_arguments": {
+        "title": "Batman"
+      },
+      "started_at": "2026-11-12T15:25:16.267542+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"percentage_difference\": 1500.0\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "percentage_difference": 1500.0
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.07
+    }
+  ],
+  "finished": true,
+  "listed_tools": 702,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"character_name\": \"Batman\"\n}",
+        "{\n  \"percentage_difference\": 1500.0\n}"
+      ]
+    ]
+  ],
+  "seconds": 1.329,
+  "tool_errors": 0
+}

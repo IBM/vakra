@@ -1,0 +1,55 @@
+{
+  "capability": 4,
+  "domain": "movie",
+  "uuid": "8a6ba32c9bed-ba5d1e29b4fa",
+  "sample_index": 4,
+  "source_file": "/root/v14/internal/test/capability_4_multiturn/output/movie.json",
+  "source_sha256": "896651cfe6925f147c7c83822bf9c51e869513ac3b7ac9a4833a948b95a666e9",
+  "turn_count": 3,
+  "call_count": 4,
+  "status": "pass",
+  "expected_calls": 4,
+  "local_calls": 4,
+  "code_engine_calls": 4,
+  "local_errors": 0,
+  "code_engine_errors": 0,
+  "local_exception": null,
+  "code_engine_exception": null,
+  "differences": [],
+  "matching_errors": [],
+  "local_tool_errors": [],
+  "code_engine_tool_errors": [],
+  "raw_results_equal": false,
+  "serialization_differences": [
+    {
+      "call": 1,
+      "tool": "query_movie",
+      "first_differing_character": 3615,
+      "local_excerpt": "\n      \"metadata\": {\n        \"doc_id\": \"1770318222787864000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"17703",
+      "code_engine_excerpt": "\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222787864000\"\n      }\n    },\n    {\n      \"id\": \"17703"
+    },
+    {
+      "call": 2,
+      "tool": "query_movie",
+      "first_differing_character": 1779,
+      "local_excerpt": "\n      \"metadata\": {\n        \"doc_id\": \"1770318222787768000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"17703",
+      "code_engine_excerpt": "\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222787768000\"\n      }\n    },\n    {\n      \"id\": \"17703"
+    },
+    {
+      "call": 3,
+      "tool": "query_movie",
+      "first_differing_character": 998,
+      "local_excerpt": "\n      \"metadata\": {\n        \"doc_id\": \"1770318222787864000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"17703",
+      "code_engine_excerpt": "\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222787864000\"\n      }\n    },\n    {\n      \"id\": \"17703"
+    },
+    {
+      "call": 4,
+      "tool": "query_movie",
+      "first_differing_character": 2055,
+      "local_excerpt": "\n      \"metadata\": {\n        \"from_clapnq\": false,\n        \"doc_id\": \"1770318222788012000\"\n      }\n    },\n    {\n      \"id\": \"17703",
+      "code_engine_excerpt": "\n      \"metadata\": {\n        \"doc_id\": \"1770318222788012000\",\n        \"from_clapnq\": false\n      }\n    },\n    {\n      \"id\": \"17703"
+    }
+  ],
+  "local_output_file": "cap4_8a6ba32c9bed-ba5d1e29b4fa_local.json",
+  "code_engine_output_file": "cap4_8a6ba32c9bed-ba5d1e29b4fa_code_engine.json"
+}

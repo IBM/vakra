@@ -1,0 +1,60 @@
+{
+  "capability": 2,
+  "domain": "california_schools",
+  "uuid": "bd3d9a21b4c9-8c530ae54b29",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap2.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_highest_free_meal_ratio",
+      "resolved_arguments": {
+        "county_name": "Alameda"
+      },
+      "started_at": "2026-11-12T15:24:10.733751+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"ratio\": 1.0\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "ratio": 1.0
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 2.15
+    }
+  ],
+  "finished": true,
+  "listed_tools": 89,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"ratio\": 1.0\n}"
+      ]
+    ]
+  ],
+  "seconds": 3.93,
+  "tool_errors": 0
+}

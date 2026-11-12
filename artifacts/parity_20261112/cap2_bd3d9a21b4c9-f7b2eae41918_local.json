@@ -1,0 +1,70 @@
+{
+  "capability": 2,
+  "domain": "california_schools",
+  "uuid": "bd3d9a21b4c9-f7b2eae41918",
+  "backend": "local",
+  "connection": {
+    "mode": "stdio",
+    "container_name": "capability_2_dashboard_apis",
+    "container_runtime": null,
+    "container_command": [
+      "python",
+      "/app/mcp_dispatch.py"
+    ],
+    "container_env": {
+      "CAPABILITY_ID": "2",
+      "MCP_DB_ROOT": "/app/db"
+    },
+    "command": null,
+    "args": null,
+    "server_url": null,
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_lowest_free_meal_ratios",
+      "resolved_arguments": {
+        "educational_option_type": "Continuation School"
+      },
+      "started_at": "2026-11-12T15:24:14.173069+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"ratios\": [\n    0.043478260869565216,\n    0.07042253521126761,\n    0.11363636363636363\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "ratios": [
+                0.043478260869565216,
+                0.07042253521126761,
+                0.11363636363636363
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.051
+    }
+  ],
+  "finished": true,
+  "listed_tools": 89,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"ratios\": [\n    0.043478260869565216,\n    0.07042253521126761,\n    0.11363636363636363\n  ]\n}"
+      ]
+    ]
+  ],
+  "seconds": 1.286,
+  "tool_errors": 0
+}

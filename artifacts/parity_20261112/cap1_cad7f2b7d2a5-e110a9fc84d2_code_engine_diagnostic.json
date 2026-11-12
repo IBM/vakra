@@ -1,0 +1,286 @@
+{
+  "capability": 1,
+  "domain": "craftbeer",
+  "uuid": "cad7f2b7d2a5-e110a9fc84d2",
+  "backend": "code_engine_diagnostic",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_data",
+      "resolved_arguments": {
+        "tool_universe_id": "cad7f2b7d2a5-e110a9fc84d2",
+        "reset_handles": true
+      },
+      "started_at": "2026-11-12T15:27:48.505685+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"retrieved_beers_1\", \"num_records\": 2410, \"key_details\": [{\"name\": \"beers_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 4, 5]}, {\"name\": \"beers_brewery_id\", \"dtype\": \"int64\", \"first_3_values\": [166, 166, 166]}, {\"name\": \"beers_abv\", \"dtype\": \"float64\", \"first_3_values\": [0.065, 0.087, 0.08]}, {\"name\": \"beers_ibu\", \"dtype\": \"float64\", \"first_3_values\": [65.0, 85.0, 35.0]}, {\"name\": \"beers_name\", \"dtype\": \"object\", \"first_3_values\": [\"Dale's Pale Ale\", \"Gordon Ale (2009)\", \"Old Chub\"]}, {\"name\": \"beers_style\", \"dtype\": \"object\", \"first_3_values\": [\"American Pale Ale (APA)\", \"American Double / Imperial IPA\", \"Scottish Ale\"]}, {\"name\": \"beers_ounces\", \"dtype\": \"float64\", \"first_3_values\": [12.0, 12.0, 12.0]}, {\"name\": \"breweries_id\", \"dtype\": \"int64\", \"first_3_values\": [166, 166, 166]}, {\"name\": \"breweries_name\", \"dtype\": \"object\", \"first_3_values\": [\"Oskar Blues Brewery\", \"Oskar Blues Brewery\", \"Oskar Blues Brewery\"]}, {\"name\": \"breweries_city\", \"dtype\": \"object\", \"first_3_values\": [\"Longmont\", \"Longmont\", \"Longmont\"]}, {\"name\": \"breweries_state\", \"dtype\": \"object\", \"first_3_values\": [\"CO\", \"CO\", \"CO\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "retrieved_beers_1",
+              "num_records": 2410,
+              "key_details": [
+                {
+                  "name": "beers_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "name": "beers_brewery_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    166,
+                    166,
+                    166
+                  ]
+                },
+                {
+                  "name": "beers_abv",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    0.065,
+                    0.087,
+                    0.08
+                  ]
+                },
+                {
+                  "name": "beers_ibu",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    65.0,
+                    85.0,
+                    35.0
+                  ]
+                },
+                {
+                  "name": "beers_name",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Dale's Pale Ale",
+                    "Gordon Ale (2009)",
+                    "Old Chub"
+                  ]
+                },
+                {
+                  "name": "beers_style",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "American Pale Ale (APA)",
+                    "American Double / Imperial IPA",
+                    "Scottish Ale"
+                  ]
+                },
+                {
+                  "name": "beers_ounces",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    12.0,
+                    12.0,
+                    12.0
+                  ]
+                },
+                {
+                  "name": "breweries_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    166,
+                    166,
+                    166
+                  ]
+                },
+                {
+                  "name": "breweries_name",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Oskar Blues Brewery",
+                    "Oskar Blues Brewery",
+                    "Oskar Blues Brewery"
+                  ]
+                },
+                {
+                  "name": "breweries_city",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Longmont",
+                    "Longmont",
+                    "Longmont"
+                  ]
+                },
+                {
+                  "name": "breweries_state",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "CO",
+                    "CO",
+                    "CO"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 5.308
+    },
+    {
+      "tool": "filter_data",
+      "resolved_arguments": {
+        "data_label": "retrieved_beers_1",
+        "key_name": "breweries_state",
+        "value": "NY",
+        "condition": "equal_to"
+      },
+      "started_at": "2026-11-12T15:27:53.814110+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_beers_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_beers_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 4.666
+    },
+    {
+      "tool": "sort_data",
+      "resolved_arguments": {
+        "data_label": "$FILTERED_DF_0$",
+        "key_name": "beers_ibu",
+        "ascending": false
+      },
+      "started_at": "2026-11-12T15:27:58.480652+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for SortDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for SortDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 5.089
+    },
+    {
+      "tool": "retrieve_data",
+      "resolved_arguments": {
+        "data_label": "$SORTED_DF$",
+        "key_name": "breweries_name",
+        "distinct": false,
+        "limit": 1
+      },
+      "started_at": "2026-11-12T15:28:03.570244+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for RetrieveDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$SORTED_DF$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for RetrieveDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$SORTED_DF$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 4.866
+    },
+    {
+      "tool": "retrieve_data",
+      "resolved_arguments": {
+        "data_label": "$SORTED_DF$",
+        "key_name": "breweries_city",
+        "distinct": false,
+        "limit": 1
+      },
+      "started_at": "2026-11-12T15:28:08.437044+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for RetrieveDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$SORTED_DF$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for RetrieveDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$SORTED_DF$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 4.577
+    }
+  ],
+  "finished": true,
+  "listed_tools": 9,
+  "replay_responses": [
+    [
+      [
+        "{\"handle\": \"retrieved_beers_1\", \"num_records\": 2410, \"key_details\": [{\"name\": \"beers_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 4, 5]}, {\"name\": \"beers_brewery_id\", \"dtype\": \"int64\", \"first_3_values\": [166, 166, 166]}, {\"name\": \"beers_abv\", \"dtype\": \"float64\", \"first_3_values\": [0.065, 0.087, 0.08]}, {\"name\": \"beers_ibu\", \"dtype\": \"float64\", \"first_3_values\": [65.0, 85.0, 35.0]}, {\"name\": \"beers_name\", \"dtype\": \"object\", \"first_3_values\": [\"Dale's Pale Ale\", \"Gordon Ale (2009)\", \"Old Chub\"]}, {\"name\": \"beers_style\", \"dtype\": \"object\", \"first_3_values\": [\"American Pale Ale (APA)\", \"American Double / Imperial IPA\", \"Scottish Ale\"]}, {\"name\": \"beers_ounces\", \"dtype\": \"float64\", \"first_3_values\": [12.0, 12.0, 12.0]}, {\"name\": \"breweries_id\", \"dtype\": \"int64\", \"first_3_values\": [166, 166, 166]}, {\"name\": \"breweries_name\", \"dtype\": \"object\", \"first_3_values\": [\"Oskar Blues Brewery\", \"Oskar Blues Brewery\", \"Oskar Blues Brewery\"]}, {\"name\": \"breweries_city\", \"dtype\": \"object\", \"first_3_values\": [\"Longmont\", \"Longmont\", \"Longmont\"]}, {\"name\": \"breweries_state\", \"dtype\": \"object\", \"first_3_values\": [\"CO\", \"CO\", \"CO\"]}]}",
+        "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_beers_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+        "Input validation error: 1 validation error for SortDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$FILTERED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+        "Input validation error: 1 validation error for RetrieveDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$SORTED_DF$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type",
+        "Input validation error: 1 validation error for RetrieveDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$SORTED_DF$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+      ]
+    ]
+  ],
+  "seconds": 29.882,
+  "tool_errors": 4
+}

@@ -1,0 +1,24 @@
+{
+  "capability": 1,
+  "domain": "beer_factory",
+  "uuid": "a823e527d383-86c438a4c62f",
+  "backend": "code_engine_diagnostic",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [],
+  "finished": true,
+  "exception": "ExceptionGroup: HTTPStatusError: Server error '502 Bad Gateway' for url 'https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/beer_factory'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502",
+  "seconds": 0.314,
+  "tool_errors": 0,
+  "previous_attempt": "cap1_a823e527d383-86c438a4c62f_code_engine_diagnostic_attempt1.json"
+}

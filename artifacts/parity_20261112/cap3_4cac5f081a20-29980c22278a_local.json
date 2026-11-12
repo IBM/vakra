@@ -1,0 +1,542 @@
+{
+  "capability": 3,
+  "domain": "bpo",
+  "uuid": "4cac5f081a20-29980c22278a",
+  "backend": "local",
+  "connection": {
+    "mode": "stdio",
+    "container_name": "capability_3_multihop_reasoning",
+    "container_runtime": null,
+    "container_command": [
+      "python",
+      "/app/mcp_dispatch.py"
+    ],
+    "container_env": {
+      "CAPABILITY_ID": "3",
+      "MCP_DB_ROOT": "/app/db"
+    },
+    "command": null,
+    "args": null,
+    "server_url": null,
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "skills_skill_deep_analysis",
+      "resolved_arguments": {
+        "requisition_id": "05958BR"
+      },
+      "started_at": "2026-11-12T15:24:19.750551+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"requisition_id\": \"05958BR\", \"analysis_version\": \"3.0\", \"results\": {\"nested_skills\": [{\"level\": 15, \"metadata\": {\"type\": \"analysis_layer_15\"}, \"data\": {\"level\": 14, \"metadata\": {\"type\": \"analysis_layer_14\"}, \"data\": {\"level\": 13, \"metadata\": {\"type\": \"analysis_layer_13\"}, \"data\": {\"level\": 12, \"metadata\": {\"type\": \"analysis_layer_12\"}, \"data\": {\"level\": 11, \"metadata\": {\"type\": \"analysis_layer_11\"}, \"data\": {\"level\": 10, \"metadata\": {\"type\": \"analysis_layer_10\"}, \"data\": {\"level\": 9, \"metadata\": {\"type\": \"analysis_layer_9\"}, \"data\": {\"level\": 8, \"metadata\": {\"type\": \"analysis_layer_8\"}, \"data\": {\"level\": 7, \"metadata\": {\"type\": \"analysis_layer_7\"}, \"data\": {\"level\": 6, \"metadata\": {\"type\": \"analysis_layer_6\"}, \"data\": {\"level\": 5, \"metadata\": {\"type\": \"analysis_layer_5\"}, \"data\": {\"level\": 4, \"metadata\": {\"type\": \"analysis_layer_4\"}, \"data\": {\"level\": 3, \"metadata\": {\"type\": \"analysis_layer_3\"}, \"data\": {\"level\": 2, \"metadata\": {\"type\": \"analysis_layer_2\"}, \"data\": {\"level\": 1, \"metadata\": {\"type\": \"analysis_layer_1\"}, \"data\": {\"skill\": \"AWS\", \"count\": 948}}}}}}}}}}}}}}}}, {\"level\": 15, \"metadata\": {\"type\": \"analysis_layer_15\"}, \"data\": {\"level\": 14, \"metadata\": {\"type\": \"analysis_layer_14\"}, \"data\": {\"level\": 13, \"metadata\": {\"type\": \"analysis_layer_13\"}, \"data\": {\"level\": 12, \"metadata\": {\"type\": \"analysis_layer_12\"}, \"data\": {\"level\": 11, \"metadata\": {\"type\": \"analysis_layer_11\"}, \"data\": {\"level\": 10, \"metadata\": {\"type\": \"analysis_layer_10\"}, \"data\": {\"level\": 9, \"metadata\": {\"type\": \"analysis_layer_9\"}, \"data\": {\"level\": 8, \"metadata\": {\"type\": \"analysis_layer_8\"}, \"data\": {\"level\": 7, \"metadata\": {\"type\": \"analysis_layer_7\"}, \"data\": {\"level\": 6, \"metadata\": {\"type\": \"analysis_layer_6\"}, \"data\": {\"level\": 5, \"metadata\": {\"type\": \"analysis_layer_5\"}, \"data\": {\"level\": 4, \"metadata\": {\"type\": \"analysis_layer_4\"}, \"data\": {\"level\": 3, \"metadata\": {\"type\": \"analysis_layer_3\"}, \"data\": {\"level\": 2, \"metadata\": {\"type\": \"analysis_layer_2\"}, \"data\": {\"level\": 1, \"metadata\": {\"type\": \"analysis_layer_1\"}, \"data\": {\"skill\": \"IT Support\", \"count\": 868}}}}}}}}}}}}}}}}, {\"level\": 15, \"metadata\": {\"type\": \"analysis_layer_15\"}, \"data\": {\"level\": 14, \"metadata\": {\"type\": \"analysis_layer_14\"}, \"data\": {\"level\": 13, \"metadata\": {\"type\": \"analysis_layer_13\"}, \"data\": {\"level\": 12, \"metadata\": {\"type\": \"analysis_layer_12\"}, \"data\": {\"level\": 11, \"metadata\": {\"type\": \"analysis_layer_11\"}, \"data\": {\"level\": 10, \"metadata\": {\"type\": \"analysis_layer_10\"}, \"data\": {\"level\": 9, \"metadata\": {\"type\": \"analysis_layer_9\"}, \"data\": {\"level\": 8, \"metadata\": {\"type\": \"analysis_layer_8\"}, \"data\": {\"level\": 7, \"metadata\": {\"type\": \"analysis_layer_7\"}, \"data\": {\"level\": 6, \"metadata\": {\"type\": \"analysis_layer_6\"}, \"data\": {\"level\": 5, \"metadata\": {\"type\": \"analysis_layer_5\"}, \"data\": {\"level\": 4, \"metadata\": {\"type\": \"analysis_layer_4\"}, \"data\": {\"level\": 3, \"metadata\": {\"type\": \"analysis_layer_3\"}, \"data\": {\"level\": 2, \"metadata\": {\"type\": \"analysis_layer_2\"}, \"data\": {\"level\": 1, \"metadata\": {\"type\": \"analysis_layer_1\"}, \"data\": {\"skill\": \"NIST Cybersecurity Framework\", \"count\": 816}}}}}}}}}}}}}}}}, {\"level\": 15, \"metadata\": {\"type\": \"analysis_layer_15\"}, \"data\": {\"level\": 14, \"metadata\": {\"type\": \"analysis_layer_14\"}, \"data\": {\"level\": 13, \"metadata\": {\"type\": \"analysis_layer_13\"}, \"data\": {\"level\": 12, \"metadata\": {\"type\": \"analysis_layer_12\"}, \"data\": {\"level\": 11, \"metadata\": {\"type\": \"analysis_layer_11\"}, \"data\": {\"level\": 10, \"metadata\": {\"type\": \"analysis_layer_10\"}, \"data\": {\"level\": 9, \"metadata\": {\"type\": \"analysis_layer_9\"}, \"data\": {\"level\": 8, \"metadata\": {\"type\": \"analysis_layer_8\"}, \"data\": {\"level\": 7, \"metadata\": {\"type\": \"analysis_layer_7\"}, \"data\": {\"level\": 6, \"metadata\": {\"type\": \"analysis_layer_6\"}, \"data\": {\"level\": 5, \"metadata\": {\"type\": \"analysis_layer_5\"}, \"data\": {\"level\": 4, \"metadata\": {\"type\": \"analysis_layer_4\"}, \"data\": {\"level\": 3, \"metadata\": {\"type\": \"analysis_layer_3\"}, \"data\": {\"level\": 2, \"metadata\": {\"type\": \"analysis_layer_2\"}, \"data\": {\"level\": 1, \"metadata\": {\"type\": \"analysis_layer_1\"}, \"data\": {\"skill\": \"Incident Management\", \"count\": 748}}}}}}}}}}}}}}}}, {\"level\": 15, \"metadata\": {\"type\": \"analysis_layer_15\"}, \"data\": {\"level\": 14, \"metadata\": {\"type\": \"analysis_layer_14\"}, \"data\": {\"level\": 13, \"metadata\": {\"type\": \"analysis_layer_13\"}, \"data\": {\"level\": 12, \"metadata\": {\"type\": \"analysis_layer_12\"}, \"data\": {\"level\": 11, \"metadata\": {\"type\": \"analysis_layer_11\"}, \"data\": {\"level\": 10, \"metadata\": {\"type\": \"analysis_layer_10\"}, \"data\": {\"level\": 9, \"metadata\": {\"type\": \"analysis_layer_9\"}, \"data\": {\"level\": 8, \"metadata\": {\"type\": \"analysis_layer_8\"}, \"data\": {\"level\": 7, \"metadata\": {\"type\": \"analysis_layer_7\"}, \"data\": {\"level\": 6, \"metadata\": {\"type\": \"analysis_layer_6\"}, \"data\": {\"level\": 5, \"metadata\": {\"type\": \"analysis_layer_5\"}, \"data\": {\"level\": 4, \"metadata\": {\"type\": \"analysis_layer_4\"}, \"data\": {\"level\": 3, \"metadata\": {\"type\": \"analysis_layer_3\"}, \"data\": {\"level\": 2, \"metadata\": {\"type\": \"analysis_layer_2\"}, \"data\": {\"level\": 1, \"metadata\": {\"type\": \"analysis_layer_1\"}, \"data\": {\"skill\": \"Firewalls\", \"count\": 744}}}}}}}}}}}}}}}}], \"total_depth\": 15}}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "requisition_id": "05958BR",
+              "analysis_version": "3.0",
+              "results": {
+                "nested_skills": [
+                  {
+                    "level": 15,
+                    "metadata": {
+                      "type": "analysis_layer_15"
+                    },
+                    "data": {
+                      "level": 14,
+                      "metadata": {
+                        "type": "analysis_layer_14"
+                      },
+                      "data": {
+                        "level": 13,
+                        "metadata": {
+                          "type": "analysis_layer_13"
+                        },
+                        "data": {
+                          "level": 12,
+                          "metadata": {
+                            "type": "analysis_layer_12"
+                          },
+                          "data": {
+                            "level": 11,
+                            "metadata": {
+                              "type": "analysis_layer_11"
+                            },
+                            "data": {
+                              "level": 10,
+                              "metadata": {
+                                "type": "analysis_layer_10"
+                              },
+                              "data": {
+                                "level": 9,
+                                "metadata": {
+                                  "type": "analysis_layer_9"
+                                },
+                                "data": {
+                                  "level": 8,
+                                  "metadata": {
+                                    "type": "analysis_layer_8"
+                                  },
+                                  "data": {
+                                    "level": 7,
+                                    "metadata": {
+                                      "type": "analysis_layer_7"
+                                    },
+                                    "data": {
+                                      "level": 6,
+                                      "metadata": {
+                                        "type": "analysis_layer_6"
+                                      },
+                                      "data": {
+                                        "level": 5,
+                                        "metadata": {
+                                          "type": "analysis_layer_5"
+                                        },
+                                        "data": {
+                                          "level": 4,
+                                          "metadata": {
+                                            "type": "analysis_layer_4"
+                                          },
+                                          "data": {
+                                            "level": 3,
+                                            "metadata": {
+                                              "type": "analysis_layer_3"
+                                            },
+                                            "data": {
+                                              "level": 2,
+                                              "metadata": {
+                                                "type": "analysis_layer_2"
+                                              },
+                                              "data": {
+                                                "level": 1,
+                                                "metadata": {
+                                                  "type": "analysis_layer_1"
+                                                },
+                                                "data": {
+                                                  "skill": "AWS",
+                                                  "count": 948
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "level": 15,
+                    "metadata": {
+                      "type": "analysis_layer_15"
+                    },
+                    "data": {
+                      "level": 14,
+                      "metadata": {
+                        "type": "analysis_layer_14"
+                      },
+                      "data": {
+                        "level": 13,
+                        "metadata": {
+                          "type": "analysis_layer_13"
+                        },
+                        "data": {
+                          "level": 12,
+                          "metadata": {
+                            "type": "analysis_layer_12"
+                          },
+                          "data": {
+                            "level": 11,
+                            "metadata": {
+                              "type": "analysis_layer_11"
+                            },
+                            "data": {
+                              "level": 10,
+                              "metadata": {
+                                "type": "analysis_layer_10"
+                              },
+                              "data": {
+                                "level": 9,
+                                "metadata": {
+                                  "type": "analysis_layer_9"
+                                },
+                                "data": {
+                                  "level": 8,
+                                  "metadata": {
+                                    "type": "analysis_layer_8"
+                                  },
+                                  "data": {
+                                    "level": 7,
+                                    "metadata": {
+                                      "type": "analysis_layer_7"
+                                    },
+                                    "data": {
+                                      "level": 6,
+                                      "metadata": {
+                                        "type": "analysis_layer_6"
+                                      },
+                                      "data": {
+                                        "level": 5,
+                                        "metadata": {
+                                          "type": "analysis_layer_5"
+                                        },
+                                        "data": {
+                                          "level": 4,
+                                          "metadata": {
+                                            "type": "analysis_layer_4"
+                                          },
+                                          "data": {
+                                            "level": 3,
+                                            "metadata": {
+                                              "type": "analysis_layer_3"
+                                            },
+                                            "data": {
+                                              "level": 2,
+                                              "metadata": {
+                                                "type": "analysis_layer_2"
+                                              },
+                                              "data": {
+                                                "level": 1,
+                                                "metadata": {
+                                                  "type": "analysis_layer_1"
+                                                },
+                                                "data": {
+                                                  "skill": "IT Support",
+                                                  "count": 868
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "level": 15,
+                    "metadata": {
+                      "type": "analysis_layer_15"
+                    },
+                    "data": {
+                      "level": 14,
+                      "metadata": {
+                        "type": "analysis_layer_14"
+                      },
+                      "data": {
+                        "level": 13,
+                        "metadata": {
+                          "type": "analysis_layer_13"
+                        },
+                        "data": {
+                          "level": 12,
+                          "metadata": {
+                            "type": "analysis_layer_12"
+                          },
+                          "data": {
+                            "level": 11,
+                            "metadata": {
+                              "type": "analysis_layer_11"
+                            },
+                            "data": {
+                              "level": 10,
+                              "metadata": {
+                                "type": "analysis_layer_10"
+                              },
+                              "data": {
+                                "level": 9,
+                                "metadata": {
+                                  "type": "analysis_layer_9"
+                                },
+                                "data": {
+                                  "level": 8,
+                                  "metadata": {
+                                    "type": "analysis_layer_8"
+                                  },
+                                  "data": {
+                                    "level": 7,
+                                    "metadata": {
+                                      "type": "analysis_layer_7"
+                                    },
+                                    "data": {
+                                      "level": 6,
+                                      "metadata": {
+                                        "type": "analysis_layer_6"
+                                      },
+                                      "data": {
+                                        "level": 5,
+                                        "metadata": {
+                                          "type": "analysis_layer_5"
+                                        },
+                                        "data": {
+                                          "level": 4,
+                                          "metadata": {
+                                            "type": "analysis_layer_4"
+                                          },
+                                          "data": {
+                                            "level": 3,
+                                            "metadata": {
+                                              "type": "analysis_layer_3"
+                                            },
+                                            "data": {
+                                              "level": 2,
+                                              "metadata": {
+                                                "type": "analysis_layer_2"
+                                              },
+                                              "data": {
+                                                "level": 1,
+                                                "metadata": {
+                                                  "type": "analysis_layer_1"
+                                                },
+                                                "data": {
+                                                  "skill": "NIST Cybersecurity Framework",
+                                                  "count": 816
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "level": 15,
+                    "metadata": {
+                      "type": "analysis_layer_15"
+                    },
+                    "data": {
+                      "level": 14,
+                      "metadata": {
+                        "type": "analysis_layer_14"
+                      },
+                      "data": {
+                        "level": 13,
+                        "metadata": {
+                          "type": "analysis_layer_13"
+                        },
+                        "data": {
+                          "level": 12,
+                          "metadata": {
+                            "type": "analysis_layer_12"
+                          },
+                          "data": {
+                            "level": 11,
+                            "metadata": {
+                              "type": "analysis_layer_11"
+                            },
+                            "data": {
+                              "level": 10,
+                              "metadata": {
+                                "type": "analysis_layer_10"
+                              },
+                              "data": {
+                                "level": 9,
+                                "metadata": {
+                                  "type": "analysis_layer_9"
+                                },
+                                "data": {
+                                  "level": 8,
+                                  "metadata": {
+                                    "type": "analysis_layer_8"
+                                  },
+                                  "data": {
+                                    "level": 7,
+                                    "metadata": {
+                                      "type": "analysis_layer_7"
+                                    },
+                                    "data": {
+                                      "level": 6,
+                                      "metadata": {
+                                        "type": "analysis_layer_6"
+                                      },
+                                      "data": {
+                                        "level": 5,
+                                        "metadata": {
+                                          "type": "analysis_layer_5"
+                                        },
+                                        "data": {
+                                          "level": 4,
+                                          "metadata": {
+                                            "type": "analysis_layer_4"
+                                          },
+                                          "data": {
+                                            "level": 3,
+                                            "metadata": {
+                                              "type": "analysis_layer_3"
+                                            },
+                                            "data": {
+                                              "level": 2,
+                                              "metadata": {
+                                                "type": "analysis_layer_2"
+                                              },
+                                              "data": {
+                                                "level": 1,
+                                                "metadata": {
+                                                  "type": "analysis_layer_1"
+                                                },
+                                                "data": {
+                                                  "skill": "Incident Management",
+                                                  "count": 748
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "level": 15,
+                    "metadata": {
+                      "type": "analysis_layer_15"
+                    },
+                    "data": {
+                      "level": 14,
+                      "metadata": {
+                        "type": "analysis_layer_14"
+                      },
+                      "data": {
+                        "level": 13,
+                        "metadata": {
+                          "type": "analysis_layer_13"
+                        },
+                        "data": {
+                          "level": 12,
+                          "metadata": {
+                            "type": "analysis_layer_12"
+                          },
+                          "data": {
+                            "level": 11,
+                            "metadata": {
+                              "type": "analysis_layer_11"
+                            },
+                            "data": {
+                              "level": 10,
+                              "metadata": {
+                                "type": "analysis_layer_10"
+                              },
+                              "data": {
+                                "level": 9,
+                                "metadata": {
+                                  "type": "analysis_layer_9"
+                                },
+                                "data": {
+                                  "level": 8,
+                                  "metadata": {
+                                    "type": "analysis_layer_8"
+                                  },
+                                  "data": {
+                                    "level": 7,
+                                    "metadata": {
+                                      "type": "analysis_layer_7"
+                                    },
+                                    "data": {
+                                      "level": 6,
+                                      "metadata": {
+                                        "type": "analysis_layer_6"
+                                      },
+                                      "data": {
+                                        "level": 5,
+                                        "metadata": {
+                                          "type": "analysis_layer_5"
+                                        },
+                                        "data": {
+                                          "level": 4,
+                                          "metadata": {
+                                            "type": "analysis_layer_4"
+                                          },
+                                          "data": {
+                                            "level": 3,
+                                            "metadata": {
+                                              "type": "analysis_layer_3"
+                                            },
+                                            "data": {
+                                              "level": 2,
+                                              "metadata": {
+                                                "type": "analysis_layer_2"
+                                              },
+                                              "data": {
+                                                "level": 1,
+                                                "metadata": {
+                                                  "type": "analysis_layer_1"
+                                                },
+                                                "data": {
+                                                  "skill": "Firewalls",
+                                                  "count": 744
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                ],
+                "total_depth": 15
+              }
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.027
+    }
+  ],
+  "finished": true,
+  "listed_tools": 32,
+  "replay_responses": [
+    [
+      [
+        "{\"requisition_id\": \"05958BR\", \"analysis_version\": \"3.0\", \"results\": {\"nested_skills\": [{\"level\": 15, \"metadata\": {\"type\": \"analysis_layer_15\"}, \"data\": {\"level\": 14, \"metadata\": {\"type\": \"analysis_layer_14\"}, \"data\": {\"level\": 13, \"metadata\": {\"type\": \"analysis_layer_13\"}, \"data\": {\"level\": 12, \"metadata\": {\"type\": \"analysis_layer_12\"}, \"data\": {\"level\": 11, \"metadata\": {\"type\": \"analysis_layer_11\"}, \"data\": {\"level\": 10, \"metadata\": {\"type\": \"analysis_layer_10\"}, \"data\": {\"level\": 9, \"metadata\": {\"type\": \"analysis_layer_9\"}, \"data\": {\"level\": 8, \"metadata\": {\"type\": \"analysis_layer_8\"}, \"data\": {\"level\": 7, \"metadata\": {\"type\": \"analysis_layer_7\"}, \"data\": {\"level\": 6, \"metadata\": {\"type\": \"analysis_layer_6\"}, \"data\": {\"level\": 5, \"metadata\": {\"type\": \"analysis_layer_5\"}, \"data\": {\"level\": 4, \"metadata\": {\"type\": \"analysis_layer_4\"}, \"data\": {\"level\": 3, \"metadata\": {\"type\": \"analysis_layer_3\"}, \"data\": {\"level\": 2, \"metadata\": {\"type\": \"analysis_layer_2\"}, \"data\": {\"level\": 1, \"metadata\": {\"type\": \"analysis_layer_1\"}, \"data\": {\"skill\": \"AWS\", \"count\": 948}}}}}}}}}}}}}}}}, {\"level\": 15, \"metadata\": {\"type\": \"analysis_layer_15\"}, \"data\": {\"level\": 14, \"metadata\": {\"type\": \"analysis_layer_14\"}, \"data\": {\"level\": 13, \"metadata\": {\"type\": \"analysis_layer_13\"}, \"data\": {\"level\": 12, \"metadata\": {\"type\": \"analysis_layer_12\"}, \"data\": {\"level\": 11, \"metadata\": {\"type\": \"analysis_layer_11\"}, \"data\": {\"level\": 10, \"metadata\": {\"type\": \"analysis_layer_10\"}, \"data\": {\"level\": 9, \"metadata\": {\"type\": \"analysis_layer_9\"}, \"data\": {\"level\": 8, \"metadata\": {\"type\": \"analysis_layer_8\"}, \"data\": {\"level\": 7, \"metadata\": {\"type\": \"analysis_layer_7\"}, \"data\": {\"level\": 6, \"metadata\": {\"type\": \"analysis_layer_6\"}, \"data\": {\"level\": 5, \"metadata\": {\"type\": \"analysis_layer_5\"}, \"data\": {\"level\": 4, \"metadata\": {\"type\": \"analysis_layer_4\"}, \"data\": {\"level\": 3, \"metadata\": {\"type\": \"analysis_layer_3\"}, \"data\": {\"level\": 2, \"metadata\": {\"type\": \"analysis_layer_2\"}, \"data\": {\"level\": 1, \"metadata\": {\"type\": \"analysis_layer_1\"}, \"data\": {\"skill\": \"IT Support\", \"count\": 868}}}}}}}}}}}}}}}}, {\"level\": 15, \"metadata\": {\"type\": \"analysis_layer_15\"}, \"data\": {\"level\": 14, \"metadata\": {\"type\": \"analysis_layer_14\"}, \"data\": {\"level\": 13, \"metadata\": {\"type\": \"analysis_layer_13\"}, \"data\": {\"level\": 12, \"metadata\": {\"type\": \"analysis_layer_12\"}, \"data\": {\"level\": 11, \"metadata\": {\"type\": \"analysis_layer_11\"}, \"data\": {\"level\": 10, \"metadata\": {\"type\": \"analysis_layer_10\"}, \"data\": {\"level\": 9, \"metadata\": {\"type\": \"analysis_layer_9\"}, \"data\": {\"level\": 8, \"metadata\": {\"type\": \"analysis_layer_8\"}, \"data\": {\"level\": 7, \"metadata\": {\"type\": \"analysis_layer_7\"}, \"data\": {\"level\": 6, \"metadata\": {\"type\": \"analysis_layer_6\"}, \"data\": {\"level\": 5, \"metadata\": {\"type\": \"analysis_layer_5\"}, \"data\": {\"level\": 4, \"metadata\": {\"type\": \"analysis_layer_4\"}, \"data\": {\"level\": 3, \"metadata\": {\"type\": \"analysis_layer_3\"}, \"data\": {\"level\": 2, \"metadata\": {\"type\": \"analysis_layer_2\"}, \"data\": {\"level\": 1, \"metadata\": {\"type\": \"analysis_layer_1\"}, \"data\": {\"skill\": \"NIST Cybersecurity Framework\", \"count\": 816}}}}}}}}}}}}}}}}, {\"level\": 15, \"metadata\": {\"type\": \"analysis_layer_15\"}, \"data\": {\"level\": 14, \"metadata\": {\"type\": \"analysis_layer_14\"}, \"data\": {\"level\": 13, \"metadata\": {\"type\": \"analysis_layer_13\"}, \"data\": {\"level\": 12, \"metadata\": {\"type\": \"analysis_layer_12\"}, \"data\": {\"level\": 11, \"metadata\": {\"type\": \"analysis_layer_11\"}, \"data\": {\"level\": 10, \"metadata\": {\"type\": \"analysis_layer_10\"}, \"data\": {\"level\": 9, \"metadata\": {\"type\": \"analysis_layer_9\"}, \"data\": {\"level\": 8, \"metadata\": {\"type\": \"analysis_layer_8\"}, \"data\": {\"level\": 7, \"metadata\": {\"type\": \"analysis_layer_7\"}, \"data\": {\"level\": 6, \"metadata\": {\"type\": \"analysis_layer_6\"}, \"data\": {\"level\": 5, \"metadata\": {\"type\": \"analysis_layer_5\"}, \"data\": {\"level\": 4, \"metadata\": {\"type\": \"analysis_layer_4\"}, \"data\": {\"level\": 3, \"metadata\": {\"type\": \"analysis_layer_3\"}, \"data\": {\"level\": 2, \"metadata\": {\"type\": \"analysis_layer_2\"}, \"data\": {\"level\": 1, \"metadata\": {\"type\": \"analysis_layer_1\"}, \"data\": {\"skill\": \"Incident Management\", \"count\": 748}}}}}}}}}}}}}}}}, {\"level\": 15, \"metadata\": {\"type\": \"analysis_layer_15\"}, \"data\": {\"level\": 14, \"metadata\": {\"type\": \"analysis_layer_14\"}, \"data\": {\"level\": 13, \"metadata\": {\"type\": \"analysis_layer_13\"}, \"data\": {\"level\": 12, \"metadata\": {\"type\": \"analysis_layer_12\"}, \"data\": {\"level\": 11, \"metadata\": {\"type\": \"analysis_layer_11\"}, \"data\": {\"level\": 10, \"metadata\": {\"type\": \"analysis_layer_10\"}, \"data\": {\"level\": 9, \"metadata\": {\"type\": \"analysis_layer_9\"}, \"data\": {\"level\": 8, \"metadata\": {\"type\": \"analysis_layer_8\"}, \"data\": {\"level\": 7, \"metadata\": {\"type\": \"analysis_layer_7\"}, \"data\": {\"level\": 6, \"metadata\": {\"type\": \"analysis_layer_6\"}, \"data\": {\"level\": 5, \"metadata\": {\"type\": \"analysis_layer_5\"}, \"data\": {\"level\": 4, \"metadata\": {\"type\": \"analysis_layer_4\"}, \"data\": {\"level\": 3, \"metadata\": {\"type\": \"analysis_layer_3\"}, \"data\": {\"level\": 2, \"metadata\": {\"type\": \"analysis_layer_2\"}, \"data\": {\"level\": 1, \"metadata\": {\"type\": \"analysis_layer_1\"}, \"data\": {\"skill\": \"Firewalls\", \"count\": 744}}}}}}}}}}}}}}}}], \"total_depth\": 15}}"
+      ]
+    ]
+  ],
+  "seconds": 2.318,
+  "tool_errors": 0
+}

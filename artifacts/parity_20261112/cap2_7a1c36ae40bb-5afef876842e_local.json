@@ -1,0 +1,66 @@
+{
+  "capability": 2,
+  "domain": "superhero",
+  "uuid": "7a1c36ae40bb-5afef876842e",
+  "backend": "local",
+  "connection": {
+    "mode": "stdio",
+    "container_name": "capability_2_dashboard_apis",
+    "container_runtime": null,
+    "container_command": [
+      "python",
+      "/app/mcp_dispatch.py"
+    ],
+    "container_env": {
+      "CAPABILITY_ID": "2",
+      "MCP_DB_ROOT": "/app/db"
+    },
+    "command": null,
+    "args": null,
+    "server_url": null,
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_count_heroes_by_power",
+      "resolved_arguments": {
+        "power_name": "Super Strength"
+      },
+      "started_at": "2026-11-12T15:24:49.243670+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"count\": 358\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "count": 358
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.042
+    }
+  ],
+  "finished": true,
+  "listed_tools": 109,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"count\": 358\n}"
+      ]
+    ]
+  ],
+  "seconds": 1.215,
+  "tool_errors": 0
+}

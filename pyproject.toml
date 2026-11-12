@@ -51,7 +51,7 @@ agents = [
 
 # MCP server functionality (includes agents)
 mcp = [
-    "mcp>=1.0.0",
+    "mcp>=1.27,<2",
     "langchain>=0.1.0",
     "langchain-openai>=0.0.5",
     "httpx",

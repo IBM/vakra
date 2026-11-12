@@ -1,0 +1,604 @@
+{
+  "capability": 1,
+  "domain": "books",
+  "uuid": "6e317bcd6839-d365c9ad58eb",
+  "backend": "local",
+  "connection": {
+    "mode": "stdio",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": "/root/cuga-eval/.venv/bin/python",
+    "args": [
+      "-m",
+      "environment.m3.python_tools.mcp"
+    ],
+    "server_url": null,
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_data",
+      "resolved_arguments": {
+        "tool_universe_id": "6e317bcd6839-d365c9ad58eb",
+        "reset_handles": true
+      },
+      "started_at": "2026-11-12T15:25:56.047067+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"retrieved_book_1\", \"num_records\": 17642, \"key_details\": [{\"name\": \"book_book_id\", \"dtype\": \"int64\", \"first_3_values\": [10539, 8109, 2792]}, {\"name\": \"book_title\", \"dtype\": \"object\", \"first_3_values\": [\"Baseball: a Literary Anthology\", \"Having Our Say: The Delany Sisters' First 100 Years\", \"Tales Before Tolkien: The Roots of Modern Fantasy\"]}, {\"name\": \"book_isbn13\", \"dtype\": \"object\", \"first_3_values\": [\"9781931082099\", \"9780822215028\", \"9780345458568\"]}, {\"name\": \"book_language_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 1, 1]}, {\"name\": \"book_num_pages\", \"dtype\": \"int64\", \"first_3_values\": [733, 62, 528]}, {\"name\": \"book_publication_date\", \"dtype\": \"object\", \"first_3_values\": [\"2002-03-04\", \"1996-03-01\", \"2005-11-29\"]}, {\"name\": \"book_publisher_id\", \"dtype\": \"int64\", \"first_3_values\": [1130, 590, 514]}, {\"name\": \"book_author_book_id\", \"dtype\": \"int64\", \"first_3_values\": [10539, 8109, 2792]}, {\"name\": \"book_author_author_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 2, 3]}, {\"name\": \"author_author_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 2, 3]}, {\"name\": \"author_author_name\", \"dtype\": \"object\", \"first_3_values\": [\"A. Bartlett Giamatti\", \"A. Elizabeth Delany\", \"A. Merritt\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "retrieved_book_1",
+              "num_records": 17642,
+              "key_details": [
+                {
+                  "name": "book_book_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    10539,
+                    8109,
+                    2792
+                  ]
+                },
+                {
+                  "name": "book_title",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Baseball: a Literary Anthology",
+                    "Having Our Say: The Delany Sisters' First 100 Years",
+                    "Tales Before Tolkien: The Roots of Modern Fantasy"
+                  ]
+                },
+                {
+                  "name": "book_isbn13",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "9781931082099",
+                    "9780822215028",
+                    "9780345458568"
+                  ]
+                },
+                {
+                  "name": "book_language_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1,
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "name": "book_num_pages",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    733,
+                    62,
+                    528
+                  ]
+                },
+                {
+                  "name": "book_publication_date",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "2002-03-04",
+                    "1996-03-01",
+                    "2005-11-29"
+                  ]
+                },
+                {
+                  "name": "book_publisher_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1130,
+                    590,
+                    514
+                  ]
+                },
+                {
+                  "name": "book_author_book_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    10539,
+                    8109,
+                    2792
+                  ]
+                },
+                {
+                  "name": "book_author_author_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1,
+                    2,
+                    3
+                  ]
+                },
+                {
+                  "name": "author_author_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1,
+                    2,
+                    3
+                  ]
+                },
+                {
+                  "name": "author_author_name",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "A. Bartlett Giamatti",
+                    "A. Elizabeth Delany",
+                    "A. Merritt"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.171
+    },
+    {
+      "tool": "select_data_equal_to",
+      "resolved_arguments": {
+        "data_label": "retrieved_book_1",
+        "key_name": "author_author_name",
+        "value": "Orson Scott Card"
+      },
+      "started_at": "2026-11-12T15:25:56.219048+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"filtered_book_1\", \"num_records\": 40, \"key_details\": [{\"name\": \"book_book_id\", \"dtype\": \"int64\", \"first_3_values\": [263, 628, 629]}, {\"name\": \"book_title\", \"dtype\": \"object\", \"first_3_values\": [\"Gold: The Final Science Fiction Collection\", \"Treasure Box\", \"Homebody\"]}, {\"name\": \"book_isbn13\", \"dtype\": \"object\", \"first_3_values\": [\"9780060556525\", \"9780061093982\", \"9780061093999\"]}, {\"name\": \"book_language_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 1, 1]}, {\"name\": \"book_num_pages\", \"dtype\": \"int64\", \"first_3_values\": [416, 384, 430]}, {\"name\": \"book_publication_date\", \"dtype\": \"object\", \"first_3_values\": [\"2003-10-21\", \"1997-10-01\", \"1999-01-25\"]}, {\"name\": \"book_publisher_id\", \"dtype\": \"int64\", \"first_3_values\": [880, 864, 907]}, {\"name\": \"book_author_book_id\", \"dtype\": \"int64\", \"first_3_values\": [263, 628, 629]}, {\"name\": \"book_author_author_id\", \"dtype\": \"int64\", \"first_3_values\": [6560, 6560, 6560]}, {\"name\": \"author_author_id\", \"dtype\": \"int64\", \"first_3_values\": [6560, 6560, 6560]}, {\"name\": \"author_author_name\", \"dtype\": \"object\", \"first_3_values\": [\"Orson Scott Card\", \"Orson Scott Card\", \"Orson Scott Card\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "filtered_book_1",
+              "num_records": 40,
+              "key_details": [
+                {
+                  "name": "book_book_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    263,
+                    628,
+                    629
+                  ]
+                },
+                {
+                  "name": "book_title",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Gold: The Final Science Fiction Collection",
+                    "Treasure Box",
+                    "Homebody"
+                  ]
+                },
+                {
+                  "name": "book_isbn13",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "9780060556525",
+                    "9780061093982",
+                    "9780061093999"
+                  ]
+                },
+                {
+                  "name": "book_language_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1,
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "name": "book_num_pages",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    416,
+                    384,
+                    430
+                  ]
+                },
+                {
+                  "name": "book_publication_date",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "2003-10-21",
+                    "1997-10-01",
+                    "1999-01-25"
+                  ]
+                },
+                {
+                  "name": "book_publisher_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    880,
+                    864,
+                    907
+                  ]
+                },
+                {
+                  "name": "book_author_book_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    263,
+                    628,
+                    629
+                  ]
+                },
+                {
+                  "name": "book_author_author_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    6560,
+                    6560,
+                    6560
+                  ]
+                },
+                {
+                  "name": "author_author_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    6560,
+                    6560,
+                    6560
+                  ]
+                },
+                {
+                  "name": "author_author_name",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Orson Scott Card",
+                    "Orson Scott Card",
+                    "Orson Scott Card"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.059
+    },
+    {
+      "tool": "transform_data_to_datetime_part",
+      "resolved_arguments": {
+        "data_label": "filtered_book_1",
+        "key_name": "book_publication_date",
+        "datetime_pattern": "%Y"
+      },
+      "started_at": "2026-11-12T15:25:56.279027+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"transformed_book_1\", \"num_records\": 40, \"key_details\": [{\"name\": \"book_book_id\", \"dtype\": \"int\", \"first_3_values\": [263, 628, 629]}, {\"name\": \"book_title\", \"dtype\": \"str\", \"first_3_values\": [\"Gold: The Final Science Fiction Collection\", \"Treasure Box\", \"Homebody\"]}, {\"name\": \"book_isbn13\", \"dtype\": \"str\", \"first_3_values\": [\"9780060556525\", \"9780061093982\", \"9780061093999\"]}, {\"name\": \"book_language_id\", \"dtype\": \"int\", \"first_3_values\": [1, 1, 1]}, {\"name\": \"book_num_pages\", \"dtype\": \"int\", \"first_3_values\": [416, 384, 430]}, {\"name\": \"book_publication_date\", \"dtype\": \"int\", \"first_3_values\": [2003, 1997, 1999]}, {\"name\": \"book_publisher_id\", \"dtype\": \"int\", \"first_3_values\": [880, 864, 907]}, {\"name\": \"book_author_book_id\", \"dtype\": \"int\", \"first_3_values\": [263, 628, 629]}, {\"name\": \"book_author_author_id\", \"dtype\": \"int\", \"first_3_values\": [6560, 6560, 6560]}, {\"name\": \"author_author_id\", \"dtype\": \"int\", \"first_3_values\": [6560, 6560, 6560]}, {\"name\": \"author_author_name\", \"dtype\": \"str\", \"first_3_values\": [\"Orson Scott Card\", \"Orson Scott Card\", \"Orson Scott Card\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "transformed_book_1",
+              "num_records": 40,
+              "key_details": [
+                {
+                  "name": "book_book_id",
+                  "dtype": "int",
+                  "first_3_values": [
+                    263,
+                    628,
+                    629
+                  ]
+                },
+                {
+                  "name": "book_title",
+                  "dtype": "str",
+                  "first_3_values": [
+                    "Gold: The Final Science Fiction Collection",
+                    "Treasure Box",
+                    "Homebody"
+                  ]
+                },
+                {
+                  "name": "book_isbn13",
+                  "dtype": "str",
+                  "first_3_values": [
+                    "9780060556525",
+                    "9780061093982",
+                    "9780061093999"
+                  ]
+                },
+                {
+                  "name": "book_language_id",
+                  "dtype": "int",
+                  "first_3_values": [
+                    1,
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "name": "book_num_pages",
+                  "dtype": "int",
+                  "first_3_values": [
+                    416,
+                    384,
+                    430
+                  ]
+                },
+                {
+                  "name": "book_publication_date",
+                  "dtype": "int",
+                  "first_3_values": [
+                    2003,
+                    1997,
+                    1999
+                  ]
+                },
+                {
+                  "name": "book_publisher_id",
+                  "dtype": "int",
+                  "first_3_values": [
+                    880,
+                    864,
+                    907
+                  ]
+                },
+                {
+                  "name": "book_author_book_id",
+                  "dtype": "int",
+                  "first_3_values": [
+                    263,
+                    628,
+                    629
+                  ]
+                },
+                {
+                  "name": "book_author_author_id",
+                  "dtype": "int",
+                  "first_3_values": [
+                    6560,
+                    6560,
+                    6560
+                  ]
+                },
+                {
+                  "name": "author_author_id",
+                  "dtype": "int",
+                  "first_3_values": [
+                    6560,
+                    6560,
+                    6560
+                  ]
+                },
+                {
+                  "name": "author_author_name",
+                  "dtype": "str",
+                  "first_3_values": [
+                    "Orson Scott Card",
+                    "Orson Scott Card",
+                    "Orson Scott Card"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.004
+    },
+    {
+      "tool": "select_data_equal_to",
+      "resolved_arguments": {
+        "data_label": "transformed_book_1",
+        "key_name": "book_publication_date",
+        "value": "2001"
+      },
+      "started_at": "2026-11-12T15:25:56.284380+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"filtered_book_2\", \"num_records\": 7, \"key_details\": [{\"name\": \"book_book_id\", \"dtype\": \"int64\", \"first_3_values\": [2380, 2382, 7209]}, {\"name\": \"book_title\", \"dtype\": \"object\", \"first_3_values\": [\"Saints\", \"Lovelock (Mayflower Trilogy  #1)\", \"Legends\"]}, {\"name\": \"book_isbn13\", \"dtype\": \"object\", \"first_3_values\": [\"9780312876067\", \"9780312877514\", \"9780765300355\"]}, {\"name\": \"book_language_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 2, 2]}, {\"name\": \"book_num_pages\", \"dtype\": \"int64\", \"first_3_values\": [608, 288, 717]}, {\"name\": \"book_publication_date\", \"dtype\": \"int64\", \"first_3_values\": [2001, 2001, 2001]}, {\"name\": \"book_publisher_id\", \"dtype\": \"int64\", \"first_3_values\": [728, 1885, 2000]}, {\"name\": \"book_author_book_id\", \"dtype\": \"int64\", \"first_3_values\": [2380, 2382, 7209]}, {\"name\": \"book_author_author_id\", \"dtype\": \"int64\", \"first_3_values\": [6560, 6560, 6560]}, {\"name\": \"author_author_id\", \"dtype\": \"int64\", \"first_3_values\": [6560, 6560, 6560]}, {\"name\": \"author_author_name\", \"dtype\": \"object\", \"first_3_values\": [\"Orson Scott Card\", \"Orson Scott Card\", \"Orson Scott Card\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "filtered_book_2",
+              "num_records": 7,
+              "key_details": [
+                {
+                  "name": "book_book_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    2380,
+                    2382,
+                    7209
+                  ]
+                },
+                {
+                  "name": "book_title",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Saints",
+                    "Lovelock (Mayflower Trilogy  #1)",
+                    "Legends"
+                  ]
+                },
+                {
+                  "name": "book_isbn13",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "9780312876067",
+                    "9780312877514",
+                    "9780765300355"
+                  ]
+                },
+                {
+                  "name": "book_language_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    1,
+                    2,
+                    2
+                  ]
+                },
+                {
+                  "name": "book_num_pages",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    608,
+                    288,
+                    717
+                  ]
+                },
+                {
+                  "name": "book_publication_date",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    2001,
+                    2001,
+                    2001
+                  ]
+                },
+                {
+                  "name": "book_publisher_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    728,
+                    1885,
+                    2000
+                  ]
+                },
+                {
+                  "name": "book_author_book_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    2380,
+                    2382,
+                    7209
+                  ]
+                },
+                {
+                  "name": "book_author_author_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    6560,
+                    6560,
+                    6560
+                  ]
+                },
+                {
+                  "name": "author_author_id",
+                  "dtype": "int64",
+                  "first_3_values": [
+                    6560,
+                    6560,
+                    6560
+                  ]
+                },
+                {
+                  "name": "author_author_name",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Orson Scott Card",
+                    "Orson Scott Card",
+                    "Orson Scott Card"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.011
+    },
+    {
+      "tool": "get_book_titles",
+      "resolved_arguments": {
+        "data_label": "filtered_book_2"
+      },
+      "started_at": "2026-11-12T15:25:56.296413+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "[\"Saints\", \"Lovelock (Mayflower Trilogy  #1)\", \"Legends\", \"Sarah (Women of Genesis  #1)\", \"Shadow of the Hegemon (The Shadow Series  #2)\", \"How to Write Science Fiction & Fantasy\", \"X\\u00e9nocide (Ender's Saga  #3)\"]"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": [
+              "Saints",
+              "Lovelock (Mayflower Trilogy  #1)",
+              "Legends",
+              "Sarah (Women of Genesis  #1)",
+              "Shadow of the Hegemon (The Shadow Series  #2)",
+              "How to Write Science Fiction & Fantasy",
+              "Xénocide (Ender's Saga  #3)"
+            ]
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 0.048
+    }
+  ],
+  "finished": true,
+  "listed_tools": 26,
+  "replay_responses": [
+    [
+      [
+        "{\"handle\": \"retrieved_book_1\", \"num_records\": 17642, \"key_details\": [{\"name\": \"book_book_id\", \"dtype\": \"int64\", \"first_3_values\": [10539, 8109, 2792]}, {\"name\": \"book_title\", \"dtype\": \"object\", \"first_3_values\": [\"Baseball: a Literary Anthology\", \"Having Our Say: The Delany Sisters' First 100 Years\", \"Tales Before Tolkien: The Roots of Modern Fantasy\"]}, {\"name\": \"book_isbn13\", \"dtype\": \"object\", \"first_3_values\": [\"9781931082099\", \"9780822215028\", \"9780345458568\"]}, {\"name\": \"book_language_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 1, 1]}, {\"name\": \"book_num_pages\", \"dtype\": \"int64\", \"first_3_values\": [733, 62, 528]}, {\"name\": \"book_publication_date\", \"dtype\": \"object\", \"first_3_values\": [\"2002-03-04\", \"1996-03-01\", \"2005-11-29\"]}, {\"name\": \"book_publisher_id\", \"dtype\": \"int64\", \"first_3_values\": [1130, 590, 514]}, {\"name\": \"book_author_book_id\", \"dtype\": \"int64\", \"first_3_values\": [10539, 8109, 2792]}, {\"name\": \"book_author_author_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 2, 3]}, {\"name\": \"author_author_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 2, 3]}, {\"name\": \"author_author_name\", \"dtype\": \"object\", \"first_3_values\": [\"A. Bartlett Giamatti\", \"A. Elizabeth Delany\", \"A. Merritt\"]}]}",
+        "{\"handle\": \"filtered_book_1\", \"num_records\": 40, \"key_details\": [{\"name\": \"book_book_id\", \"dtype\": \"int64\", \"first_3_values\": [263, 628, 629]}, {\"name\": \"book_title\", \"dtype\": \"object\", \"first_3_values\": [\"Gold: The Final Science Fiction Collection\", \"Treasure Box\", \"Homebody\"]}, {\"name\": \"book_isbn13\", \"dtype\": \"object\", \"first_3_values\": [\"9780060556525\", \"9780061093982\", \"9780061093999\"]}, {\"name\": \"book_language_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 1, 1]}, {\"name\": \"book_num_pages\", \"dtype\": \"int64\", \"first_3_values\": [416, 384, 430]}, {\"name\": \"book_publication_date\", \"dtype\": \"object\", \"first_3_values\": [\"2003-10-21\", \"1997-10-01\", \"1999-01-25\"]}, {\"name\": \"book_publisher_id\", \"dtype\": \"int64\", \"first_3_values\": [880, 864, 907]}, {\"name\": \"book_author_book_id\", \"dtype\": \"int64\", \"first_3_values\": [263, 628, 629]}, {\"name\": \"book_author_author_id\", \"dtype\": \"int64\", \"first_3_values\": [6560, 6560, 6560]}, {\"name\": \"author_author_id\", \"dtype\": \"int64\", \"first_3_values\": [6560, 6560, 6560]}, {\"name\": \"author_author_name\", \"dtype\": \"object\", \"first_3_values\": [\"Orson Scott Card\", \"Orson Scott Card\", \"Orson Scott Card\"]}]}",
+        "{\"handle\": \"transformed_book_1\", \"num_records\": 40, \"key_details\": [{\"name\": \"book_book_id\", \"dtype\": \"int\", \"first_3_values\": [263, 628, 629]}, {\"name\": \"book_title\", \"dtype\": \"str\", \"first_3_values\": [\"Gold: The Final Science Fiction Collection\", \"Treasure Box\", \"Homebody\"]}, {\"name\": \"book_isbn13\", \"dtype\": \"str\", \"first_3_values\": [\"9780060556525\", \"9780061093982\", \"9780061093999\"]}, {\"name\": \"book_language_id\", \"dtype\": \"int\", \"first_3_values\": [1, 1, 1]}, {\"name\": \"book_num_pages\", \"dtype\": \"int\", \"first_3_values\": [416, 384, 430]}, {\"name\": \"book_publication_date\", \"dtype\": \"int\", \"first_3_values\": [2003, 1997, 1999]}, {\"name\": \"book_publisher_id\", \"dtype\": \"int\", \"first_3_values\": [880, 864, 907]}, {\"name\": \"book_author_book_id\", \"dtype\": \"int\", \"first_3_values\": [263, 628, 629]}, {\"name\": \"book_author_author_id\", \"dtype\": \"int\", \"first_3_values\": [6560, 6560, 6560]}, {\"name\": \"author_author_id\", \"dtype\": \"int\", \"first_3_values\": [6560, 6560, 6560]}, {\"name\": \"author_author_name\", \"dtype\": \"str\", \"first_3_values\": [\"Orson Scott Card\", \"Orson Scott Card\", \"Orson Scott Card\"]}]}",
+        "{\"handle\": \"filtered_book_2\", \"num_records\": 7, \"key_details\": [{\"name\": \"book_book_id\", \"dtype\": \"int64\", \"first_3_values\": [2380, 2382, 7209]}, {\"name\": \"book_title\", \"dtype\": \"object\", \"first_3_values\": [\"Saints\", \"Lovelock (Mayflower Trilogy  #1)\", \"Legends\"]}, {\"name\": \"book_isbn13\", \"dtype\": \"object\", \"first_3_values\": [\"9780312876067\", \"9780312877514\", \"9780765300355\"]}, {\"name\": \"book_language_id\", \"dtype\": \"int64\", \"first_3_values\": [1, 2, 2]}, {\"name\": \"book_num_pages\", \"dtype\": \"int64\", \"first_3_values\": [608, 288, 717]}, {\"name\": \"book_publication_date\", \"dtype\": \"int64\", \"first_3_values\": [2001, 2001, 2001]}, {\"name\": \"book_publisher_id\", \"dtype\": \"int64\", \"first_3_values\": [728, 1885, 2000]}, {\"name\": \"book_author_book_id\", \"dtype\": \"int64\", \"first_3_values\": [2380, 2382, 7209]}, {\"name\": \"book_author_author_id\", \"dtype\": \"int64\", \"first_3_values\": [6560, 6560, 6560]}, {\"name\": \"author_author_id\", \"dtype\": \"int64\", \"first_3_values\": [6560, 6560, 6560]}, {\"name\": \"author_author_name\", \"dtype\": \"object\", \"first_3_values\": [\"Orson Scott Card\", \"Orson Scott Card\", \"Orson Scott Card\"]}]}",
+        "[\"Saints\", \"Lovelock (Mayflower Trilogy  #1)\", \"Legends\", \"Sarah (Women of Genesis  #1)\", \"Shadow of the Hegemon (The Shadow Series  #2)\", \"How to Write Science Fiction & Fantasy\", \"X\\u00e9nocide (Ender's Saga  #3)\"]"
+      ]
+    ]
+  ],
+  "seconds": 4.637,
+  "tool_errors": 0
+}

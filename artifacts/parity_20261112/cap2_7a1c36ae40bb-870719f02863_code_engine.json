@@ -1,0 +1,65 @@
+{
+  "capability": 2,
+  "domain": "superhero",
+  "uuid": "7a1c36ae40bb-870719f02863",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap2.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_power_names_by_superhero",
+      "resolved_arguments": {
+        "superhero_name": "3-D Man"
+      },
+      "started_at": "2026-11-12T15:24:46.885779+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"power_names\": [\n    \"Agility\",\n    \"Super Strength\",\n    \"Stamina\",\n    \"Super Speed\"\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "power_names": [
+                "Agility",
+                "Super Strength",
+                "Stamina",
+                "Super Speed"
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.14
+    }
+  ],
+  "finished": true,
+  "listed_tools": 109,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"power_names\": [\n    \"Agility\",\n    \"Super Strength\",\n    \"Stamina\",\n    \"Super Speed\"\n  ]\n}"
+      ]
+    ]
+  ],
+  "seconds": 2.695,
+  "tool_errors": 0
+}

@@ -1,0 +1,91 @@
+{
+  "capability": 3,
+  "domain": "books",
+  "uuid": "6e317bcd6839-be3f4a72d000",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap3.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_language_names_by_publication_date",
+      "resolved_arguments": {},
+      "started_at": "2026-11-12T15:25:06.704328+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"language_names\": [\n    \"English\",\n    \"English\"\n  ]\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "language_names": [
+                "English",
+                "English"
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.427
+    },
+    {
+      "tool": "get_count_books_by_language",
+      "resolved_arguments": {
+        "language_name": "English"
+      },
+      "started_at": "2026-11-12T15:25:08.131720+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"count\": 8911\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "count": 8911
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.207
+    }
+  ],
+  "finished": true,
+  "listed_tools": 155,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"language_names\": [\n    \"English\",\n    \"English\"\n  ]\n}",
+        "{\n  \"count\": 8911\n}"
+      ]
+    ]
+  ],
+  "seconds": 4.419,
+  "tool_errors": 0
+}

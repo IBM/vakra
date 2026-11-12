@@ -1,0 +1,32 @@
+{
+  "capability": 4,
+  "domain": "beer_factory",
+  "uuid": "a823e527d383-769208ced562",
+  "sample_index": 0,
+  "source_file": "/root/v14/internal/test/capability_4_multiturn/output/beer_factory.json",
+  "source_sha256": "a43c2bd9f65801ce699d1c359d03ec767b3a4e1c6029095d07c9918e72751782",
+  "turn_count": 3,
+  "call_count": 3,
+  "status": "pass",
+  "expected_calls": 3,
+  "local_calls": 3,
+  "code_engine_calls": 3,
+  "local_errors": 0,
+  "code_engine_errors": 0,
+  "local_exception": null,
+  "code_engine_exception": null,
+  "differences": [],
+  "matching_errors": [],
+  "local_tool_errors": [],
+  "code_engine_tool_errors": [],
+  "raw_results_equal": true,
+  "serialization_differences": [],
+  "transport_retry": {
+    "attempt_1_exception": "ExceptionGroup: SSLError: [SSL] passed invalid argument (_ssl.c:2570)",
+    "attempt_1_file": "cap4_a823e527d383-769208ced562_code_engine_attempt1.json",
+    "attempt_2_exception": null,
+    "recovered": true
+  },
+  "local_output_file": "cap4_a823e527d383-769208ced562_local.json",
+  "code_engine_output_file": "cap4_a823e527d383-769208ced562_code_engine.json"
+}

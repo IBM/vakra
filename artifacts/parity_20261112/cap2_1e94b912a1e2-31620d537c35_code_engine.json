@@ -1,0 +1,60 @@
+{
+  "capability": 2,
+  "domain": "formula_1",
+  "uuid": "1e94b912a1e2-31620d537c35",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap2.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_fastest_q2_surname",
+      "resolved_arguments": {
+        "race_id": 19
+      },
+      "started_at": "2026-11-12T15:24:32.799056+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"surname\": \"Fisichella\"\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "surname": "Fisichella"
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.439
+    }
+  ],
+  "finished": true,
+  "listed_tools": 152,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"surname\": \"Fisichella\"\n}"
+      ]
+    ]
+  ],
+  "seconds": 3.375,
+  "tool_errors": 0
+}

@@ -1,0 +1,35 @@
+{
+  "capability": 1,
+  "domain": "beer_factory",
+  "uuid": "a823e527d383-86c438a4c62f",
+  "backend": "code_engine_diagnostic",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_data",
+      "resolved_arguments": {
+        "tool_universe_id": "a823e527d383-86c438a4c62f",
+        "reset_handles": true
+      },
+      "started_at": "2026-11-12T15:24:47.194597+00:00",
+      "exception": "CancelledError: Cancelled via cancel scope 7f592b6731d0",
+      "seconds": 5.024
+    }
+  ],
+  "finished": true,
+  "listed_tools": 26,
+  "exception": "ExceptionGroup: SSLError: [SSL] passed invalid argument (_ssl.c:2570)",
+  "seconds": 10.356,
+  "tool_errors": 1
+}

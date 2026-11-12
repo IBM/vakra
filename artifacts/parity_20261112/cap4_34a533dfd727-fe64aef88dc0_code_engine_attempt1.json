@@ -1,0 +1,63 @@
+{
+  "capability": 4,
+  "domain": "disney",
+  "uuid": "34a533dfd727-fe64aef88dc0",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap4.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_director_by_song",
+      "resolved_arguments": {
+        "song": "Once Upon a Dream"
+      },
+      "started_at": "2026-11-12T15:24:46.519495+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"director\": \"Clyde Geronimi\"\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "director": "Clyde Geronimi"
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.159
+    },
+    {
+      "tool": "query_disney",
+      "resolved_arguments": {
+        "question": "\nWhich film directed by Clyde Geronimi was based on Charles Perrault's fairy tale?"
+      },
+      "started_at": "2026-11-12T15:24:47.679561+00:00",
+      "exception": "CancelledError: Cancelled via cancel scope 7f592b80fb60",
+      "seconds": 1.842
+    }
+  ],
+  "finished": true,
+  "listed_tools": 109,
+  "exception": "ExceptionGroup: SSLError: [SSL] passed invalid argument (_ssl.c:2570)",
+  "seconds": 4.619,
+  "tool_errors": 1
+}

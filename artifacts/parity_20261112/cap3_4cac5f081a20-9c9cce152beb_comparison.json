@@ -1,0 +1,128 @@
+{
+  "capability": 3,
+  "domain": "bpo",
+  "uuid": "4cac5f081a20-9c9cce152beb",
+  "sample_index": 10,
+  "source_file": "/root/v14/internal/test/capability_3_multihop_reasoning/output/bpo.json",
+  "source_sha256": "eaa081cad6f46d01dae9eaf74983b381a79a6bb4f7eac1e8f165d0e7a92c9bd1",
+  "turn_count": 1,
+  "call_count": 3,
+  "status": "matching_errors",
+  "expected_calls": 3,
+  "local_calls": 3,
+  "code_engine_calls": 3,
+  "local_errors": 3,
+  "code_engine_errors": 3,
+  "local_exception": null,
+  "code_engine_exception": null,
+  "differences": [],
+  "matching_errors": [
+    {
+      "call": 1,
+      "tool": "candidate_source_sla_per_source",
+      "reason": "both backends returned the same error"
+    },
+    {
+      "call": 2,
+      "tool": "candidate_source_candidate_volume_by_source",
+      "reason": "both backends returned the same error"
+    },
+    {
+      "call": 3,
+      "tool": "candidate_source_funnel_conversion_by_source",
+      "reason": "both backends returned the same error"
+    }
+  ],
+  "local_tool_errors": [
+    {
+      "call": 1,
+      "tool": "candidate_source_sla_per_source",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 'requisition_id' is a required property"
+          }
+        ],
+        "isError": true
+      },
+      "exception": null
+    },
+    {
+      "call": 2,
+      "tool": "candidate_source_candidate_volume_by_source",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 'requisition_id' is a required property"
+          }
+        ],
+        "isError": true
+      },
+      "exception": null
+    },
+    {
+      "call": 3,
+      "tool": "candidate_source_funnel_conversion_by_source",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 'requisition_id' is a required property"
+          }
+        ],
+        "isError": true
+      },
+      "exception": null
+    }
+  ],
+  "code_engine_tool_errors": [
+    {
+      "call": 1,
+      "tool": "candidate_source_sla_per_source",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 'requisition_id' is a required property"
+          }
+        ],
+        "isError": true
+      },
+      "exception": null
+    },
+    {
+      "call": 2,
+      "tool": "candidate_source_candidate_volume_by_source",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 'requisition_id' is a required property"
+          }
+        ],
+        "isError": true
+      },
+      "exception": null
+    },
+    {
+      "call": 3,
+      "tool": "candidate_source_funnel_conversion_by_source",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 'requisition_id' is a required property"
+          }
+        ],
+        "isError": true
+      },
+      "exception": null
+    }
+  ],
+  "raw_results_equal": true,
+  "serialization_differences": [],
+  "local_output_file": "cap3_4cac5f081a20-9c9cce152beb_local.json",
+  "code_engine_output_file": "cap3_4cac5f081a20-9c9cce152beb_code_engine.json"
+}

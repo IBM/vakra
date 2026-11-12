@@ -1,0 +1,60 @@
+{
+  "capability": 2,
+  "domain": "financial",
+  "uuid": "fed0e4820af4-5884354614cf",
+  "backend": "code_engine",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap2.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_count_account_ids_by_district",
+      "resolved_arguments": {
+        "district": "Prague"
+      },
+      "started_at": "2026-11-12T15:24:24.448656+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"count\": 84\n}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "count": 84
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 1.296
+    }
+  ],
+  "finished": true,
+  "listed_tools": 102,
+  "replay_responses": [
+    [
+      [
+        "{\n  \"count\": 84\n}"
+      ]
+    ]
+  ],
+  "seconds": 2.82,
+  "tool_errors": 0
+}

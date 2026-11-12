@@ -1,0 +1,267 @@
+{
+  "capability": 1,
+  "domain": "book_publishing_company",
+  "uuid": "5661cd917583-338de4806750",
+  "backend": "code_engine_diagnostic",
+  "connection": {
+    "mode": "http",
+    "container_name": "fastapi-mcp-server",
+    "container_runtime": null,
+    "container_command": null,
+    "container_env": null,
+    "command": null,
+    "args": null,
+    "server_url": "https://vakra-cap1.1gxwxi8kos9y.us-east.codeengine.appdomain.cloud/mcp/{domain}",
+    "require_persistent_backend": false,
+    "secondary_container_command": null
+  },
+  "calls": [
+    {
+      "tool": "get_data",
+      "resolved_arguments": {
+        "tool_universe_id": "5661cd917583-338de4806750",
+        "reset_handles": true
+      },
+      "started_at": "2026-11-12T15:25:02.096118+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"handle\": \"retrieved_titles_1\", \"num_records\": 18, \"key_details\": [{\"name\": \"titles_title_id\", \"dtype\": \"object\", \"first_3_values\": [\"BU1032\", \"BU1111\", \"BU2075\"]}, {\"name\": \"titles_title\", \"dtype\": \"object\", \"first_3_values\": [\"The Busy Executive's Database Guide\", \"Cooking with Computers: Surreptitious Balance Sheets\", \"You Can Combat Computer Stress!\"]}, {\"name\": \"titles_type\", \"dtype\": \"object\", \"first_3_values\": [\"business\", \"business\", \"business\"]}, {\"name\": \"titles_pub_id\", \"dtype\": \"object\", \"first_3_values\": [\"1389\", \"1389\", \"0736\"]}, {\"name\": \"titles_price\", \"dtype\": \"float64\", \"first_3_values\": [19.99, 11.95, 2.99]}, {\"name\": \"titles_advance\", \"dtype\": \"float64\", \"first_3_values\": [5000.0, 5000.0, 10125.0]}, {\"name\": \"titles_royalty\", \"dtype\": \"float64\", \"first_3_values\": [10.0, 10.0, 24.0]}, {\"name\": \"titles_ytd_sales\", \"dtype\": \"float64\", \"first_3_values\": [4095.0, 3876.0, 18722.0]}, {\"name\": \"titles_notes\", \"dtype\": \"object\", \"first_3_values\": [\"An overview of available database systems with emphasis on common business applications. Illustrated.\", \"Helpful hints on how to use your electronic resources to the best advantage.\", \"The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations.\"]}, {\"name\": \"titles_pubdate\", \"dtype\": \"object\", \"first_3_values\": [\"1991-06-12 00:00:00.0\", \"1991-06-09 00:00:00.0\", \"1991-06-30 00:00:00.0\"]}, {\"name\": \"publishers_pub_id\", \"dtype\": \"object\", \"first_3_values\": [\"1389\", \"1389\", \"0736\"]}, {\"name\": \"publishers_pub_name\", \"dtype\": \"object\", \"first_3_values\": [\"Algodata Infosystems\", \"Algodata Infosystems\", \"New Moon Books\"]}, {\"name\": \"publishers_city\", \"dtype\": \"object\", \"first_3_values\": [\"Berkeley\", \"Berkeley\", \"Boston\"]}, {\"name\": \"publishers_state\", \"dtype\": \"object\", \"first_3_values\": [\"CA\", \"CA\", \"MA\"]}, {\"name\": \"publishers_country\", \"dtype\": \"object\", \"first_3_values\": [\"USA\", \"USA\", \"USA\"]}]}"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "handle": "retrieved_titles_1",
+              "num_records": 18,
+              "key_details": [
+                {
+                  "name": "titles_title_id",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "BU1032",
+                    "BU1111",
+                    "BU2075"
+                  ]
+                },
+                {
+                  "name": "titles_title",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "The Busy Executive's Database Guide",
+                    "Cooking with Computers: Surreptitious Balance Sheets",
+                    "You Can Combat Computer Stress!"
+                  ]
+                },
+                {
+                  "name": "titles_type",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "business",
+                    "business",
+                    "business"
+                  ]
+                },
+                {
+                  "name": "titles_pub_id",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "1389",
+                    "1389",
+                    "0736"
+                  ]
+                },
+                {
+                  "name": "titles_price",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    19.99,
+                    11.95,
+                    2.99
+                  ]
+                },
+                {
+                  "name": "titles_advance",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    5000.0,
+                    5000.0,
+                    10125.0
+                  ]
+                },
+                {
+                  "name": "titles_royalty",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    10.0,
+                    10.0,
+                    24.0
+                  ]
+                },
+                {
+                  "name": "titles_ytd_sales",
+                  "dtype": "float64",
+                  "first_3_values": [
+                    4095.0,
+                    3876.0,
+                    18722.0
+                  ]
+                },
+                {
+                  "name": "titles_notes",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "An overview of available database systems with emphasis on common business applications. Illustrated.",
+                    "Helpful hints on how to use your electronic resources to the best advantage.",
+                    "The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations."
+                  ]
+                },
+                {
+                  "name": "titles_pubdate",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "1991-06-12 00:00:00.0",
+                    "1991-06-09 00:00:00.0",
+                    "1991-06-30 00:00:00.0"
+                  ]
+                },
+                {
+                  "name": "publishers_pub_id",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "1389",
+                    "1389",
+                    "0736"
+                  ]
+                },
+                {
+                  "name": "publishers_pub_name",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Algodata Infosystems",
+                    "Algodata Infosystems",
+                    "New Moon Books"
+                  ]
+                },
+                {
+                  "name": "publishers_city",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "Berkeley",
+                    "Berkeley",
+                    "Boston"
+                  ]
+                },
+                {
+                  "name": "publishers_state",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "CA",
+                    "CA",
+                    "MA"
+                  ]
+                },
+                {
+                  "name": "publishers_country",
+                  "dtype": "object",
+                  "first_3_values": [
+                    "USA",
+                    "USA",
+                    "USA"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": false,
+      "seconds": 4.899
+    },
+    {
+      "tool": "transform_data",
+      "resolved_arguments": {
+        "data_label": "retrieved_titles_1",
+        "key_name": "titles_pubdate",
+        "operation_type": "datetime",
+        "operation_args": {
+          "pattern": "%Y"
+        }
+      },
+      "started_at": "2026-11-12T15:25:06.996108+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for TransformDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_titles_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for TransformDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='retrieved_titles_1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 4.678
+    },
+    {
+      "tool": "filter_data",
+      "resolved_arguments": {
+        "data_label": "$TRANSFORMED_DF_0$",
+        "key_name": "titles_pubdate",
+        "value": "1991",
+        "condition": "equal_to"
+      },
+      "started_at": "2026-11-12T15:25:11.675572+00:00",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$TRANSFORMED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "semantic_result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: 1 validation error for FilterDataInput\ndata\n  Input should be a valid dictionary [type=dict_type, input_value='$TRANSFORMED_DF_0$', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/dict_type"
+          }
+        ],
+        "isError": false
+      },
+      "tool_error": true,
+      "seconds": 4.859
+    },
+    {
+      "tool": "retrieve_data",
+      "resolved_arguments": {
+        "data_label": "$FILTERED_DF_1$",
+        "key_name": "titles_title",
+        "distinct": false,
+        "limit": -1
+      },
+      "started_at": "2026-11-12T15:25:16.535828+00:00",
+      "exception": "CancelledError: Cancelled via cancel scope 7f592bad7ce0",
+      "seconds": 0.001
+    }
+  ],
+  "finished": true,
+  "listed_tools": 9,
+  "exception": "ExceptionGroup: SSLError: [SSL] passed invalid argument (_ssl.c:2570)",
+  "seconds": 19.816,
+  "tool_errors": 3
+}
