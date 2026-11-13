@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Sequence, Tuple
@@ -159,6 +159,9 @@ class TurnScorer:
                     "exactmatch_score": exactmatch_score,
                     "answer_score": answer_score,
                     "groundedness_score": groundedness_score,
+                    "groundedness_pass_at_k": getattr(groundedness, "pass_at_k", groundedness_score),
+                    "groundedness_pass_power_k": getattr(groundedness, "pass_power_k", groundedness_score),
+                    "groundedness_trials": [asdict(t) for t in getattr(groundedness, "trials", ())],
                     "score_explanation": {"answer": answer_explanation, "exactmatch": exactmatch_explanation, "groundedness":groundedness_explanation},
                 }
                 return score, details
@@ -199,6 +202,9 @@ class TurnScorer:
                 "exactmatch_score": exactmatch_score,
                 "answer_score": None,
                 "groundedness_score": groundedness_score,
+                    "groundedness_pass_at_k": getattr(groundedness, "pass_at_k", groundedness_score),
+                    "groundedness_pass_power_k": getattr(groundedness, "pass_power_k", groundedness_score),
+                    "groundedness_trials": [asdict(t) for t in getattr(groundedness, "trials", ())],
                 "score_explanation": {"answer": None, "exactmatch": exactmatch_explanation, "groundedness":groundedness_explanation},
             }
             return score, details
@@ -287,6 +293,8 @@ class DialogueScorer:
 
         per_turn: List[Dict[str, Any]] = []
         turn_scores: List[float] = []
+        pass_at_scores: List[float] = []
+        pass_power_scores: List[float] = []
 
         for gt_turn in [gt_turns[-1]]: # Only the last turn evaluated against prediction
             turn_id = gt_turn.get(GT_OUTPUT_TURN_ID_KEY)
@@ -313,12 +321,19 @@ class DialogueScorer:
                 pred_responses=pred_responses,
             )
 
+            # Gates and deterministic bypasses retain their original score for both metrics.
+            pass_at = details.get("groundedness_pass_at_k", score)
+            pass_power = details.get("groundedness_pass_power_k", score)
+            pass_at_scores.append(pass_at)
+            pass_power_scores.append(pass_power)
             per_turn.append(
                 {
                     "turn_id": turn_id,
                     "query": query,
                     "pred_answer": pred_answer,
                     "score": score,
+                    "pass_at_k": pass_at,
+                    "pass_power_k": pass_power,
                     "metadata":details,
                 }
             )
@@ -328,6 +343,8 @@ class DialogueScorer:
 
         details = {
             "dialogue_score": dialogue_score,
+            "pass_at_k": self._aggregate(pass_at_scores),
+            "pass_power_k": self._aggregate(pass_power_scores),
             "num_turns": len(gt_turns),
             "per_turn": per_turn,
             "aggregate": self.cfg.aggregate,

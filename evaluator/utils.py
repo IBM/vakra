@@ -176,3 +176,8 @@ class JudgeOutput:
     score: float
     explanation: Optional[str] = None
 
+@dataclass(frozen=True)
+class GroundednessOutput(JudgeOutput):
+    pass_at_k: float = 0.0
+    pass_power_k: float = 0.0
+    trials: Tuple[JudgeOutput, ...] = ()
