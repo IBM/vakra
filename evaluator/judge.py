@@ -5,7 +5,7 @@ import os
 import json
 from copy import deepcopy
 from prompt import GroundednessPrompt, CorrectnessPrompt
-from utils import JudgeInput, JudgeOutput
+from utils import JudgeInput, JudgeOutput, GroundednessOutput
 from constant import N_TOOL_CALLS_PER_TURN
 from langchain_openai import ChatOpenAI
 from typing import Any, Dict, Optional, Tuple
@@ -103,6 +103,12 @@ class GroundednessJudge(LLMJudge):
     Check if the predicted answer is grounded in the answers in the turn.
     """
 
+    def __init__(self, config: Optional[dict] = None, k: int = 1):
+        if isinstance(k, bool) or not isinstance(k, int) or k < 1:
+            raise ValueError("k must be a positive integer")
+        self.k = k
+        super().__init__(config or {})
+
     _ws = re.compile(r"\s+")
 
     def _norm(self, s: str) -> str:
@@ -116,13 +122,22 @@ class GroundednessJudge(LLMJudge):
         prompt=GroundednessPrompt.format(
             doc=tr,
             response=pr)
-        try:
-            result=self.invoke(prompt)            
-            result_parsed= self._parse_response(result)
-            return JudgeOutput(score=result_parsed["score"], explanation=result_parsed["explanation"])
-        except Exception as e:
-            return JudgeOutput(score=0.0, explanation=f"Judge Error {e}.")
-    
+        trials = []
+        for _ in range(self.k):
+            try:
+                result = self.invoke(prompt)
+                parsed = self._parse_response(result)
+                trials.append(JudgeOutput(score=parsed["score"], explanation=parsed["explanation"]))
+            except Exception as e:
+                trials.append(JudgeOutput(score=0.0, explanation=f"Judge Error {e}."))
+        return GroundednessOutput(
+            score=trials[0].score,
+            explanation=trials[0].explanation,
+            pass_at_k=float(any(t.score == 1.0 for t in trials)),
+            pass_power_k=float(all(t.score == 1.0 for t in trials)),
+            trials=tuple(trials),
+        )
+
     def _find_label_and_line(self, text: str) -> tuple[Optional[str], Optional[int]]:
         lines = [ln.strip() for ln in text.split("\n") if ln.strip()]
         for i, ln in enumerate(lines[:10]):  # scan first few meaningful lines
@@ -333,7 +348,7 @@ class CorrectnessJudge(LLMJudge):
             result_parsed= self._parse_response(result)
             return JudgeOutput(score=result_parsed["score"], explanation=result_parsed["explanation"])
         except Exception as e:
-            return JudgeOutput(score=0.0, explanation="Judge Error {e}.")
+            return JudgeOutput(score=0.0, explanation=f"Judge Error {e}.")
 
 class ExactMatchJudge(LLMJudge):
     """

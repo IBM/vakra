@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, List
 from tqdm import tqdm
@@ -50,38 +50,38 @@ class CapabilityPolicy:
     execute_mcp_tools: bool = True
 
     # --- Judges ---
-    correctness_judge: Any = CorrectnessJudge(config={})
-    groundedness_judge: Any = GroundednessJudge(config={})
-    exactmatch_judge: Any = ExactMatchJudge(config={})
+    correctness_judge: Any = field(default_factory=CorrectnessJudge)
+    groundedness_judge: Any = field(default_factory=GroundednessJudge)
+    exactmatch_judge: Any = field(default_factory=ExactMatchJudge)
 
 
 
-def build_default_capability_registry() -> Dict[str, CapabilityPolicy]:
+def build_default_capability_registry(k: int = 1) -> Dict[str, CapabilityPolicy]:
     return {
         "capability_bi_apis": CapabilityPolicy(
             execute_mcp_tools=True,
             correctness_judge=CorrectnessJudge(config={}),
-            groundedness_judge=GroundednessJudge(config={}),
+            groundedness_judge=GroundednessJudge(config={}, k=k),
             exactmatch_judge=ExactMatchJudge(config={})
         ),
 
         "capability_dashboard_apis": CapabilityPolicy(
             execute_mcp_tools=True,
             correctness_judge=CorrectnessJudge(config={}),
-            groundedness_judge=GroundednessJudge(config={}),
+            groundedness_judge=GroundednessJudge(config={}, k=k),
             exactmatch_judge=ExactMatchJudge(config={})            
         ),
 
         "capability_multihop_reasoning": CapabilityPolicy(
             execute_mcp_tools=True,
             correctness_judge=CorrectnessJudge(config={}),
-            groundedness_judge=GroundednessJudge(config={}),
+            groundedness_judge=GroundednessJudge(config={}, k=k),
             exactmatch_judge=ExactMatchJudge(config={})            
         ),
         "capability_multiturn": CapabilityPolicy(
             execute_mcp_tools=True,
             correctness_judge=CorrectnessJudge(config={}),
-            groundedness_judge=GroundednessJudge(config={}),
+            groundedness_judge=GroundednessJudge(config={}, k=k),
             exactmatch_judge=ExactMatchJudge(config={})            
         ),        
     }
@@ -187,6 +187,8 @@ async def evaluate_domain(
                     "mean_dialogue_score": 0.0,
                     "min_dialogue_score":  0.0,
                     "max_dialogue_score": 0.0,
+                    "pass_at_k": 0.0,
+                    "pass_power_k": 0.0,
                         }
             }
         return domain_out, []
@@ -321,7 +323,15 @@ async def evaluate_domain(
         "max_dialogue_score": max(domain_scores) if domain_scores else 0.0,
     }
 
+    domain_out["summary"].update(_pass_metrics(domain_out["dialogues"], len(gt_list)))
     return domain_out, dialogue_scores
+
+def _pass_metrics(dialogues: List[Dict[str, Any]], count: int) -> Dict[str, float]:
+    return {
+        name: sum(d["details"][name] for d in dialogues) / count if count else 0.0
+        for name in ("pass_at_k", "pass_power_k")
+    }
+
 
 def _load_existing_results(out_path: Path) -> Optional[Dict[str, Any]]:
     """
@@ -393,6 +403,11 @@ def _write_intermediate_results(
         ),
     }
 
+    results["summary"].update(_pass_metrics(
+        [dialogue for domain in results["domains"].values() for dialogue in domain["dialogues"]],
+        total_samples,
+    ))
+
     # Write to disk
     out_path.write_text(
         json.dumps(results, indent=2, ensure_ascii=False),
@@ -438,6 +453,10 @@ def evaluate_capability(
 
     # Load existing results if available (for resume capability)
     existing_results = _load_existing_results(out_path)
+    k = policy.groundedness_judge.k
+    if existing_results and (existing_results.get("groundedness_k") != k
+                             or existing_results.get("metrics_version") != 1):
+        raise ValueError("Existing results use different K or metric schema; choose a new --output file.")
     if existing_results:
         results = existing_results
         # Reconstruct all_dialogue_scores from existing results
@@ -446,6 +465,8 @@ def evaluate_capability(
             all_dialogue_scores.extend([d["score"] for d in domain_data["dialogues"]])
     else:
         results: Dict[str, Any] = {
+            "groundedness_k": k,
+            "metrics_version": 1,
             "capability_name": capability_name,
             "groundtruth_dir": str(gt_dir),
             "prediction_dir": str(pred_dir),
@@ -503,6 +524,8 @@ def evaluate_capability(
     print("Number of samples evaluated:", num_samples)
     print("Number of correct dialogues:", correct_sum)
     print("Accuracy:", accuracy)
+    print(f"Pass@{k} accuracy:", results["summary"]["pass_at_k"])
+    print(f"Pass^{k} accuracy:", results["summary"]["pass_power_k"])
     print("=========================================================================")
 
     return results
@@ -514,6 +537,7 @@ def evaluate_capability(
 
 def main() -> None:
     ap = argparse.ArgumentParser()
+    ap.add_argument("--k", type=int, default=1, help="Positive number of groundedness judgments (default: 1)")
     ap.add_argument("--capability_name", required=True, help="Capability name (must exist in registry)")
     ap.add_argument("--gt_root", required=True, help="Path to capability_name/groundtruth/")
     ap.add_argument("--pred_root", required=True, help="Path to capability_name/prediction/")
@@ -536,6 +560,8 @@ def main() -> None:
         help="Optional path to a PolicyJudge Python file. If omitted, policy judging is disabled.",
     )
     args = ap.parse_args()
+    if args.k < 1:
+        ap.error("--k must be a positive integer")
 
     capability_name = args.capability_name
     gt_dir = Path(args.gt_root)
@@ -568,7 +594,7 @@ def main() -> None:
     except (ValueError, AttributeError):
         mcp_config = None
 
-    registry = build_default_capability_registry()
+    registry = build_default_capability_registry(k=args.k)
     evaluate_capability(
         capability_name=capability_name,
         gt_dir=gt_dir,
