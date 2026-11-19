@@ -280,6 +280,7 @@ class CorrectnessJudge(LLMJudge):
 
         return {"explanation": explanation.strip(), "score": score_int}
 
+    @staticmethod
     def _find_first_json_object(text: str) -> Optional[str]:
         """
         Returns the substring of the first top-level JSON object found in `text`,
