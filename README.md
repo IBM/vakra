@@ -1,13 +1,26 @@
 # 🔷 VAKRA: A Benchmark for Evaluating Multi-Hop, Multi-Source Tool-Calling in AI Agents
-**VAKRA** (e**V**aluating **A**PI and **K**nowledge **R**etrieval **A**gents using multi-hop, multi-source dialogues) is a tool-grounded, executable benchmark designed to evaluate how well AI agents reason end-to-end in enterprise-like settings.
 
-Rather than testing isolated skills, **VAKRA** measures compositional reasoning across APIs and documents, using full execution traces to assess whether agents can reliably complete multi-step workflows, not just individual steps. **VAKRA** provides an executable environment where agents interact with over 8,000 locally hosted APIs backed by real databases spanning 62 domains, along with domain-aligned document collections.
+<div align="center">
 
-**Resources:** [Leaderboard](https://ibm-research-vakra.hf.space) · [Dataset](https://huggingface.co/datasets/ibm-research/VAKRA) · [Blog](https://www.ibm.com/new/announcements/introducing-vakra-benchmark)
+[![Paper](https://img.shields.io/badge/Paper-arXiv%3A2608.12282-b31b1b?style=flat-square&logo=arxiv)](https://arxiv.org/abs/2608.12282)
+[![Blog](https://img.shields.io/badge/Blog-Benchmark%20Analysis-blue?style=flat-square)](https://huggingface.co/blog/ibm-research/vakra-benchmark-analysis)
+[![Website](https://img.shields.io/badge/Website-VAKRA-blue?style=flat-square)](https://ibm-research-vakra.hf.space/)
+[![Dataset](https://img.shields.io/badge/Dataset-Hugging%20Face-yellow?style=flat-square&logo=huggingface)](https://huggingface.co/datasets/ibm-research/VAKRA)
+[![Leaderboard](https://img.shields.io/badge/Leaderboard-Live-blue?style=flat-square)](https://ibm-research-vakra.hf.space/#leaderboard)
+
+</div>
+
+**VAKRA** (e**V**aluating **A**PI and **K**nowledge **R**etrieval **A**gents using multi-hop, multi-source dialogues) is a tool-grounded, executable benchmark for measuring how well AI agents complete multi-step enterprise workflows. Agents work with over 8,000 locally hosted APIs backed by real databases across 62 domains and with domain-aligned document collections. Tasks require agents to disambiguate entities, select tools across different interfaces, reconcile schemas and parameters, pass intermediate outputs to later calls, ground answers in evidence from multiple sources, and follow natural-language tool-use policies. Full execution traces help pinpoint where that reasoning succeeds or fails.
 
 **Quick links:** [Requirements](#requirements) · [Quick Start](#quick-start) · [Exploring Available Tools](#exploring-available-tools) · [Running Your Agent](#running-your-own-agent) · [Submit to Leaderboard](#submitting-to-the-live-leaderboard)
 
+## Latest Updates
 
+- **May 21, 2026** — Juris Agent took second place for tool selection. [Leaderboard](https://ibm-research-vakra.hf.space/#leaderboard)
+- **April 15, 2026** — IBM Research published a breakdown of VAKRA's dataset design, evaluation framework, and where models fail at each stage. [Benchmark analysis](https://huggingface.co/blog/ibm-research/vakra-benchmark-analysis)
+- **March 24, 2026** — VAKRA opened leaderboard submissions. [Submission template](https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml)
+- **March 23, 2026** — VAKRA released the dataset, including executable tasks and evaluation inputs for reproducing leaderboard runs. [Dataset](https://huggingface.co/datasets/ibm-research/VAKRA)
+- **March 22, 2026** — IBM publicly launched the VAKRA benchmark. [IBM announcement](https://www.ibm.com/new/announcements/introducing-vakra-benchmark)
 
 ## What VAKRA Provides
 
@@ -67,18 +80,6 @@ Rather than testing isolated skills, **VAKRA** measures compositional reasoning 
   </div>
 </div>
 
-## Why This Benchmark Matters
-
-Enterprise workflows rarely look like single-turn QA or one-off function calls. In practice, agents must chain decisions across systems, reconcile mismatched schemas, interpret tool constraints expressed in natural language, ground answers in retrieved evidence, and reuse intermediate outputs to parameterize later tool calls.
-
-VAKRA is designed to surface exactly where that reasoning succeeds or fails, including:
-
-- entity disambiguation
-- cross-source grounding
-- parameter and schema alignment
-- tool selection under interface variation
-- policy interpretation during execution
-
 ## Benchmark Structure
 
 VAKRA organizes evaluation into four capabilities, which together reflect three progressively complex settings.
@@ -108,7 +109,7 @@ We have multi-turn dialogues represented as context-response-pairs wherein queri
 
 This represents the most challenging setting, mirroring decision workflows. Please find below example of all the four capabilities mentioned above.
 
-<img width="2816" height="1536" alt="Core benchmark capabilities" src="ui/core_benchmark_capabilities.png" />
+![Core benchmark capabilities: API chaining, tool selection, multi-hop API reasoning, and multi-source reasoning with policy adherence](ui/vakra_capabilities_diagram.png)
 
 ## Dataset Overview
 
