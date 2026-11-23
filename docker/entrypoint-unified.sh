@@ -88,6 +88,12 @@ if [ "$SERVE_MODE" = "http" ]; then
     mkdir -p "$OPENAPI_SPEC_DIR"
     curl -sf http://localhost:8000/openapi.json -o "$OPENAPI_SPEC_DIR/openapi-8000.json" \
         || { echo "WARNING: could not snapshot :8000 spec; MCP servers will fetch it live"; rm -f "$OPENAPI_SPEC_DIR/openapi-8000.json"; }
+    # Per-domain slices: a backend pinned to one domain then parses KBs, not ~6 MB
+    # (~100 MB RSS saved per persistent backend). Falls back to the full file.
+    if [ -f "$OPENAPI_SPEC_DIR/openapi-8000.json" ]; then
+        python -m environment.openapi_cache slice "$OPENAPI_SPEC_DIR/openapi-8000.json" \
+            || echo "WARNING: could not slice :8000 spec; MCP servers will load the full snapshot"
+    fi
     if [ "$RETRIEVER_AVAILABLE" = "true" ]; then
         curl -sf http://localhost:8001/openapi.json -o "$OPENAPI_SPEC_DIR/openapi-8001.json" \
             || rm -f "$OPENAPI_SPEC_DIR/openapi-8001.json"

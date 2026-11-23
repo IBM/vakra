@@ -145,6 +145,10 @@ async def _domain_tools(domain: str) -> list:
 # ---------------------------------------------------------------------------
 PERSISTENT = os.environ.get("BRIDGE_PERSISTENT", "1") == "1"
 IDLE_SECONDS = float(os.environ.get("BRIDGE_IDLE_SECONDS", "900"))
+# Cap on live persistent backends (~60 MB each). Past the cap, the least-recently-used
+# idle backend is stopped; if every backend is busy, the call runs on a one-off
+# spawned backend instead. Size it to the container's memory (0 = no cap).
+MAX_PERSISTENT = int(os.environ.get("BRIDGE_MAX_PERSISTENT", "64"))
 
 
 class DomainBackend:
@@ -153,6 +157,8 @@ class DomainBackend:
         self.session: Optional[ClientSession] = None
         self.ready = asyncio.Event()
         self.dead = asyncio.Event()      # set when the subprocess connection is gone
+        self.stopping = False            # set by LRU eviction
+        self.wake = asyncio.Event()      # wakes the owner task (dead or stopping)
         self.error: Optional[BaseException] = None
         self.inflight = 0
         self.last_used = time.monotonic()
@@ -160,7 +166,12 @@ class DomainBackend:
 
     @property
     def alive(self) -> bool:
-        return self.session is not None and not self.dead.is_set() and not self.task.done()
+        return (self.session is not None and not self.dead.is_set()
+                and not self.stopping and not self.task.done())
+
+    def stop(self) -> None:
+        self.stopping = True
+        self.wake.set()
 
     async def _own(self) -> None:
         env = os.environ.copy()
@@ -176,10 +187,18 @@ class DomainBackend:
                     log.info("backend up: domain=%r", self.domain)
                     while True:
                         with contextlib.suppress(asyncio.TimeoutError):
-                            await asyncio.wait_for(self.dead.wait(), timeout=min(60.0, IDLE_SECONDS))
+                            await asyncio.wait_for(self.wake.wait(), timeout=min(60.0, IDLE_SECONDS))
                         if self.dead.is_set():
                             log.warning("backend connection lost: domain=%r", self.domain)
                             break
+                        if self.stopping:
+                            if self.inflight == 0:
+                                log.info("backend evicted (LRU): domain=%r", self.domain)
+                                break
+                            self.wake.clear()
+                            await asyncio.sleep(1)  # let in-flight calls finish
+                            self.wake.set()
+                            continue
                         idle = time.monotonic() - self.last_used
                         if self.inflight == 0 and idle >= IDLE_SECONDS:
                             log.info("backend idle %.0fs, stopping: domain=%r", idle, self.domain)
@@ -190,6 +209,7 @@ class DomainBackend:
         finally:
             self.session = None
             self.dead.set()
+            self.wake.set()
             self.ready.set()
             if _backends.get(self.domain) is self:
                 del _backends[self.domain]
@@ -204,7 +224,8 @@ class DomainBackend:
             return await self.session.call_tool(name, arguments)
         except McpError as e:
             if e.error.code == CONNECTION_CLOSED:
-                self.dead.set()  # subprocess exited; owner task tears down, next call respawns
+                self.dead.set()
+                self.wake.set()  # subprocess exited; owner task tears down, next call respawns
             raise
         finally:
             self.inflight -= 1
@@ -214,15 +235,32 @@ class DomainBackend:
 _backends: Dict[str, DomainBackend] = {}
 
 
-def _backend(domain: str) -> DomainBackend:
+def _backend(domain: str) -> Optional[DomainBackend]:
+    """The domain's live backend, starting one if needed; None if at capacity."""
     b = _backends.get(domain)
-    if b is None or (b.ready.is_set() and not b.alive):
-        b = _backends[domain] = DomainBackend(domain)
+    if b is not None and (b.alive or not b.ready.is_set()) and not b.stopping:
+        return b
+    live = [x for x in _backends.values() if x is not b and not x.stopping]
+    if MAX_PERSISTENT > 0 and len(live) >= MAX_PERSISTENT:
+        idle = [x for x in live if x.inflight == 0 and x.ready.is_set()]
+        if not idle:
+            return None
+        victim = min(idle, key=lambda x: x.last_used)
+        victim.stop()
+        del _backends[victim.domain]
+    b = _backends[domain] = DomainBackend(domain)
     return b
+
+
+async def _spawned_call(domain: str, name: str, arguments: dict):
+    async with spawn_backend(domain) as sess:
+        return await sess.call_tool(name, arguments)
 
 
 async def _persistent_call(domain: str, name: str, arguments: dict):
     b = _backend(domain)
+    if b is None:  # every persistent slot is busy: one-off backend for this call
+        return await _spawned_call(domain, name, arguments)
     try:
         return await b.call_tool(name, arguments)
     except Exception:
@@ -232,7 +270,10 @@ async def _persistent_call(domain: str, name: str, arguments: dict):
         if b.alive:
             raise
         log.warning("retrying %s on a fresh backend: domain=%r", name, domain)
-        return await _backend(domain).call_tool(name, arguments)
+        nb = _backend(domain)
+        if nb is None:
+            return await _spawned_call(domain, name, arguments)
+        return await nb.call_tool(name, arguments)
 
 
 # ---------------------------------------------------------------------------
@@ -253,8 +294,7 @@ async def _call_tool(name: str, arguments: dict):
     if PERSISTENT:
         result = await _persistent_call(domain, name, arguments or {})
     else:
-        async with spawn_backend(domain) as sess:
-            result = await sess.call_tool(name, arguments or {})
+        result = await _spawned_call(domain, name, arguments or {})
     # Forward the downstream content blocks verbatim.
     return result.content
 
