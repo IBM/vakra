@@ -108,7 +108,10 @@ def _register_domain_routes(app: FastAPI, domain: str):
     @router.post("/query", response_model=QueryResponse,
                  summary=f"Query {domain}",
                  description=domain_desc)
-    async def query(request: QueryRequest):
+    # Plain `def`: FastAPI runs it in its threadpool. Embedding the question and the
+    # Chroma search are blocking; as `async def` they ran one at a time on the event
+    # loop, so parallel agents queued behind each other until callers timed out.
+    def query(request: QueryRequest):
         retriever = _get_retriever(domain)
         raw = retriever.query(request.question, n_results=request.n_results)
 

@@ -53,6 +53,11 @@ from mcp.server import Server
 from mcp.types import Tool, TextContent
 
 from environment.mcp_logging import _setup_mcp_logging
+from environment.openapi_cache import fetch_openapi
+
+# Seconds to wait for a FastAPI backend to answer a tool call. Upstream default 30;
+# raise it (e.g. 120) where many agents share one container and calls queue.
+BACKEND_TIMEOUT = float(os.getenv("MCP_BACKEND_TIMEOUT", "30"))
 
 logger = logging.getLogger(__name__)
 
@@ -125,11 +130,8 @@ class Capability4CombinedMCPServer:
     # ------------------------------------------------------------------
 
     async def _fetch_openapi(self, base_url: str) -> Dict:
-        """Fetch the OpenAPI JSON spec from a FastAPI server."""
-        async with httpx.AsyncClient() as client:
-            response = await client.get(f"{base_url}/openapi.json")
-            response.raise_for_status()
-            return response.json()
+        """Fetch the OpenAPI JSON spec from a FastAPI server (snapshot file if present)."""
+        return await fetch_openapi(base_url)
 
     # ------------------------------------------------------------------
     # M3 REST tool discovery (mirrors environment/m3/rest/mcp_server.py)
@@ -370,7 +372,7 @@ class Capability4CombinedMCPServer:
             body = arguments.get("body")
 
         try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
+            async with httpx.AsyncClient(timeout=BACKEND_TIMEOUT) as client:
                 if method == "GET":
                     response = await client.get(url)
                 elif method == "POST":

@@ -22,7 +22,9 @@ fi
 # --- Start M3 REST FastAPI on port 8000 ---
 echo "Starting M3 REST FastAPI on port 8000..."
 cd /app/m3-rest
-uvicorn app:app --host 0.0.0.0 --port 8000 &
+# The M3 route handlers are `async def` with blocking sqlite3 calls, so one worker
+# runs one query at a time. M3_WORKERS>1 lets parallel clients' queries overlap.
+uvicorn app:app --host 0.0.0.0 --port 8000 --workers "${M3_WORKERS:-1}" &
 M3_PID=$!
 cd /app
 
@@ -40,14 +42,16 @@ else
 fi
 
 # --- Wait for M3 REST FastAPI ---
-echo "Waiting for M3 REST FastAPI (port 8000)..."
-for i in $(seq 1 60); do
+# Cold starts on a COS-backed mount (and M3_WORKERS>1) can take well over a minute.
+M3_READY_TIMEOUT="${M3_READY_TIMEOUT:-300}"
+echo "Waiting for M3 REST FastAPI (port 8000, up to ${M3_READY_TIMEOUT}s)..."
+for i in $(seq 1 "$M3_READY_TIMEOUT"); do
     if curl -sf http://localhost:8000/openapi.json > /dev/null 2>&1; then
         echo "M3 REST FastAPI is ready."
         break
     fi
-    if [ "$i" -eq 60 ]; then
-        echo "ERROR: M3 REST FastAPI did not start within 60 seconds."
+    if [ "$i" -eq "$M3_READY_TIMEOUT" ]; then
+        echo "ERROR: M3 REST FastAPI did not start within ${M3_READY_TIMEOUT} seconds."
         exit 1
     fi
     sleep 1
@@ -77,6 +81,24 @@ echo "=== All services running. ==="
 #                     the bridge exposes MCP over HTTP at /mcp/<domain> on BRIDGE_PORT.
 # (unset/default)  -> keep the container alive for `docker exec -i` (local benchmark flow).
 if [ "$SERVE_MODE" = "http" ]; then
+    # The bridge spawns an MCP server process per request, and each one would
+    # otherwise download the full multi-MB OpenAPI spec from the backends. Snapshot
+    # the specs once; environment/openapi_cache.py reads them via OPENAPI_SPEC_DIR.
+    export OPENAPI_SPEC_DIR=/tmp/openapi-specs
+    mkdir -p "$OPENAPI_SPEC_DIR"
+    curl -sf http://localhost:8000/openapi.json -o "$OPENAPI_SPEC_DIR/openapi-8000.json" \
+        || { echo "WARNING: could not snapshot :8000 spec; MCP servers will fetch it live"; rm -f "$OPENAPI_SPEC_DIR/openapi-8000.json"; }
+    # Per-domain slices: a backend pinned to one domain then parses KBs, not ~6 MB
+    # (~100 MB RSS saved per persistent backend). Falls back to the full file.
+    if [ -f "$OPENAPI_SPEC_DIR/openapi-8000.json" ]; then
+        python -m environment.openapi_cache slice "$OPENAPI_SPEC_DIR/openapi-8000.json" \
+            || echo "WARNING: could not slice :8000 spec; MCP servers will load the full snapshot"
+    fi
+    if [ "$RETRIEVER_AVAILABLE" = "true" ]; then
+        curl -sf http://localhost:8001/openapi.json -o "$OPENAPI_SPEC_DIR/openapi-8001.json" \
+            || rm -f "$OPENAPI_SPEC_DIR/openapi-8001.json"
+    fi
+    ls -l "$OPENAPI_SPEC_DIR"
     echo "SERVE_MODE=http -> starting MCP HTTP bridge on port ${BRIDGE_PORT:-8080} (endpoint: /mcp/<domain>)"
     exec python /app/mcp_http_bridge.py --port "${BRIDGE_PORT:-8080}"
 else

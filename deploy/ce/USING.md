@@ -111,8 +111,9 @@ Pick a capability + domain to list tools and invoke them from the browser — no
 
 - **Public, unauthenticated** — anyone with a URL can call the tools. Don't post the URLs
   publicly; ask the deployer to add a bearer-token gate in `mcp_http_bridge.py` if needed.
-- **Per-call latency:** the bridge spawns a fresh subprocess per MCP call, so heavy
-  `--parallel` runs carry some overhead. Fine for interactive/small runs.
+- **Parallel runs:** recommended at full speed are about 17–20 parallel runs on cap 2 and
+  about 10 on cap 3 and cap 4. More still work but tool calls get slower (cap 4 semantic
+  search especially). Details: README.md → *Parallel runs & sizing*.
 - **cap 3 `bpo` domain** needs the BPO data baked into the image (deployer's build step) —
   other cap 3 domains use the M3 REST path.
 - If a call fails, the deployer can check `ibmcloud ce app logs -n vakra-cap<N>`.
