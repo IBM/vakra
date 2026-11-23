@@ -16,7 +16,7 @@ from benchmark.mcp_client import create_client_and_connect as connect_local
 logger = logging.getLogger(__name__)
 REPO_ROOT = Path(__file__).resolve().parents[1]
 LOCAL_CONFIG = REPO_ROOT / 'benchmark' / 'mcp_connection_config.yaml'
-CE_CONFIG = Path(__file__).with_name('mcp_connection_config.ce.yaml')
+CE_CONFIG = REPO_ROOT / 'benchmark' / 'mcp_connection_config.ce.yaml'
 HTTP_MODES = ('http', 'streamable-http')
 
 

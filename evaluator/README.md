@@ -228,8 +228,9 @@ evaluator/
 ## Code Engine tools (capabilities 2–4)
 
 The evaluator supports `--tool-backend local|code-engine`; local remains the
-existing default. This integration is confined to the evaluator. It does not
-change environment servers, containers, benchmark code or benchmark execution.
+existing default. The connection adapter is confined to the evaluator; its YAML
+lives beside the other connection configs in `benchmark/`. Environment servers,
+containers, benchmark client/runner code and benchmark execution are unchanged.
 
 Copy `.env.example` to `.env` in the repository root and replace the selected
 capability's dummy `VAKRA_CAP2_URL`, `VAKRA_CAP3_URL` or `VAKRA_CAP4_URL` with its
@@ -244,7 +245,7 @@ python evaluator/evaluator.py \
   --output /tmp/ce-dashboard-results.json
 ```
 
-`evaluator/mcp_connection_config.ce.yaml` maps capabilities 2–4 to streamable HTTP
+`benchmark/mcp_connection_config.ce.yaml` maps capabilities 2–4 to streamable HTTP
 endpoints `/mcp/<domain>`. `--mcp-config PATH` overrides the selected backend's
 configuration. Explicit HTTP overrides also work with the default backend flag.
 Local connections delegate to the existing `benchmark/mcp_client.py` unchanged.
