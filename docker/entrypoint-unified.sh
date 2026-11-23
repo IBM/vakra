@@ -55,5 +55,9 @@ fi
 
 echo "=== All services running. Container ready for exec. ==="
 
+if [ "${SERVE_MODE:-stdio}" = "http" ]; then
+    exec python /app/mcp_http_bridge.py
+fi
+
 # Keep container alive for docker exec -i usage
 exec tail -f /dev/null

@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 from typing import Optional
 from urllib.parse import quote, urlsplit
+from uuid import uuid4
 
 from mcp import ClientSession
 from benchmark.mcp_client import MCPConnectionConfig, load_mcp_config
@@ -25,6 +26,7 @@ class EvaluatorMCPConnectionConfig(MCPConnectionConfig):
     capability_id: int = 0
     backend: str = 'local'
     requested_backend: str = 'local'
+    require_persistent_backend: bool = False
 
 
 def _load(path, capability_id):
@@ -34,41 +36,17 @@ def _load(path, capability_id):
     return configs[capability_id]
 
 
-def _local_fallback(config_path=None):
-    # A CE-only override may have no capability 1 entry, or reference an HTTP
-    # endpoint with unset variables. Neither should prevent the local fallback.
-    if config_path is not None:
-        configs = load_mcp_config(str(config_path))
-        candidate = configs.get(1)
-        if candidate is not None and candidate.mode not in HTTP_MODES:
-            return candidate
-    return _load(LOCAL_CONFIG, 1)
-
-
 def select_evaluator_mcp_config(capability_id: int, backend: str = 'local', config_path: Optional[str] = None):
     if backend not in ('local', 'code-engine'):
         raise ValueError(f'Unknown tool backend: {backend}')
-    if capability_id == 1 and backend == 'code-engine':
-        logger.warning(
-            'Code Engine tool calling for capability 1 is not supported in this version; '
-            'falling back to local execution. No Code Engine connection will be opened.'
-        )
-        cfg = _local_fallback(config_path)
-    else:
-        cfg = _load(config_path or (CE_CONFIG if backend == 'code-engine' else LOCAL_CONFIG), capability_id)
-        # An explicit HTTP YAML must not bypass the capability 1 restriction.
-        if capability_id == 1 and cfg.mode in HTTP_MODES:
-            logger.warning(
-                'Code Engine tool calling for capability 1 is not supported in this version; '
-                'ignoring the HTTP configuration and falling back to local execution.'
-            )
-            cfg = _local_fallback()
-        elif backend == 'code-engine' and cfg.mode not in HTTP_MODES:
-            raise ValueError('code-engine requires an HTTP MCP configuration')
+    cfg = _load(config_path or (CE_CONFIG if backend == 'code-engine' else LOCAL_CONFIG), capability_id)
+    if backend == 'code-engine' and cfg.mode not in HTTP_MODES:
+        raise ValueError('code-engine requires an HTTP MCP configuration')
     effective = 'code-engine' if cfg.mode in HTTP_MODES else 'local'
     selected = EvaluatorMCPConnectionConfig(
         **asdict(cfg), capability_id=capability_id,
         backend=effective, requested_backend=backend,
+        require_persistent_backend=capability_id == 1 and cfg.mode in HTTP_MODES,
     )
     if selected.server_url:
         selected.server_url = os.path.expandvars(selected.server_url)
@@ -92,31 +70,50 @@ def resolve_http_url(cfg, domain: str) -> str:
 
 
 @contextlib.asynccontextmanager
-async def _http_session(url, domain):
+async def _http_session(url: str, domain: str, *, require_persistent_backend: bool = False):
+    """One private bridge backend for this connection; release it on close."""
+    headers = {"X-MCP-Domain": domain, "X-Vakra-Session": uuid4().hex}
+    if require_persistent_backend:
+        import httpx
+        health_url = url.split("/mcp/", 1)[0] + "/healthz"
+        async with httpx.AsyncClient(timeout=60) as client:
+            response = await client.get(health_url)
+            response.raise_for_status()
+            if response.json().get("persistent_backends") is not True:
+                raise RuntimeError("Capability 1 needs the session-preserving Code Engine bridge; redeploy docker/mcp_http_bridge.py before evaluating")
+    # MCP 1.x and 2.x expose different HTTP transport constructors.
     import mcp.client.streamable_http as transport
-    legacy = getattr(transport, 'streamablehttp_client', None)
-    headers = {'X-MCP-Domain': domain}
-    async with contextlib.AsyncExitStack() as stack:
-        if legacy is not None:
-            connection = legacy(url, headers=headers, timeout=600, sse_read_timeout=1800)
-        else:
-            # MCP 2.x changed the client constructor and HTTP client dependency.
-            import httpx2
-            client = await stack.enter_async_context(httpx2.AsyncClient(headers=headers, timeout=600))
-            connection = transport.streamable_http_client(url, http_client=client)
-        read, write, _ = await stack.enter_async_context(connection)
-        session = await stack.enter_async_context(ClientSession(read, write))
-        await session.initialize()
-        yield session
+    legacy_client = getattr(transport, "streamablehttp_client", None)
+    try:
+        async with contextlib.AsyncExitStack() as stack:
+            if legacy_client is not None:
+                connection = legacy_client(url, headers=headers, timeout=600, sse_read_timeout=1800)
+            else:
+                import httpx2
+                client = await stack.enter_async_context(httpx2.AsyncClient(headers=headers, timeout=600))
+                connection = transport.streamable_http_client(url, http_client=client)
+            read, write, _ = await stack.enter_async_context(connection)
+            session = await stack.enter_async_context(ClientSession(read, write))
+            await session.initialize()
+            yield session
+    finally:
+        await _release_http_backend(url, headers)
+
+
+async def _release_http_backend(url: str, headers: dict) -> None:
+    import httpx
+    try:
+        async with httpx.AsyncClient(timeout=15) as client:
+            await client.delete(url, headers=headers)
+    except Exception:
+        logger.warning("Could not release remote backend; bridge idle expiry will clean it up", exc_info=True)
 
 
 @contextlib.asynccontextmanager
 async def create_client_and_connect(cfg, domain=''):
-    if cfg.mode in HTTP_MODES and getattr(cfg, 'capability_id', None) == 1:
-        # Protect programmatic callers too, not only CLI configuration selection.
-        cfg = select_evaluator_mcp_config(1, 'code-engine')
     if cfg.mode in HTTP_MODES:
-        async with _http_session(resolve_http_url(cfg, domain), domain) as session:
+        async with _http_session(resolve_http_url(cfg, domain), domain,
+                                 require_persistent_backend=getattr(cfg, 'require_persistent_backend', False) or getattr(cfg, 'capability_id', None) == 1) as session:
             yield session
     else:
         async with connect_local(cfg, domain) as session:
