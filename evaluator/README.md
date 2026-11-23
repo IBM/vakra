@@ -284,3 +284,39 @@ default capability registry also use K=3.
 
 Existing results produced with K=1 cannot be resumed as K=3. Use a new `--output`
 file for the new default, or pass `--k 1` to resume a compatible K=1 run.
+
+## Concurrent Code Engine domains
+
+For capabilities 2–4, `--tool-backend code-engine` evaluates up to 20 domains
+concurrently. Use `--num-domains N` (or `--num_domains N`) to change this positive
+integer limit. This limits simultaneous domains; all selected domains are queued
+and evaluated. `--domains` still selects which domains to run. Local execution
+and capability 1's local fallback remain sequential.
+
+Each domain runs in a separate process with its own MCP connection and judge
+clients. Tool calls within a domain retain their existing order. For example:
+
+```bash
+python evaluator/evaluator.py \
+  --capability_name capability_dashboard_apis \
+  --gt_root /path/to/groundtruth --pred_root /path/to/predictions \
+  --tool-backend code-engine --num-domains 20 \
+  --output /tmp/ce-dashboard-results.json
+```
+
+The overall log tags progress with capability, domain, stage and sample UUID.
+Detailed stdout, stderr, tool progress and tracebacks go to a separate log for
+each domain, under `<output_stem>_logs/<run_id>/` beside the output file. Override
+the log root with `--log-dir PATH`. Results record these paths in `domain_logs`.
+
+Only the coordinator writes the aggregate results, using atomic replacement
+after each completed or failed domain. `execution`, `domain_progress` and
+`failed_domains` describe run status; metrics include completed domains only.
+A domain exception does not stop other domains. Such runs print `INCOMPLETE`,
+record status `partial`, and exit with code 1. Individual tool errors retain the
+existing replay/scoring behavior; they do not automatically fail the domain.
+
+Rerunning the command skips completed domains and retries failed or unfinished
+ones with new log files. Concurrency can change when resuming; backend, endpoint
+and K compatibility checks still apply. Ctrl-C or SIGTERM stops active workers
+and checkpoints completed results before exiting.

@@ -7,7 +7,7 @@ import warnings
 from abc import ABC, abstractmethod
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
-from typing import Any, AsyncIterator, Dict, List, Optional, Sequence
+from typing import Any, AsyncIterator, Dict, List, Optional, Sequence, Callable
 
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
@@ -255,6 +255,7 @@ async def execute_tools_batch(
     dialogue_tools_batch: List[List[List[Dict[str, Any]]]],
     schema_map: Optional[Dict[str, Any]],
     is_gt: bool = False,
+    progress_callback: Optional[Callable[[Dict[str, Any]], None]] = None,
 ) -> List[List[List[Any]]]:
     """
     Execute a batch of tool calls using a raw MCP session, with schema-based
@@ -273,12 +274,17 @@ async def execute_tools_batch(
     """
     all_dialogue_responses: List[List[List[Any]]] = []
 
-    for dialogue_tools in dialogue_tools_batch:
+    total = sum(len(turn) for dialogue in dialogue_tools_batch for turn in dialogue)
+    completed = 0
+    if progress_callback:
+        progress_callback({'event': 'replay_started', 'completed': 0, 'total': total})
+
+    for dialogue_index, dialogue_tools in enumerate(dialogue_tools_batch):
         dialogue_responses: List[List[Any]] = []
         labeled_responses: Dict[str, Any] = {}
         has_labels = any(tool.get("label") for turn in dialogue_tools for tool in turn)
 
-        for turn_tools in dialogue_tools:
+        for turn_index, turn_tools in enumerate(dialogue_tools):
             turn_responses: List[Any] = []
 
             for tool in turn_tools:
@@ -315,6 +321,11 @@ async def execute_tools_batch(
                 tool_args = _coerce_args_to_schema(raw_args, input_schema)
 
                 result = None
+                call_error = False
+                if progress_callback:
+                    progress_callback({'event': 'tool_started', 'tool': tool_name,
+                                       'completed': completed, 'total': total,
+                                       'dialogue_index': dialogue_index, 'turn_index': turn_index})
                 try:
                     result = await session.call_tool(tool_name, tool_args)
                     # Extract text from MCP response
@@ -327,6 +338,7 @@ async def execute_tools_batch(
                     else:
                         turn_responses.append("")
                 except Exception as e:
+                    call_error = True
                     turn_responses.append(f"Error: {str(e)}")
 
                 if is_gt and tool.get("label"):
@@ -341,10 +353,20 @@ async def execute_tools_batch(
                             if not (isinstance(response, dict) and "error" in response):
                                 labeled_responses[tool["label"]] = response
 
+                completed += 1
+                if progress_callback:
+                    progress_callback({'event': 'tool_completed', 'tool': tool_name,
+                                       'completed': completed, 'total': total,
+                                       'dialogue_index': dialogue_index, 'turn_index': turn_index,
+                                       'error': call_error or bool(getattr(result, 'isError', False)
+                                                                  or getattr(result, 'is_error', False))})
+
             dialogue_responses.append(turn_responses)
 
         all_dialogue_responses.append(dialogue_responses)
 
+    if progress_callback:
+        progress_callback({'event': 'replay_completed', 'completed': completed, 'total': total})
     return all_dialogue_responses
 
 

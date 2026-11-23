@@ -3,9 +3,12 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import logging
+from datetime import datetime, timezone
+from uuid import uuid4
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple, List
+from typing import Any, Dict, Optional, Tuple, List, Callable
 from tqdm import tqdm
 from dotenv import load_dotenv
 
@@ -161,6 +164,7 @@ async def evaluate_domain(
     mcp_config: Optional[MCPConnectionConfig],
     capability_name: str,
     policy_judge_path: Optional[str] = None,
+    progress_callback: Optional[Callable[[Dict[str, Any]], None]] = None,
 ) -> Tuple[Dict[str, Any], List[float]]:
     """
     Evaluate a single domain (async version).
@@ -196,6 +200,18 @@ async def evaluate_domain(
             }
         return domain_out, []
 
+    if progress_callback:
+        progress_callback({'event': 'stage', 'stage': 'loaded', 'total': len(paired)})
+
+    def replay_progress(stage):
+        if progress_callback is None:
+            return None
+        def report(event):
+            index = event.get('dialogue_index')
+            uuid = str(paired[index][0].get('uuid')) if index is not None else None
+            progress_callback({**event, 'stage': stage, 'uuid': uuid})
+        return report
+
     # Build scorers per domain
     turn_cfg = TurnScorerConfig(
         capability=capability_name,
@@ -229,6 +245,8 @@ async def evaluate_domain(
 
     # MCP execution and scoring
     if policy.execute_mcp_tools and mcp_config and paired:
+        if progress_callback:
+            progress_callback({'event': 'stage', 'stage': 'connecting'})
         async with create_client_and_connect(mcp_config, domain) as session:
             # Get schema from tools
             tools_result = await session.list_tools()
@@ -248,17 +266,21 @@ async def evaluate_domain(
                     _update_dialogue_toolcall_for_get_data(gt_raw, uuid, skip_initialize_active_data=True)
                     _update_dialogue_toolcall_for_get_data(pr_raw, uuid, skip_initialize_active_data=False)
 
-            mcp_batch_responses_pred = await execute_tools_batch(session, batch_tools_pred, schema_map)
+            mcp_batch_responses_pred = await execute_tools_batch(session, batch_tools_pred, schema_map,
+                                                                 progress_callback=replay_progress("prediction"))
             mcp_batch_responses_gt = await execute_tools_batch(
                 session,
                 batch_tools_gt,
                 schema_map,
                 is_gt=capability_name == "capability_bi_apis",
+                progress_callback=replay_progress("ground_truth"),
             )
 
+            if progress_callback:
+                progress_callback({'event': 'stage', 'stage': 'scoring', 'total': len(paired)})
             # Score each paired dialogue
             for idx, (gt_raw, pr_raw) in enumerate(
-                tqdm(paired, desc=f"[{capability_name}][{domain}]", leave=False)
+                tqdm(paired, desc=f"[{capability_name}][{domain}]", leave=False, disable=progress_callback is not None)
             ):
                 uuid = str(gt_raw.get("uuid"))
 
@@ -274,6 +296,9 @@ async def evaluate_domain(
                     pred_key=PRED_OUTPUT_KEY
                 )
                 dialogue_scores.append(float(dialogue_score))
+                if progress_callback:
+                    progress_callback({'event': 'sample_scored', 'stage': 'scoring', 'uuid': uuid,
+                                       'completed': idx + 1, 'total': len(paired)})
 
                 domain_out["dialogues"].append({
                     "uuid": uuid,
@@ -291,7 +316,7 @@ async def evaluate_domain(
     else:
         # No MCP tools - just score based on predictions as-is
         for idx, (gt_raw, pr_raw) in enumerate(
-            tqdm(paired, desc=f"[{capability_name}][{domain}]", leave=False)
+            tqdm(paired, desc=f"[{capability_name}][{domain}]", leave=False, disable=progress_callback is not None)
         ):
             uuid = str(gt_raw.get("uuid"))
 
@@ -301,6 +326,9 @@ async def evaluate_domain(
                 pred_key=PRED_OUTPUT_KEY
             )
             dialogue_scores.append(float(dialogue_score))
+            if progress_callback:
+                progress_callback({'event': 'sample_scored', 'stage': 'scoring', 'uuid': uuid,
+                                   'completed': idx + 1, 'total': len(paired)})
 
             domain_out["dialogues"].append({
                 "uuid": uuid,
@@ -361,6 +389,7 @@ def _write_intermediate_results(
     results: Dict[str, Any],
     all_dialogue_scores: List[float],
     out_path: Path,
+    *, atomic: bool = False,
 ) -> None:
     """
     Write intermediate results to disk.
@@ -412,12 +441,110 @@ def _write_intermediate_results(
     ))
 
     # Write to disk
-    out_path.write_text(
-        json.dumps(results, indent=2, ensure_ascii=False),
-        encoding="utf-8",
-    )
+    if atomic:
+        from domain_runner import atomic_write_json
+        atomic_write_json(out_path, results)
+    else:
+        out_path.write_text(
+            json.dumps(results, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
 
     return results
+
+
+def _evaluate_parallel_domains(results, all_dialogue_scores, gt_files, pred_dir, out_path,
+                               policy, mcp_config, capability_name, policy_judge_path,
+                               num_domains, log_dir):
+    from domain_runner import DomainJob, pack_policy, run_domains
+
+    selected = [path.stem for path in gt_files]
+    pending = [path for path in gt_files if path.stem not in results["domains"]]
+    root = Path(log_dir) if log_dir is not None else out_path.parent / f"{out_path.stem}_logs"
+    run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S") + "-" + uuid4().hex[:8]
+    run_path = root.resolve() / run_id
+    failures = results.setdefault("failed_domains", {})
+    logs = results.setdefault("domain_logs", {})
+    progress = results.setdefault("domain_progress", {})
+    for domain in selected:
+        failures.pop(domain, None)
+        progress[domain] = {"status": "completed" if domain in results["domains"] else "pending"}
+    execution = results["execution"] = {
+        "mode": "parallel-code-engine", "num_domains": num_domains,
+        "max_workers": min(num_domains, len(pending)), "run_id": run_id,
+        "log_directory": str(run_path), "selected_domains": selected, "status": "running",
+    }
+    def checkpoint():
+        execution["completed_domains"] = [d for d in selected if d in results["domains"]]
+        execution["failed_domains"] = [d for d in selected if d in failures]
+        execution["pending_domains"] = [d for d in selected if d not in results["domains"] and d not in failures]
+        # Completion order must not change output ordering or aggregation order.
+        results["domains"] = dict(sorted(results["domains"].items()))
+        all_dialogue_scores[:] = [float(dialogue["score"])
+            for domain in results["domains"].values() for dialogue in domain["dialogues"]]
+        _write_intermediate_results(results, all_dialogue_scores, out_path, atomic=True)
+
+    def on_event(event):
+        domain = event['domain']
+        state = progress[domain]
+        if state['status'] in ('completed', 'failed'):
+            return
+        if event['event'] == 'domain_started':
+            state['status'] = 'running'
+            logs[domain] = event['log_path']
+        state.update(event)
+        # Worker logs retain tool-start messages too; the overall log uses one
+        # concise line per completion/stage, never multiple concurrent bars.
+        if event['event'] == 'tool_started':
+            return
+        count = f" {event['completed']}/{event['total']}" if 'completed' in event else ''
+        tool = f" {event['tool']}" if 'tool' in event else ''
+        uuid = f" uuid={event['uuid']}" if event.get('uuid') else ''
+        error = ' ERROR' if event.get('error') else ''
+        print(f"[{capability_name}][{domain}][{event.get('stage', 'worker')}] "
+              f"{event['event']}{count}{tool}{uuid}{error}", flush=True)
+
+    def on_result(outcome):
+        domain = outcome.domain
+        logs[domain] = outcome.log_path
+        progress[domain].update(status='failed' if outcome.error else 'completed', seconds=outcome.seconds)
+        if outcome.error:
+            failures[domain] = {"error": outcome.error, "log_path": outcome.log_path,
+                                "run_id": run_id, "seconds": outcome.seconds}
+            print(f"[{capability_name}][{domain}] FAILED: {outcome.error!r}; log={outcome.log_path}", flush=True)
+        else:
+            results["domains"][domain] = outcome.data
+            failures.pop(domain, None)
+            print(f"[{capability_name}][{domain}] COMPLETED in {outcome.seconds:.1f}s; log={outcome.log_path}", flush=True)
+        checkpoint()
+        print(f"[{capability_name}] Domains: completed={len(execution['completed_domains'])} "
+              f"failed={len(execution['failed_domains'])} pending={len(execution['pending_domains'])}", flush=True)
+
+    for path in gt_files:
+        if path.stem in results["domains"]:
+            print(f"Skipping already-completed domain: {path.stem}", flush=True)
+    jobs = []
+    if pending:
+        spec = pack_policy(policy)
+        run_path.mkdir(parents=True, exist_ok=True)
+        jobs = [DomainJob(path.stem, path, pred_dir / path.name, capability_name, mcp_config,
+                          spec, policy_judge_path, run_path / f"{path.stem}.log",
+                          run_path / f"{path.stem}.result.json") for path in pending]
+    checkpoint()
+    print(f"[{capability_name}] Code Engine domain workers: {execution['max_workers']} "
+          f"(limit={num_domains}); logs={run_path}", flush=True)
+    try:
+        run_domains(jobs, num_domains, on_event, on_result)
+    except KeyboardInterrupt:
+        execution["status"] = "interrupted"
+        for domain in execution["pending_domains"]:
+            if progress[domain]['status'] == 'running':
+                progress[domain]['status'] = 'interrupted'
+        checkpoint()
+        print(f"[{capability_name}] Interrupted; completed results saved to {out_path}", flush=True)
+        raise
+    execution["status"] = "partial" if failures else "completed"
+    checkpoint()
 
 
 def evaluate_capability(
@@ -430,7 +557,11 @@ def evaluate_capability(
     selected_domains: Optional[set[str]] = None,
     policy_judge_path: Optional[str] = None,
     tool_backend: str = "local",
+    num_domains: int = 20,
+    log_dir: Optional[Path] = None,
 ) -> Dict[str, Any]:
+    if isinstance(num_domains, bool) or not isinstance(num_domains, int) or num_domains < 1:
+        raise ValueError("num_domains must be a positive integer")
     if capability_name not in registry:
         raise ValueError(
             f"Capability '{capability_name}' not found in registry. Add it in build_default_capability_registry()."
@@ -494,40 +625,50 @@ def evaluate_capability(
     # Get list of already-completed domains
     completed_domains = set(results["domains"].keys())
 
-    for gt_path in gt_files:
-        domain = gt_path.stem
+    use_workers = (
+        tool_backend == "code-engine"
+        and capability_name in ("capability_dashboard_apis", "capability_multihop_reasoning", "capability_multiturn")
+        and mcp_config is not None and mcp_config.mode in ("http", "streamable-http")
+    )
+    if use_workers:
+        _evaluate_parallel_domains(results, all_dialogue_scores, gt_files, pred_dir, out_path,
+                                   policy, mcp_config, capability_name, policy_judge_path,
+                                   num_domains, log_dir)
+    else:
+        for gt_path in gt_files:
+            domain = gt_path.stem
 
-        # Skip already-completed domains
-        if domain in completed_domains:
-            print(f"Skipping already-completed domain: {domain}")
-            continue
+            # Skip already-completed domains
+            if domain in completed_domains:
+                print(f"Skipping already-completed domain: {domain}")
+                continue
 
-        pred_path = pred_dir / gt_path.name
+            pred_path = pred_dir / gt_path.name
 
-        print(f"\nEvaluating domain: {domain}")
-        # Run async evaluation for this domain
-        domain_out, domain_scores = asyncio.run(
-            evaluate_domain(
-                domain=domain,
-                gt_path=gt_path,
-                pred_path=pred_path,
-                policy=policy,
-                mcp_config=mcp_config,
-                capability_name=capability_name,
-                policy_judge_path=policy_judge_path,
+            print(f"\nEvaluating domain: {domain}")
+            # Run async evaluation for this domain
+            domain_out, domain_scores = asyncio.run(
+                evaluate_domain(
+                    domain=domain,
+                    gt_path=gt_path,
+                    pred_path=pred_path,
+                    policy=policy,
+                    mcp_config=mcp_config,
+                    capability_name=capability_name,
+                    policy_judge_path=policy_judge_path,
+                )
             )
-        )
 
-        all_dialogue_scores.extend(domain_scores)
-        results["domains"][domain] = domain_out
+            all_dialogue_scores.extend(domain_scores)
+            results["domains"][domain] = domain_out
 
-        # Write intermediate results after each domain
-        # This ensures partial results are saved if evaluation is interrupted
-        _write_intermediate_results(results, all_dialogue_scores, out_path)
+            # Write intermediate results after each domain
+            # This ensures partial results are saved if evaluation is interrupted
+            _write_intermediate_results(results, all_dialogue_scores, out_path)
 
-    # Final write (summary already updated by last intermediate write)
-    # This is technically redundant but ensures the final state is written
-    results=_write_intermediate_results(results, all_dialogue_scores, out_path)
+        # Final write (summary already updated by last intermediate write)
+        # This is technically redundant but ensures the final state is written
+        results=_write_intermediate_results(results, all_dialogue_scores, out_path)
 
     print("=========================================================================")
     print("==================================[RESULTS]==============================")
@@ -537,6 +678,8 @@ def evaluate_capability(
     correct_sum = results["summary"].get("n_correct", 0.0)
     accuracy = results["summary"].get("mean_dialogue_score", 0.0)
 
+    if results.get("execution", {}).get("status") in ("partial", "interrupted"):
+        print("INCOMPLETE evaluation: metrics below cover completed domains only.", flush=True)
     print("Number of samples evaluated:", num_samples)
     print("Number of correct dialogues:", correct_sum)
     print("Accuracy:", accuracy)
@@ -577,7 +720,13 @@ def main() -> None:
     )
     ap.add_argument("--tool-backend", choices=("local", "code-engine"), default="local",
                     help="Tool environment. Code Engine supports capabilities 2–4; capability 1 logs a fallback to local.")
+    ap.add_argument("--num-domains", "--num_domains", dest="num_domains", type=int, default=20,
+                    help="Maximum simultaneous Code Engine domains for capabilities 2–4 (default: 20). Local execution stays sequential.")
+    ap.add_argument("--log-dir", type=Path, default=None,
+                    help="Parallel domain logs (default: <output_stem>_logs/<run_id>/)")
     args = ap.parse_args()
+    if args.num_domains < 1:
+        ap.error("--num-domains must be a positive integer")
     if args.k < 1:
         ap.error("--k must be a positive integer")
 
@@ -611,8 +760,10 @@ def main() -> None:
     except (ValueError, OSError) as exc:
         ap.error(str(exc))
 
+    if capability_name == "capability_bi_apis" and args.tool_backend == "code-engine" and args.num_domains > 1:
+        logging.getLogger(__name__).warning("Capability 1 uses local sequential execution; --num-domains is ignored.")
     registry = build_default_capability_registry(k=args.k)
-    evaluate_capability(
+    results = evaluate_capability(
         capability_name=capability_name,
         gt_dir=gt_dir,
         pred_dir=pred_dir,
@@ -621,10 +772,14 @@ def main() -> None:
         mcp_config=mcp_config,
         selected_domains=selected_domains,
         tool_backend=mcp_config.backend,
+        num_domains=args.num_domains,
+        log_dir=args.log_dir,
         policy_judge_path=args.policy_judge_path,
     )
 
     print(f"Wrote: {out_path}")
+    if isinstance(results, dict) and results.get("execution", {}).get("status") == "partial":
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
