@@ -93,23 +93,38 @@ def test_unsupported_capability_is_configuration_error():
         backend.select_evaluator_mcp_config(5, 'code-engine')
 
 
-def test_http_transport_and_cleanup(monkeypatch):
+@pytest.mark.parametrize('modern', [False, True])
+@pytest.mark.parametrize('stream_count', [2, 3])
+def test_http_transport_and_cleanup(monkeypatch, modern, stream_count):
     import mcp.client.streamable_http as transport
     events = []
+    read, write = object(), object()
+    @asynccontextmanager
+    async def client(**kwargs):
+        assert kwargs['headers'] == {'X-MCP-Domain': 'test'}
+        yield 'http-client'
     @asynccontextmanager
     async def connection(url, **kwargs):
-        assert kwargs['headers'] == {'X-MCP-Domain': 'test'}
+        if modern:
+            assert kwargs['http_client'] == 'http-client'
+        else:
+            assert kwargs['headers'] == {'X-MCP-Domain': 'test'}
         events.append('transport-open')
         try:
-            yield None, None, lambda: None
+            yield (read, write) if stream_count == 2 else (read, write, lambda: None)
         finally:
             events.append('transport-close')
     class Session:
-        def __init__(self, *args): pass
+        def __init__(self, *args): assert args == (read, write)
         async def __aenter__(self): return self
         async def __aexit__(self, *args): events.append('session-close')
         async def initialize(self): events.append('initialize')
-    monkeypatch.setattr(transport, 'streamablehttp_client', connection, raising=False)
+    if modern:
+        monkeypatch.delattr(transport, 'streamablehttp_client', raising=False)
+        monkeypatch.setattr(transport, 'streamable_http_client', connection, raising=False)
+        monkeypatch.setitem(sys.modules, 'httpx2', SimpleNamespace(AsyncClient=client))
+    else:
+        monkeypatch.setattr(transport, 'streamablehttp_client', connection, raising=False)
     monkeypatch.setattr(backend, 'ClientSession', Session)
     async def run():
         with pytest.raises(RuntimeError, match='test failure'):
