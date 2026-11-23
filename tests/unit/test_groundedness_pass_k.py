@@ -107,3 +107,28 @@ def test_correctness_error_includes_exception(monkeypatch, inp):
     result = judge.judge(inp)
     assert result.score == 0.0
     assert result.explanation == "Judge Error provider unavailable."
+
+
+def test_default_k_is_three(monkeypatch, inp):
+    import evaluator as entry
+    monkeypatch.setattr(LLMJudge, '_build_llm', lambda *args: None)
+    judge = GroundednessJudge()
+    judge.invoke = Mock(return_value='yes')
+    result = judge.judge(inp)
+    assert judge.k == 3
+    assert len(result.trials) == judge.invoke.call_count == 3
+    assert CapabilityPolicy().groundedness_judge.k == 3
+    assert all(p.groundedness_judge.k == 3 for p in entry.build_default_capability_registry().values())
+
+
+@pytest.mark.parametrize('extra,expected', [([], 3), (['--k', '1'], 1), (['--k', '5'], 5)])
+def test_cli_default_and_override_k(monkeypatch, tmp_path, extra, expected):
+    import evaluator as entry
+    monkeypatch.setattr(LLMJudge, '_build_llm', lambda *args: None)
+    captured = {}
+    monkeypatch.setattr(entry, 'evaluate_capability', lambda **kwargs: captured.update(kwargs))
+    monkeypatch.setattr(sys, 'argv', ['evaluator.py', '--capability_name', 'capability_dashboard_apis',
+        '--gt_root', str(tmp_path), '--pred_root', str(tmp_path),
+        '--output', str(tmp_path / 'results.json'), *extra])
+    entry.main()
+    assert all(p.groundedness_judge.k == expected for p in captured['registry'].values())
