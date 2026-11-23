@@ -51,7 +51,8 @@ def extract_toolcalls_for_mcp(
                 continue
             if isinstance(raw_tc, dict) and "name" in raw_tc:
                 turn_tools.append(
-                    {"name": raw_tc["name"], "arguments": raw_tc.get("arguments", {})})
+                    {"name": raw_tc["name"], "arguments": raw_tc.get("arguments", {}),
+                     **({"label": raw_tc["label"]} if "label" in raw_tc else {})})
         if limit_last_n is not None:
             turn_tools = turn_tools[-limit_last_n:]
         dialogue_tools.append(turn_tools)
@@ -230,6 +231,58 @@ def _coerce_args_to_schema(args: Dict[str, Any], input_schema: Optional[Dict[str
 # Batch tool execution
 # -----------------------------
 
+async def replay_paired_tools(config, domain, batch_pred, batch_gt, *, is_bi=False):
+    """Keep BI prediction/GT adjacent so the initial sample is loaded once."""
+    from benchmark.mcp_client import create_client_and_connect
+
+    def schemas(tools):
+        return {
+            tool.name: getattr(tool, "input_schema", None) or getattr(tool, "inputSchema", {})
+            for tool in tools
+        }
+
+    if not is_bi:
+        async with create_client_and_connect(config, domain) as session:
+            schema_map = schemas((await session.list_tools()).tools)
+            pred = await execute_tools_batch(session, batch_pred, schema_map)
+            gt = await execute_tools_batch(session, batch_gt, schema_map)
+            return pred, gt
+
+    pred_responses, gt_responses = [], []
+    for pred, gt in zip(batch_pred, batch_gt):
+        # One backend lives through all turns and both replays of this sample.
+        async with create_client_and_connect(config, domain) as session:
+            schema_map = schemas((await session.list_tools()).tools)
+            if "reset_handles" not in schema_map.get("get_data", {}).get("properties", {}):
+                raise RuntimeError(
+                    "Capability 1 requires the updated MCP backend with get_data(reset_handles). "
+                    "Rebuild the local image or redeploy the session-preserving Code Engine bridge."
+                )
+            pred_responses.extend(await execute_tools_batch(session, [pred], schema_map))
+            # get_data in GT clears prediction handles but reuses active_data.
+            gt_responses.extend(await execute_tools_batch(session, [gt], schema_map, is_gt=True))
+    return pred_responses, gt_responses
+
+
+def _resolve_gt_reference(value: Any, responses: Dict[str, Any], argument: str) -> Any:
+    """Resolve exact label references without replacing text inside literals."""
+    if isinstance(value, str):
+        label = value[1:-1] if value.startswith("$") and value.endswith("$") else value
+        if label in responses:
+            response = responses[label]
+            if isinstance(response, dict):
+                if argument.startswith("data_label") and "handle" in response:
+                    return response["handle"]
+                if argument == "input_value" and "results" in response:
+                    return response["results"]
+            return response
+    elif isinstance(value, list):
+        return [_resolve_gt_reference(item, responses, argument) for item in value]
+    elif isinstance(value, dict):
+        return {key: _resolve_gt_reference(item, responses, key) for key, item in value.items()}
+    return value
+
+
 async def execute_tools_batch(
     session: ClientSession,
     dialogue_tools_batch: List[List[List[Dict[str, Any]]]],
@@ -255,6 +308,8 @@ async def execute_tools_batch(
 
     for dialogue_tools in dialogue_tools_batch:
         dialogue_responses: List[List[Any]] = []
+        labeled_responses: Dict[str, Any] = {}
+        has_labels = any(tool.get("label") for turn in dialogue_tools for tool in turn)
 
         for turn_tools in dialogue_tools:
             turn_responses: List[Any] = []
@@ -262,23 +317,37 @@ async def execute_tools_batch(
             for tool in turn_tools:
                 tool_name = tool["name"]
                 raw_args = tool.get("arguments", {}) or {}
-                if is_gt:
-                    if (("input_value" in raw_args.keys()) or "data_label" in raw_args.keys()) and len(turn_responses)>0:
-                        if "handle" in turn_responses[-1]:
-                            previous_response = json.loads(turn_responses[-1])
-                            if "input_value" in raw_args.keys():
-                                raw_args["input_value"] = previous_response["results"]
-                            if "data_label" in raw_args.keys():
-                                raw_args["data_label"] = previous_response["handle"]
-
                 # Parse JSON string args if needed (JSON round-trip safety)
                 if isinstance(raw_args, str):
                     raw_args = json.loads(raw_args)
+                # Work on a copy: replay must not rewrite the source dialogue.
+                raw_args = dict(raw_args)
+
+                if is_gt and has_labels:
+                    raw_args = {
+                        key: _resolve_gt_reference(value, labeled_responses, key)
+                        for key, value in raw_args.items()
+                    }
+                elif is_gt and turn_responses and (
+                    "input_value" in raw_args or "data_label" in raw_args
+                ):
+                    try:
+                        previous_response = json.loads(turn_responses[-1])
+                    except (TypeError, ValueError):
+                        previous_response = None
+                    # Getters may return lists (including strings containing
+                    # "handle"); only actual handle objects can be chained.
+                    if isinstance(previous_response, dict) and "handle" in previous_response:
+                        if "input_value" in raw_args and "results" in previous_response:
+                            raw_args["input_value"] = previous_response["results"]
+                        if "data_label" in raw_args:
+                            raw_args["data_label"] = previous_response["handle"]
 
                 # Coerce args to match MCP tool input schema
                 input_schema = (schema_map or {}).get(tool_name)
                 tool_args = _coerce_args_to_schema(raw_args, input_schema)
 
+                result = None
                 try:
                     result = await session.call_tool(tool_name, tool_args)
                     # Extract text from MCP response
@@ -292,6 +361,18 @@ async def execute_tools_batch(
                         turn_responses.append("")
                 except Exception as e:
                     turn_responses.append(f"Error: {str(e)}")
+
+                if is_gt and tool.get("label"):
+                    # Failed calls must not turn an error payload into input data.
+                    labeled_responses.pop(tool["label"], None)
+                    if result is not None and not getattr(result, "isError", False):
+                        try:
+                            response = json.loads(turn_responses[-1])
+                        except (TypeError, ValueError):
+                            pass
+                        else:
+                            if not (isinstance(response, dict) and "error" in response):
+                                labeled_responses[tool["label"]] = response
 
             dialogue_responses.append(turn_responses)
 

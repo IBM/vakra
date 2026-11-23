@@ -23,7 +23,7 @@
 #   docker exec -i -e MCP_DOMAIN=bpo       task_3_m3_environ python /app/environment/bpo/mcp/bpo_router.py
 #   docker exec -i -e MCP_DOMAIN=airline   task_3_m3_environ python /app/environment/bpo/mcp/bpo_router.py
 
-FROM python:3.11-slim
+FROM python:3.11-slim-bookworm
 
 WORKDIR /app
 
@@ -82,6 +82,7 @@ RUN chmod +x entrypoint.sh
 
 # --- MCP dispatcher (single entrypoint for all tasks, routed by TASK_ID) ---
 COPY docker/mcp_dispatch.py mcp_dispatch.py
+COPY docker/mcp_http_bridge.py mcp_http_bridge.py
 
 # Volume mount points (data mounted at runtime, not baked in)
 VOLUME /app/db
