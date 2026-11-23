@@ -1018,13 +1018,23 @@
         <a href="#overview">Overview</a>
         <a href="https://huggingface.co/datasets/ibm-research/VAKRA" onclick="event.preventDefault();var opened=window.open(this.href,'_blank','noopener,noreferrer');if(!opened){navigator.clipboard&&navigator.clipboard.writeText(this.href);alert('Could not open tab. URL copied to clipboard:\n'+this.href);}">Dataset</a>
         <a href="#leaderboard">Leaderboard</a>
-        <a href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml">Submission</a>
+        <a href="#submission">Submission</a>
+        <a href="https://arxiv.org/abs/2608.12282">Paper</a>
         <details class="top-dropdown">
           <summary>Blog</summary>
           <div class="top-dropdown-menu">
             <a href="https://www.ibm.com/new/announcements/introducing-vakra-benchmark" target="_blank">Release</a>
             <a href="https://huggingface.co/blog/ibm-research/vakra-benchmark-analysis" target="_blank">Dataset Description</a>            
             <a href="https://huggingface.co/blog/ibm-research/vakra-benchmark-analysis#evaluation-framework" target="_blank">Evaluation & Error Analysis</a>
+          </div>
+        </details>
+        <details class="top-dropdown">
+          <summary>SemEval 2027</summary>
+          <div class="top-dropdown-menu">
+            <a href="https://semeval.github.io/SemEval2027/">SemEval 2027 Tasks</a>
+            <a href="https://forms.gle/2MLpxaU1kcD1SbCm7">SemEval Registration</a>
+            <a href="https://sites.google.com/view/vakrasemeval2027">VAKRA Task website</a>
+            <a href="https://groups.google.com/g/vakra-advanced">Mailing list</a>
           </div>
         </details>
       </nav>
@@ -1056,6 +1066,14 @@
         <div class="sidebar-news">
         <div class="sidebar-news-title">News</div>
             <div class="sidebar-news-item">
+              <span class="sidebar-news-date">Sep 30, 2026</span>
+              <strong>VAKRA-Advanced was selected as Task 11 at SemEval 2027</strong>, co-located with ACL 2027.
+            </div>
+            <div class="sidebar-news-item">
+              <span class="sidebar-news-date">Aug 12, 2026</span>
+              The <a href="https://arxiv.org/abs/2608.12282">VAKRA paper</a> was released on arXiv.
+            </div>
+            <div class="sidebar-news-item">
               <span class="sidebar-news-date">May 21, 2026</span>
               <a href="https://research.clerktree.com/juris" target="_blank">Juris Agent</a> ranks second on the leaderboard for tool selection capability.
             </div>        
@@ -1065,7 +1083,7 @@
             </div>
             <div class="sidebar-news-item">
               <span class="sidebar-news-date">Mar 24, 2026</span>
-              <a href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml" target="_blank">Leaderboard submissions</a> are open. You can also browse setup details and code in the <a href="https://github.com/IBM/vakra" target="_blank">GitHub repository</a>.
+              VAKRA opened leaderboard submissions. You can also browse setup details and code in the <a href="https://github.com/IBM/vakra" target="_blank">GitHub repository</a>.
             </div>
             <div class="sidebar-news-item">
               <span class="sidebar-news-date">Mar 23, 2026</span>
@@ -1096,9 +1114,9 @@
             <a class="btn secondary" href="https://huggingface.co/datasets/ibm-research/VAKRA" target="_blank">View Dataset</a>
             <!-- <a class="btn primary" href="https://huggingface.co/datasets/ibm-research/VAKRA" onclick="event.preventDefault();var opened=window.open(this.href,'_blank','noopener,noreferrer');if(!opened){navigator.clipboard&&navigator.clipboard.writeText(this.href);alert('Could not open tab. URL copied to clipboard:\n'+this.href);}">View dataset</a> -->
             <a class="btn secondary" href="https://huggingface.co/blog/ibm-research/vakra-benchmark-analysis/">Blog</a>
-            <a class="btn primary" href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml" onclick="event.preventDefault();var opened=window.open(this.href,'_blank','noopener,noreferrer');if(!opened){navigator.clipboard&&navigator.clipboard.writeText(this.href);alert('Could not open tab. URL copied to clipboard:\n'+this.href);}">Submit to Leaderboard</a>
+            <a class="btn primary" href="https://forms.gle/2MLpxaU1kcD1SbCm7">SemEval Registration</a>
             <a class="btn secondary" href="https://github.com/IBM/vakra" target="_blank">GitHub repo</a>            
-            <a class="btn secondary" href="#leaderboard">Leaderboard</a>          
+            <a class="btn secondary" href="https://arxiv.org/abs/2608.12282">Paper</a>
           </div>
         </div>
       </section>
@@ -1228,9 +1246,9 @@
         <div class="section-header">
           <div>
             <div class="kicker">Submission</div>
-            <h2 class="section-title">Submit to the live leaderboard</h2>
+            <h2 class="section-title">Submit through SemEval 2027</h2>
             <p class="section-desc">
-              Ready to add your model to the public VAKRA leaderboard? Follow the submission flow below.
+              Leaderboard submissions are currently accepted exclusively through SemEval 2027 Task 11.
             </p>
           </div>
           <!-- <div class="leaderboard-badges">
@@ -1256,16 +1274,16 @@
               <div>
                 <h3>Validate the output</h3>
                 <p>
-                  The outputs are expected in a particular folder structure along with a metadata file created by the validator script. Run the <a class="inline-link" href="https://github.com/IBM/vakra/blob/main/validate_output.py" target="_blank">validate_output.py</a> script on the output folder. Provide the output of the validator script along with your submission.
+                  Use <a class="inline-link" href="https://github.com/IBM/vakra/blob/main/validate_output.py" target="_blank">validate_output.py</a> to check your benchmark output locally.
                 </p>
               </div>
             </div>
             <div class="step">
               <div class="step-num">03</div>
               <div>
-                <h3>Open the submission template</h3>
+                <h3>Follow the SemEval submission instructions</h3>
                 <p>
-                  Use the <a class="inline-link" href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml" target="_blank">leaderboard submission issue template</a> to share your outputs, agent description, code or system link. Once reviewed, approved submissions will be added to the  live leaderboard.
+                  Check the <a class="inline-link" href="https://sites.google.com/view/vakrasemeval2027">task website</a> for competition submission instructions.
                 </p>
               </div>
             </div>
@@ -1278,7 +1296,7 @@
               Everything needed to prepare a leaderboard entry is linked here.
             </p>
             <div class="submission-actions">
-              <a class="btn primary" href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml" target="_blank">Open submission template</a>
+              <a class="btn primary" href="https://forms.gle/2MLpxaU1kcD1SbCm7">Register for SemEval</a>
               <a class="btn secondary" href="https://github.com/IBM/vakra" target="_blank">View benchmark repo</a>
               <a class="btn secondary" href="https://huggingface.co/datasets/ibm-research/VAKRA" onclick="event.preventDefault();var opened=window.open(this.href,'_blank','noopener,noreferrer');if(!opened){navigator.clipboard&&navigator.clipboard.writeText(this.href);alert('Could not open tab. URL copied to clipboard:\n'+this.href);}">View dataset</a>
             </div>
@@ -1311,22 +1329,15 @@
             <h3>Executable backends</h3>
             <p>Setup MCP based local APIs and retrieval stack.</p>
           </a>
-          <div class="card resource-card clickable-card"
-              onclick="window.open('https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml', '_blank')">
+          <a class="card resource-card" href="https://forms.gle/2MLpxaU1kcD1SbCm7">
             <div class="kicker">Submission</div>
-            <h3>Leaderboard and submissions</h3>
-            <p>
-              Please create a github issue using the 
-              <a href="https://github.com/IBM/vakra/issues/new?template=leaderboard_submission.yml" target="_blank" style="color:#3b82f6;">
-                Leaderboard Submission Template
-              </a> 
-              to submit for evaluation.
-            </p>
-          </div>
-          <a class="card resource-card" href="#">
+            <h3>Register for SemEval</h3>
+            <p>Register for VAKRA-Advanced to access the evaluation dataset.</p>
+          </a>
+          <a class="card resource-card" href="https://arxiv.org/abs/2608.12282">
             <div class="kicker">Paper</div>
             <h3>Benchmark paper</h3>
-            <p>Link to the paper or blog page describing dataset construction coming soon.</p>
+            <p>Read the VAKRA benchmark paper on arXiv.</p>
           </a>
         </div>
       </section>
