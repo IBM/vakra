@@ -18,6 +18,7 @@ from mcp.types import Tool, TextContent
 from pydantic import AnyUrl
 
 from environment.mcp_logging import _setup_mcp_logging
+from environment.openapi_cache import fetch_openapi
 
 logger = logging.getLogger(__name__)
 
@@ -52,10 +53,7 @@ class FastAPIMCPServer:
     async def discover_fastapi_endpoints(self) -> Dict:
         """Fetch OpenAPI spec from FastAPI server"""
         try:
-            async with httpx.AsyncClient() as client:
-                response = await client.get(f"{self.fastapi_base_url}/openapi.json")
-                response.raise_for_status()
-                return response.json()
+            return await fetch_openapi(self.fastapi_base_url)
         except Exception as e:
             logger.error(f"Failed to fetch OpenAPI spec: {e}")
             raise

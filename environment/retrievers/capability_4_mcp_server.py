@@ -53,6 +53,7 @@ from mcp.server import Server
 from mcp.types import Tool, TextContent
 
 from environment.mcp_logging import _setup_mcp_logging
+from environment.openapi_cache import fetch_openapi
 
 logger = logging.getLogger(__name__)
 
@@ -125,11 +126,8 @@ class Capability4CombinedMCPServer:
     # ------------------------------------------------------------------
 
     async def _fetch_openapi(self, base_url: str) -> Dict:
-        """Fetch the OpenAPI JSON spec from a FastAPI server."""
-        async with httpx.AsyncClient() as client:
-            response = await client.get(f"{base_url}/openapi.json")
-            response.raise_for_status()
-            return response.json()
+        """Fetch the OpenAPI JSON spec from a FastAPI server (snapshot file if present)."""
+        return await fetch_openapi(base_url)
 
     # ------------------------------------------------------------------
     # M3 REST tool discovery (mirrors environment/m3/rest/mcp_server.py)
