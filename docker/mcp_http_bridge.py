@@ -288,13 +288,24 @@ async def _list_tools():
     return await _domain_tools(_current_domain.get())
 
 
-@proxy.call_tool()
+# validate_input=False: the SDK validates arguments against Server._tool_cache, which
+# is keyed by tool name and shared by every domain this proxy serves. Dozens of tool
+# names exist in several domains with different schemas (e.g. get_customer_names:
+# books needs last_name_pattern, movie needs active+limit), so a valid call could be
+# rejected -- or an invalid one accepted -- against another domain's schema. Each
+# backend is pinned to its domain and validates against the right schema itself.
+@proxy.call_tool(validate_input=False)
 async def _call_tool(name: str, arguments: dict):
     domain = _current_domain.get()
     if PERSISTENT:
         result = await _persistent_call(domain, name, arguments or {})
     else:
         result = await _spawned_call(domain, name, arguments or {})
+    if result.isError:
+        # Keep the error flag: raising makes the SDK return isError=True with this text.
+        raise RuntimeError("\n".join(
+            getattr(c, "text", "") for c in result.content if getattr(c, "type", "") == "text"
+        ) or f"tool {name} failed")
     # Forward the downstream content blocks verbatim.
     return result.content
 
