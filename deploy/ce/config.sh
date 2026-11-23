@@ -51,8 +51,21 @@ export DATA_SOURCE="${DATA_SOURCE:-mount}"
 # Sizing. Capabilities 1-3 are light; capability 4 loads embeddings + ChromaDB.
 export CPU="${CPU:-1}"
 export MEMORY="${MEMORY:-4G}"
-export CAP4_CPU="${CAP4_CPU:-2}"
-export CAP4_MEMORY="${CAP4_MEMORY:-8G}"
+# Per-capability sizing, measured under parallel load (see README "Parallel runs & sizing").
+# cap1 uses CPU/MEMORY above. cap2: ~37 calls/s; cap3: ~14-22 calls/s; cap4: ~22 SQL calls/s
+# and ~3.5 semantic searches/s (search is CPU-bound).
+export CAP2_CPU="${CAP2_CPU:-6}"
+export CAP2_MEMORY="${CAP2_MEMORY:-48G}"
+export CAP3_CPU="${CAP3_CPU:-4}"
+export CAP3_MEMORY="${CAP3_MEMORY:-16G}"
+export CAP4_CPU="${CAP4_CPU:-8}"
+export CAP4_MEMORY="${CAP4_MEMORY:-32G}"
+
+# Runtime tuning passed to every app (see docker/entrypoint-unified.sh, docker/mcp_http_bridge.py).
+export M3_WORKERS="${M3_WORKERS:-4}"                      # uvicorn workers for the M3 SQL API
+export BRIDGE_MAX_PERSISTENT="${BRIDGE_MAX_PERSISTENT:-64}" # live per-domain backends (~60 MB each)
+export MCP_BACKEND_TIMEOUT="${MCP_BACKEND_TIMEOUT:-30}"     # seconds a tool call waits for the API
+export CAP4_MCP_BACKEND_TIMEOUT="${CAP4_MCP_BACKEND_TIMEOUT:-120}"  # queued searches wait, not fail
 # Ephemeral storage: tiny for mount mode; must exceed the dataset for sync mode.
 if [ "$DATA_SOURCE" = "sync" ]; then
   export EPHEMERAL="${EPHEMERAL:-30G}"

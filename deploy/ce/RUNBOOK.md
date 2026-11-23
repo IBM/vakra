@@ -32,9 +32,11 @@ domain injected as `MCP_DOMAIN` into a freshly-spawned server process. **Code En
 no `docker exec` and no local bind mounts**, so two seams are bridged — *for CE only*:
 
 1. **Transport** — `docker/mcp_http_bridge.py` serves MCP over HTTP at `/mcp/<domain>`.
-   It runs only when the container starts with `SERVE_MODE=http`. For each request it
-   spawns a fresh, domain-pinned `mcp_dispatch.py` subprocess (same `MCP_DOMAIN`
-   mechanism as `docker exec -e`), so `list_tools()` is scoped to exactly one domain.
+   It runs only when the container starts with `SERVE_MODE=http`. Each domain gets one
+   long-lived, domain-pinned `mcp_dispatch.py` subprocess (same `MCP_DOMAIN` mechanism
+   as `docker exec -e`), so `list_tools()` is scoped to exactly one domain. Tool lists are
+   cached per domain and each backend reads a per-domain OpenAPI slice written at start-up.
+   Sizing and tuning: README.md → *Parallel runs & sizing*.
 2. **Data** — the ~35 GB dataset lives in a COS bucket, mounted into each app at the
    paths the servers already expect (`/app/db`, `/app/environment/configs`, and for
    cap 4 `/app/retrievers/chroma_data` + `/app/retrievers/queries`).
@@ -44,7 +46,7 @@ your laptop:  benchmark_runner.py --mcp-config …ce.yaml   (reads data/test/ lo
                      │  MCP over HTTPS  (/mcp/<domain>)
                      ▼
    4 Code Engine apps: vakra-cap1..4   (same image, SERVE_MODE=http, CAPABILITY_ID=1..4)
-     mcp_http_bridge ──spawn(MCP_DOMAIN)──► mcp_dispatch.py ──► FastAPI backends :8000/:8001
+     mcp_http_bridge ──one per domain (MCP_DOMAIN)──► mcp_dispatch.py ──► FastAPI :8000 / :8001
      data mounted read-only from COS pds  ◄── vakra-store ◄── bucket vakra-benchmark-data-us-east
 ```
 
@@ -259,9 +261,15 @@ for i in 1 2 3 4; do n="vakra-cap$i"; u=$(eval echo \$VAKRA_CAP${i}_URL)
 > - *CE doesn't re-pull an unchanged `:latest`.* The script stamps a per-deploy `DEPLOY_REV`
 >   env so every deploy is a new revision and pulls the freshly-built image.
 > - *The bridge crashed with "attempted to exit a cancel scope…".* The first bridge version
->   cached one backend subprocess and reused it across HTTP request tasks — an anyio
->   scope violation. Fixed: spawn a fresh, scope-local subprocess per request (validated with
->   a local dummy-server harness before rebuilding).
+>   cached one backend subprocess and entered/exited its session from different HTTP request
+>   tasks — an anyio scope violation. An interim fix spawned a fresh subprocess per request,
+>   which capped parallel runs at ~2 calls/s with spec-fetch timeouts. Current fix: one
+>   backend per domain whose session is opened and closed by a dedicated owner task; request
+>   tasks only send calls over it.
+> - *Same-named tools rejected with "'x' is a required property".* The proxy validated
+>   arguments against the MCP SDK's tool cache, which is keyed by name and shared across
+>   domains (e.g. `get_person_names` differs between movies_4 and simpson_episodes). Fixed:
+>   the proxy no longer validates; each domain backend validates against its own schema.
 
 ---
 
@@ -416,7 +424,11 @@ VAKRA_CE_ADMIN=1 YES=1 ./teardown.sh --delete-bucket  # also empties + deletes t
 | `candidate_data.parquet not found` (cap3) | The in-repo `environment/bpo/data/` must be baked in — rebuild with the anchored `/data/` excludes (Step 3). |
 | `Mount directory … is a duplicate` | `app update` can't re-mount; scripts now delete+recreate. Re-run. |
 | App serves old code after rebuild | `DEPLOY_REV` forces a new revision; or delete+recreate. |
-| Bridge `cancel scope` crash | Fresh-subprocess-per-request bridge (current code). Rebuild. |
+| Bridge `cancel scope` crash | Fixed in current code (per-domain backends with an owner task). Rebuild. |
+| `Failed to fetch OpenAPI spec` / ~2 calls/s under parallel runs | Old spawn-per-request bridge. Rebuild with current code; check `M3_WORKERS` is set. |
+| `Input validation error: 'x' is a required property` on a valid call | Old bridge validating against another domain's schema. Rebuild with current code. |
+| `Error calling API:` under heavy load | Call waited longer than `MCP_BACKEND_TIMEOUT`. Fewer parallel runs, more vCPU, or a higher timeout. |
+| First cap 4 searches after a restart take ~1–2 min | Chroma index loading from the COS mount; later searches on that collection are fast. |
 | Explorer `streamablehttp_client` ImportError | Pin `mcp==1.27.0` (busts stale pip cache). Rebuild explorer. |
 | cap4 ChromaDB write errors on the mount | Redeploy with `DATA_SOURCE=sync`. |
 | Runner: `ModuleNotFoundError: No module named 'encodings'` / `base_prefix='/install'` | A **corrupt `.venv`** (mixed Pythons, or a build-standalone base). `deactivate; rm -rf .venv`, then recreate with a framework Python per Prerequisites: `python3.12 -m venv .venv`. |

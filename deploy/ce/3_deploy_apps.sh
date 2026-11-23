@@ -24,8 +24,12 @@ DEPLOY_REV="$(date +%s)"
 # Build the common flags for one app.  $1=app name  $2=capability id
 deploy_app() {
   local name="$1" cap="$2"
-  local cpu="$CPU" mem="$MEMORY" eph="$EPHEMERAL"
-  if [[ "$cap" == "4" ]]; then cpu="$CAP4_CPU"; mem="$CAP4_MEMORY"; eph="$CAP4_EPHEMERAL"; fi
+  local cpu="$CPU" mem="$MEMORY" eph="$EPHEMERAL" timeout="$MCP_BACKEND_TIMEOUT"
+  case "$cap" in
+    2) cpu="$CAP2_CPU"; mem="$CAP2_MEMORY" ;;
+    3) cpu="$CAP3_CPU"; mem="$CAP3_MEMORY" ;;
+    4) cpu="$CAP4_CPU"; mem="$CAP4_MEMORY"; eph="$CAP4_EPHEMERAL"; timeout="$CAP4_MCP_BACKEND_TIMEOUT" ;;
+  esac
 
   local args=(
     --image "$IMAGE_REF"
@@ -38,6 +42,9 @@ deploy_app() {
     --env "BRIDGE_PORT=$BRIDGE_PORT"
     --env "DATA_SOURCE=$DATA_SOURCE"
     --env "DEPLOY_REV=$DEPLOY_REV"
+    --env "M3_WORKERS=$M3_WORKERS"
+    --env "BRIDGE_MAX_PERSISTENT=$BRIDGE_MAX_PERSISTENT"
+    --env "MCP_BACKEND_TIMEOUT=$timeout"
     --request-timeout 600
   )
 
