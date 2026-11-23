@@ -55,6 +55,10 @@ from mcp.types import Tool, TextContent
 from environment.mcp_logging import _setup_mcp_logging
 from environment.openapi_cache import fetch_openapi
 
+# Seconds to wait for a FastAPI backend to answer a tool call. Upstream default 30;
+# raise it (e.g. 120) where many agents share one container and calls queue.
+BACKEND_TIMEOUT = float(os.getenv("MCP_BACKEND_TIMEOUT", "30"))
+
 logger = logging.getLogger(__name__)
 
 # domain_negatives.json lives alongside this script in the container
@@ -368,7 +372,7 @@ class Capability4CombinedMCPServer:
             body = arguments.get("body")
 
         try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
+            async with httpx.AsyncClient(timeout=BACKEND_TIMEOUT) as client:
                 if method == "GET":
                     response = await client.get(url)
                 elif method == "POST":
