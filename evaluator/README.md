@@ -274,3 +274,13 @@ resumed locally, including through the capability 1 fallback.
 The HTTP client supports the installed MCP 1.x and 2.x transport constructors.
 No benchmark/environment SDK dependency or Docker image changes are required by
 this evaluator-only PR. Capability 1 state handling belongs to the stacked PR.
+
+## Groundedness K
+
+The evaluator defaults to **K=3**, so runs without `--k` report Pass@3 and Pass^3.
+Use `--k 1` for the previous single-judgment behavior, or another positive integer
+for a different number of groundedness judgments. The judge constructor and
+default capability registry also use K=3.
+
+Existing results produced with K=1 cannot be resumed as K=3. Use a new `--output`
+file for the new default, or pass `--k 1` to resume a compatible K=1 run.

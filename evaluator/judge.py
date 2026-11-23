@@ -103,7 +103,7 @@ class GroundednessJudge(LLMJudge):
     Check if the predicted answer is grounded in the answers in the turn.
     """
 
-    def __init__(self, config: Optional[dict] = None, k: int = 1):
+    def __init__(self, config: Optional[dict] = None, k: int = 3):
         if isinstance(k, bool) or not isinstance(k, int) or k < 1:
             raise ValueError("k must be a positive integer")
         self.k = k

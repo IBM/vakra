@@ -59,7 +59,7 @@ class CapabilityPolicy:
 
 
 
-def build_default_capability_registry(k: int = 1) -> Dict[str, CapabilityPolicy]:
+def build_default_capability_registry(k: int = 3) -> Dict[str, CapabilityPolicy]:
     return {
         "capability_bi_apis": CapabilityPolicy(
             execute_mcp_tools=True,
@@ -553,7 +553,7 @@ def evaluate_capability(
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--k", type=int, default=1, help="Positive number of groundedness judgments (default: 1)")
+    ap.add_argument("--k", type=int, default=3, help="Positive number of groundedness judgments (default: 3)")
     ap.add_argument("--capability_name", required=True, help="Capability name (must exist in registry)")
     ap.add_argument("--gt_root", required=True, help="Path to capability_name/groundtruth/")
     ap.add_argument("--pred_root", required=True, help="Path to capability_name/prediction/")
