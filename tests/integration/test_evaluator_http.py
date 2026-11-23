@@ -26,6 +26,8 @@ def test_local_http_parity(capability, monkeypatch):
     def connection(url, **kwargs):
         return original(url, httpx_client_factory=factory, **kwargs)
     monkeypatch.setattr(transport, 'streamablehttp_client', connection)
+    async def release(*args): pass
+    monkeypatch.setattr(backend, '_release_http_backend', release)
     async def run():
         local = backend.EvaluatorMCPConnectionConfig(command=sys.executable,
             args=[str(ROOT / 'tests' / 'fixtures' / 'evaluator_echo_backend.py')], capability_id=capability)

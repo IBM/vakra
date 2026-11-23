@@ -225,15 +225,15 @@ evaluator/
 - [`benchmark/mcp_connection_config.yaml`](/vakra/benchmark/mcp_connection_config.yaml)
 - [`evaluator/evaluator.py`](/vakra/evaluator/evaluator.py)
 
-## Code Engine tools (capabilities 2–4)
+## Code Engine tools (capabilities 1–4)
 
 The evaluator supports `--tool-backend local|code-engine`; local remains the
-existing default. The connection adapter is confined to the evaluator; its YAML
-lives beside the other connection configs in `benchmark/`. Environment servers,
-containers, benchmark client/runner code and benchmark execution are unchanged.
+existing default. The connection adapter stays under `evaluator/`, and its YAML
+lives beside the other connection configs in `benchmark/`. This stacked version
+also adds the capability 1 backend state support below.
 
 Copy `.env.example` to `.env` in the repository root and replace the selected
-capability's dummy `VAKRA_CAP2_URL`, `VAKRA_CAP3_URL` or `VAKRA_CAP4_URL` with its
+capability's dummy `VAKRA_CAP1_URL` through `VAKRA_CAP4_URL` with its
 app URL (not the browser explorer URL). The evaluator loads this file without
 overriding exported shell variables. Existing judge credentials are still needed.
 
@@ -245,32 +245,55 @@ python evaluator/evaluator.py \
   --output /tmp/ce-dashboard-results.json
 ```
 
-`benchmark/mcp_connection_config.ce.yaml` maps capabilities 2–4 to streamable HTTP
+`benchmark/mcp_connection_config.ce.yaml` maps capabilities 1–4 to streamable HTTP
 endpoints `/mcp/<domain>`. `--mcp-config PATH` overrides the selected backend's
 configuration. Explicit HTTP overrides also work with the default backend flag.
 Local connections delegate to the existing `benchmark/mcp_client.py` unchanged.
 
-### Capability 1 fallback
+### Capability 1: sample state and transforms
 
-Capability 1's hosted stateful tool sequences are not supported in this version.
-Requesting `--tool-backend code-engine` with `capability_bi_apis` logs:
+Prediction and ground-truth replay run consecutively in one private connection
+per sample. Both begin with `get_data(tool_universe_id=UUID, reset_handles=True)`.
+The first call selects the sample's universe. The second clears intermediate
+handles and counters while reusing the same initial dataset. Changing the
+universe loads a new dataset. All turns in one dialogue retain their state.
 
-```text
-Code Engine tool calling for capability 1 is not supported in this version; falling back to local execution. No Code Engine connection will be opened.
-```
+Transforms receive deep copies of their input datasets before executing. Their
+results get new handles; neither earlier handles nor the initial dataset are
+modified, even if a transform fails after changing its copy. Read-only filters,
+getters and aggregations do not require this extra copy. Prediction handles are
+released before ground-truth replay, and the backend closes after the sample.
 
-Execution then uses the existing local capability 1 configuration. No hosted URL
-or server upgrade is required for that fallback. An HTTP override cannot bypass
-this restriction. A custom local capability 1 entry is honored; otherwise the
-default `benchmark/mcp_connection_config.yaml` supplies the local settings.
-Normal local requirements (including a running configured container) still apply;
-local failures are reported normally, with no second attempt to use Code Engine.
+**Rebuild/redeploy the backend for these semantics.** Capability 1 checks that
+`get_data` advertises `reset_handles` and fails with an upgrade message if it
+is missing. Hosted capability 1 also checks `/healthz` for `persistent_backends: true`
+before replay, so an old stateless bridge is rejected. This applies to local Docker images as well as hosted images.
 
-Results record the **effective** backend: capability 1 fallback is recorded as
-`local`, even when `code-engine` was requested. Resume checks reject results from
-a different backend/URL. Legacy results without connection metadata may be
-resumed locally, including through the capability 1 fallback.
+### Deploying the session-preserving HTTP bridge
 
-The HTTP client supports the installed MCP 1.x and 2.x transport constructors.
-No benchmark/environment SDK dependency or Docker image changes are required by
-this evaluator-only PR. Capability 1 state handling belongs to the stacked PR.
+The bridge in `docker/mcp_http_bridge.py` uses the existing capability dispatcher.
+Build the unified image and set `SERVE_MODE=http`, `CAPABILITY_ID=1` (or 2–4),
+and the existing database/retriever mounts. It listens on `PORT` (default 8080).
+The evaluator supplies a random `X-Vakra-Session` header. Calls with that header
+share one domain-scoped stdio backend, owned by a dedicated worker task. A
+DELETE on the same path/header releases it; otherwise idle workers expire after
+`BRIDGE_IDLE_TIMEOUT` seconds (default 900). `BRIDGE_MAX_SESSIONS` defaults to 16.
+Tool results preserve MCP error flags and structured content.
+
+**Use one replica per capability app and one bridge process.** Worker state is
+in process memory. Unknown/expired session IDs fail explicitly rather than
+silently creating an empty backend. Multi-replica deployment requires routing
+all requests for a session to its owning replica. This implementation does not
+provide distributed session state or automatically restart a sample after loss.
+
+Clients without `X-Vakra-Session` retain the original bridge's stateless per-call
+behavior, suitable for independent tool calls. Stateful capability 1 trajectories
+must use the updated evaluator and bridge. The existing Code Engine deployment
+must be updated by its owner; changing the evaluator alone cannot preserve
+handles on a bridge that starts a fresh backend for every call.
+
+The server API targets `mcp>=1.27,<2`, as declared in the MCP dependencies.
+
+Results record the effective backend and reject resumption against a different
+backend or endpoint. The HTTP adapter remains under `evaluator/`; benchmark
+source and benchmark-runner behavior remain unchanged by this stacked PR.

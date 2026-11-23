@@ -24,55 +24,12 @@ def test_remote_selection(capability, monkeypatch):
         backend.select_evaluator_mcp_config(capability, 'code-engine')
 
 
-def test_capability_one_falls_back_without_remote_url(monkeypatch, caplog):
-    monkeypatch.delenv('VAKRA_CAP1_URL', raising=False)
-    cfg = backend.select_evaluator_mcp_config(1, 'code-engine')
-    assert cfg.backend == 'local'
-    assert cfg.requested_backend == 'code-engine'
-    assert cfg.mode == 'stdio'
-    assert cfg.server_url is None
-    assert 'falling back to local execution' in caplog.text
-    seen = []
-    @asynccontextmanager
-    async def local(config, domain):
-        seen.append((config.backend, domain))
-        yield 'local-session'
-    @asynccontextmanager
-    async def remote(*args, **kwargs):
-        pytest.fail('fallback must not open HTTP')
-        yield
-    monkeypatch.setattr(backend, 'connect_local', local)
-    monkeypatch.setattr(backend, '_http_session', remote)
-    async def run():
-        async with backend.create_client_and_connect(cfg, 'college_completion') as session:
-            assert session == 'local-session'
-    asyncio.run(run())
-    assert seen == [('local', 'college_completion')]
 
 
-def test_fallback_with_ce_override_missing_capability_one(caplog):
-    cfg = backend.select_evaluator_mcp_config(1, 'code-engine', str(backend.CE_CONFIG))
-    assert cfg.mode == 'stdio'
-    assert cfg.backend == 'local'
-    assert 'falling back' in caplog.text
 
 
-def test_http_override_cannot_bypass_capability_one_fallback(tmp_path, caplog):
-    path = tmp_path / 'http.yaml'
-    path.write_text('tasks:\n  1:\n    mode: http\n    server_url: ${UNSET_CAP1_URL}/mcp/{domain}\n')
-    for requested in ('local', 'code-engine'):
-        cfg = backend.select_evaluator_mcp_config(1, requested, str(path))
-        assert cfg.mode == 'stdio'
-        assert cfg.backend == 'local'
-    assert 'falling back' in caplog.text
 
 
-def test_fallback_honors_custom_local_config(tmp_path):
-    path = tmp_path / 'local.yaml'
-    path.write_text('tasks:\n  1:\n    mode: stdio\n    command: python\n    args: [custom.py]\n')
-    cfg = backend.select_evaluator_mcp_config(1, 'code-engine', str(path))
-    assert cfg.backend == 'local'
-    assert cfg.args == ['custom.py']
 
 
 def test_explicit_remote_override_records_effective_backend(tmp_path):
@@ -98,7 +55,8 @@ def test_http_transport_and_cleanup(monkeypatch):
     events = []
     @asynccontextmanager
     async def connection(url, **kwargs):
-        assert kwargs['headers'] == {'X-MCP-Domain': 'test'}
+        assert kwargs['headers']['X-MCP-Domain'] == 'test'
+        assert len(kwargs['headers']['X-Vakra-Session']) == 32
         events.append('transport-open')
         try:
             yield None, None, lambda: None
@@ -111,12 +69,14 @@ def test_http_transport_and_cleanup(monkeypatch):
         async def initialize(self): events.append('initialize')
     monkeypatch.setattr(transport, 'streamablehttp_client', connection, raising=False)
     monkeypatch.setattr(backend, 'ClientSession', Session)
+    async def release(*args): events.append('release')
+    monkeypatch.setattr(backend, '_release_http_backend', release)
     async def run():
         with pytest.raises(RuntimeError, match='test failure'):
             async with backend._http_session('https://example.org/mcp/test', 'test'):
                 raise RuntimeError('test failure')
     asyncio.run(run())
-    assert events == ['transport-open', 'initialize', 'session-close', 'transport-close']
+    assert events == ['transport-open', 'initialize', 'session-close', 'transport-close', 'release']
 
 
 @pytest.fixture
@@ -129,21 +89,7 @@ def evaluator():
     return module
 
 
-@pytest.mark.parametrize('k', [1, 3])
-def test_cli_records_local_backend_after_fallback(evaluator, monkeypatch, tmp_path, caplog, k):
-    seen = {}
-    monkeypatch.setattr(sys, 'argv', ['evaluator.py', '--capability_name', 'capability_bi_apis',
-        '--gt_root', str(tmp_path), '--pred_root', str(tmp_path), '--tool-backend', 'code-engine', '--k', str(k)])
-    def registry(k=1):
-        seen['groundedness_k'] = k
-        return {}
-    monkeypatch.setattr(evaluator, 'build_default_capability_registry', registry)
-    monkeypatch.setattr(evaluator, 'evaluate_capability', lambda **kwargs: seen.update(kwargs))
-    evaluator.main()
-    assert seen['groundedness_k'] == k
-    assert seen['tool_backend'] == 'local'
-    assert seen['mcp_config'].mode == 'stdio'
-    assert 'falling back' in caplog.text
+
 
 
 @pytest.mark.parametrize('previous', [None, {'backend': 'local', 'mode': 'stdio', 'server_url': None}])
@@ -157,3 +103,44 @@ def test_resume_rejects_mixed_backends(evaluator, tmp_path, previous):
     with pytest.raises(ValueError, match='backend'):
         evaluator.evaluate_capability('capability_dashboard_apis', tmp_path, tmp_path, output,
             {'capability_dashboard_apis': SimpleNamespace(groundedness_judge=SimpleNamespace(k=1))}, mcp_config=cfg, tool_backend=cfg.backend)
+
+
+def test_capability_one_remote_is_enabled_on_stacked_branch(monkeypatch):
+    monkeypatch.setenv('VAKRA_CAP1_URL', 'https://cap1.example')
+    cfg = backend.select_evaluator_mcp_config(1, 'code-engine')
+    assert cfg.backend == 'code-engine'
+    assert cfg.require_persistent_backend
+    assert not backend.select_evaluator_mcp_config(1).require_persistent_backend
+
+
+def test_old_stateless_bridge_is_rejected(monkeypatch):
+    import httpx
+    class Client:
+        def __init__(self, **kwargs): pass
+        async def __aenter__(self): return self
+        async def __aexit__(self, *args): pass
+        async def get(self, url):
+            return httpx.Response(200, json={'status':'ok'}, request=httpx.Request('GET', url))
+    monkeypatch.setattr(httpx, 'AsyncClient', Client)
+    async def run():
+        with pytest.raises(RuntimeError, match='session-preserving'):
+            async with backend._http_session('https://cap1.example/mcp/test', 'test', require_persistent_backend=True):
+                pytest.fail('old bridge must be rejected')
+    asyncio.run(run())
+
+
+@pytest.mark.parametrize('k', [1, 3])
+def test_cli_records_capability_one_remote_backend(evaluator, monkeypatch, tmp_path, k):
+    seen = {}
+    monkeypatch.setenv('VAKRA_CAP1_URL', 'https://cap1.example')
+    monkeypatch.setattr(sys, 'argv', ['evaluator.py', '--capability_name', 'capability_bi_apis',
+        '--gt_root', str(tmp_path), '--pred_root', str(tmp_path), '--tool-backend', 'code-engine', '--k', str(k)])
+    def registry(k=1):
+        seen['groundedness_k'] = k
+        return {}
+    monkeypatch.setattr(evaluator, 'build_default_capability_registry', registry)
+    monkeypatch.setattr(evaluator, 'evaluate_capability', lambda **kwargs: seen.update(kwargs))
+    evaluator.main()
+    assert seen['groundedness_k'] == k
+    assert seen['tool_backend'] == 'code-engine'
+    assert seen['mcp_config'].require_persistent_backend

@@ -15,10 +15,9 @@ from judge import CorrectnessJudge, GroundednessJudge, ExactMatchJudge
 from tool_backends import (
     MCPConnectionConfig,
     select_evaluator_mcp_config,
-    create_client_and_connect,
 )
 from mcp_tools import (
-    execute_tools_batch,
+    replay_paired_tools,
     extract_toolcalls_for_mcp,
     inject_mcp_responses,
 )
@@ -117,7 +116,7 @@ def _prepend_get_data_to_batch(
         ):
             initial_label = first_turn[0].get("label")
             first_turn = first_turn[1:]
-        initial_tool = {"name": "get_data", "arguments": {"tool_universe_id": uuid}}
+        initial_tool = {"name": "get_data", "arguments": {"tool_universe_id": uuid, "reset_handles": True}}
         if initial_label:
             initial_tool["label"] = initial_label
         first_turn = [initial_tool] + first_turn
@@ -141,9 +140,9 @@ def _update_dialogue_toolcall_for_get_data(
     if not isinstance(seq, dict):
         return
     tool_calls = list(seq.get("tool_call", []))
-    if skip_initialize_active_data and tool_calls and tool_calls[0].get("name") == "initialize_active_data":
+    if skip_initialize_active_data and tool_calls and tool_calls[0].get("name") in ("initialize_active_data", "get_data"):
         tool_calls = tool_calls[1:]
-    tool_calls = [{"name": "get_data", "arguments": {"tool_universe_id": uuid}}] + tool_calls
+    tool_calls = [{"name": "get_data", "arguments": {"tool_universe_id": uuid, "reset_handles": True}}] + tool_calls
     seq["tool_call"] = tool_calls
     turns[0][PRED_OUTPUT_SEQUENCE_KEY] = seq
 
@@ -229,65 +228,57 @@ async def evaluate_domain(
 
     # MCP execution and scoring
     if policy.execute_mcp_tools and mcp_config and paired:
-        async with create_client_and_connect(mcp_config, domain) as session:
-            # Get schema from tools
-            tools_result = await session.list_tools()
-            schema_map = {tool.name: getattr(tool, "input_schema", None) or getattr(tool, "inputSchema", {}) for tool in tools_result.tools}
+        # Batch execute tools
+        batch_tools_pred = [extract_toolcalls_for_mcp(pr, limit_last_n=N_TOOL_CALLS_PER_TURN) for _, pr in paired]
+        batch_tools_gt = [extract_toolcalls_for_mcp(gt) for gt, _ in paired]
 
-            # Batch execute tools
-            batch_tools_pred = [extract_toolcalls_for_mcp(pr, limit_last_n=N_TOOL_CALLS_PER_TURN) for _, pr in paired]
-            batch_tools_gt = [extract_toolcalls_for_mcp(gt) for gt, _ in paired]
+        # capability_bi_apis: replace initialize_active_data with get_data (GT),
+        # and prepend get_data (pred), then sync dialogue tool_call sequences
+        if capability_name == "capability_bi_apis":
+            uuids = [str(gt.get("uuid")) for gt, _ in paired]
+            batch_tools_gt = _prepend_get_data_to_batch(batch_tools_gt, uuids, skip_initialize_active_data=True)
+            batch_tools_pred = _prepend_get_data_to_batch(batch_tools_pred, uuids, skip_initialize_active_data=False)
+            for (gt_raw, pr_raw), uuid in zip(paired, uuids):
+                _update_dialogue_toolcall_for_get_data(gt_raw, uuid, skip_initialize_active_data=True)
+                _update_dialogue_toolcall_for_get_data(pr_raw, uuid, skip_initialize_active_data=False)
 
-            # capability_bi_apis: replace initialize_active_data with get_data (GT),
-            # and prepend get_data (pred), then sync dialogue tool_call sequences
-            if capability_name == "capability_bi_apis":
-                uuids = [str(gt.get("uuid")) for gt, _ in paired]
-                batch_tools_gt = _prepend_get_data_to_batch(batch_tools_gt, uuids, skip_initialize_active_data=True)
-                batch_tools_pred = _prepend_get_data_to_batch(batch_tools_pred, uuids, skip_initialize_active_data=False)
-                for (gt_raw, pr_raw), uuid in zip(paired, uuids):
-                    _update_dialogue_toolcall_for_get_data(gt_raw, uuid, skip_initialize_active_data=True)
-                    _update_dialogue_toolcall_for_get_data(pr_raw, uuid, skip_initialize_active_data=False)
+        mcp_batch_responses_pred, mcp_batch_responses_gt = await replay_paired_tools(
+            mcp_config, domain, batch_tools_pred, batch_tools_gt,
+            is_bi=capability_name == "capability_bi_apis",
+        )
 
-            mcp_batch_responses_pred = await execute_tools_batch(session, batch_tools_pred, schema_map)
-            mcp_batch_responses_gt = await execute_tools_batch(
-                session,
-                batch_tools_gt,
-                schema_map,
-                is_gt=capability_name == "capability_bi_apis",
+        # Score each paired dialogue
+        for idx, (gt_raw, pr_raw) in enumerate(
+            tqdm(paired, desc=f"[{capability_name}][{domain}]", leave=False)
+        ):
+            uuid = str(gt_raw.get("uuid"))
+
+            # Inject fresh responses so groundedness judge uses tool outputs
+            inject_mcp_responses(pr_raw, mcp_batch_responses_pred[idx], type="pred", capability_name=capability_name)
+            if capability_name != "capability_bi_apis" and mcp_batch_responses_gt is not None:
+                inject_mcp_responses(gt_raw, mcp_batch_responses_gt[idx], type="gt",capability_name=capability_name)
+
+            # Score and store details
+            dialogue_score, dialogue_details = dialogue_scorer.score(
+                gt_dialogue=gt_raw,
+                pred_dialogue=pr_raw,
+                pred_key=PRED_OUTPUT_KEY
             )
+            dialogue_scores.append(float(dialogue_score))
 
-            # Score each paired dialogue
-            for idx, (gt_raw, pr_raw) in enumerate(
-                tqdm(paired, desc=f"[{capability_name}][{domain}]", leave=False)
-            ):
-                uuid = str(gt_raw.get("uuid"))
-
-                # Inject fresh responses so groundedness judge uses tool outputs
-                inject_mcp_responses(pr_raw, mcp_batch_responses_pred[idx], type="pred", capability_name=capability_name)
-                if capability_name != "capability_bi_apis" and mcp_batch_responses_gt is not None:
-                    inject_mcp_responses(gt_raw, mcp_batch_responses_gt[idx], type="gt",capability_name=capability_name)
-
-                # Score and store details
-                dialogue_score, dialogue_details = dialogue_scorer.score(
-                    gt_dialogue=gt_raw,
-                    pred_dialogue=pr_raw,
-                    pred_key=PRED_OUTPUT_KEY
-                )
-                dialogue_scores.append(float(dialogue_score))
-
-                domain_out["dialogues"].append({
-                    "uuid": uuid,
-                    "score": float(dialogue_score),
-                    "metadata": {
-                        "capability": capability_name,
-                        "domain": domain,
-                        "policy": {
-                            "dialogue_aggregate": policy.dialogue_aggregate,
-                            "execute_mcp_tools": policy.execute_mcp_tools,
-                        },
+            domain_out["dialogues"].append({
+                "uuid": uuid,
+                "score": float(dialogue_score),
+                "metadata": {
+                    "capability": capability_name,
+                    "domain": domain,
+                    "policy": {
+                        "dialogue_aggregate": policy.dialogue_aggregate,
+                        "execute_mcp_tools": policy.execute_mcp_tools,
                     },
-                    "details": dialogue_details,
-                })
+                },
+                "details": dialogue_details,
+            })
     else:
         # No MCP tools - just score based on predictions as-is
         for idx, (gt_raw, pr_raw) in enumerate(
@@ -561,7 +552,7 @@ def main() -> None:
     ap.add_argument(
         "--mcp-config",
         default=None,
-        help="Override the selected backend configuration YAML; capability 1 ignores HTTP overrides and falls back locally"
+        help="Override the backend's MCP configuration YAML (local or .ce.yaml by default)"
     )
     ap.add_argument(
         "--domains",
@@ -576,7 +567,7 @@ def main() -> None:
         help="Optional path to a PolicyJudge Python file. If omitted, policy judging is disabled.",
     )
     ap.add_argument("--tool-backend", choices=("local", "code-engine"), default="local",
-                    help="Tool environment. Code Engine supports capabilities 2–4; capability 1 logs a fallback to local.")
+                    help="Tool environment (default: local). Code Engine uses VAKRA_CAP1_URL through VAKRA_CAP4_URL.")
     args = ap.parse_args()
     if args.k < 1:
         ap.error("--k must be a positive integer")

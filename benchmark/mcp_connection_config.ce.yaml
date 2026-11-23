@@ -1,6 +1,9 @@
 # Evaluator-only Code Engine endpoints. Use capability app URLs, not the explorer.
-# Capability 1 deliberately falls back to benchmark/mcp_connection_config.yaml.
+# Capability 1 requires the updated session-preserving bridge and backend.
 tasks:
+  1:
+    mode: http
+    server_url: "${VAKRA_CAP1_URL}/mcp/{domain}"
   2:
     mode: http
     server_url: "${VAKRA_CAP2_URL}/mcp/{domain}"
