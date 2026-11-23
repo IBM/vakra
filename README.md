@@ -11,7 +11,12 @@
 </div>
 
 > [!IMPORTANT]
-> 🎉 **VAKRA-Advanced was selected as Task 11 at SemEval 2027.** The shared task evaluates multi-hop, multi-source tool calling in executable environments. [Register for SemEval](https://forms.gle/2MLpxaU1kcD1SbCm7) · [Task website](https://sites.google.com/view/vakrasemeval2027) · [Mailing list](https://groups.google.com/g/vakra-advanced)
+> 🎉 **VAKRA-Advanced was selected as Task 11 at SemEval 2027**, co-located with ACL 2027. The shared task evaluates multi-hop, multi-source tool calling in executable environments.
+>
+> - **Submissions** for leaderboard are accepted exclusively through the SemEval competition currently.
+> - **Test set release** for SemEval is scheduled for January 10, 2027.
+>
+> [Register for SemEval](https://forms.gle/2MLpxaU1kcD1SbCm7) · [Task website](https://sites.google.com/view/vakrasemeval2027) · [Mailing list](https://groups.google.com/g/vakra-advanced)
 
 ---
 
