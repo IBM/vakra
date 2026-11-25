@@ -179,7 +179,7 @@ def test_error_reports_merge_workers_and_survive_resume(tmp_path):
         for domain in ('alpha', 'beta'): write_domain(folder, domain)
     capability = 'capability_dashboard_apis'
     policy = entry.CapabilityPolicy(correctness_judge=FixedJudge(), exactmatch_judge=FixedJudge(),
-                                   groundedness_judge=ErrorGroundedness(k=3))
+                                   groundedness_judge=ErrorGroundedness({'failed_trials': [1, 2]}, k=3))
     output = tmp_path / 'results.json'
     with http_server({'alpha': 'recover', 'beta': 'permanent'}) as (url, calls):
         config = EvaluatorMCPConnectionConfig(mode='http', server_url=url, backend='code-engine')
@@ -187,11 +187,14 @@ def test_error_reports_merge_workers_and_survive_resume(tmp_path):
             config, tool_backend='code-engine', num_domains=2)
         assert result['execution']['status'] == 'completed'
         report = json.loads((tmp_path / 'results.errors.json').read_text())
-        assert report['summary'] == {'error_count': 7, 'ground_truth_tool_call_errors': 3,
+        assert report['summary'] == {'error_count': 11, 'ground_truth_tool_call_errors': 3,
+            'samples_with_errors': 4, 'samples_with_ground_truth_errors': 3, 'samples_with_llm_errors': 4,
             'unresolved_ground_truth_calls': 2, 'recovered_ground_truth_calls': 1,
-            'failed_ground_truth_attempts': 9, 'llm_call_errors': 4}
+            'failed_ground_truth_attempts': 9, 'llm_call_errors': 4, 'failed_llm_call_attempts': 8}
         assert report['domains']['alpha']['samples']['alpha-sample-0']['ground_truth_tool_call_errors'] == 1
         assert report['domains']['beta']['samples']['beta-sample-1']['llm_call_errors'] == 1
+        assert report['domains']['beta']['samples']['beta-sample-1']['failed_llm_call_attempts'] == 2
+        assert report['domains']['beta']['samples']['beta-sample-1']['samples_with_errors'] == 1
         assert report['domains']['alpha']['samples']['alpha-sample-0']['errors'][0]['recovered'] is True
         assert report['domains_without_error_tracking'] == []
         assert calls.count('alpha') == 5

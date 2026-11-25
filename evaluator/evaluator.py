@@ -714,7 +714,10 @@ def evaluate_capability(
     print(f"Ground-truth calls with errors: {error_summary['ground_truth_tool_call_errors']} "
           f"(recovered={error_summary['recovered_ground_truth_calls']}, "
           f"unresolved={error_summary['unresolved_ground_truth_calls']}); "
-          f"LLM errors: {error_summary['llm_call_errors']}")
+          f"LLM calls with errors: {error_summary['llm_call_errors']} "
+          f"(failed attempts={error_summary['failed_llm_call_attempts']}, "
+          f"samples={error_summary['samples_with_llm_errors']})")
+    print(f"Samples affected by any error: {error_summary['samples_with_errors']}")
     print(f"Error report: {error_report_path(out_path)}")
     if error_report['domains_without_error_tracking']:
         print('Historical error tracking unavailable for resumed domains: ' +

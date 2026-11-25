@@ -34,16 +34,27 @@ def error_report_path(output):
 def _counts(records):
     gt = [r for r in records if r['type'] == 'ground_truth_tool_call']
     llm = [r for r in records if r['type'] == 'llm_call']
+    def samples(errors):
+        return {(r.get('domain'), str(r.get('uuid'))) for r in errors}
+    # Groundedness K trials belong to one sample/judge evaluation. Keep every
+    # failed attempt in the report, but count that evaluation only once.
+    llm_calls = {(r.get('domain'), str(r.get('uuid')), r.get('judge')) for r in llm}
     return {'error_count': len(records), 'ground_truth_tool_call_errors': len(gt),
+            'samples_with_errors': len(samples(records)),
+            'samples_with_ground_truth_errors': len(samples(gt)),
+            'samples_with_llm_errors': len(samples(llm)),
             'unresolved_ground_truth_calls': sum(not r['recovered'] for r in gt),
             'recovered_ground_truth_calls': sum(r['recovered'] for r in gt),
             'failed_ground_truth_attempts': sum(r['failed_attempt_count'] for r in gt),
-            'llm_call_errors': len(llm)}
+            'failed_llm_call_attempts': len(llm), 'llm_call_errors': len(llm_calls)}
 
 
 def build_error_report(results, output):
     domains, all_records = {}, []
-    for domain, records in sorted(results.get('evaluation_errors', {}).items()):
+    for domain, raw_records in sorted(results.get('evaluation_errors', {}).items()):
+        # The enclosing domain is authoritative, including for old checkpoints
+        # whose error records did not carry their own domain field.
+        records = [{**record, 'domain': domain} for record in raw_records]
         samples = {}
         for record in records:
             uuid = str(record.get('uuid'))

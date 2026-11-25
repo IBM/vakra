@@ -122,8 +122,9 @@ def test_report_counts_and_legacy_coverage(tmp_path):
     output = tmp_path / 'results.json'
     report = write_error_report(results, output)
     assert report['summary'] == {'error_count': 4, 'ground_truth_tool_call_errors': 2,
+        'samples_with_errors': 2, 'samples_with_ground_truth_errors': 2, 'samples_with_llm_errors': 1,
         'unresolved_ground_truth_calls': 1, 'recovered_ground_truth_calls': 1,
-        'failed_ground_truth_attempts': 6, 'llm_call_errors': 2}
+        'failed_ground_truth_attempts': 6, 'llm_call_errors': 1, 'failed_llm_call_attempts': 2}
     assert report['domains']['alpha']['samples']['a']['error_count'] == 3
     assert report['domains']['alpha']['samples']['b']['error_count'] == 1
     assert report['domains_without_error_tracking'] == ['legacy']
@@ -155,3 +156,49 @@ def test_cap1_chains_only_successful_retry_handles(monkeypatch, labeled, recover
                           'input_value': [42] if recovered else 'source'}]
     assert len(errors) == 1
     assert errors[0]['recovered'] is recovered
+
+
+def test_repeated_trials_are_separate_from_calls_and_affected_samples():
+    rows = [
+        {'type': 'llm_call', 'uuid': 'shared', 'judge': 'GroundednessJudge', 'trial': trial,
+         'message': 'provider failed'} for trial in (1, 2, 3)
+    ]
+    correctness = {'type': 'llm_call', 'uuid': 'shared', 'judge': 'CorrectnessJudge',
+                   'message': 'parse failed'}
+    gt = {'type': 'ground_truth_tool_call', 'uuid': 'shared', 'message': 'tool failed',
+          'recovered': False, 'failed_attempt_count': 4}
+    results = {'domains': {'alpha': {}, 'beta': {}},
+               'evaluation_errors': {'alpha': [*rows, correctness, gt, gt.copy()], 'beta': rows}}
+    original = json.dumps(results)
+    report = build_error_report(results, Path('results.json'))
+    summary = report['summary']
+    assert summary['error_count'] == 9
+    assert summary['failed_llm_call_attempts'] == 7
+    assert summary['llm_call_errors'] == 3  # alpha's two judges plus beta's groundedness
+    assert summary['samples_with_llm_errors'] == 2  # Same UUID, different domains.
+    assert summary['samples_with_ground_truth_errors'] == 1
+    assert summary['samples_with_errors'] == 2  # GT and LLM overlap on alpha/shared.
+    assert report['domains']['alpha']['samples']['shared']['llm_call_errors'] == 2
+    assert report['domains']['alpha']['samples']['shared']['failed_llm_call_attempts'] == 4
+    assert report['domains']['alpha']['samples']['shared']['samples_with_errors'] == 1
+    assert json.dumps(results) == original  # Normalize for reporting without rewriting checkpoints.
+
+
+def test_three_groundedness_trial_failures_affect_one_sample():
+    errors = [{'type': 'llm_call', 'uuid': 'a', 'judge': 'GroundednessJudge',
+               'trial': trial, 'message': 'offline'} for trial in (1, 2, 3)]
+    report = build_error_report({'evaluation_errors': {'alpha': errors}}, Path('results.json'))
+    assert report['summary']['failed_llm_call_attempts'] == 3
+    assert report['summary']['llm_call_errors'] == 1
+    assert report['summary']['samples_with_errors'] == 1
+    assert report['summary']['samples_with_llm_errors'] == 1
+    assert len(report['domains']['alpha']['samples']['a']['errors']) == 3
+
+
+def test_empty_error_report_has_zero_affected_samples():
+    counts = build_error_report({}, Path('results.json'))['summary']
+    assert counts['samples_with_errors'] == 0
+    assert counts['samples_with_ground_truth_errors'] == 0
+    assert counts['samples_with_llm_errors'] == 0
+    assert counts['llm_call_errors'] == 0
+    assert counts['failed_llm_call_attempts'] == 0
