@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 import importlib
 import inspect
@@ -94,6 +94,7 @@ class DomainOutcome:
     scores: list | None = None
     error: str | None = None
     seconds: float = 0
+    errors: list = field(default_factory=list)
 
 
 def domain_worker(job: DomainJob, events, stop) -> None:
@@ -123,7 +124,8 @@ def domain_worker(job: DomainJob, events, stop) -> None:
                 emit({'event': 'stage', 'stage': 'loading'})
                 outcome.data, outcome.scores = asyncio.run(evaluate_domain(
                     job.domain, job.gt_path, job.pred_path, policy, job.mcp_config,
-                    job.capability_name, job.policy_judge_path, progress_callback=emit))
+                    job.capability_name, job.policy_judge_path, progress_callback=emit,
+                    error_records=outcome.errors))
             except BaseException as exc:
                 outcome.error = f'{type(exc).__name__}: {exc}'
                 traceback.print_exc()

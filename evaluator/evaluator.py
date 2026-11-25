@@ -34,6 +34,7 @@ from scorer import (
 from constant import PRED_OUTPUT_KEY, PRED_OUTPUT_SEQUENCE_KEY
 from constant import N_TOOL_CALLS_PER_TURN
 from utils import read_domain_file, pair_dialogues_by_uuid
+from evaluation_errors import llm_error_context, write_error_report, error_report_path
 
 CAPABILITY_MCP_TOOL_MAP={
     "capability_bi_apis": 1,
@@ -165,6 +166,7 @@ async def evaluate_domain(
     capability_name: str,
     policy_judge_path: Optional[str] = None,
     progress_callback: Optional[Callable[[Dict[str, Any]], None]] = None,
+    error_records: Optional[List[Dict[str, Any]]] = None,
 ) -> Tuple[Dict[str, Any], List[float]]:
     """
     Evaluate a single domain (async version).
@@ -172,6 +174,8 @@ async def evaluate_domain(
     Returns:
         Tuple of (domain_out dict, dialogue_scores list)
     """
+    if error_records is None:
+        error_records = []
     # Read data files
     gt_list = read_domain_file(gt_path)
     pred_list = read_domain_file(pred_path) if pred_path.exists() else []
@@ -211,6 +215,19 @@ async def evaluate_domain(
             uuid = str(paired[index][0].get('uuid')) if index is not None else None
             progress_callback({**event, 'stage': stage, 'uuid': uuid})
         return report
+
+    def record_gt_error(event):
+        index = event['dialogue_index']
+        record = {**event, 'capability': capability_name, 'domain': domain,
+                  'uuid': str(paired[index][0].get('uuid')),
+                  'time': datetime.now(timezone.utc).isoformat()}
+        error_records.append(record)
+
+    def score_dialogue(gt_raw, pr_raw):
+        with llm_error_context(error_records, capability=capability_name, domain=domain,
+                               uuid=str(gt_raw.get('uuid'))):
+            return dialogue_scorer.score(gt_dialogue=gt_raw, pred_dialogue=pr_raw,
+                                         pred_key=PRED_OUTPUT_KEY)
 
     # Build scorers per domain
     turn_cfg = TurnScorerConfig(
@@ -274,6 +291,8 @@ async def evaluate_domain(
                 schema_map,
                 is_gt=capability_name == "capability_bi_apis",
                 progress_callback=replay_progress("ground_truth"),
+                gt_retries=3,
+                error_callback=record_gt_error,
             )
 
             if progress_callback:
@@ -290,11 +309,7 @@ async def evaluate_domain(
                     inject_mcp_responses(gt_raw, mcp_batch_responses_gt[idx], type="gt",capability_name=capability_name)
 
                 # Score and store details
-                dialogue_score, dialogue_details = dialogue_scorer.score(
-                    gt_dialogue=gt_raw,
-                    pred_dialogue=pr_raw,
-                    pred_key=PRED_OUTPUT_KEY
-                )
+                dialogue_score, dialogue_details = score_dialogue(gt_raw, pr_raw)
                 dialogue_scores.append(float(dialogue_score))
                 if progress_callback:
                     progress_callback({'event': 'sample_scored', 'stage': 'scoring', 'uuid': uuid,
@@ -320,11 +335,7 @@ async def evaluate_domain(
         ):
             uuid = str(gt_raw.get("uuid"))
 
-            dialogue_score, dialogue_details = dialogue_scorer.score(
-                gt_dialogue=gt_raw,
-                pred_dialogue=pr_raw,
-                pred_key=PRED_OUTPUT_KEY
-            )
+            dialogue_score, dialogue_details = score_dialogue(gt_raw, pr_raw)
             dialogue_scores.append(float(dialogue_score))
             if progress_callback:
                 progress_callback({'event': 'sample_scored', 'stage': 'scoring', 'uuid': uuid,
@@ -440,6 +451,9 @@ def _write_intermediate_results(
         total_samples,
     ))
 
+    # The coordinator owns both files; persist diagnostics with every checkpoint.
+    results['error_report_file'] = str(error_report_path(out_path))
+    write_error_report(results, out_path)
     # Write to disk
     if atomic:
         from domain_runner import atomic_write_json
@@ -466,8 +480,11 @@ def _evaluate_parallel_domains(results, all_dialogue_scores, gt_files, pred_dir,
     failures = results.setdefault("failed_domains", {})
     logs = results.setdefault("domain_logs", {})
     progress = results.setdefault("domain_progress", {})
+    domain_errors = results.setdefault('evaluation_errors', {})
     for domain in selected:
         failures.pop(domain, None)
+        if domain not in results['domains']:
+            domain_errors.pop(domain, None)
         progress[domain] = {"status": "completed" if domain in results["domains"] else "pending"}
     execution = results["execution"] = {
         "mode": "parallel-code-engine", "num_domains": num_domains,
@@ -506,6 +523,7 @@ def _evaluate_parallel_domains(results, all_dialogue_scores, gt_files, pred_dir,
 
     def on_result(outcome):
         domain = outcome.domain
+        domain_errors[domain] = outcome.errors
         logs[domain] = outcome.log_path
         progress[domain].update(status='failed' if outcome.error else 'completed', seconds=outcome.seconds)
         if outcome.error:
@@ -647,8 +665,9 @@ def evaluate_capability(
 
             print(f"\nEvaluating domain: {domain}")
             # Run async evaluation for this domain
-            domain_out, domain_scores = asyncio.run(
-                evaluate_domain(
+            records = []
+            try:
+                domain_out, domain_scores = asyncio.run(evaluate_domain(
                     domain=domain,
                     gt_path=gt_path,
                     pred_path=pred_path,
@@ -656,8 +675,13 @@ def evaluate_capability(
                     mcp_config=mcp_config,
                     capability_name=capability_name,
                     policy_judge_path=policy_judge_path,
-                )
-            )
+                    error_records=records,
+                ))
+            except BaseException:
+                results.setdefault('evaluation_errors', {})[domain] = records
+                _write_intermediate_results(results, all_dialogue_scores, out_path)
+                raise
+            results.setdefault('evaluation_errors', {})[domain] = records
 
             all_dialogue_scores.extend(domain_scores)
             results["domains"][domain] = domain_out
@@ -685,6 +709,16 @@ def evaluate_capability(
     print("Accuracy:", accuracy)
     print(f"Pass@{k} accuracy:", results["summary"]["pass_at_k"])
     print(f"Pass^{k} accuracy:", results["summary"]["pass_power_k"])
+    error_report = write_error_report(results, out_path)
+    error_summary = error_report['summary']
+    print(f"Ground-truth calls with errors: {error_summary['ground_truth_tool_call_errors']} "
+          f"(recovered={error_summary['recovered_ground_truth_calls']}, "
+          f"unresolved={error_summary['unresolved_ground_truth_calls']}); "
+          f"LLM errors: {error_summary['llm_call_errors']}")
+    print(f"Error report: {error_report_path(out_path)}")
+    if error_report['domains_without_error_tracking']:
+        print('Historical error tracking unavailable for resumed domains: ' +
+              ', '.join(error_report['domains_without_error_tracking']))
     print("=========================================================================")
 
     return results

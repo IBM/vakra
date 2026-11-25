@@ -9,6 +9,7 @@ from utils import JudgeInput, JudgeOutput, GroundednessOutput
 from constant import N_TOOL_CALLS_PER_TURN
 from langchain_openai import ChatOpenAI
 from typing import Any, Dict, Optional, Tuple
+from evaluation_errors import record_llm_error
 
 _LABEL_RE = re.compile(r"\b(yes|partial|no|unsure)\b", re.IGNORECASE)
 _CONCLUSION_RE = re.compile(r"<conclusion>\s*(.*?)\s*</conclusion>", re.IGNORECASE | re.DOTALL)
@@ -123,12 +124,15 @@ class GroundednessJudge(LLMJudge):
             doc=tr,
             response=pr)
         trials = []
-        for _ in range(self.k):
+        for trial in range(self.k):
+            phase = 'request'
             try:
                 result = self.invoke(prompt)
+                phase = 'response_parse'
                 parsed = self._parse_response(result)
                 trials.append(JudgeOutput(score=parsed["score"], explanation=parsed["explanation"]))
             except Exception as e:
+                record_llm_error(self, e, phase=phase, trial=trial + 1)
                 trials.append(JudgeOutput(score=0.0, explanation=f"Judge Error {e}."))
         return GroundednessOutput(
             score=trials[0].score,
@@ -343,11 +347,14 @@ class CorrectnessJudge(LLMJudge):
             question=query,
             answer=gt,
             prediction=pr)
+        phase = 'request'
         try:
-            result=self.invoke(prompt)            
+            result=self.invoke(prompt)
+            phase = 'response_parse'
             result_parsed= self._parse_response(result)
             return JudgeOutput(score=result_parsed["score"], explanation=result_parsed["explanation"])
         except Exception as e:
+            record_llm_error(self, e, phase=phase)
             return JudgeOutput(score=0.0, explanation=f"Judge Error {e}.")
 
 class ExactMatchJudge(LLMJudge):

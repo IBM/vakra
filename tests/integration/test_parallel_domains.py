@@ -13,13 +13,13 @@ import pytest
 import uvicorn
 from mcp.server.lowlevel import Server
 from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
-from mcp.types import Tool, TextContent
+from mcp.types import Tool, TextContent, CallToolResult
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / 'evaluator'), str(ROOT / 'tests' / 'fixtures')]
 import evaluator as entry
 from tool_backends import EvaluatorMCPConnectionConfig
-from parallel_judges import FixedJudge, FixedGroundedness
+from parallel_judges import FixedJudge, FixedGroundedness, ErrorGroundedness
 
 
 def make_policy():
@@ -42,7 +42,7 @@ def write_domain(folder, domain, turns=1):
 
 
 @contextmanager
-def http_server():
+def http_server(failure_policy=None):
     current = ContextVar('domain', default='')
     calls = []
     server = Server('parallel-domain-test')
@@ -55,6 +55,10 @@ def http_server():
         domain = current.get()
         assert arguments['value'] == domain
         calls.append(domain)
+        policy = (failure_policy or {}).get(domain)
+        count = calls.count(domain)
+        if (policy == 'recover' and count == 3) or (policy == 'permanent' and count >= 3):
+            return CallToolResult(isError=True, content=[TextContent(type='text', text='temporary GT error')])
         await asyncio.sleep(.02)
         return [TextContent(type='text', text=json.dumps({'value': arguments['value']}))]
     manager = StreamableHTTPSessionManager(app=server, stateless=True, json_response=True)
@@ -166,3 +170,35 @@ def test_parallel_metrics_failure_checkpoints_logs_and_resume(tmp_path, capabili
     assert '[alpha]' in text and '[beta]' in text
     assert 'INCOMPLETE' in text
     assert 'Skipping already-completed domain: alpha' in text
+
+
+def test_error_reports_merge_workers_and_survive_resume(tmp_path):
+    gt, pred = tmp_path / 'gt', tmp_path / 'pred'
+    gt.mkdir(); pred.mkdir()
+    for folder in (gt, pred):
+        for domain in ('alpha', 'beta'): write_domain(folder, domain)
+    capability = 'capability_dashboard_apis'
+    policy = entry.CapabilityPolicy(correctness_judge=FixedJudge(), exactmatch_judge=FixedJudge(),
+                                   groundedness_judge=ErrorGroundedness(k=3))
+    output = tmp_path / 'results.json'
+    with http_server({'alpha': 'recover', 'beta': 'permanent'}) as (url, calls):
+        config = EvaluatorMCPConnectionConfig(mode='http', server_url=url, backend='code-engine')
+        result = entry.evaluate_capability(capability, gt, pred, output, {capability: policy},
+            config, tool_backend='code-engine', num_domains=2)
+        assert result['execution']['status'] == 'completed'
+        report = json.loads((tmp_path / 'results.errors.json').read_text())
+        assert report['summary'] == {'error_count': 7, 'ground_truth_tool_call_errors': 3,
+            'unresolved_ground_truth_calls': 2, 'recovered_ground_truth_calls': 1,
+            'failed_ground_truth_attempts': 9, 'llm_call_errors': 4}
+        assert report['domains']['alpha']['samples']['alpha-sample-0']['ground_truth_tool_call_errors'] == 1
+        assert report['domains']['beta']['samples']['beta-sample-1']['llm_call_errors'] == 1
+        assert report['domains']['alpha']['samples']['alpha-sample-0']['errors'][0]['recovered'] is True
+        assert report['domains_without_error_tracking'] == []
+        assert calls.count('alpha') == 5
+        assert calls.count('beta') == 10
+        calls.clear()
+        resumed = entry.evaluate_capability(capability, gt, pred, output, {capability: policy},
+            config, tool_backend='code-engine', num_domains=1)
+        assert calls == []
+        assert json.loads((tmp_path / 'results.errors.json').read_text()) == report
+        assert resumed['evaluation_errors'] == result['evaluation_errors']

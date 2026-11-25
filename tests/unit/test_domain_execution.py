@@ -98,3 +98,44 @@ def test_interrupt_checkpoints_completed_domains(tmp_path, monkeypatch):
     assert result['execution']['pending_domains'] == ['beta']
     assert result['domain_progress']['beta']['status'] == 'interrupted'
     assert set(result['domains']) == {'alpha'}
+
+
+def test_failed_worker_errors_are_checkpointed(tmp_path, monkeypatch):
+    gt = tmp_path / 'gt'
+    gt.mkdir()
+    (gt / 'alpha.json').write_text('[]')
+    error = {'type': 'ground_truth_tool_call', 'domain': 'alpha', 'uuid': 'sample-1',
+             'tool': 'test', 'message': 'offline', 'recovered': False,
+             'attempt_count': 4, 'failed_attempt_count': 4}
+    def fail(jobs, limit, on_event, on_result):
+        on_result(domain_runner.DomainOutcome('alpha', str(jobs[0].log_path),
+                                             error='worker failed later', errors=[error]))
+    monkeypatch.setattr(domain_runner, 'run_domains', fail)
+    config = EvaluatorMCPConnectionConfig(mode='http', server_url='http://test/mcp/{domain}', backend='code-engine')
+    output = tmp_path / 'results.json'
+    result = entry.evaluate_capability('capability_dashboard_apis', gt, gt, output,
+        {'capability_dashboard_apis': policy()}, config, tool_backend='code-engine')
+    report = json.loads((tmp_path / 'results.errors.json').read_text())
+    assert result['execution']['status'] == 'partial'
+    assert result['evaluation_errors']['alpha'] == [error]
+    assert report['summary']['unresolved_ground_truth_calls'] == 1
+    assert report['domains']['alpha']['samples']['sample-1']['errors'] == [error]
+
+
+def test_local_exception_preserves_collected_errors(tmp_path, monkeypatch):
+    gt = tmp_path / 'gt'
+    gt.mkdir()
+    (gt / 'alpha.json').write_text('[]')
+    error = {'type': 'llm_call', 'domain': 'alpha', 'uuid': 'sample-1',
+             'judge': 'GroundednessJudge', 'message': 'provider offline'}
+    async def fail(**kwargs):
+        kwargs['error_records'].append(error)
+        raise RuntimeError('domain failed later')
+    monkeypatch.setattr(entry, 'evaluate_domain', fail)
+    output = tmp_path / 'results.json'
+    with pytest.raises(RuntimeError, match='domain failed later'):
+        entry.evaluate_capability('capability_dashboard_apis', gt, gt, output,
+            {'capability_dashboard_apis': policy()})
+    report = json.loads((tmp_path / 'results.errors.json').read_text())
+    assert report['summary']['llm_call_errors'] == 1
+    assert report['domains']['alpha']['samples']['sample-1']['errors'] == [error]

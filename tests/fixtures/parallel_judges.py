@@ -2,6 +2,19 @@
 import os
 import time
 from utils import JudgeOutput, GroundednessOutput
+from judge import GroundednessJudge
+
+
+class ErrorGroundedness(GroundednessJudge):
+    """One provider failure in each group of three trials; no network client."""
+    def _build_llm(self, config):
+        return None
+
+    def invoke(self, prompt):
+        self.calls = getattr(self, 'calls', 0) + 1
+        if self.calls % 3 == 1:
+            raise RuntimeError('judge unavailable')
+        return 'yes'
 
 
 class FixedJudge:

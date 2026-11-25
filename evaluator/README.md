@@ -320,3 +320,41 @@ Rerunning the command skips completed domains and retries failed or unfinished
 ones with new log files. Concurrency can change when resuming; backend, endpoint
 and K compatibility checks still apply. Ctrl-C or SIGTERM stops active workers
 and checkpoints completed results before exiting.
+
+## Ground-truth retries and error report
+
+Ground-truth tool replay retries failed calls **three additional times** (four
+attempts total), with 1, 2 and 4 seconds between attempts. This applies to local
+and Code Engine execution for all capabilities. Prediction calls retain one
+attempt. Retry detection includes raised exceptions, either MCP error flag, and
+explicit error text/JSON payloads. Cancellation interrupts retries immediately.
+Capability 1's reference resolution uses the final successful retry response.
+
+Every evaluation writes a separate `<output_stem>.errors.json` beside its results.
+For example, `--output results.json` produces `results.errors.json`. The final
+console summary prints ground-truth and LLM error counts and the report path.
+The coordinator atomically checkpoints the report after each domain, including
+collected errors if the domain fails. Workers do not write the shared report.
+
+The report groups records under `domains.<domain>.samples.<uuid>.errors`, with
+counts at sample, domain and overall levels. Two record types are collected:
+
+- `ground_truth_tool_call`: tool name, turn/tool indices, attempt count, failed
+  attempt count, each attempt's error message, and `recovered` status.
+- `llm_call`: correctness/groundedness judge name, request or response-parsing
+  phase, error message, and groundedness trial number when applicable.
+
+`ground_truth_tool_call_errors` counts affected tool calls, including recovered
+calls. `failed_ground_truth_attempts` counts their failed attempts separately;
+`unresolved_ground_truth_calls` and `recovered_ground_truth_calls` distinguish the
+outcomes. `llm_call_errors` counts failed judge invocations/trials, including
+invalid responses; a K=3 sample may therefore have three groundedness errors.
+SDK-internal retries are not counted separately. Normal negative judgments are
+not errors. The existing scoring behavior is preserved for unresolved calls.
+
+Results retain diagnostic records in `evaluation_errors` so resume can preserve
+completed domains' reports. Retried unfinished domains replace their prior
+records. `domains_without_error_tracking` lists completed domains resumed from
+older results that did not record diagnostics; their historical errors cannot
+be reconstructed as zero errors. Existing active workers must finish or be
+restarted before these changes apply to their evaluation.
