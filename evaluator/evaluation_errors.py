@@ -34,12 +34,19 @@ def error_report_path(output):
 def _counts(records):
     gt = [r for r in records if r['type'] == 'ground_truth_tool_call']
     llm = [r for r in records if r['type'] == 'llm_call']
+    messages = set()
+    for record in records:
+        for error in [record, *(record.get('attempt_errors') or [])]:
+            message = error.get('message')
+            if isinstance(message, str) and message.strip():
+                messages.add(message)
     def samples(errors):
         return {(r.get('domain'), str(r.get('uuid'))) for r in errors}
     # Groundedness K trials belong to one sample/judge evaluation. Keep every
     # failed attempt in the report, but count that evaluation only once.
     llm_calls = {(r.get('domain'), str(r.get('uuid')), r.get('judge')) for r in llm}
-    return {'error_count': len(records), 'ground_truth_tool_call_errors': len(gt),
+    return {'error_count': len(records), 'error_messages': sorted(messages),
+            'ground_truth_tool_call_errors': len(gt),
             'samples_with_errors': len(samples(records)),
             'samples_with_ground_truth_errors': len(samples(gt)),
             'samples_with_llm_errors': len(samples(llm)),

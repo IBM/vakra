@@ -130,6 +130,10 @@ the corresponding per-type counts. Their sum can exceed `samples_with_errors`
 when the same sample has both types. Counts appear in overall, domain and sample
 summaries; the original detailed trial records remain available. `error_count`
 continues to count raw error records rather than unique samples.
+`error_messages` lists unique, nonempty error messages in sorted order. It
+includes both ground-truth and LLM errors, including messages from earlier GT
+retry attempts. This list appears in overall, domain and sample summaries;
+deduplication does not remove detailed records or change error counts.
 SDK-internal retries are not counted separately. Normal negative judgments are
 not errors. The existing scoring behavior is preserved for unresolved calls.
 Resuming from checkpoints with retained error records recomputes these counts.

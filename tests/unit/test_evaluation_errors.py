@@ -122,6 +122,7 @@ def test_report_counts_and_legacy_coverage(tmp_path):
     output = tmp_path / 'results.json'
     report = write_error_report(results, output)
     assert report['summary'] == {'error_count': 4, 'ground_truth_tool_call_errors': 2,
+        'error_messages': ['invalid response', 'offline', 'timeout'],
         'samples_with_errors': 2, 'samples_with_ground_truth_errors': 2, 'samples_with_llm_errors': 1,
         'unresolved_ground_truth_calls': 1, 'recovered_ground_truth_calls': 1,
         'failed_ground_truth_attempts': 6, 'llm_call_errors': 1, 'failed_llm_call_attempts': 2}
@@ -202,3 +203,20 @@ def test_empty_error_report_has_zero_affected_samples():
     assert counts['samples_with_llm_errors'] == 0
     assert counts['llm_call_errors'] == 0
     assert counts['failed_llm_call_attempts'] == 0
+
+
+def test_unique_messages_include_retry_history_and_deduplicate_across_domains():
+    gt = {'type': 'ground_truth_tool_call', 'uuid': 'a', 'message': 'last failure',
+          'recovered': True, 'failed_attempt_count': 3, 'attempt_errors': [
+              {'attempt': 1, 'message': 'first failure'},
+              {'attempt': 2, 'message': 'last failure'},
+              {'attempt': 3, 'message': 'last failure'}]}
+    llm = {'type': 'llm_call', 'uuid': 'b', 'judge': 'GroundednessJudge', 'message': 'provider failed'}
+    results = {'evaluation_errors': {'beta': [llm, llm.copy()], 'alpha': [gt, llm.copy()]}}
+    report = build_error_report(results, Path('results.json'))
+    assert report['summary']['error_messages'] == ['first failure', 'last failure', 'provider failed']
+    assert report['domains']['alpha']['samples']['a']['error_messages'] == ['first failure', 'last failure']
+    assert report['domains']['beta']['error_messages'] == ['provider failed']
+    assert report['summary']['failed_llm_call_attempts'] == 3
+    assert len(report['domains']['beta']['samples']['b']['errors']) == 2
+    assert build_error_report({}, Path('results.json'))['summary']['error_messages'] == []

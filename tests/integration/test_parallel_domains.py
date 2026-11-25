@@ -188,6 +188,7 @@ def test_error_reports_merge_workers_and_survive_resume(tmp_path):
         assert result['execution']['status'] == 'completed'
         report = json.loads((tmp_path / 'results.errors.json').read_text())
         assert report['summary'] == {'error_count': 11, 'ground_truth_tool_call_errors': 3,
+            'error_messages': ['RuntimeError: judge unavailable', 'temporary GT error'],
             'samples_with_errors': 4, 'samples_with_ground_truth_errors': 3, 'samples_with_llm_errors': 4,
             'unresolved_ground_truth_calls': 2, 'recovered_ground_truth_calls': 1,
             'failed_ground_truth_attempts': 9, 'llm_call_errors': 4, 'failed_llm_call_attempts': 8}
