@@ -164,7 +164,7 @@ def test_cli_records_local_backend_after_fallback(evaluator, monkeypatch, tmp_pa
 @pytest.mark.parametrize('previous', [None, {'backend': 'local', 'mode': 'stdio', 'server_url': None}])
 def test_resume_rejects_mixed_backends(evaluator, tmp_path, previous):
     (tmp_path / 'domain.json').write_text('[]')
-    results = {'domains': {}, 'groundedness_k': 1, 'metrics_version': 1}
+    results = {'domains': {}, 'groundedness_k': 1, 'metrics_version': evaluator.METRICS_VERSION}
     if previous is not None: results['tool_connection'] = previous
     output = tmp_path / 'results.txt'
     output.write_text(json.dumps(results))

@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "evaluator"))
 from judge import GroundednessJudge, LLMJudge
 from utils import JudgeInput, JudgeOutput
 from scorer import TurnScorer, TurnScorerConfig
-from evaluator import _pass_metrics, _write_intermediate_results, evaluate_capability, CapabilityPolicy
+from evaluator import _pass_metrics, _write_intermediate_results, evaluate_capability, CapabilityPolicy, METRICS_VERSION
 
 
 @pytest.fixture
@@ -67,7 +67,7 @@ def test_scoring_gates(monkeypatch, inp, exact, correct, expected_calls):
 def test_summary_and_resume(tmp_path):
     dialogues = [{"score": 0, "details": {"pass_at_k": 1, "pass_power_k": 0}}]
     assert _pass_metrics(dialogues, 2) == {"pass_at_k": .5, "pass_power_k": 0}
-    results = {"groundedness_k": 3, "metrics_version": 1, "domains": {"test": {
+    results = {"groundedness_k": 3, "metrics_version": METRICS_VERSION, "domains": {"test": {
         "n_paired": 1, "missing_prediction_uuids": ["missing"], "extra_prediction_uuids": [],
         "summary": {"num_samples": 2}, "dialogues": dialogues,
     }}}

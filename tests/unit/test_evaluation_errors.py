@@ -125,7 +125,8 @@ def test_report_counts_and_legacy_coverage(tmp_path):
         'error_messages': ['invalid response', 'offline', 'timeout'],
         'samples_with_errors': 2, 'samples_with_ground_truth_errors': 2, 'samples_with_llm_errors': 1,
         'unresolved_ground_truth_calls': 1, 'recovered_ground_truth_calls': 1,
-        'failed_ground_truth_attempts': 6, 'llm_call_errors': 1, 'failed_llm_call_attempts': 2}
+        'failed_ground_truth_attempts': 6, 'llm_call_errors': 1, 'failed_llm_call_attempts': 2,
+        'resolved_llm_errors': 0, 'resolved_llm_call_attempts': 0, 'resolved_error_messages': []}
     assert report['domains']['alpha']['samples']['a']['error_count'] == 3
     assert report['domains']['alpha']['samples']['b']['error_count'] == 1
     assert report['domains_without_error_tracking'] == ['legacy']
@@ -220,3 +221,32 @@ def test_unique_messages_include_retry_history_and_deduplicate_across_domains():
     assert report['summary']['failed_llm_call_attempts'] == 3
     assert len(report['domains']['beta']['samples']['b']['errors']) == 2
     assert build_error_report({}, Path('results.json'))['summary']['error_messages'] == []
+
+
+def test_resolved_and_unresolved_messages_are_reported_separately():
+    records = [
+        {'type': 'llm_call', 'uuid': 'a', 'judge': 'GroundednessJudge', 'resolved': True,
+         'message': 'token limit error'},
+        {'type': 'llm_call', 'uuid': 'a', 'judge': 'GroundednessJudge', 'resolved': True,
+         'message': 'token limit error'},
+        {'type': 'llm_call', 'uuid': 'a', 'judge': 'GroundednessJudge', 'message': 'provider offline'},
+        {'type': 'ground_truth_tool_call', 'uuid': 'b', 'message': 'tool unavailable',
+         'recovered': False, 'failed_attempt_count': 4},
+    ]
+    report = build_error_report({'evaluation_errors': {'alpha': records}}, Path('results.json'))
+    assert report['summary']['resolved_error_messages'] == ['token limit error']
+    assert report['summary']['error_messages'] == ['provider offline', 'tool unavailable']
+    assert report['domains']['alpha']['samples']['a']['resolved_error_messages'] == ['token limit error']
+    assert report['domains']['alpha']['samples']['a']['error_messages'] == ['provider offline']
+    assert report['domains']['alpha']['samples']['b']['resolved_error_messages'] == []
+    assert report['summary']['failed_llm_call_attempts'] == 3
+    assert list(report['summary'])[-1] == 'error_messages'
+    assert len(report['domains']['alpha']['samples']['a']['errors']) == 3
+
+
+def test_unresolved_message_is_not_hidden_when_another_sample_resolved_it():
+    records = [{'type': 'llm_call', 'uuid': uuid, 'judge': 'GroundednessJudge',
+                'message': 'same error', 'resolved': resolved} for uuid,resolved in [('a', True), ('b', False)]]
+    counts = build_error_report({'evaluation_errors': {'alpha': records}}, Path('results.json'))['summary']
+    assert counts['error_messages'] == counts['resolved_error_messages'] == ['same error']
+    assert counts['samples_with_errors'] == 1

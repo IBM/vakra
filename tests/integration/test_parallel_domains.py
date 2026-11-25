@@ -191,7 +191,8 @@ def test_error_reports_merge_workers_and_survive_resume(tmp_path):
             'error_messages': ['RuntimeError: judge unavailable', 'temporary GT error'],
             'samples_with_errors': 4, 'samples_with_ground_truth_errors': 3, 'samples_with_llm_errors': 4,
             'unresolved_ground_truth_calls': 2, 'recovered_ground_truth_calls': 1,
-            'failed_ground_truth_attempts': 9, 'llm_call_errors': 4, 'failed_llm_call_attempts': 8}
+            'failed_ground_truth_attempts': 9, 'llm_call_errors': 4, 'failed_llm_call_attempts': 8,
+            'resolved_llm_errors': 0, 'resolved_llm_call_attempts': 0, 'resolved_error_messages': []}
         assert report['domains']['alpha']['samples']['alpha-sample-0']['ground_truth_tool_call_errors'] == 1
         assert report['domains']['beta']['samples']['beta-sample-1']['llm_call_errors'] == 1
         assert report['domains']['beta']['samples']['beta-sample-1']['failed_llm_call_attempts'] == 2
@@ -206,3 +207,43 @@ def test_error_reports_merge_workers_and_survive_resume(tmp_path):
         assert calls == []
         assert json.loads((tmp_path / 'results.errors.json').read_text()) == report
         assert resumed['evaluation_errors'] == result['evaluation_errors']
+
+
+def test_token_limit_resolution_reaches_worker_reports_and_resume(tmp_path):
+    gt, pred = tmp_path / 'gt', tmp_path / 'pred'
+    gt.mkdir(); pred.mkdir()
+    for folder in (gt, pred): write_domain(folder, 'alpha')
+    capability = 'capability_dashboard_apis'
+    policy = entry.CapabilityPolicy(correctness_judge=FixedJudge(), exactmatch_judge=FixedJudge(),
+        groundedness_judge=ErrorGroundedness({'failed_trials': [1, 2, 3],
+            'failure_message': 'max_tokens must be at least 1, got -19171.'}, k=3))
+    output = tmp_path / 'results.json'
+    with http_server() as (url, calls):
+        config = EvaluatorMCPConnectionConfig(mode='http', server_url=url, backend='code-engine')
+        results = entry.evaluate_capability(capability, gt, pred, output, {capability: policy},
+            config, tool_backend='code-engine', num_domains=2)
+        assert results['metrics_version'] == entry.METRICS_VERSION == 2
+        assert results['summary']['mean_dialogue_score'] == 1
+        assert results['summary']['pass_at_k'] == results['summary']['pass_power_k'] == 1
+        for dialogue in results['domains']['alpha']['dialogues']:
+            metadata = dialogue['details']['per_turn'][0]['metadata']
+            assert metadata['groundedness_score'] == 1
+            assert metadata['original_groundedness_score'] == 0
+        report = json.loads((tmp_path / 'results.errors.json').read_text())
+        assert report['summary']['samples_with_errors'] == 0
+        assert report['summary']['samples_with_llm_errors'] == 0
+        assert report['summary']['llm_call_errors'] == 0
+        assert report['summary']['resolved_llm_errors'] == 2
+        assert report['summary']['resolved_llm_call_attempts'] == 6
+        assert report['summary']['failed_llm_call_attempts'] == 6
+        assert report['summary']['error_messages'] == []
+        assert report['summary']['resolved_error_messages'] == [
+            'RuntimeError: max_tokens must be at least 1, got -19171.']
+        for sample in report['domains']['alpha']['samples'].values():
+            assert len(sample['errors']) == 3
+            assert all(error['resolved'] for error in sample['errors'])
+        calls.clear()
+        entry.evaluate_capability(capability, gt, pred, output, {capability: policy},
+            config, tool_backend='code-engine', num_domains=1)
+        assert calls == []
+        assert json.loads((tmp_path / 'results.errors.json').read_text()) == report

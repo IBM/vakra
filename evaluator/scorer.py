@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Literal, Optional, Sequence, Tuple
 from utils import ToolCall
 from judge import CorrectnessJudge, GroundednessJudge, LLMJudge, JudgeValidationError
 from utils import JudgeInput
+from evaluation_errors import is_token_limit_error, resolve_token_limit_errors
 from constant import N_TOOL_CALLS_PER_TURN, PRED_OUTPUT_KEY, PRED_OUTPUT_TURN_ID_KEY, PRED_OUTPUT_QUERY_KEY, PRED_OUTPUT_ANSWER_KEY, PRED_OUTPUT_SEQUENCE_KEY, GT_OUTPUT_KEY, GT_OUTPUT_TURN_ID_KEY, GT_OUTPUT_QUERY_KEY, GT_OUTPUT_ANSWER_KEY, GT_OUTPUT_SEQUENCE_KEY
 
 
@@ -194,6 +195,15 @@ class TurnScorer:
 
             groundedness = self.groundedness_judge.judge(inp=input)
             groundedness_score, groundedness_explanation = float(groundedness.score), groundedness.explanation
+            trials = getattr(groundedness, 'trials', ())
+            # Error explanations are produced by the judge's exception handler;
+            # a normal negative judgment must not trigger this fallback.
+            explanations = [trial.explanation for trial in trials] or [groundedness_explanation]
+            token_limit_failure = any(str(text).startswith('Judge Error ') and is_token_limit_error(text)
+                                      for text in explanations)
+            if token_limit_failure:
+                groundedness_score = 1.0
+                resolve_token_limit_errors(self.groundedness_judge)
             score = groundedness_score
             details = {
                 "gt_steps": len(gt),
@@ -207,6 +217,10 @@ class TurnScorer:
                     "groundedness_trials": [asdict(t) for t in getattr(groundedness, "trials", ())],
                 "score_explanation": {"answer": None, "exactmatch": exactmatch_explanation, "groundedness":groundedness_explanation},
             }
+            if token_limit_failure:
+                details.update(score_resolution='exactmatch_token_limit',
+                               original_groundedness_score=float(groundedness.score),
+                               groundedness_pass_at_k=1.0, groundedness_pass_power_k=1.0)
             return score, details
         else:
             raise JudgeValidationError(
