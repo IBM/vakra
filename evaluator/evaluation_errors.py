@@ -45,7 +45,7 @@ def _counts(records):
     # Groundedness K trials belong to one sample/judge evaluation. Keep every
     # failed attempt in the report, but count that evaluation only once.
     llm_calls = {(r.get('domain'), str(r.get('uuid')), r.get('judge')) for r in llm}
-    return {'error_count': len(records), 'error_messages': sorted(messages),
+    return {'error_count': len(records),
             'ground_truth_tool_call_errors': len(gt),
             'samples_with_errors': len(samples(records)),
             'samples_with_ground_truth_errors': len(samples(gt)),
@@ -53,7 +53,8 @@ def _counts(records):
             'unresolved_ground_truth_calls': sum(not r['recovered'] for r in gt),
             'recovered_ground_truth_calls': sum(r['recovered'] for r in gt),
             'failed_ground_truth_attempts': sum(r['failed_attempt_count'] for r in gt),
-            'failed_llm_call_attempts': len(llm), 'llm_call_errors': len(llm_calls)}
+            'failed_llm_call_attempts': len(llm), 'llm_call_errors': len(llm_calls),
+            'error_messages': sorted(messages)}
 
 
 def build_error_report(results, output):
