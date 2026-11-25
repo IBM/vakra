@@ -13,7 +13,7 @@ class ErrorGroundedness(GroundednessJudge):
     def invoke(self, prompt):
         self.calls = getattr(self, 'calls', 0) + 1
         if (self.calls - 1) % 3 + 1 in self.model_config.get('failed_trials', [1]):
-            raise RuntimeError('judge unavailable')
+            raise RuntimeError(self.model_config.get('failure_message', 'judge unavailable'))
         return 'yes'
 
 

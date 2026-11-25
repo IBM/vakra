@@ -42,6 +42,7 @@ CAPABILITY_MCP_TOOL_MAP={
     "capability_multihop_reasoning": 3,
     "capability_multiturn": 4,
 }
+METRICS_VERSION = 2
 
 # -----------------------------
 # Capability policy / registry
@@ -608,7 +609,7 @@ def evaluate_capability(
     existing_results = _load_existing_results(out_path)
     k = policy.groundedness_judge.k
     if existing_results and (existing_results.get("groundedness_k") != k
-                             or existing_results.get("metrics_version") != 1):
+                             or existing_results.get("metrics_version") != METRICS_VERSION):
         raise ValueError("Existing results use different K or metric schema; choose a new --output file.")
     connection_identity = {
         "backend": tool_backend,
@@ -630,7 +631,7 @@ def evaluate_capability(
     else:
         results: Dict[str, Any] = {
             "groundedness_k": k,
-            "metrics_version": 1,
+            "metrics_version": METRICS_VERSION,
             "capability_name": capability_name,
             "tool_connection": connection_identity,
             "groundtruth_dir": str(gt_dir),
@@ -716,7 +717,8 @@ def evaluate_capability(
           f"unresolved={error_summary['unresolved_ground_truth_calls']}); "
           f"LLM calls with errors: {error_summary['llm_call_errors']} "
           f"(failed attempts={error_summary['failed_llm_call_attempts']}, "
-          f"samples={error_summary['samples_with_llm_errors']})")
+          f"samples={error_summary['samples_with_llm_errors']}, "
+          f"resolved={error_summary['resolved_llm_errors']})")
     print(f"Samples affected by any error: {error_summary['samples_with_errors']}")
     print(f"Error report: {error_report_path(out_path)}")
     if error_report['domains_without_error_tracking']:

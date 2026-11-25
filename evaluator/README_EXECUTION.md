@@ -130,10 +130,13 @@ the corresponding per-type counts. Their sum can exceed `samples_with_errors`
 when the same sample has both types. Counts appear in overall, domain and sample
 summaries; the original detailed trial records remain available. `error_count`
 continues to count raw error records rather than unique samples.
-`error_messages` lists unique, nonempty error messages in sorted order. It
-includes both ground-truth and LLM errors, including messages from earlier GT
-retry attempts. This list appears in overall, domain and sample summaries;
-deduplication does not remove detailed records or change error counts.
+`error_messages` lists unique, nonempty messages from ground-truth and unresolved
+LLM errors in sorted order, including messages from earlier GT retry attempts.
+`resolved_error_messages` separately lists messages from resolved LLM records.
+Both lists appear in overall, domain and sample summaries; deduplication does
+not remove detailed records or change error counts. If the same message occurs
+in resolved and unresolved records, it appears in both lists so the unresolved
+failure remains visible. `error_messages` remains the final summary field.
 SDK-internal retries are not counted separately. Normal negative judgments are
 not errors. The existing scoring behavior is preserved for unresolved calls.
 Resuming from checkpoints with retained error records recomputes these counts.
@@ -144,3 +147,33 @@ records. `domains_without_error_tracking` lists completed domains resumed from
 older results that did not record diagnostics; their historical errors cannot
 be reconstructed as zero errors. Existing active workers must finish or be
 restarted before these changes apply to their evaluation.
+
+### Exact-match fallback for token-limit errors
+
+When `exactmatch_score` is `1.0` and groundedness judging fails with
+`max_tokens must be at least 1`, the evaluator sets `groundedness_score` to `1.0`
+using the exact-match result. The existing scoring flow then calculates the
+dialogue score. Pass@K and Pass^K also receive `1.0` for this
+deterministic fallback. Other provider errors and normal negative judgments do
+not trigger it; policy-adherence failures still take precedence.
+
+Turn metadata records `score_resolution: exactmatch_token_limit` and the original
+groundedness score. Original trial scores/explanations are retained. Matching
+error records remain in the error report with `resolved: true` and a resolution
+reason, including the original error message.
+
+Resolved records do not contribute to `samples_with_errors` or
+`samples_with_llm_errors`. A sample with any other unresolved LLM error or GT
+error still contributes to the appropriate counts. `llm_call_errors` now counts
+sample/judge groups with unresolved failures. `resolved_llm_errors` counts groups
+whose recorded failures are all resolved; these two group counts are disjoint.
+`resolved_llm_call_attempts` counts individual resolved attempts, including a
+resolved attempt in an otherwise unresolved group. `failed_llm_call_attempts`
+and `error_count` retain all original failures. Resolved messages are listed in
+`resolved_error_messages` instead of contributing to `error_messages`; the latter
+remains the final summary field.
+
+This changes the scoring policy to `metrics_version: 2`. Results from version 1
+cannot be resumed under this policy; choose a fresh `--output` file (or a fresh
+batch output directory) to avoid mixing scoring versions. These changes do not
+rewrite previously saved scores automatically.
