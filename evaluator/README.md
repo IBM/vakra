@@ -224,3 +224,13 @@ evaluator/
 - [`setup.md`](/vakra/setup.md)
 - [`benchmark/mcp_connection_config.yaml`](/vakra/benchmark/mcp_connection_config.yaml)
 - [`evaluator/evaluator.py`](/vakra/evaluator/evaluator.py)
+
+## Groundedness K
+
+The evaluator defaults to **K=3**, so runs without `--k` report Pass@3 and Pass^3.
+Use `--k 1` for the previous single-judgment behavior, or another positive integer
+for a different number of groundedness judgments. The judge constructor and
+default capability registry also use K=3.
+
+Existing results produced with K=1 cannot be resumed as K=3. Use a new `--output`
+file for the new default, or pass `--k 1` to resume a compatible K=1 run.
