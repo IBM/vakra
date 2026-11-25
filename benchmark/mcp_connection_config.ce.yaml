@@ -1,0 +1,12 @@
+# Evaluator-only Code Engine endpoints. Use capability app URLs, not the explorer.
+# Capability 1 deliberately falls back to benchmark/mcp_connection_config.yaml.
+tasks:
+  2:
+    mode: http
+    server_url: "${VAKRA_CAP2_URL}/mcp/{domain}"
+  3:
+    mode: http
+    server_url: "${VAKRA_CAP3_URL}/mcp/{domain}"
+  4:
+    mode: http
+    server_url: "${VAKRA_CAP4_URL}/mcp/{domain}"

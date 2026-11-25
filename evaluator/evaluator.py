@@ -7,11 +7,14 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, List
 from tqdm import tqdm
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).resolve().parents[1] / ".env", override=False)
 
 from judge import CorrectnessJudge, GroundednessJudge, ExactMatchJudge
-from benchmark.mcp_client import (
+from tool_backends import (
     MCPConnectionConfig,
-    load_mcp_config,
+    select_evaluator_mcp_config,
     create_client_and_connect,
 )
 from mcp_tools import (
@@ -229,7 +232,7 @@ async def evaluate_domain(
         async with create_client_and_connect(mcp_config, domain) as session:
             # Get schema from tools
             tools_result = await session.list_tools()
-            schema_map = {tool.name: tool.input_schema for tool in tools_result.tools}
+            schema_map = {tool.name: getattr(tool, "input_schema", None) or getattr(tool, "inputSchema", {}) for tool in tools_result.tools}
 
             # Batch execute tools
             batch_tools_pred = [extract_toolcalls_for_mcp(pr, limit_last_n=N_TOOL_CALLS_PER_TURN) for _, pr in paired]
@@ -426,6 +429,7 @@ def evaluate_capability(
     mcp_config: Optional[MCPConnectionConfig] = None,
     selected_domains: Optional[set[str]] = None,
     policy_judge_path: Optional[str] = None,
+    tool_backend: str = "local",
 ) -> Dict[str, Any]:
     if capability_name not in registry:
         raise ValueError(
@@ -457,8 +461,19 @@ def evaluate_capability(
     if existing_results and (existing_results.get("groundedness_k") != k
                              or existing_results.get("metrics_version") != 1):
         raise ValueError("Existing results use different K or metric schema; choose a new --output file.")
+    connection_identity = {
+        "backend": tool_backend,
+        "mode": mcp_config.mode if mcp_config else None,
+        "server_url": mcp_config.server_url if mcp_config else None,
+    }
     if existing_results:
+        previous = existing_results.get("tool_connection")
+        if previous is None and (tool_backend != "local" or (mcp_config and mcp_config.mode in ("http", "streamable-http"))):
+            raise ValueError("Existing results have no backend metadata; choose a new --output for Code Engine")
+        if previous is not None and previous != connection_identity:
+            raise ValueError("Existing results use a different tool backend/endpoint; choose a new --output")
         results = existing_results
+        results["tool_connection"] = connection_identity
         # Reconstruct all_dialogue_scores from existing results
         all_dialogue_scores: List[float] = []
         for domain_data in results["domains"].values():
@@ -468,6 +483,7 @@ def evaluate_capability(
             "groundedness_k": k,
             "metrics_version": 1,
             "capability_name": capability_name,
+            "tool_connection": connection_identity,
             "groundtruth_dir": str(gt_dir),
             "prediction_dir": str(pred_dir),
             "domains": {},
@@ -544,8 +560,8 @@ def main() -> None:
     ap.add_argument("--output", default=None, help="Output results.json path (default: <capability_root>/results.json)")
     ap.add_argument(
         "--mcp-config",
-        default="benchmark/mcp_connection_config.yaml",
-        help="Path to MCP connection config YAML file (default: benchmark/mcp_connection_config.yaml)"
+        default=None,
+        help="Override the selected backend configuration YAML; capability 1 ignores HTTP overrides and falls back locally"
     )
     ap.add_argument(
         "--domains",
@@ -559,6 +575,8 @@ def main() -> None:
         default=None,
         help="Optional path to a PolicyJudge Python file. If omitted, policy judging is disabled.",
     )
+    ap.add_argument("--tool-backend", choices=("local", "code-engine"), default="local",
+                    help="Tool environment. Code Engine supports capabilities 2–4; capability 1 logs a fallback to local.")
     args = ap.parse_args()
     if args.k < 1:
         ap.error("--k must be a positive integer")
@@ -584,15 +602,14 @@ def main() -> None:
         capability_root = gt_dir.parent
         out_path = capability_root / "results.json"
 
-    # Load MCP configs from YAML
-    mcp_configs_by_capability_id = load_mcp_config(args.mcp_config)
-
-    # Extract capability_id from capability_name (assumes format like "capability1", "capability2", etc.)
+    if capability_name not in CAPABILITY_MCP_TOOL_MAP:
+        ap.error(f"Unknown capability: {capability_name}")
     try:
-        capability_id = int(CAPABILITY_MCP_TOOL_MAP[capability_name])
-        mcp_config = mcp_configs_by_capability_id.get(capability_id)
-    except (ValueError, AttributeError):
-        mcp_config = None
+        mcp_config = select_evaluator_mcp_config(
+            CAPABILITY_MCP_TOOL_MAP[capability_name], args.tool_backend, args.mcp_config
+        )
+    except (ValueError, OSError) as exc:
+        ap.error(str(exc))
 
     registry = build_default_capability_registry(k=args.k)
     evaluate_capability(
@@ -603,6 +620,7 @@ def main() -> None:
         registry=registry,
         mcp_config=mcp_config,
         selected_domains=selected_domains,
+        tool_backend=mcp_config.backend,
         policy_judge_path=args.policy_judge_path,
     )
 

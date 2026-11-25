@@ -225,6 +225,56 @@ evaluator/
 - [`benchmark/mcp_connection_config.yaml`](/vakra/benchmark/mcp_connection_config.yaml)
 - [`evaluator/evaluator.py`](/vakra/evaluator/evaluator.py)
 
+## Code Engine tools (capabilities 2–4)
+
+The evaluator supports `--tool-backend local|code-engine`; local remains the
+existing default. The connection adapter is confined to the evaluator; its YAML
+lives beside the other connection configs in `benchmark/`. Environment servers,
+containers, benchmark client/runner code and benchmark execution are unchanged.
+
+Copy `.env.example` to `.env` in the repository root and replace the selected
+capability's dummy `VAKRA_CAP2_URL`, `VAKRA_CAP3_URL` or `VAKRA_CAP4_URL` with its
+app URL (not the browser explorer URL). The evaluator loads this file without
+overriding exported shell variables. Existing judge credentials are still needed.
+
+```bash
+python evaluator/evaluator.py \
+  --capability_name capability_dashboard_apis \
+  --gt_root /path/to/groundtruth --pred_root /path/to/predictions \
+  --domains california_schools --tool-backend code-engine \
+  --output /tmp/ce-dashboard-results.json
+```
+
+`benchmark/mcp_connection_config.ce.yaml` maps capabilities 2–4 to streamable HTTP
+endpoints `/mcp/<domain>`. `--mcp-config PATH` overrides the selected backend's
+configuration. Explicit HTTP overrides also work with the default backend flag.
+Local connections delegate to the existing `benchmark/mcp_client.py` unchanged.
+
+### Capability 1 fallback
+
+Capability 1's hosted stateful tool sequences are not supported in this version.
+Requesting `--tool-backend code-engine` with `capability_bi_apis` logs:
+
+```text
+Code Engine tool calling for capability 1 is not supported in this version; falling back to local execution. No Code Engine connection will be opened.
+```
+
+Execution then uses the existing local capability 1 configuration. No hosted URL
+or server upgrade is required for that fallback. An HTTP override cannot bypass
+this restriction. A custom local capability 1 entry is honored; otherwise the
+default `benchmark/mcp_connection_config.yaml` supplies the local settings.
+Normal local requirements (including a running configured container) still apply;
+local failures are reported normally, with no second attempt to use Code Engine.
+
+Results record the **effective** backend: capability 1 fallback is recorded as
+`local`, even when `code-engine` was requested. Resume checks reject results from
+a different backend/URL. Legacy results without connection metadata may be
+resumed locally, including through the capability 1 fallback.
+
+The HTTP client supports the installed MCP 1.x and 2.x transport constructors.
+No benchmark/environment SDK dependency or Docker image changes are required by
+this evaluator-only PR. Capability 1 state handling belongs to the stacked PR.
+
 ## Groundedness K
 
 The evaluator defaults to **K=3**, so runs without `--k` report Pass@3 and Pass^3.
