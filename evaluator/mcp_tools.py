@@ -7,7 +7,7 @@ import warnings
 from abc import ABC, abstractmethod
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
-from typing import Any, AsyncIterator, Dict, List, Optional, Sequence
+from typing import Any, AsyncIterator, Dict, List, Optional, Sequence, Callable
 
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
@@ -16,6 +16,25 @@ from constant import PRED_OUTPUT_KEY, PRED_OUTPUT_SEQUENCE_KEY
 from utils import _ensure_list
 
 ToolSpec = Dict[str, Any]
+
+
+def _tool_response_error(result, text):
+    """Recognize protocol errors and explicit error payloads from tool wrappers."""
+    if getattr(result, 'isError', False) or getattr(result, 'is_error', False):
+        return text or 'MCP tool returned an error flag'
+    stripped = text.strip()
+    if stripped.lower() in ('error', 'failed') or stripped.lower().startswith(('error:', 'error calling ', 'exception:')):
+        return text
+    try:
+        payload = json.loads(stripped)
+    except (ValueError, TypeError):
+        return None
+    if isinstance(payload, dict):
+        if payload.get('error') or payload.get('errors'):
+            return str(payload.get('error') or payload['errors'])
+        if str(payload.get('status', '')).lower() in ('error', 'failed'):
+            return str(payload.get('message') or payload)
+    return None
 
 
 # -----------------------------
@@ -255,6 +274,9 @@ async def execute_tools_batch(
     dialogue_tools_batch: List[List[List[Dict[str, Any]]]],
     schema_map: Optional[Dict[str, Any]],
     is_gt: bool = False,
+    progress_callback: Optional[Callable[[Dict[str, Any]], None]] = None,
+    gt_retries: int = 0,
+    error_callback: Optional[Callable[[Dict[str, Any]], None]] = None,
 ) -> List[List[List[Any]]]:
     """
     Execute a batch of tool calls using a raw MCP session, with schema-based
@@ -267,19 +289,30 @@ async def execute_tools_batch(
             [ [tool...], [tool...], ... ],  # dialogue 1
         ]
         schema_map: {tool_name: inputSchema} mapping used to coerce argument types
+        gt_retries: Additional attempts for GT replay (the evaluator passes 3).
+        error_callback: Receives one GT error record per affected call, including
+            failed attempts and whether a retry recovered it.
 
     Returns:
         List[List[List[Any]]]: Response strings in the same structure as input
     """
+    if isinstance(gt_retries, bool) or not isinstance(gt_retries, int) or gt_retries < 0:
+        raise ValueError('gt_retries must be a nonnegative integer')
     all_dialogue_responses: List[List[List[Any]]] = []
 
-    for dialogue_tools in dialogue_tools_batch:
+    total = sum(len(turn) for dialogue in dialogue_tools_batch for turn in dialogue)
+    completed = 0
+    if progress_callback:
+        progress_callback({'event': 'replay_started', 'completed': 0, 'total': total})
+
+    for dialogue_index, dialogue_tools in enumerate(dialogue_tools_batch):
         dialogue_responses: List[List[Any]] = []
         labeled_responses: Dict[str, Any] = {}
         has_labels = any(tool.get("label") for turn in dialogue_tools for tool in turn)
 
-        for turn_tools in dialogue_tools:
+        for turn_index, turn_tools in enumerate(dialogue_tools):
             turn_responses: List[Any] = []
+            previous_call_failed = False
 
             for tool in turn_tools:
                 tool_name = tool["name"]
@@ -295,7 +328,7 @@ async def execute_tools_batch(
                         key: _resolve_gt_reference(value, labeled_responses, key)
                         for key, value in raw_args.items()
                     }
-                elif is_gt and turn_responses and (
+                elif is_gt and turn_responses and not previous_call_failed and (
                     "input_value" in raw_args or "data_label" in raw_args
                 ):
                     try:
@@ -315,24 +348,49 @@ async def execute_tools_batch(
                 tool_args = _coerce_args_to_schema(raw_args, input_schema)
 
                 result = None
-                try:
-                    result = await session.call_tool(tool_name, tool_args)
-                    # Extract text from MCP response
-                    if result.content and len(result.content) > 0:
-                        content_item = result.content[0]
-                        if hasattr(content_item, "text"):
-                            turn_responses.append(content_item.text)
-                        else:
-                            turn_responses.append(str(content_item))
-                    else:
-                        turn_responses.append("")
-                except Exception as e:
-                    turn_responses.append(f"Error: {str(e)}")
+                call_error = False
+                if progress_callback:
+                    progress_callback({'event': 'tool_started', 'tool': tool_name,
+                                       'completed': completed, 'total': total,
+                                       'dialogue_index': dialogue_index, 'turn_index': turn_index})
+                attempt_errors = []
+                for attempt in range(gt_retries + 1):
+                    result = None
+                    try:
+                        result = await session.call_tool(tool_name, tool_args)
+                        texts = [getattr(item, 'text', str(item)) for item in (result.content or [])]
+                        text = texts[0] if texts else ''
+                        message = next((error for part in texts
+                                        if (error := _tool_response_error(result, part))), None)
+                        if not texts:
+                            message = _tool_response_error(result, '')
+                    except Exception as e:
+                        text = f"Error: {str(e)}"
+                        message = f'{type(e).__name__}: {e}'
+                    call_error = message is not None
+                    if not call_error:
+                        break
+                    attempt_errors.append({'attempt': attempt + 1, 'message': message})
+                    if attempt < gt_retries:
+                        if progress_callback:
+                            progress_callback({'event': 'tool_retry', 'tool': tool_name,
+                                               'attempt': attempt + 1, 'next_attempt': attempt + 2,
+                                               'dialogue_index': dialogue_index, 'turn_index': turn_index,
+                                               'error': True})
+                        await asyncio.sleep(2 ** attempt)
+                turn_responses.append(text)
+                if attempt_errors and error_callback:
+                    error_callback({'type': 'ground_truth_tool_call', 'tool': tool_name,
+                                    'dialogue_index': dialogue_index, 'turn_index': turn_index,
+                                    'tool_index': len(turn_responses) - 1, 'attempt_count': attempt + 1,
+                                    'failed_attempt_count': len(attempt_errors), 'recovered': not call_error,
+                                    'message': attempt_errors[-1]['message'], 'attempt_errors': attempt_errors})
+                previous_call_failed = call_error
 
                 if is_gt and tool.get("label"):
                     # Failed calls must not turn an error payload into input data.
                     labeled_responses.pop(tool["label"], None)
-                    if result is not None and not getattr(result, "isError", False):
+                    if result is not None and not call_error:
                         try:
                             response = json.loads(turn_responses[-1])
                         except (TypeError, ValueError):
@@ -341,10 +399,20 @@ async def execute_tools_batch(
                             if not (isinstance(response, dict) and "error" in response):
                                 labeled_responses[tool["label"]] = response
 
+                completed += 1
+                if progress_callback:
+                    progress_callback({'event': 'tool_completed', 'tool': tool_name,
+                                       'completed': completed, 'total': total,
+                                       'dialogue_index': dialogue_index, 'turn_index': turn_index,
+                                       'error': call_error or bool(getattr(result, 'isError', False)
+                                                                  or getattr(result, 'is_error', False))})
+
             dialogue_responses.append(turn_responses)
 
         all_dialogue_responses.append(dialogue_responses)
 
+    if progress_callback:
+        progress_callback({'event': 'replay_completed', 'completed': completed, 'total': total})
     return all_dialogue_responses
 
 

@@ -104,7 +104,9 @@ async def _http_session(url, domain):
             import httpx2
             client = await stack.enter_async_context(httpx2.AsyncClient(headers=headers, timeout=600))
             connection = transport.streamable_http_client(url, http_client=client)
-        read, write, _ = await stack.enter_async_context(connection)
+        # MCP transports return either two streams or two streams plus a
+        # session-ID callback, depending on the installed SDK version.
+        read, write, *_ = await stack.enter_async_context(connection)
         session = await stack.enter_async_context(ClientSession(read, write))
         await session.initialize()
         yield session
