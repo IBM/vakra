@@ -1,0 +1,117 @@
+{
+  "synthetic_demo": true,
+  "common_dialogues": 5,
+  "matched_reference_dialogues": 4,
+  "excluded_common_dialogues": 1,
+  "failure_rate_among_eligible": 0.25,
+  "retry_budget_per_system": 1,
+  "assumed_retry_success": 0.5,
+  "repeats": 200,
+  "seed": 71,
+  "systems": {
+    "synthetic_a": {
+      "source_dialogues": 5,
+      "unmatched_dialogues": 0,
+      "observed_status_counts": {
+        "scored": 3,
+        "groundedness_error": 1,
+        "groundedness_not_called": 1
+      },
+      "reference": {
+        "mean_score": 0.5,
+        "scored_dialogues": 4,
+        "total_dialogues": 4,
+        "coverage": 1.0
+      },
+      "eligible_for_failure": 3,
+      "masked_per_trial": 1,
+      "retry_attempted_per_trial": 1,
+      "policies": {
+        "zero": {
+          "mean_score": 0.3325,
+          "delta_from_reference": -0.16749999999999998,
+          "mean_coverage": 1.0,
+          "trials_with_score": 200
+        },
+        "abstain": {
+          "mean_score": 0.4433333333333333,
+          "delta_from_reference": -0.0566666666666667,
+          "mean_coverage": 0.75,
+          "trials_with_score": 200
+        },
+        "retry_then_abstain": {
+          "mean_score": 0.4733333333333333,
+          "delta_from_reference": -0.026666666666666727,
+          "mean_coverage": 0.8575,
+          "trials_with_score": 200
+        }
+      }
+    },
+    "synthetic_b": {
+      "source_dialogues": 5,
+      "unmatched_dialogues": 0,
+      "observed_status_counts": {
+        "scored": 4,
+        "groundedness_not_called": 1
+      },
+      "reference": {
+        "mean_score": 0.25,
+        "scored_dialogues": 4,
+        "total_dialogues": 4,
+        "coverage": 1.0
+      },
+      "eligible_for_failure": 3,
+      "masked_per_trial": 1,
+      "retry_attempted_per_trial": 1,
+      "policies": {
+        "zero": {
+          "mean_score": 0.1675,
+          "delta_from_reference": -0.08249999999999999,
+          "mean_coverage": 1.0,
+          "trials_with_score": 200
+        },
+        "abstain": {
+          "mean_score": 0.22333333333333333,
+          "delta_from_reference": -0.026666666666666672,
+          "mean_coverage": 0.75,
+          "trials_with_score": 200
+        },
+        "retry_then_abstain": {
+          "mean_score": 0.22916666666666663,
+          "delta_from_reference": -0.02083333333333337,
+          "mean_coverage": 0.8575,
+          "trials_with_score": 200
+        }
+      }
+    }
+  },
+  "pairwise": [
+    {
+      "systems": [
+        "synthetic_a",
+        "synthetic_b"
+      ],
+      "reference_gap": 0.25,
+      "policies": {
+        "zero": {
+          "mean_gap": 0.165,
+          "strict_rank_reversals": 0,
+          "ties": 134,
+          "trials_with_both_scores": 200
+        },
+        "abstain": {
+          "mean_gap": 0.22,
+          "strict_rank_reversals": 0,
+          "ties": 134,
+          "trials_with_both_scores": 200
+        },
+        "retry_then_abstain": {
+          "mean_gap": 0.24416666666666664,
+          "strict_rank_reversals": 0,
+          "ties": 73,
+          "trials_with_both_scores": 200
+        }
+      }
+    }
+  ]
+}
